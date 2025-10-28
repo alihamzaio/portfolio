@@ -10,6 +10,7 @@ const navItems = [
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
+  { label: "Resume", href: "/api/resume/download" },
 ]
 
 export function Navigation() {

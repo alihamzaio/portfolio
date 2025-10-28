@@ -1,62 +1,179 @@
 [
     {
         "id": 1,
-        "title": "E-Commerce Platform",
-        "description": "Full-stack e-commerce solution with real-time inventory management.",
+        "title": "Fanatic Website",
+        "description": "Modern e-commerce style React application with responsive UI and smooth animations.",
         "tags": [
-            "Next.js",
-            "TypeScript",
-            "PostgreSQL",
-            "Stripe"
+            "React",
+            "Bootstrap",
+            "CSS",
+            "JavaScript"
         ],
-        "image": "/ecommerce-dashboard.png",
-        "details": "Built a complete e-commerce platform with user authentication, product management, shopping cart, and payment processing using Stripe. Implemented real-time inventory updates and order tracking.",
-        "link": "#",
-        "github": "#"
+        "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=1200&q=80",
+        "details": "Developed a fully responsive React-based e-commerce experience with elegant product layouts and animation effects. Focused on reusable components and performance optimization.",
+        "link": "https://fanatic.onrender.com/",
+        "github": "https://github.com/AliHamza0007/fanatic"
     },
     {
         "id": 2,
-        "title": "Task Management App",
-        "description": "Collaborative task management with real-time updates.",
+        "title": "Foodpanda Clone",
+        "description": "Food delivery platform clone with Google API and Redux integration.",
         "tags": [
             "React",
-            "Firebase",
-            "Tailwind CSS",
-            "Framer Motion"
+            "Redux",
+            "Bootstrap",
+            "GoogleAPI"
         ],
-        "image": "/task-management-app.png",
-        "details": "Created a collaborative task management application with real-time synchronization, team collaboration features, and beautiful animations using Framer Motion.",
-        "link": "#",
-        "github": "#"
+        "image": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1200&q=80",
+        "details": "Built a Foodpanda-style web app with dynamic menus, map integration, and real-time updates. Implemented Redux for state management and API integration.",
+        "link": "https://foodpanda-xo5w.onrender.com/",
+        "github": "https://github.com/AliHamza0007/FoodPanda"
     },
     {
         "id": 3,
-        "title": "AI Chat Interface",
-        "description": "Modern chat interface with AI integration.",
+        "title": "Mr & Mrs Website",
+        "description": "Interactive shopping experience with animations and stylish design.",
         "tags": [
-            "Next.js",
-            "OpenAI",
-            "Tailwind CSS",
-            "TypeScript"
+            "React",
+            "Bootstrap",
+            "Framer Motion",
+            "JavaScript"
         ],
-        "image": "/ai-chat-interface.png",
-        "details": "Developed an AI-powered chat interface with streaming responses, conversation history, and a sleek modern design. Integrated with OpenAI API for intelligent responses.",
-        "link": "#",
-        "github": "#"
+        "image": "https://images.unsplash.com/photo-1505382921873-1c3e4c3c6a39?auto=format&fit=crop&w=1200&q=80",
+        "details": "Created a visually engaging storefront using React and Framer Motion. Optimized UX and responsive layout for a seamless shopping experience.",
+        "link": "https://mr-mrs.onrender.com/",
+        "github": "https://github.com/AliHamza0007/mr_mrs"
     },
     {
         "id": 4,
-        "title": "Analytics Dashboard",
-        "description": "Real-time analytics dashboard with interactive charts.",
+        "title": "Speed Cart",
+        "description": "Fast and responsive online shopping cart built with React.",
         "tags": [
             "React",
-            "Recharts",
-            "Node.js",
-            "MongoDB"
+            "Bootstrap",
+            "JavaScript",
+            "Responsive Design"
         ],
-        "image": "/analytics-dashboard-charts.png",
-        "details": "Built a comprehensive analytics dashboard with real-time data visualization, interactive charts, and customizable widgets for tracking business metrics.",
-        "link": "#",
+        "image": "https://images.unsplash.com/photo-1599488615730-3c7e7e7a5b6d?auto=format&fit=crop&w=1200&q=80",
+        "details": "Developed an optimized and fully responsive e-commerce cart interface. Integrated smooth user interactions and modular React components.",
+        "link": "https://speed-cart.onrender.com/",
+        "github": "https://github.com/AliHamza0007/speed_Cart"
+    },
+    {
+        "id": 5,
+        "title": "Osteopathe Montréal",
+        "description": "Professional service website with clean UI and React components.",
+        "tags": [
+            "React",
+            "Bootstrap",
+            "Responsive",
+            "JavaScript"
+        ],
+        "image": "https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=1200&q=80",
+        "details": "Built a responsive website for a Montréal-based osteopathy clinic, focusing on clarity, accessibility, and optimized performance.",
+        "link": "https://osteopathe-montreal.onrender.com/",
+        "github": "https://github.com/AliHamza0007/Oesteopathe-Montreal"
+    },
+    {
+        "id": 6,
+        "title": "SeaTrans Maritime",
+        "description": "Corporate React site for a shipping and logistics company.",
+        "tags": [
+            "React",
+            "Bootstrap",
+            "CSS",
+            "JavaScript"
+        ],
+        "image": "https://images.unsplash.com/photo-1505839673365-e3971f8d9184?auto=format&fit=crop&w=1200&q=80",
+        "details": "Developed a React-based website for a maritime logistics company. Focused on navigation, responsive layouts, and a professional visual theme.",
+        "link": "https://sea-trans.onrender.com/",
+        "github": "https://github.com/AliHamza0007/sea-trans"
+    },
+    {
+        "id": 7,
+        "title": "SolutionM4 Theme Maker",
+        "description": "Theme customization and builder web app.",
+        "tags": [
+            "React",
+            "Bootstrap",
+            "CSS",
+            "JavaScript"
+        ],
+        "image": "https://images.unsplash.com/photo-1590608897129-79da98d159c3?auto=format&fit=crop&w=1200&q=80",
+        "details": "Created a theme builder for generating responsive website templates dynamically. Built with reusable React components and Bootstrap.",
+        "link": "https://solutionm4.onrender.com/",
+        "github": "https://github.com/AliHamza0007/solutionM4"
+    },
+    {
+        "id": 8,
+        "title": "Techno Solution",
+        "description": "IT solutions website with sleek design and React-based UI.",
+        "tags": [
+            "React",
+            "Bootstrap",
+            "CSS",
+            "JavaScript"
+        ],
+        "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+        "details": "Built a tech solutions website for business services. Focused on UI consistency and page transition effects.",
+        "link": "https://techno-im5l.onrender.com/",
+        "github": "https://github.com/AliHamza0007/techno_Sloution"
+    },
+    {
+        "id": 9,
+        "title": "Bizkar Website",
+        "description": "React-based business site with a responsive and modern layout.",
+        "tags": [
+            "React",
+            "Bootstrap",
+            "CSS",
+            "JavaScript"
+        ],
+        "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
+        "details": "Developed a corporate website using React and Bootstrap with modern UI/UX principles. Deployed on Render for live hosting.",
+        "link": "https://bizkar-production.onrender.com/",
+        "github": "https://github.com/AliHamza0007/Bizkar"
+    },
+    {
+        "id": 10,
+        "title": "ConfortZone Shopping Website",
+        "description": "Full MERN stack e-commerce platform with real-time features.",
+        "tags": [
+            "MongoDB",
+            "Express",
+            "React",
+            "Node.js"
+        ],
+        "image": "https://images.unsplash.com/photo-1616627985068-3a6b89395a58?auto=format&fit=crop&w=1200&q=80",
+        "details": "A full MERN stack e-commerce site featuring product management, cart functionality, and payment handling. Deployed with Cyclic for production.",
+        "link": "https://confortzone.cyclic.app/",
+        "github": "https://github.com/AliHamza0007/E-Commerce-Website"
+    },
+    {
+        "id": 11,
+        "title": "Portfolio Website",
+        "description": "Personal portfolio built with React and TypeScript.",
+        "tags": [
+            "React",
+            "TypeScript",
+            "Bootstrap"
+        ],
+        "image": "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=1200&q=80",
+        "details": "Designed and developed a personal portfolio website showcasing projects, skills, and contact info. Created with React + TypeScript for scalability.",
+        "link": "/",
+        "github": "https://github.com/AliHamza0007/Portfolio"
+    },
+    {
+        "id": 12,
+        "title": "LinkedIn Profile",
+        "description": "Professional portfolio and career profile.",
+        "tags": [
+            "React Developer",
+            "MERN Developer"
+        ],
+        "image": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+        "details": "Connect and explore my professional background, projects, and experience on LinkedIn.",
+        "link": "https://www.linkedin.com/in/alihamza9/",
         "github": "#"
     }
 ]
