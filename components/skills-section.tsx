@@ -3,8 +3,12 @@
 import { motion } from "framer-motion"
 import skills from '../lib/skill.json'
 import Image from "next/image"
-import { Carousel, CarouselContent, CarouselItem } from './ui/carousel'
 import * as React from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination, Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 export function SkillsSection() {
 
@@ -31,18 +35,6 @@ export function SkillsSection() {
     },
   }
 
-  // Carousel auto-slide logic
-  const carouselApiRef = React.useRef<any>(null)
-  React.useEffect(() => {
-    // Only on mobile
-    const handle = setInterval(() => {
-      if (window.innerWidth < 768 && carouselApiRef.current) {
-        carouselApiRef.current.scrollNext()
-      }
-    }, 3000)
-    return () => clearInterval(handle)
-  }, [])
-
   return (
     <section id="skills" className="py-20 px-4 relative">
       <div className="max-w-6xl mx-auto">
@@ -56,35 +48,41 @@ export function SkillsSection() {
             Skills & Technologies
           </span>
         </motion.h2>
-        {/* MOBILE CAROUSEL */}
+        {/* MOBILE SWIPER */}
         <div className="md:hidden">
-          <Carousel opts={{ align: 'start', loop: true }} setApi={api => (carouselApiRef.current = api)}>
-            <CarouselContent>
-              {skills.map((skill, idx) => (
-                <CarouselItem key={skill.name} className="flex min-w-0">
-                  <motion.div
-                    variants={cardVariants}
-                    initial="hidden"
-                    animate="visible"
-                    whileHover="hover"
-                    className="glass p-6 rounded-xl neon-border w-full cursor-pointer group mx-2"
-                  >
-                    {skill.image && <Image src={skill.image} alt="Icon" width={30} height={30} className="mb-4 group-hover:scale-110 transition-transform" />}
-                    <h3 className="text-lg font-semibold mb-3 text-foreground">{skill.name}</h3>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${skill.level}%` }}
-                        transition={{ duration: 0.9, delay: idx * 0.06, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-primary to-accent"
-                      />
-                    </div>
-                    <div className="text-sm text-foreground/60 mt-2">{skill.level}%</div>
-                  </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <Swiper
+            modules={[Autoplay]}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            autoplay={{ delay: 2800, disableOnInteraction: false }}
+            spaceBetween={14}
+            slidesPerView={1.15}
+            centeredSlides
+            loop
+          >
+            {skills.map((skill, idx) => (
+              <SwiperSlide key={skill.name}>
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover="hover"
+                  className="glass p-6 rounded-xl neon-border w-full cursor-pointer group ring-1 ring-primary/20 bg-gradient-to-b from-white/5 to-transparent"
+                >
+                  {skill.image && <Image src={skill.image} alt="Icon" width={30} height={30} className="mb-4 group-hover:scale-110 transition-transform" />}
+                  <h3 className="text-lg font-semibold mb-3 text-foreground">{skill.name}</h3>
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 0.9, delay: idx * 0.06, ease: "easeOut" }}
+                      className="h-full bg-gradient-to-r from-primary to-accent"
+                    />
+                  </div>
+                  <div className="text-sm text-foreground/60 mt-2">{skill.level}%</div>
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         {/* Desktop/Tablet grid */}
         <motion.div
