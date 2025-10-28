@@ -1,12 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useInView } from "react-intersection-observer"
 import skills from '../lib/skill.json'
 import Image from "next/image"
+import { Carousel, CarouselContent, CarouselItem } from './ui/carousel'
+import * as React from 'react'
 
 export function SkillsSection() {
-  const { ref, inView } = useInView({ threshold: 0.2 })
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,26 +31,68 @@ export function SkillsSection() {
     },
   }
 
+  // Carousel auto-slide logic
+  const carouselApiRef = React.useRef<any>(null)
+  React.useEffect(() => {
+    // Only on mobile
+    const handle = setInterval(() => {
+      if (window.innerWidth < 768 && carouselApiRef.current) {
+        carouselApiRef.current.scrollNext()
+      }
+    }, 3000)
+    return () => clearInterval(handle)
+  }, [])
+
   return (
     <section id="skills" className="py-20 px-4 relative">
       <div className="max-w-6xl mx-auto">
         <motion.h2
-          ref={ref}
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3, margin: "0px 0px -20% 0px" }}
           className="text-4xl md:text-5xl font-bold mb-16 text-center"
         >
           <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Skills & Technologies
           </span>
         </motion.h2>
-
+        {/* MOBILE CAROUSEL */}
+        <div className="md:hidden">
+          <Carousel opts={{ align: 'start', loop: true }} setApi={api => (carouselApiRef.current = api)}>
+            <CarouselContent>
+              {skills.map((skill, idx) => (
+                <CarouselItem key={skill.name} className="flex min-w-0">
+                  <motion.div
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    className="glass p-6 rounded-xl neon-border w-full cursor-pointer group mx-2"
+                  >
+                    {skill.image && <Image src={skill.image} alt="Icon" width={30} height={30} className="mb-4 group-hover:scale-110 transition-transform" />}
+                    <h3 className="text-lg font-semibold mb-3 text-foreground">{skill.name}</h3>
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${skill.level}%` }}
+                        transition={{ duration: 0.9, delay: idx * 0.06, ease: "easeOut" }}
+                        className="h-full bg-gradient-to-r from-primary to-accent"
+                      />
+                    </div>
+                    <div className="text-sm text-foreground/60 mt-2">{skill.level}%</div>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
+        {/* Desktop/Tablet grid */}
         <motion.div
-          ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2, margin: "0px 0px -15% 0px" }}
+          className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6"
         >
           {skills.map((skill, index) => (
             <motion.div
@@ -66,8 +108,9 @@ export function SkillsSection() {
               <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={inView ? { width: `${skill.level}%` } : { width: 0 }}
-                  transition={{ duration: 1, delay: index * 0.1 }}
+                  whileInView={{ width: `${skill.level}%` }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ duration: 0.9, delay: index * 0.06, ease: "easeOut" }}
                   className="h-full bg-gradient-to-r from-primary to-accent"
                 />
               </div>

@@ -1,59 +1,102 @@
 [
-    {
-        "name": "React",
-        "image": "https://workos.imgix.net/app-branding/environment_01GS6W3C901N50J4ZGFB6V1Z6C/01K7002RKAGJ71T32Q78NC7KSC",
-        "level": 95
-    },
-    {
-        "name": "Next.js",
-        "level": 95
-    },
-    {
-        "name": "Node.js",
-        "level": 90
-    },
-    {
-        "name": "Express.js",
-        "level": 85
-    },
-    {
-        "name": "TypeScript",
-        "level": 90
-    },
-    {
-        "name": "MongoDB",
-        "level": 85
-    },
-    {
-        "name": "PostgreSQL",
-        "level": 80
-    },
-    {
-        "name": "GraphQL",
-        "level": 80
-    },
-    {
-        "name": "Docker",
-        "level": 75
-    },
-    {
-        "name": "Tailwind CSS",
-        "level": 95
-    },
-    {
-        "name": "Framer Motion",
-        "level": 85
-    },
-    {
-        "name": "Git & GitHub",
-        "level": 90
-    },
-    {
-        "name": "API Development",
-        "level": 88
-    },
-    {
-        "name": "Blockchain Basics",
-        "level": 65
-    }
+  {
+    "name": "HTML5",
+    "level": 95,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+  },
+  {
+    "name": "CSS3",
+    "level": 90,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+  },
+  {
+    "name": "JavaScript (ES6+)",
+    "level": 93,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+  },
+  {
+    "name": "TypeScript",
+    "level": 88,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+  },
+  {
+    "name": "React.js",
+    "level": 95,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+  },
+  {
+    "name": "Next.js",
+    "level": 92,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+  },
+  {
+    "name": "Node.js",
+    "level": 89,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+  },
+  {
+    "name": "Express.js",
+    "level": 87,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeyAbhhBNGbQ38Vu0mAQ-QGPAEZSuBxUOhczRsWn5ec_5950E0Mc4HBOk_LdRhaFot7TE&usqp=CAU"
+  },
+  {
+    "name": "MongoDB",
+    "level": 85,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
+  },
+  {
+    "name": "PostgreSQL",
+    "level": 75,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"
+  },
+  {
+    "name": "Material UI (MUI)",
+    "level": 86,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg"
+  },
+  {
+    "name": "Tailwind CSS",
+    "level": 94,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg"
+  },
+  {
+    "name": "Redux Toolkit",
+    "level": 68,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg"
+  },
+  {
+    "name": "Docker",
+    "level": 80,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"
+  },
+  {
+    "name": "Git & GitHub",
+    "level": 92,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Git-logo-orange.svg/640px-Git-logo-orange.svg.png"
+  },
+  {
+    "name": "RESTful APIs",
+    "level": 90,
+    "image": "https://media.lordicon.com/icons/wired/gradient/1330-rest-api.svg"
+  },
+  {
+    "name": "Linux",
+    "level": 76,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg"
+  },
+  {
+    "name": "VS Code",
+    "level": 91,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
+  },
+  {
+    "name": "NPM & Yarn",
+    "level": 86,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg"
+  },
+  {
+    "name": "Full Stack Development",
+    "level": 96,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg"
+  }
 ]
