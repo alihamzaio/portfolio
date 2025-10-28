@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "title": "E-Commerce Platform",
+        "description": "Full-stack e-commerce solution with real-time inventory management.",
+        "tags": [
+            "Next.js",
+            "TypeScript",
+            "PostgreSQL",
+            "Stripe"
+        ],
+        "image": "/ecommerce-dashboard.png",
+        "details": "Built a complete e-commerce platform with user authentication, product management, shopping cart, and payment processing using Stripe. Implemented real-time inventory updates and order tracking.",
+        "link": "#",
+        "github": "#"
+    },
+    {
+        "id": 2,
+        "title": "Task Management App",
+        "description": "Collaborative task management with real-time updates.",
+        "tags": [
+            "React",
+            "Firebase",
+            "Tailwind CSS",
+            "Framer Motion"
+        ],
+        "image": "/task-management-app.png",
+        "details": "Created a collaborative task management application with real-time synchronization, team collaboration features, and beautiful animations using Framer Motion.",
+        "link": "#",
+        "github": "#"
+    },
+    {
+        "id": 3,
+        "title": "AI Chat Interface",
+        "description": "Modern chat interface with AI integration.",
+        "tags": [
+            "Next.js",
+            "OpenAI",
+            "Tailwind CSS",
+            "TypeScript"
+        ],
+        "image": "/ai-chat-interface.png",
+        "details": "Developed an AI-powered chat interface with streaming responses, conversation history, and a sleek modern design. Integrated with OpenAI API for intelligent responses.",
+        "link": "#",
+        "github": "#"
+    },
+    {
+        "id": 4,
+        "title": "Analytics Dashboard",
+        "description": "Real-time analytics dashboard with interactive charts.",
+        "tags": [
+            "React",
+            "Recharts",
+            "Node.js",
+            "MongoDB"
+        ],
+        "image": "/analytics-dashboard-charts.png",
+        "details": "Built a comprehensive analytics dashboard with real-time data visualization, interactive charts, and customizable widgets for tracking business metrics.",
+        "link": "#",
+        "github": "#"
+    }
+]
