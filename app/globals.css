@@ -119,6 +119,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -148,5 +149,35 @@
 
   .glass-dark {
     @apply bg-black/20 backdrop-blur-md border border-white/10;
+  }
+
+  /* Ensure Swiper slides stretch evenly and cards fill height */
+  .project-swiper .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .project-swiper .swiper-slide {
+    height: auto;
+  }
+
+  /* Ensure cards equalize by enforcing media aspect ratio and flex */
+  .project-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Line clamp utilities for consistent heights */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
