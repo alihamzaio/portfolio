@@ -53,9 +53,9 @@ export function ProjectsSection() {
           }}
         >
           {projects.map((project, idx) => (
-            <SwiperSlide key={project.id} className="h-auto">
+            <SwiperSlide key={idx} className="h-auto">
               <motion.div
-                key={project.id}
+                key={idx}
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
@@ -72,10 +72,10 @@ export function ProjectsSection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-semibold mb-2 text-foreground line-clamp-2">{project.title}</h3>
-                  <p className="text-foreground/70 mb-4 text-sm line-clamp-3">{project.description}</p>
-                  <div className="mt-auto flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
+                  <h3 className="text-xl font-semibold mb-2 text-foreground line-clamp-2 min-h-[56px]">{project.title}</h3>
+                  <p className="text-foreground/70 mb-4 text-sm line-clamp-3 min-h-[60px]">{project.description}</p>
+                  <div className="mt-auto flex flex-wrap gap-2 min-h-[32px] overflow-hidden">
+                    {(project.tags.slice(0, 3)).map((tag) => (
                       <span
                         key={tag}
                         className="px-3 py-1 text-xs rounded-full bg-primary/20 text-primary border border-primary/30"
@@ -83,6 +83,9 @@ export function ProjectsSection() {
                         {tag}
                       </span>
                     ))}
+                    {project.tags.length > 3 && (
+                      <span className="px-3 py-1 text-xs rounded-full bg-white/5 text-foreground/70 border border-white/10">+{project.tags.length - 3}</span>
+                    )}
                   </div>
                 </div>
               </motion.div>
