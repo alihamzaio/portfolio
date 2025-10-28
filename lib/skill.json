@@ -1,0 +1,59 @@
+[
+    {
+        "name": "React",
+        "image": "https://workos.imgix.net/app-branding/environment_01GS6W3C901N50J4ZGFB6V1Z6C/01K7002RKAGJ71T32Q78NC7KSC",
+        "level": 95
+    },
+    {
+        "name": "Next.js",
+        "level": 95
+    },
+    {
+        "name": "Node.js",
+        "level": 90
+    },
+    {
+        "name": "Express.js",
+        "level": 85
+    },
+    {
+        "name": "TypeScript",
+        "level": 90
+    },
+    {
+        "name": "MongoDB",
+        "level": 85
+    },
+    {
+        "name": "PostgreSQL",
+        "level": 80
+    },
+    {
+        "name": "GraphQL",
+        "level": 80
+    },
+    {
+        "name": "Docker",
+        "level": 75
+    },
+    {
+        "name": "Tailwind CSS",
+        "level": 95
+    },
+    {
+        "name": "Framer Motion",
+        "level": 85
+    },
+    {
+        "name": "Git & GitHub",
+        "level": 90
+    },
+    {
+        "name": "API Development",
+        "level": 88
+    },
+    {
+        "name": "Blockchain Basics",
+        "level": 65
+    }
+]
