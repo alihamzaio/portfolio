@@ -1,5 +1,27 @@
 [
     {
+    "id": 26,
+    "title": "Adam Store – Full E-Commerce Platform",
+    "description": "A complete e-commerce platform featuring customer storefront, admin dashboard, and backend API system for product, order, and user management.",
+    "tags": [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Axios",
+        "Bootstrap",
+        "REST API",
+        "E-Commerce",
+        "Admin Dashboard",
+        "Full-Stack Development"
+    ],
+    "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659999/adamstore_preview.png",
+    "details": "Developed the entire Adam Store e-commerce system including both customer-facing and admin dashboards. The customer side provides product browsing, cart management, and order placement with secure authentication and responsive UI. The admin dashboard enables full control over inventory, orders, users, and analytics. The backend was built using Node.js, Express.js, and MongoDB with RESTful APIs and Axios integration for smooth data communication. The platform ensures scalability, performance, and an intuitive management experience for store operators.",
+    "link": "https://adamstore.pk/",
+    "github": "https://github.com/Adam-store-Ecomerce/E-Comerce-Sami"
+}
+,
+    {
         "id": 25,
         "title": "Verana Blockchain Crawler & Indexing System",
         "description": "A high-performance blockchain data crawler and indexer with PostgreSQL storage and RESTful API exposure.",
