@@ -1,15 +1,14 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
+import { siteConfig } from "@/lib/site"
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alihamza-fawn.vercel.app'
-    return {
-        rules: {
-            userAgent: '*',
-            allow: '/',
-        },
-        sitemap: `${baseUrl}/sitemap.xml`,
-        host: baseUrl,
-    }
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/admin", "/api/admin"],
+    },
+    sitemap: `${siteConfig.url}/sitemap.xml`,
+    host: siteConfig.url,
+  }
 }
-
-
