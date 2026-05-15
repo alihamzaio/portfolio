@@ -1,82 +1,80 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import { Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { StructuredData } from "@/components/structured-data"
+import { siteConfig } from "@/lib/site"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+})
+
+export const viewport: Viewport = {
+  themeColor: "#050505",
+  width: "device-width",
+  initialScale: 1,
+}
 
 export const metadata: Metadata = {
   title: {
-    default: "Ali Hamza | Software Engineer (MERN Stack Developer)",
-    template: "%s | Ali Hamza"
+    default: `${siteConfig.name} — ${siteConfig.title}`,
+    template: `%s — ${siteConfig.name}`,
   },
-  description:
-    "Ali Hamza — Software Engineer and MERN Stack Developer. Building high-performance web apps with Next.js, React, Node.js, Express, and MongoDB.",
+  description: siteConfig.description,
   keywords: [
-    "Ali Hamza",
-    "Software Engineer",
-    "MERN Stack Developer",
-    "MERN Developer",
-    "React Developer",
-    "Next.js Developer",
-    "Node.js Developer",
+    siteConfig.name,
     "Full Stack Developer",
-    "Pakistan Developer",
+    "MERN Stack",
+    "AWS Engineer",
+    "Next.js",
+    "Serverless",
+    "TypeScript",
   ],
-  authors: [{ name: "Ali Hamza" }],
-  creator: "Ali Hamza",
-  publisher: "Ali Hamza",
-  alternates: {
-    canonical: "https://alihamza-fawn.vercel.app/",
-  },
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: "website",
-    url: "https://alihamza-fawn.vercel.app/",
-    title: "Ali Hamza | Software Engineer (MERN Stack Developer)",
-    description:
-      "MERN stack portfolio — React, Next.js, Node.js, Express, MongoDB. View projects, skills, and contact Ali Hamza.",
-    siteName: "Ali Hamza Portfolio",
-    images: [
-      {
-        url: "/icon.png",
-        width: 1200,
-        height: 630,
-        alt: "Ali Hamza — MERN Stack Developer",
-      },
-    ],
+    url: siteConfig.url,
+    title: `${siteConfig.name} — Premium Full Stack Engineer`,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    locale: "en_US",
+    images: [{ url: "/icon.png", width: 1200, height: 630, alt: siteConfig.name }],
   },
-  category: "technology",
-  applicationName: "Ali Hamza Portfolio",
-  generator: "Next.js",
-  metadataBase: new URL("https://alihamza-fawn.vercel.app/"),
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
-    },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — MERN + AWS`,
+    description: siteConfig.description,
+    images: ["/icon.png"],
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple.png",
-    shortcut: "/favicon.ico",
-  },
+  robots: { index: true, follow: true },
+  icons: { icon: "/favicon.ico", apple: "/apple.png" },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`font-sans antialiased dark`}>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <StructuredData />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         {children}
         <Analytics />
       </body>

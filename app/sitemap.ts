@@ -1,15 +1,26 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next"
+import { siteConfig } from "@/lib/site"
+import { getProjectSlugs } from "@/lib/projects"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alihamza-fawn.vercel.app'
-    const routes = ['/', '#about', '#skills', '#projects', '#contact']
-    const now = new Date()
-    return routes.map((route) => ({
-        url: `${baseUrl}${route.startsWith('#') ? '/' : ''}${route}`,
-        lastModified: now,
-        changeFrequency: 'weekly',
-        priority: route === '/' ? 1 : 0.6,
-    }))
+  const base = siteConfig.url
+  const now = new Date()
+
+  const staticRoutes = ["", "/about", "/projects", "/experience", "/tech-stack", "/blog", "/contact"].map(
+    (path) => ({
+      url: `${base}${path}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: path === "" ? 1 : 0.8,
+    })
+  )
+
+  const projectRoutes = getProjectSlugs().map((slug) => ({
+    url: `${base}/projects/${slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }))
+
+  return [...staticRoutes, ...projectRoutes]
 }
-
-
