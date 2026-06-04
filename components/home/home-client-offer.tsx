@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Code2, Cloud, Blocks, Gauge } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { Reveal } from "@/components/ui/reveal"
 import { SmartLink } from "@/components/ui/smart-link"
@@ -13,8 +14,7 @@ const icons = [Code2, Cloud, Blocks, Gauge]
 
 export function HomeClientOffer() {
   return (
-    <section id="offer" className="section-pad section-surface border-t border-white/[0.06]">
-      <div className="section-shell">
+    <SectionWrapper id="offer">
         <SectionHeading
           label={copy.sections.offer.label}
           title={copy.sections.offer.title}
@@ -51,7 +51,6 @@ export function HomeClientOffer() {
             .
           </p>
         </Reveal>
-      </div>
-    </section>
+    </SectionWrapper>
   )
 }

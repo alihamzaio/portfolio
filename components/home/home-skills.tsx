@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { skillCategories } from "@/lib/skills-data"
 import { copy } from "@/lib/copy"
@@ -10,8 +11,7 @@ import { fadeUp, staggerContainer } from "@/lib/motion"
 
 export function HomeSkills() {
   return (
-    <section id="skills" className="section-pad border-t border-white/[0.06]">
-      <div className="section-shell">
+    <SectionWrapper id="skills" variant="muted">
         <SectionHeading
           label={copy.sections.skills.label}
           title={copy.sections.skills.title}
@@ -50,7 +50,6 @@ export function HomeSkills() {
             </motion.div>
           ))}
         </motion.div>
-      </div>
-    </section>
+    </SectionWrapper>
   )
 }

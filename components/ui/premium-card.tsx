@@ -3,6 +3,7 @@
 import { useRef, type ReactNode, type MouseEvent } from "react"
 import { motion, type HTMLMotionProps } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { ease } from "@/lib/motion"
 
 interface PremiumCardProps extends HTMLMotionProps<"div"> {
   children: ReactNode
@@ -31,14 +32,14 @@ export function PremiumCard({
     <motion.div
       ref={ref}
       onMouseMove={onMove}
-      whileHover={hover ? { y: -6 } : undefined}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={hover ? { y: -4 } : undefined}
+      transition={{ duration: 0.45, ease }}
       className={cn(
         spotlight ? "glass-card-interactive" : "glass-card",
-        "rounded-2xl p-6 transition-colors duration-300 relative overflow-hidden",
-        hover && !spotlight && "hover:border-white/[0.14]",
+        "rounded-2xl p-6 transition-all duration-500 relative overflow-hidden",
+        hover && !spotlight && "hover:border-white/[0.12]",
         spotlight &&
-          "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none before:bg-[radial-gradient(400px_circle_at_var(--sx,50%)_var(--sy,50%),rgba(59,130,246,0.12),transparent_45%)]",
+          "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none before:bg-[radial-gradient(480px_circle_at_var(--sx,50%)_var(--sy,50%),rgba(59,130,246,0.14),transparent_42%)]",
         className
       )}
       {...props}

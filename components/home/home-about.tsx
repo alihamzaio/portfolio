@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Cloud, Code2, Database, Layers, Zap } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { engineeringMetrics } from "@/lib/site"
@@ -21,8 +22,7 @@ export function HomeAbout() {
   const profile = usePublicProfile()
 
   return (
-    <section id="about" className="section-pad border-t border-white/[0.06]">
-      <div className="section-shell">
+    <SectionWrapper id="about" variant="elevated">
         <SectionHeading
           label={copy.sections.about.label}
           title={copy.sections.about.title}
@@ -77,7 +77,6 @@ export function HomeAbout() {
             </motion.div>
           ))}
         </motion.div>
-      </div>
-    </section>
+    </SectionWrapper>
   )
 }

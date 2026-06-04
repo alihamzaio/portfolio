@@ -1,9 +1,30 @@
 import { getAdminEmail } from "./auth"
+import { getResendApiKey, getResendFromEmail } from "./env-server"
+
+function parseResendError(body: string): string {
+  try {
+    const data = JSON.parse(body) as { message?: string; name?: string }
+    const msg = data.message || data.name || body
+
+    if (/only send testing emails to your own/i.test(msg)) {
+      return `Resend test mode: emails can only be sent to the Gmail address you used to sign up at resend.com. Set ADMIN_EMAIL to that exact address, or verify a domain in Resend and use a custom RESEND_FROM_EMAIL.`
+    }
+    if (/invalid api key/i.test(msg) || /unauthorized/i.test(msg)) {
+      return "Invalid RESEND_API_KEY. Copy a new key from resend.com → API Keys, add it to .env, then restart the dev server."
+    }
+    if (/from/i.test(msg) && /domain/i.test(msg)) {
+      return "Invalid RESEND_FROM_EMAIL. For testing use onboarding@resend.dev, or verify your domain in Resend first."
+    }
+    return msg
+  } catch {
+    return body || "Failed to send email"
+  }
+}
 
 export async function sendOtpEmail(to: string, code: string): Promise<{ ok: boolean; error?: string; devCode?: string }> {
-  const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
-  const appName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Admin"
+  const apiKey = getResendApiKey()
+  const fromRaw = getResendFromEmail()
+  const from = fromRaw.includes("<") ? fromRaw : `Portfolio Admin <${fromRaw}>`
 
   if (!apiKey) {
     if (process.env.NODE_ENV === "development") {
@@ -12,7 +33,8 @@ export async function sendOtpEmail(to: string, code: string): Promise<{ ok: bool
     }
     return {
       ok: false,
-      error: "RESEND_API_KEY is not configured. Add it to .env.local (free tier at resend.com).",
+      error:
+        "RESEND_API_KEY is missing in .env (use this exact name — not NEXT_PUBLIC_RESEND_API_KEY). Restart the dev server after saving .env.",
     }
   }
 
@@ -23,7 +45,7 @@ export async function sendOtpEmail(to: string, code: string): Promise<{ ok: bool
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: `${appName} <${from}>`,
+      from,
       to: [to],
       subject: `${code} — Your admin login code`,
       html: `
@@ -38,8 +60,10 @@ export async function sendOtpEmail(to: string, code: string): Promise<{ ok: bool
   })
 
   if (!res.ok) {
-    const err = await res.text()
-    return { ok: false, error: err || "Failed to send email" }
+    const errText = await res.text()
+    const error = parseResendError(errText)
+    console.error("[Resend]", res.status, error)
+    return { ok: false, error }
   }
 
   return { ok: true }

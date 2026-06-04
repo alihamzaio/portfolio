@@ -30,7 +30,8 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error || "Failed to send OTP")
+        const msg = typeof data.error === "string" ? data.error : "Failed to send OTP"
+        setError(msg)
         return
       }
       if (data.devCode) setDevCode(data.devCode)

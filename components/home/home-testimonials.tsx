@@ -4,66 +4,71 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Quote } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { testimonials } from "@/lib/testimonials"
+import { copy } from "@/lib/copy"
+import { easeCinematic } from "@/lib/motion"
 
 export function HomeTestimonials() {
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % testimonials.length), 5000)
+    const id = setInterval(() => setIndex((i) => (i + 1) % testimonials.length), 6000)
     return () => clearInterval(id)
   }, [])
 
   const current = testimonials[index]
 
   return (
-    <section id="testimonials" className="section-pad relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.08),transparent_70%)] pointer-events-none" />
-      <div className="section-shell relative max-w-4xl mx-auto">
-        <SectionHeading
-          label="Testimonials"
-          title="Trusted by teams"
-          description="What clients say about working together."
-          align="center"
-          className="mx-auto"
-        />
+    <SectionWrapper id="testimonials">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06),transparent_65%)] pointer-events-none" />
+      <SectionHeading
+        label={copy.sections.testimonials.label}
+        title={copy.sections.testimonials.title}
+        description={copy.sections.testimonials.description}
+        align="center"
+        className="mx-auto relative"
+      />
 
-        <div className="relative min-h-[220px] sm:min-h-[200px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-card rounded-3xl p-8 sm:p-12 text-center gradient-border"
-            >
-              <Quote className="h-8 w-8 text-[#3B82F6]/50 mx-auto mb-6" />
-              <p className="text-lg sm:text-xl text-white/90 leading-relaxed mb-8">&ldquo;{current.quote}&rdquo;</p>
-              <div>
-                <p className="font-display font-semibold text-white">{current.author}</p>
-                <p className="text-sm text-muted-foreground">
-                  {current.role} · {current.company}
-                </p>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex justify-center gap-2 mt-8">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-8 bg-[#3B82F6]" : "w-1.5 bg-white/20"
-              }`}
-              aria-label={`Testimonial ${i + 1}`}
-            />
-          ))}
-        </div>
+      <div className="relative max-w-3xl mx-auto min-h-[240px]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -16, filter: "blur(6px)" }}
+            transition={{ duration: 0.55, ease: easeCinematic }}
+            className="glass-float rounded-3xl p-10 sm:p-14 text-center gradient-border relative"
+          >
+            <Quote className="h-7 w-7 text-[#3B82F6]/40 mx-auto mb-6" />
+            <p className="text-lg sm:text-xl text-[#F8FAFC]/95 leading-relaxed mb-8 font-medium">
+              &ldquo;{current.quote}&rdquo;
+            </p>
+            <div>
+              <p className="font-semibold text-[#F8FAFC]">{current.author}</p>
+              <p className="text-sm text-[#64748B] mt-1">
+                {current.role} · {current.company}
+              </p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </section>
+
+      <div className="flex justify-center gap-2 mt-10 relative">
+        {testimonials.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setIndex(i)}
+            className={`h-1 rounded-full transition-all duration-400 ${
+              i === index
+                ? "w-10 bg-gradient-to-r from-[#3B82F6] to-[#06B6D4]"
+                : "w-2 bg-white/15 hover:bg-white/25"
+            }`}
+            aria-label={`Testimonial ${i + 1}`}
+          />
+        ))}
+      </div>
+    </SectionWrapper>
   )
 }

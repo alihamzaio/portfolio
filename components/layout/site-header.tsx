@@ -67,7 +67,7 @@ export function SiteHeader() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        scrolled || mobileOpen ? "glass-nav py-3" : "py-5 bg-transparent"
+        scrolled || mobileOpen ? "glass-nav py-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)]" : "py-6 bg-transparent"
       )}
     >
       <div className="section-shell">
@@ -148,7 +148,7 @@ export function SiteHeader() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 top-[60px] z-40 bg-[#030712]/96 backdrop-blur-2xl"
+            className="lg:hidden fixed inset-0 top-[60px] z-40 bg-[#020617]/95 backdrop-blur-3xl"
           >
             <motion.nav
               initial={{ opacity: 0, y: 16 }}

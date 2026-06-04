@@ -2,72 +2,78 @@
 export const copy = {
   hero: {
     availability: "Open for freelance & full-time — remote worldwide",
-    eyebrow: "Full Stack Developer · Lahore, Pakistan",
-    lead: "I build web apps and APIs teams ship to production — MERN, AWS, and blockchain.",
+    eyebrow: "Elite Full Stack Engineer",
+    positioning: "I design and ship premium digital products — not just websites.",
+    lead: "Full-stack engineer building production SaaS, APIs, and Web3 systems with startup-level polish.",
     support:
-      "Recent work: blockchain indexer at Birxment (10k+ blocks), HealOps on AWS, and e-commerce/Web3 products at Exec9. You get clear updates, documented APIs, and code your next developer can pick up.",
-    ctaWork: "View case studies",
+      "From blockchain indexers at Birxment to AWS platforms and high-traffic frontends at Exec9 — you get measurable impact, clean architecture, and interfaces clients remember.",
+    ctaWork: "Explore case studies",
     ctaResume: "Download resume",
-    ctaContact: "Discuss your project",
+    ctaContact: "Start a project",
   },
   sections: {
     about: {
       label: "About",
-      title: "Who I am & how I work",
+      title: "Engineering with product intent",
       description:
-        "Straightforward engineering background — B.S. Computer Science (2019–2023), then production roles across agency and product teams.",
+        "Senior-level delivery across agency and product teams — B.S. Computer Science, then production roles shipping real revenue systems.",
     },
     skills: {
-      label: "Skills",
-      title: "What I build with",
-      description: "Stack I use day-to-day on client and employer projects — not a buzzword dump.",
+      label: "Capabilities",
+      title: "Stack & craft",
+      description: "Technologies I use to ship — chosen for reliability, scale, and maintainability.",
     },
     projects: {
-      label: "Work",
-      title: "Products & platforms I've shipped",
+      label: "Case studies",
+      title: "Products I've shipped",
       description:
-        "Verana, HealOps, UniLabs, Senzi, and more — live links where available.",
+        "Real platforms with architecture, metrics, and business impact — presented like product launches, not portfolio thumbnails.",
     },
     experience: {
       label: "Experience",
-      title: "Companies & roles",
-      description: "Birxment, Exec9, and Explore Logics — responsibilities match my resume.",
+      title: "Career trajectory",
+      description: "Roles where I owned delivery end-to-end — with outcomes that matter to hiring managers.",
     },
     contact: {
       label: "Contact",
-      title: "Tell me about your project",
+      title: "Let's build something exceptional",
       description:
-        "Share what you're building, timeline, and budget range. I reply within 24–48 hours.",
+        "Share your product vision, timeline, and constraints. Thoughtful replies within 24–48 hours.",
     },
     offer: {
       label: "Services",
-      title: "How I can help your team",
-      description: "Typical engagements — scoped clearly so you know what you're hiring for.",
+      title: "How I partner with teams",
+      description: "Clear scopes — so you know exactly what elite engineering engagement looks like.",
+    },
+    testimonials: {
+      label: "Proof",
+      title: "Trusted by product teams",
+      description: "Feedback from founders and engineering leads I've shipped with.",
     },
     cta: {
       label: "Hire me",
-      title: "Need a developer who delivers?",
+      title: "Ready for a product-grade build?",
       description:
-        "Whether it's a new MVP, API layer, or Web3 feature — I'll give you an honest estimate and a plan before writing code.",
-      button: "Email Ali",
+        "MVP, platform rebuild, or Web3 feature — I'll scope honestly, propose architecture, and deliver with senior frontend craftsmanship.",
+      button: "Discuss your project",
     },
   },
   services: [
     {
-      title: "Full-stack web applications",
-      desc: "Next.js/React frontends with Node.js APIs, auth, admin panels, and deployment.",
+      title: "Product-grade web applications",
+      desc: "Next.js experiences with Node APIs, auth, admin, and deployment pipelines your team can extend.",
     },
     {
-      title: "AWS & serverless backends",
-      desc: "Lambda, DynamoDB, RDS, Terraform — multi-tenant and inventory/order flows.",
+      title: "AWS & serverless platforms",
+      desc: "Lambda, DynamoDB, RDS, Terraform — multi-tenant systems built for auditability and scale.",
     },
     {
-      title: "Blockchain & Web3",
-      desc: "Indexers, wallet flows, Solidity integrations — Verana-style data pipelines.",
+      title: "Blockchain & Web3 systems",
+      desc: "Indexers, wallet flows, smart contract integrations — production pipelines like Verana.",
     },
     {
-      title: "Performance & maintenance",
-      desc: "Faster pages, fewer production bugs, handover docs for your in-house team.",
+      title: "Performance & design systems",
+      desc: "Core Web Vitals, component libraries, and handover docs — polish that survives beyond launch.",
     },
   ],
 } as const

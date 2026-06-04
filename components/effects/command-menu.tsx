@@ -103,12 +103,12 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
               className="fixed left-1/2 top-[18%] z-[201] w-full max-w-lg -translate-x-1/2 px-4"
             >
               <motion.div
-                className="glass-panel rounded-2xl overflow-hidden border-[#00FFB2]/10 shadow-2xl glow-emerald-sm"
+                className="glass-float rounded-2xl overflow-hidden border-white/[0.1] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
                 role="dialog"
                 aria-label="Command menu"
               >
                 <div className="flex items-center gap-3 border-b border-white/[0.06] px-4 py-3">
-                  <Search className="h-4 w-4 text-[#00FFB2] shrink-0" />
+                  <Search className="h-4 w-4 text-[#3B82F6] shrink-0" />
                   <input
                     autoFocus
                     value={query}
@@ -137,8 +137,8 @@ export function CommandMenuProvider({ children }: { children: ReactNode }) {
                             className={cn(
                               "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors",
                               selected === i
-                                ? "bg-[#00FFB2]/10 text-[#00FFB2]"
-                                : "text-muted-foreground hover:bg-white/[0.04]"
+                                ? "bg-[#3B82F6]/15 text-[#F8FAFC] border border-[#3B82F6]/20"
+                                : "text-[#94A3B8] hover:bg-white/[0.04] hover:text-[#F8FAFC]"
                             )}
                           >
                             <Icon className="h-4 w-4 shrink-0" />
@@ -169,7 +169,7 @@ export function CommandMenuTrigger({ className }: { className?: string }) {
       className={cn(
         "hidden lg:flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground",
         "glass-panel rounded-lg border border-white/[0.06]",
-        "hover:border-[#00FFB2]/25 hover:text-[#00FFB2] transition-colors shrink-0",
+        "hover:border-[#3B82F6]/30 hover:text-[#F8FAFC] transition-colors shrink-0",
         className
       )}
       aria-label="Open command menu"

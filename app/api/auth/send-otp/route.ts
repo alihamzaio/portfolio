@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createAndStoreOtp, getAdminEmail, isAllowedAdminEmail } from "@/lib/auth"
 import { sendOtpEmail } from "@/lib/email"
+import { getResendConfigStatus } from "@/lib/env-server"
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +25,16 @@ export async function POST(req: NextRequest) {
 
     const sent = await sendOtpEmail(normalized, result.code)
     if (!sent.ok) {
-      return NextResponse.json({ error: sent.error || "Failed to send OTP" }, { status: 500 })
+      const cfg = getResendConfigStatus()
+      return NextResponse.json(
+        {
+          error: sent.error || "Failed to send OTP. Check server logs and Resend dashboard.",
+          hint: !cfg.hasApiKey
+            ? "RESEND_API_KEY not loaded. Use .env (not NEXT_PUBLIC_) and restart pnpm dev."
+            : undefined,
+        },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({
