@@ -8,8 +8,8 @@ export function CustomCursor() {
   const [hovering, setHovering] = useState(false)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 500, damping: 40 })
-  const springY = useSpring(y, { stiffness: 500, damping: 40 })
+  const springX = useSpring(x, { stiffness: 500, damping: 42 })
+  const springY = useSpring(y, { stiffness: 500, damping: 42 })
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches
@@ -22,7 +22,7 @@ export function CustomCursor() {
     }
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement
-      setHovering(!!t.closest("a, button, [data-cursor]"))
+      setHovering(!!t.closest("a, button, [data-cursor], input, textarea"))
     }
 
     window.addEventListener("mousemove", move, { passive: true })
@@ -43,19 +43,26 @@ export function CustomCursor() {
       >
         <motion.div
           animate={{
-            width: hovering ? 40 : 8,
-            height: hovering ? 40 : 8,
-            opacity: hovering ? 0.15 : 0.35,
+            width: hovering ? 44 : 10,
+            height: hovering ? 44 : 10,
+            opacity: hovering ? 0.2 : 0.4,
           }}
-          transition={{ type: "spring", stiffness: 400, damping: 28 }}
-          className="rounded-full bg-[#3B82F6] blur-[1px]"
+          transition={{ type: "spring", stiffness: 380, damping: 26 }}
+          className="rounded-full border border-[#3B82F6]/50 bg-[#3B82F6]/30"
         />
       </motion.div>
       <motion.div
         className="fixed top-0 left-0 z-[9998] pointer-events-none"
         style={{ x, y, translateX: "-50%", translateY: "-50%" }}
       >
-        <div className="w-32 h-32 rounded-full bg-[#3B82F6]/[0.04] blur-2xl" />
+        <div
+          className="w-36 h-36 rounded-full blur-3xl transition-opacity duration-300"
+          style={{
+            background: hovering
+              ? "radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%)"
+              : "radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%)",
+          }}
+        />
       </motion.div>
     </>
   )

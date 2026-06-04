@@ -1,6 +1,7 @@
 import { randomBytes, randomInt } from "crypto"
 import { promises as fs } from "fs"
 import path from "path"
+import { getAdminEmailFromEnv } from "./env-server"
 
 const DATA_DIR = path.join(process.cwd(), "data")
 const STORE_FILE = path.join(DATA_DIR, "auth-store.json")
@@ -42,7 +43,7 @@ async function saveStore(store: AuthStore) {
 }
 
 export function getAdminEmail(): string {
-  return (process.env.ADMIN_EMAIL || "hamzasarwer9@gmail.com").toLowerCase().trim()
+  return getAdminEmailFromEnv()
 }
 
 export function isAllowedAdminEmail(email: string): boolean {

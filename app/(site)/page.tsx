@@ -4,6 +4,7 @@ import { HomeAbout } from "@/components/home/home-about"
 import { HomeSkills } from "@/components/home/home-skills"
 import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
+import { HomeTestimonials } from "@/components/home/home-testimonials"
 import { CtaBand } from "@/components/home/cta-band"
 import { HomeContact } from "@/components/home/home-contact"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
@@ -32,6 +33,7 @@ export default function HomePage() {
       <HomeSkills />
       <HomeProjects />
       <HomeExperience />
+      <HomeTestimonials />
       <CtaBand />
       <HomeContact />
     </>

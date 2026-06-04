@@ -6,17 +6,19 @@ import { LoadingOverlay } from "@/components/effects/loading-overlay"
 import { CustomCursor } from "@/components/effects/custom-cursor"
 import { AmbientScene } from "@/components/effects/ambient-scene"
 import { Spotlight } from "@/components/effects/spotlight"
+import { ScrollProgress } from "@/components/effects/scroll-progress"
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 480)
+    const t = setTimeout(() => setReady(true), 520)
     return () => clearTimeout(t)
   }, [])
 
   return (
     <>
+      <ScrollProgress />
       <AnimatePresence mode="wait">{!ready && <LoadingOverlay key="loader" />}</AnimatePresence>
       <AmbientScene />
       <Spotlight />
@@ -25,7 +27,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
         className="relative z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: ready ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
       </motion.div>

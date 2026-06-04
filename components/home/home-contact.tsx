@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { Github, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { SectionHeading } from "@/components/ui/section-heading"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { fadeUp } from "@/lib/motion"
@@ -31,8 +32,7 @@ export function HomeContact() {
   }
 
   return (
-    <section id="contact" className="section-pad border-t border-white/[0.06]">
-      <div className="section-shell">
+    <SectionWrapper id="contact">
         <SectionHeading
           label={copy.sections.contact.label}
           title={copy.sections.contact.title}
@@ -160,7 +160,6 @@ export function HomeContact() {
             </PremiumCard>
           </motion.div>
         </div>
-      </div>
-    </section>
+    </SectionWrapper>
   )
 }
