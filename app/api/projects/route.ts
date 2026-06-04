@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readJsonFile, writeJsonFile, requireAdminToken } from '@/lib/admin'
+import { readJsonFile, requireAdminAuth } from '@/lib/admin'
 import { getStoreJson, setStoreJson } from '@/lib/store'
 
 const JSON_PATH = 'lib/projects.json'
@@ -12,9 +12,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!requireAdminToken(auth)) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
     const body = await req.json()
-    const { id, title, description, tags, image, details, link, github } = body || {}
+    const { id, title, description, tags, image, details, link, github, featured } = body || {}
     if (!title) return new NextResponse('Invalid payload', { status: 400 })
     const current = await getStoreJson('projects')
     const projects = Array.isArray(current) ? current : await readJsonFile<any[]>(JSON_PATH).catch(() => [])
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
         title,
         description: description || '',
         tags: Array.isArray(tags) ? tags : [],
+        featured: !!featured,
         ...(image ? { image } : {}),
         ...(details ? { details } : {}),
         ...(link ? { link } : {}),

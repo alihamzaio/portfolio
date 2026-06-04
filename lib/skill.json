@@ -1,112 +1,23 @@
 [
-  {
-    "name": "HTML5",
-    "level": 95,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
-  },
-  {
-    "name": "CSS3",
-    "level": 80,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
-  },
-  {
-    "name": "JavaScript (ES6+)",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-  },
-  {
-    "name": "TypeScript",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
-  },
-  {
-    "name": "React.js",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-  },
-  {
-    "name": "Next.js",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
-  },
-  {
-    "name": "Node.js",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
-  },
-  {
-    "name": "Express.js",
-    "level": 87,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeyAbhhBNGbQ38Vu0mAQ-QGPAEZSuBxUOhczRsWn5ec_5950E0Mc4HBOk_LdRhaFot7TE&usqp=CAU"
-  },
-  {
-    "name": "MongoDB",
-    "level": 85,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
-  },
-  {
-    "name": "PostgreSQL",
-    "level": 70,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"
-  },
-  {
-    "name": "Material UI (MUI)",
-    "level": 70,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg"
-  },
-  {
-    "name": "Tailwind CSS",
-    "level": 94,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg"
-  },
-  {
-    "name": "Redux Toolkit",
-    "level": 70,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg"
-  },
-  {
-    "name": "Docker",
-    "level": 82,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"
-  },
-  {
-    "name": "RESTful APIs",
-    "level": 90,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg"
-  },
-  {
-    "name": "Parallel Services",
-    "level": 60,
-    "image": "https://raw.githubusercontent.com/OptimalBits/bull/HEAD/support/logo@2x.png"
-  },
-  {
-    "name": "Git & GitHub (Advanced Workflows)",
-    "level": 94,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
-  },
-  {
-    "name": "Moleculer.js",
-    "level": 70,
-    "image": "https://avatars.githubusercontent.com/u/35351806?s=200&v=4"
-  },
-  {
-    "name": "CI/CD Pipelines",
-    "level": 80,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg"
-  },
-  {
-    "name": "Linux",
-    "level": 78,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg"
-  },
-  {
-    "name": "VS Code",
-    "level": 91,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
-  },
-  {
-    "name": "Full Stack Development",
-    "level": 92,
-    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg"
-  }
+  { "name": "JavaScript", "level": 92, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+  { "name": "TypeScript", "level": 90, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+  { "name": "React.js", "level": 92, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+  { "name": "Next.js", "level": 90, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+  { "name": "Node.js", "level": 92, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+  { "name": "Express.js", "level": 90 },
+  { "name": "MongoDB", "level": 88, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+  { "name": "PostgreSQL", "level": 85, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
+  { "name": "Redis", "level": 82 },
+  { "name": "Tailwind CSS", "level": 92 },
+  { "name": "Moleculer.js", "level": 85 },
+  { "name": "BullMQ", "level": 85 },
+  { "name": "AWS Lambda", "level": 84 },
+  { "name": "Docker", "level": 86, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
+  { "name": "Kubernetes", "level": 78 },
+  { "name": "Solidity", "level": 80 },
+  { "name": "Ethers.js", "level": 82 },
+  { "name": "GraphQL", "level": 80 },
+  { "name": "Terraform", "level": 75 },
+  { "name": "Jest", "level": 85 },
+  { "name": "Git & GitHub", "level": 94, "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" }
 ]

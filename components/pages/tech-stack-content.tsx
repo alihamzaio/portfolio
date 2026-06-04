@@ -27,7 +27,7 @@ export function TechStackContent() {
               viewport={{ once: true }}
               transition={{ delay: ci * 0.06 }}
             >
-              <PremiumCard className="h-full" glow={ci === 0}>
+              <PremiumCard className="h-full">
                 <p className="text-xs font-mono tracking-widest uppercase text-[#00FFB2] mb-2">{cat.title}</p>
                 <p className="text-sm text-muted-foreground mb-6">{cat.description}</p>
                 <div className="flex flex-wrap gap-2">

@@ -1,16 +1,28 @@
 "use client"
 
 import { useRef, type ReactNode, type MouseEvent } from "react"
+import Link from "next/link"
 import { motion } from "framer-motion"
+import { usePathname } from "next/navigation"
+import {
+  getLinkKind,
+  resolveNavHref,
+  scrollToSection,
+  shouldSmoothScrollHash,
+} from "@/lib/navigation"
 import { cn } from "@/lib/utils"
+
+const MotionLink = motion.create(Link)
 
 interface MagneticButtonProps {
   children: ReactNode
   className?: string
   onClick?: () => void
   href?: string
-  variant?: "primary" | "ghost" | "outline"
+  variant?: "primary" | "secondary" | "ghost"
   type?: "button" | "submit"
+  target?: string
+  rel?: string
 }
 
 export function MagneticButton({
@@ -20,7 +32,10 @@ export function MagneticButton({
   href,
   variant = "primary",
   type = "button",
+  target,
+  rel,
 }: MagneticButtonProps) {
+  const pathname = usePathname()
   const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
 
   const handleMove = (e: MouseEvent) => {
@@ -37,27 +52,59 @@ export function MagneticButton({
   }
 
   const base = cn(
-    "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300",
-    variant === "primary" &&
-      "bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white hover:shadow-[0_0_40px_rgba(59,130,246,0.4)]",
-    variant === "outline" &&
-      "border border-white/10 bg-white/5 text-white hover:border-[#3B82F6]/40 hover:bg-[#3B82F6]/10",
-    variant === "ghost" && "text-muted-foreground hover:text-[#60A5FA]",
+    "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-all duration-300",
+    variant === "primary" && "btn-primary px-6 py-3",
+    variant === "secondary" && "btn-secondary px-6 py-3",
+    variant === "ghost" && "text-[#94A3B8] hover:text-[#F8FAFC] px-3 py-2",
     className
   )
 
   if (href) {
+    const kind = getLinkKind(href)
+
+    const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+      if (shouldSmoothScrollHash(href, pathname)) {
+        e.preventDefault()
+        scrollToSection(href)
+        window.history.pushState(null, "", href)
+      }
+    }
+
+    if (kind === "external" || kind === "download") {
+      return (
+        <motion.a
+          ref={ref as React.RefObject<HTMLAnchorElement>}
+          href={href}
+          target={target ?? (kind === "external" ? "_blank" : undefined)}
+          rel={rel ?? (kind === "external" ? "noopener noreferrer" : undefined)}
+          data-cursor
+          onMouseMove={handleMove}
+          onMouseLeave={handleLeave}
+          whileTap={{ scale: 0.97 }}
+          className={base}
+        >
+          {children}
+        </motion.a>
+      )
+    }
+
+    const linkHref = kind === "hash" ? resolveNavHref(href, pathname) : href
+
     return (
-      <motion.a
+      <MotionLink
         ref={ref as React.RefObject<HTMLAnchorElement>}
-        href={href}
+        href={linkHref}
+        target={target}
+        rel={rel}
+        data-cursor
+        onClick={kind === "hash" ? handleLinkClick : undefined}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        whileTap={{ scale: 0.98 }}
+        whileTap={{ scale: 0.97 }}
         className={base}
       >
         {children}
-      </motion.a>
+      </MotionLink>
     )
   }
 
@@ -66,9 +113,10 @@ export function MagneticButton({
       ref={ref as React.RefObject<HTMLButtonElement>}
       type={type}
       onClick={onClick}
+      data-cursor
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.97 }}
       className={base}
     >
       {children}

@@ -36,14 +36,14 @@ export function ContactContent() {
           className="mx-auto"
         />
 
-        <div className="grid lg:grid-cols-5 gap-10 max-w-5xl mx-auto">
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid lg:grid-cols-5 gap-5 max-w-4xl mx-auto lg:items-stretch">
+          <div className="lg:col-span-2 flex flex-col gap-3 h-full">
             {[
               { icon: Mail, label: "Email", value: siteConfig.email, href: siteConfig.social.email },
               { icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone}` },
               { icon: MapPin, label: "Location", value: siteConfig.location },
             ].map((item) => (
-              <PremiumCard key={item.label} className="!p-5">
+              <PremiumCard key={item.label} className="!p-4 shrink-0">
                 {item.href ? (
                   <a href={item.href} className="flex gap-4 group">
                     <item.icon className="h-5 w-5 text-[#00FFB2] shrink-0" />
@@ -65,64 +65,66 @@ export function ContactContent() {
             ))}
           </div>
 
-          <PremiumCard className="lg:col-span-3" hover={false}>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <motion.div className="grid sm:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="name" className="block text-xs font-medium text-muted-foreground mb-2">
-                    Name
+          <div className="lg:col-span-3 flex flex-col h-full min-h-0">
+            <PremiumCard hover={false} className="flex-1 flex flex-col !p-5 h-full min-h-[320px] lg:min-h-0">
+              <form onSubmit={handleSubmit} className="flex flex-col flex-1 gap-4 h-full">
+                <motion.div className="grid sm:grid-cols-2 gap-4 shrink-0">
+                  <div>
+                    <label htmlFor="name" className="block text-xs font-medium text-muted-foreground mb-1.5">
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      required
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      className="input-premium"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-xs font-medium text-muted-foreground mb-1.5">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      className="input-premium"
+                      placeholder="you@company.com"
+                    />
+                  </div>
+                </motion.div>
+                <div className="flex flex-col flex-1 min-h-[120px]">
+                  <label htmlFor="message" className="block text-xs font-medium text-muted-foreground mb-1.5 shrink-0">
+                    Message
                   </label>
-                  <input
-                    id="name"
+                  <textarea
+                    id="message"
                     required
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="input-premium"
-                    placeholder="Your name"
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    className="input-premium resize-none flex-1 min-h-[120px] w-full"
+                    placeholder="Describe your project..."
                   />
                 </div>
-                <div>
-                  <label htmlFor="email" className="block text-xs font-medium text-muted-foreground mb-2">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="input-premium"
-                    placeholder="you@company.com"
-                  />
+                <div className="shrink-0">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm bg-[#00FFB2] text-[#050505] hover:shadow-[0_0_32px_rgba(0,255,178,0.45)] transition-all w-full sm:w-auto"
+                  >
+                    {sent ? "Opening email..." : (
+                      <>
+                        Send message <Send className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
                 </div>
-              </motion.div>
-              <div>
-                <label htmlFor="message" className="block text-xs font-medium text-muted-foreground mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  required
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="input-premium resize-none"
-                  placeholder="Describe your project..."
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm bg-[#00FFB2] text-[#050505] hover:shadow-[0_0_32px_rgba(0,255,178,0.45)] transition-all w-full sm:w-auto"
-              >
-                {sent ? "Opening email..." : (
-                  <>
-                    Send message <Send className="h-4 w-4" />
-                  </>
-                )}
-              </button>
-              <p className="text-xs text-muted-foreground">Email integration ready — connect Resend, SendGrid, or API route.</p>
-            </form>
-          </PremiumCard>
+              </form>
+            </PremiumCard>
+          </div>
         </div>
       </div>
     </div>
