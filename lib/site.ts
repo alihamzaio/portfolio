@@ -1,43 +1,46 @@
 export const siteConfig = {
   name: "Ali Hamza",
-  title: "MERN Stack Developer & AI Engineer",
-  tagline: "Full Stack · MERN · AI Integration",
-  headline: "Building intelligent, cinematic digital products.",
+  title: "Full Stack Software Engineer",
+  tagline: "MERN · AWS Serverless · Blockchain",
+  headline:
+    "I help teams ship MERN applications, AWS backends, and blockchain features — with maintainable code and clear communication.",
   description:
-    "Premium full stack engineer specializing in MERN, Next.js, AWS, and AI-powered applications for ambitious startups and global teams.",
+    "Full Stack Software Engineer (3+ years). Built production systems at Birxment, Exec9, and Explore Logics — REST APIs, AWS serverless, blockchain indexers, and e-commerce/Web3 UIs. Based in Lahore, Pakistan; available remote.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
-  phone: "+923097300913",
+  phone: "+92 309 7300913",
   location: "Lahore, Pakistan",
+  education: "B.S. Computer Science — University of Education (2019–2023)",
   initials: "AH",
   available: true,
-  calendlyUrl: "https://calendly.com",
-  roles: [
-    "MERN Stack Architect",
-    "AI Integration Engineer",
-    "Next.js Product Builder",
-    "Cloud & Serverless Developer",
-  ],
   social: {
-    github: "https://github.com/alilogics007",
-    linkedin: "https://www.linkedin.com/in/alihamza9",
+    github: "https://github.com/alihamzaio",
+    linkedin: "https://www.linkedin.com/in/alihamza-fullstack-developer",
     email: "mailto:hamzasarwer9@gmail.com",
   },
   resumeUrl: "/api/resume/download",
-  stats: [
-    { label: "Projects Delivered", value: 25, suffix: "+" },
-    { label: "Years Experience", value: 3, suffix: "+" },
-    { label: "Technologies", value: 20, suffix: "+" },
-    { label: "Client Satisfaction", value: 100, suffix: "%" },
+  githubUsername: "alihamzaio",
+  specialties: [
+    "MERN Stack",
+    "AWS Serverless",
+    "Blockchain / Web3",
+    "Microservices",
+    "PostgreSQL & MongoDB",
   ],
 } as const
+
+export const engineeringMetrics = [
+  { label: "REST APIs delivered", value: "15+" },
+  { label: "Blocks indexed (Verana)", value: "10,000+" },
+  { label: "Fewer prod defects", value: "40%" },
+  { label: "SKUs automated (Senzi)", value: "5,000+" },
+] as const
 
 export const navItems = [
   { label: "Home", href: "/#home", id: "home" },
   { label: "About", href: "/#about", id: "about" },
   { label: "Skills", href: "/#skills", id: "skills" },
   { label: "Work", href: "/#projects", id: "projects" },
-  { label: "Services", href: "/#services", id: "services" },
   { label: "Experience", href: "/#experience", id: "experience" },
   { label: "Contact", href: "/#contact", id: "contact" },
 ] as const

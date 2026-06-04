@@ -3,112 +3,162 @@
 import type { FormEvent } from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send, Calendar } from "lucide-react"
-import { siteConfig } from "@/lib/site"
+import { Github, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react"
+import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { MagneticButton } from "@/components/ui/magnetic-button"
+import { fadeUp } from "@/lib/motion"
+import { copy } from "@/lib/copy"
+
+const contactRows = [
+  { key: "email", icon: Mail, label: "Email", getValue: (p: ReturnType<typeof usePublicProfile>) => p.email, href: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
+  { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone },
+  { key: "location", icon: MapPin, label: "Location", getValue: (p: ReturnType<typeof usePublicProfile>) => p.location },
+  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "LinkedIn", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
+  { key: "github", icon: Github, label: "GitHub", getValue: (p: ReturnType<typeof usePublicProfile>) => `GitHub · ${p.githubUsername}`, href: (p: ReturnType<typeof usePublicProfile>) => p.social.github, external: true },
+] as const
 
 export function HomeContact() {
+  const profile = usePublicProfile()
   const [form, setForm] = useState({ name: "", email: "", message: "" })
-  const [focused, setFocused] = useState<string | null>(null)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Project from ${form.name}`)
+    const subject = encodeURIComponent(`Inquiry from ${form.name}`)
     const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
-    window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`
+    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
   }
 
   return (
-    <section id="contact" className="section-pad">
+    <section id="contact" className="section-pad border-t border-white/[0.06]">
       <div className="section-shell">
         <SectionHeading
-          label="Contact"
-          title="Let's build something unforgettable"
-          description="Tell me about your vision. I'll respond within 24 hours."
+          label={copy.sections.contact.label}
+          title={copy.sections.contact.title}
+          description={copy.sections.contact.description}
           align="center"
           className="mx-auto"
         />
 
-        <div className="grid lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
-          <div className="lg:col-span-2 space-y-4">
-            {[
-              { icon: Mail, label: "Email", value: siteConfig.email, href: siteConfig.social.email },
-              { icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone}` },
-              { icon: MapPin, label: "Location", value: siteConfig.location },
-            ].map((item) => (
-              <PremiumCard key={item.label} className="!p-5">
-                {item.href ? (
-                  <a href={item.href} className="flex gap-4 group">
-                    <item.icon className="h-5 w-5 text-[#60A5FA] shrink-0" />
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{item.label}</p>
-                      <p className="text-sm text-white group-hover:text-[#60A5FA] transition-colors mt-1">
-                        {item.value}
-                      </p>
-                    </div>
-                  </a>
-                ) : (
-                  <div className="flex gap-4">
-                    <item.icon className="h-5 w-5 text-[#60A5FA] shrink-0" />
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider">{item.label}</p>
-                      <p className="text-sm text-white mt-1">{item.value}</p>
-                    </div>
-                  </div>
-                )}
-              </PremiumCard>
-            ))}
-            <a
-              href={siteConfig.calendlyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 text-[#C4B5FD] text-sm font-medium hover:bg-[#8B5CF6]/20 transition-colors"
-            >
-              <Calendar className="h-4 w-4" /> Book on Calendly
-            </a>
-          </div>
+        <div className="grid lg:grid-cols-5 gap-5 max-w-4xl mx-auto lg:items-stretch">
+          {/* Left — contact details */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="lg:col-span-2 flex flex-col gap-3 h-full"
+          >
+            <PremiumCard className="!p-4 shrink-0" hover={false}>
+              <div className="flex items-center gap-2.5">
+                <span
+                  className={`h-2 w-2 rounded-full shrink-0 ${profile.available ? "bg-[#22C55E] shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-[#64748B]"}`}
+                />
+                <span className="text-sm text-[#F8FAFC]">
+                  {profile.available ? "Available for opportunities" : "Not available"}
+                </span>
+              </div>
+            </PremiumCard>
 
-          <PremiumCard className="lg:col-span-3" hover={false}>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid sm:grid-cols-2 gap-5">
-                {(["name", "email"] as const).map((field) => (
-                  <div key={field}>
-                    <label className="block text-xs font-medium text-muted-foreground mb-2 capitalize">
-                      {field}
+            {contactRows.map((row) => {
+              const Icon = row.icon
+              const value = row.getValue(profile)
+              const href = "href" in row && row.href ? row.href(profile) : undefined
+              const content = (
+                <>
+                  <Icon className="h-4 w-4 text-[#3B82F6] shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <p className="text-xs text-[#64748B]">{row.label}</p>
+                    <p className="text-sm text-[#F8FAFC] truncate group-hover:text-[#3B82F6] transition-colors">
+                      {value}
+                    </p>
+                  </div>
+                </>
+              )
+
+              return (
+                <PremiumCard key={row.key} className="!p-4 shrink-0" hover={false}>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={"external" in row && row.external ? "_blank" : undefined}
+                      rel={"external" in row && row.external ? "noopener noreferrer" : undefined}
+                      className="flex gap-3 group"
+                      data-cursor
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <div className="flex gap-3">{content}</div>
+                  )}
+                </PremiumCard>
+              )
+            })}
+          </motion.div>
+
+          {/* Right — form fills column height, button pinned to bottom */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="lg:col-span-3 flex flex-col h-full min-h-0"
+          >
+            <PremiumCard hover={false} className="flex-1 flex flex-col !p-5 h-full min-h-[320px] lg:min-h-0">
+              <form onSubmit={handleSubmit} className="flex flex-col flex-1 gap-4 h-full">
+                <div className="grid sm:grid-cols-2 gap-4 shrink-0">
+                  <div>
+                    <label htmlFor="name" className="text-xs text-[#64748B] mb-1.5 block">
+                      Name
                     </label>
                     <input
+                      id="name"
                       required
-                      type={field === "email" ? "email" : "text"}
-                      value={form[field]}
-                      onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-                      onFocus={() => setFocused(field)}
-                      onBlur={() => setFocused(null)}
-                      className={`input-premium ${focused === field ? "ring-2 ring-[#3B82F6]/30" : ""}`}
-                      placeholder={field === "email" ? "you@company.com" : "Your name"}
+                      className="input-premium"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      placeholder="Your name"
                     />
                   </div>
-                ))}
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2">Message</label>
-                <textarea
-                  required
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  onFocus={() => setFocused("message")}
-                  onBlur={() => setFocused(null)}
-                  className={`input-premium resize-none ${focused === "message" ? "ring-2 ring-[#8B5CF6]/30" : ""}`}
-                  placeholder="Describe your project..."
-                />
-              </div>
-              <MagneticButton type="submit">
-                Send message <Send className="h-4 w-4" />
-              </MagneticButton>
-            </form>
-          </PremiumCard>
+                  <div>
+                    <label htmlFor="email" className="text-xs text-[#64748B] mb-1.5 block">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      className="input-premium"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      placeholder="you@company.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col flex-1 min-h-[120px]">
+                  <label htmlFor="message" className="text-xs text-[#64748B] mb-1.5 block shrink-0">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    required
+                    className="input-premium resize-none flex-1 min-h-[120px] w-full"
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="What are you building? Timeline, stack, budget…"
+                  />
+                </div>
+
+                <div className="shrink-0 pt-0">
+                  <MagneticButton type="submit">
+                    Send message <Send className="h-4 w-4" />
+                  </MagneticButton>
+                </div>
+              </form>
+            </PremiumCard>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,317 +1,492 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { Plus, Star, Trash2 } from "lucide-react"
+import { AdminShell, Panel, StatCard, type AdminTab } from "@/components/admin/admin-shell"
+import { AdminLogin } from "@/components/admin/admin-login"
+import { clearAdminSession, getAdminSession, getAuthHeaders } from "@/lib/auth-client"
+import { cn } from "@/lib/utils"
+import type { SiteSettings } from "@/lib/settings"
+import type { Experience } from "@/lib/types"
 
 type Skill = { name: string; level: number; image?: string; originalName?: string }
 type Project = {
-    id: number
-    title: string
-    description: string
-    tags: string[]
-    image?: string
-    details?: string
-    link?: string
-    github?: string
+  id: number
+  title: string
+  description: string
+  tags: string[]
+  image?: string
+  details?: string
+  link?: string
+  github?: string
+  featured?: boolean
 }
 
 export default function AdminPage() {
-    const [token, setToken] = useState<string>("")
-    const [authed, setAuthed] = useState<boolean>(false)
-    const [tab, setTab] = useState<"skills" | "projects" | "cv">("skills")
-    const [skills, setSkills] = useState<Skill[]>([])
-    const [projects, setProjects] = useState<Project[]>([])
-    const [resumeFiles, setResumeFiles] = useState<string[]>([])
-    const [activeResume, setActiveResume] = useState<string | null>(null)
-    const [uploading, setUploading] = useState(false)
+  const [authed, setAuthed] = useState(false)
+  const [checking, setChecking] = useState(true)
+  const [tab, setTab] = useState<AdminTab>("overview")
+  const [skills, setSkills] = useState<Skill[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+  const [resumeFiles, setResumeFiles] = useState<string[]>([])
+  const [activeResume, setActiveResume] = useState<string | null>(null)
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [experienceList, setExperienceList] = useState<Experience[]>([])
+  const [uploading, setUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
 
-    useEffect(() => {
-        const stored = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
-        if (stored) {
-            setToken(stored)
-            setAuthed(true)
-        }
-    }, [])
+  const authHeaders = () => getAuthHeaders()
 
-    useEffect(() => {
-        if (!authed) return
-        fetch("/api/skills").then((r) => r.json()).then((list: Skill[]) => setSkills(list.map(s => ({ ...s, originalName: s.name }))))
-        fetch("/api/projects").then((r) => r.json()).then(setProjects)
-        fetch("/api/resume").then((r) => r.json()).then((d) => {
-            setResumeFiles(d.files || [])
-            setActiveResume(d.active || null)
-        })
-    }, [authed])
-
-    const login = () => {
-        if (!token) return
-        localStorage.setItem('admin_token', token)
-        setAuthed(true)
+  const verifyStoredSession = useCallback(async () => {
+    const session = getAdminSession()
+    if (!session) {
+      setAuthed(false)
+      setChecking(false)
+      return
     }
+    const res = await fetch("/api/auth/session", {
+      headers: { Authorization: `Bearer ${session.token}` },
+    })
+    const data = await res.json()
+    if (data.valid) setAuthed(true)
+    else clearAdminSession()
+    setChecking(false)
+  }, [])
 
-    const logout = () => {
-        localStorage.removeItem('admin_token')
-        setAuthed(false)
-        setToken("")
+  useEffect(() => {
+    verifyStoredSession()
+  }, [verifyStoredSession])
+
+  const loadAll = async () => {
+    const [sk, pr, res, set, exp] = await Promise.all([
+      fetch("/api/skills").then((r) => r.json()),
+      fetch("/api/projects").then((r) => r.json()),
+      fetch("/api/resume").then((r) => r.json()),
+      fetch("/api/settings").then((r) => r.json()),
+      fetch("/api/experience").then((r) => r.json()),
+    ])
+    setSkills((sk || []).map((s: Skill) => ({ ...s, originalName: s.name })))
+    setProjects(pr || [])
+    setResumeFiles(res.files || [])
+    setActiveResume(res.active || null)
+    setSettings(set)
+    setExperienceList(Array.isArray(exp) ? exp : [])
+  }
+
+  useEffect(() => {
+    if (authed) loadAll()
+  }, [authed])
+
+  const logout = async () => {
+    const session = getAdminSession()
+    if (session) {
+      await fetch("/api/auth/session", {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${session.token}` },
+      })
     }
+    clearAdminSession()
+    setAuthed(false)
+  }
 
-    const createSkill = async (sk: Skill) => {
-        const res = await fetch("/api/skills", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ name: sk.name, level: sk.level, image: sk.image }),
-        })
-        if (res.ok) {
-            const created = await res.json()
-            setSkills(arr => arr.map(s => (s === sk ? { ...created, originalName: created.name } : s)))
-        }
-    }
-
-    const updateSkill = async (index: number) => {
-        const s = skills[index]
-        const nameToUse = s.originalName || s.name
-        const res = await fetch(`/api/skills/${encodeURIComponent(nameToUse)}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ name: s.name, level: s.level, image: s.image }),
-        })
-        if (res.ok) {
-            const updated = await res.json()
-            setSkills(arr => arr.map((x, i) => (i === index ? { ...updated, originalName: updated.name } : x)))
-        }
-    }
-
-    const deleteSkill = async (index: number) => {
-        const s = skills[index]
-        const nameToUse = s.originalName || s.name
-        const res = await fetch(`/api/skills/${encodeURIComponent(nameToUse)}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        if (res.ok) setSkills(arr => arr.filter((_, i) => i !== index))
-    }
-
-    const createProject = async (p: Project) => {
-        const res = await fetch("/api/projects", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify(p),
-        })
-        if (res.ok) {
-            const created = await res.json()
-            setProjects(arr => arr.map(x => (x === p ? created : x)))
-        }
-    }
-
-    const updateProject = async (index: number) => {
-        const p = projects[index]
-        const res = await fetch(`/api/projects/${p.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify(p),
-        })
-        if (res.ok) {
-            const updated = await res.json()
-            setProjects(arr => arr.map((x, i) => (i === index ? updated : x)))
-        }
-    }
-
-    const deleteProject = async (index: number) => {
-        const p = projects[index]
-        const res = await fetch(`/api/projects/${p.id}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        if (res.ok) setProjects(arr => arr.filter((_, i) => i !== index))
-    }
-
-    const uploadResume = async (file: File) => {
-        setUploading(true)
-        const fd = new FormData()
-        fd.append("file", file)
-        await fetch("/api/resume", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-            body: fd,
-        })
-        setUploading(false)
-        const d = await fetch("/api/resume").then((r) => r.json())
-        setResumeFiles(d.files || [])
-    }
-
-    const setActive = async (name: string) => {
-        await fetch("/api/resume", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ active: name }),
-        })
-        setActiveResume(name)
-    }
-
-    const removeResume = async (name: string) => {
-        await fetch(`/api/resume?name=${encodeURIComponent(name)}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        const d = await fetch("/api/resume").then((r) => r.json())
-        setResumeFiles(d.files || [])
-        setActiveResume(d.active || null)
-    }
-
-    if (!authed) {
-        return (
-            <main className="max-w-md mx-auto px-4 py-24 space-y-4">
-                <h1 className="text-3xl font-bold text-center">Admin Login</h1>
-                <input
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    placeholder="Enter ADMIN_TOKEN"
-                    className="w-full px-3 py-2 rounded bg-white/5 border border-white/10"
-                />
-                <button onClick={login} className="w-full px-4 py-2 rounded bg-primary text-background">Login</button>
-            </main>
-        )
-    }
-
+  if (checking) {
     return (
-        <main className="max-w-6xl mx-auto px-4 py-10 space-y-8">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Admin</h1>
-                <div className="flex items-center gap-2">
-                    <button onClick={() => setTab('skills')} className={`px-3 py-2 rounded ${tab === 'skills' ? 'bg-primary text-background' : 'bg-white/5'}`}>Skills</button>
-                    <button onClick={() => setTab('projects')} className={`px-3 py-2 rounded ${tab === 'projects' ? 'bg-primary text-background' : 'bg-white/5'}`}>Projects</button>
-                    <button onClick={() => setTab('cv')} className={`px-3 py-2 rounded ${tab === 'cv' ? 'bg-primary text-background' : 'bg-white/5'}`}>CV</button>
-                    <button onClick={logout} className="px-3 py-2 rounded bg-red-600/80">Logout</button>
-                </div>
-            </div>
-
-            {tab === 'skills' && (
-                <section className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold">Skills</h2>
-                        <button
-                            onClick={() => setSkills((s) => [...s, { name: "New Skill", level: 50 }])}
-                            className="px-3 py-2 rounded bg-primary text-background"
-                        >Add</button>
-                    </div>
-                    <div className="space-y-3">
-                        {skills.map((sk, i) => (
-                            <div key={i} className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center">
-                                <input
-                                    value={sk.name}
-                                    onChange={(e) => {
-                                        const v = e.target.value
-                                        setSkills((arr) => arr.map((x, idx) => (idx === i ? { ...x, name: v } : x)))
-                                    }}
-                                    className="px-3 py-2 rounded bg-white/5 border border-white/10"
-                                />
-                                <input
-                                    type="number"
-                                    value={sk.level}
-                                    onChange={(e) => {
-                                        const v = Number(e.target.value)
-                                        setSkills((arr) => arr.map((x, idx) => (idx === i ? { ...x, level: v } : x)))
-                                    }}
-                                    className="px-3 py-2 rounded bg-white/5 border border-white/10"
-                                />
-                                <input
-                                    value={sk.image || ""}
-                                    onChange={(e) => {
-                                        const v = e.target.value
-                                        setSkills((arr) => arr.map((x, idx) => (idx === i ? { ...x, image: v } : x)))
-                                    }}
-                                    placeholder="Image URL (optional)"
-                                    className="px-3 py-2 rounded bg-white/5 border border-white/10"
-                                />
-                                <button
-                                    onClick={() => (sk.originalName ? updateSkill(i) : createSkill(sk))}
-                                    className="px-3 py-2 rounded bg-primary text-background"
-                                >Save</button>
-                                <button
-                                    onClick={() => (sk.originalName ? deleteSkill(i) : setSkills(arr => arr.filter((_, idx) => idx !== i)))}
-                                    className="px-3 py-2 rounded bg-red-600/80"
-                                >Remove</button>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {tab === 'projects' && (
-                <section className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold">Projects</h2>
-                        <button
-                            onClick={() => setProjects((p) => [
-                                ...p,
-                                { id: Date.now(), title: "New Project", description: "", tags: [] },
-                            ])}
-                            className="px-3 py-2 rounded bg-primary text-background"
-                        >Add</button>
-                    </div>
-                    <div className="space-y-3">
-                        {projects.map((pr, i) => (
-                            <div key={pr.id} className="space-y-2 border border-white/10 rounded p-3">
-                                <input value={pr.title} onChange={(e) => {
-                                    const v = e.target.value
-                                    setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, title: v } : x)))
-                                }} className="w-full px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                <textarea value={pr.description} onChange={(e) => {
-                                    const v = e.target.value
-                                    setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, description: v } : x)))
-                                }} className="w-full px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                <input value={(pr.tags || []).join(', ')} onChange={(e) => {
-                                    const v = e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
-                                    setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, tags: v } : x)))
-                                }} placeholder="Tags (comma separated)" className="w-full px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                <input value={pr.image || ''} onChange={(e) => {
-                                    const v = e.target.value
-                                    setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, image: v } : x)))
-                                }} placeholder="Image URL" className="w-full px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                <input value={pr.details || ''} onChange={(e) => {
-                                    const v = e.target.value
-                                    setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, details: v } : x)))
-                                }} placeholder="Details" className="w-full px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    <input value={pr.link || ''} onChange={(e) => {
-                                        const v = e.target.value
-                                        setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, link: v } : x)))
-                                    }} placeholder="Live Link" className="px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                    <input value={pr.github || ''} onChange={(e) => {
-                                        const v = e.target.value
-                                        setProjects((arr) => arr.map((x, idx) => (idx === i ? { ...x, github: v } : x)))
-                                    }} placeholder="GitHub Link" className="px-3 py-2 rounded bg-white/5 border border-white/10" />
-                                </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => updateProject(i)} className="px-3 py-2 rounded bg-primary text-background">Save</button>
-                                    <button onClick={() => deleteProject(i)} className="px-3 py-2 rounded bg-red-600/80">Remove</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {tab === 'cv' && (
-                <section className="space-y-4">
-                    <h2 className="text-xl font-semibold">Resume PDFs</h2>
-                    <input type="file" accept="application/pdf" onChange={(e) => {
-                        const f = e.target.files?.[0]
-                        if (f) uploadResume(f)
-                    }} />
-                    {uploading && <div>Uploading...</div>}
-                    <div className="space-y-2">
-                        {resumeFiles.map((name) => (
-                            <div key={name} className="flex items-center gap-3">
-                                <span className="flex-1">{name}{activeResume === name ? " (active)" : ""}</span>
-                                <button onClick={() => setActive(name)} className="px-3 py-2 rounded bg-primary text-background">Set Active</button>
-                                <button onClick={() => removeResume(name)} className="px-3 py-2 rounded bg-red-600/80">Delete</button>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-        </main>
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-sm text-[#94A3B8]">Checking session…</p>
+      </main>
     )
+  }
+
+  if (!authed) {
+    return <AdminLogin onSuccess={() => { setAuthed(true); setChecking(false) }} />
+  }
+
+  const saveProject = async (p: Project, index: number) => {
+    setSaving(true)
+    const isNew = p.id > 1_000_000_000_000
+    const res = await fetch(isNew ? "/api/projects" : `/api/projects/${p.id}`, {
+      method: isNew ? "POST" : "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(p),
+    })
+    if (res.ok) {
+      const saved = await res.json()
+      setProjects((arr) => arr.map((x, i) => (i === index ? saved : x)))
+    }
+    setSaving(false)
+  }
+
+  const createProject = () => {
+    setProjects((p) => [
+      ...p,
+      { id: Date.now(), title: "New Project", description: "", tags: [], featured: false },
+    ])
+    setTab("projects")
+  }
+
+  const deleteProject = async (index: number) => {
+    const p = projects[index]
+    if (p.id > 1e12) {
+      setProjects((arr) => arr.filter((_, i) => i !== index))
+      return
+    }
+    await fetch(`/api/projects/${p.id}`, { method: "DELETE", headers: authHeaders() })
+    setProjects((arr) => arr.filter((_, i) => i !== index))
+  }
+
+  const toggleFeatured = async (index: number) => {
+    const p = { ...projects[index], featured: !projects[index].featured }
+    setProjects((arr) => arr.map((x, i) => (i === index ? p : x)))
+    if (p.id <= 1e12) await saveProject(p, index)
+  }
+
+  const saveSkill = async (sk: Skill, index: number) => {
+    const isNew = !sk.originalName
+    const res = await fetch(isNew ? "/api/skills" : `/api/skills/${encodeURIComponent(sk.originalName!)}`, {
+      method: isNew ? "POST" : "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify({ name: sk.name, level: sk.level, image: sk.image }),
+    })
+    if (res.ok) {
+      const saved = await res.json()
+      setSkills((arr) => arr.map((x, i) => (i === index ? { ...saved, originalName: saved.name } : x)))
+    }
+  }
+
+  const uploadResume = async (file: File) => {
+    setUploading(true)
+    const fd = new FormData()
+    fd.append("file", file)
+    await fetch("/api/resume", { method: "POST", headers: authHeaders(), body: fd })
+    const d = await fetch("/api/resume").then((r) => r.json())
+    setResumeFiles(d.files || [])
+    setUploading(false)
+  }
+
+  const saveSettings = async () => {
+    if (!settings) return
+    setSaving(true)
+    const payload = {
+      ...settings,
+      social: {
+        ...settings.social,
+        email: settings.email.startsWith("mailto:") ? settings.social.email : `mailto:${settings.email}`,
+      },
+    }
+    const res = await fetch("/api/settings", { method: "PUT", headers: authHeaders(), body: JSON.stringify(payload) })
+    if (res.ok) setSettings(await res.json())
+    setSaving(false)
+  }
+
+  const saveExperience = async (exp: Experience, index: number) => {
+    setSaving(true)
+    const isNew = exp.id.startsWith("new-")
+    const res = await fetch(isNew ? "/api/experience" : `/api/experience/${exp.id}`, {
+      method: isNew ? "POST" : "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(exp),
+    })
+    if (res.ok) {
+      const saved = await res.json()
+      setExperienceList((arr) => arr.map((x, i) => (i === index ? saved : x)))
+    }
+    setSaving(false)
+  }
+
+  const deleteExperience = async (index: number) => {
+    const exp = experienceList[index]
+    if (exp.id.startsWith("new-")) {
+      setExperienceList((arr) => arr.filter((_, i) => i !== index))
+      return
+    }
+    await fetch(`/api/experience/${exp.id}`, { method: "DELETE", headers: authHeaders() })
+    setExperienceList((arr) => arr.filter((_, i) => i !== index))
+  }
+
+  const addExperience = () => {
+    setExperienceList((list) => [
+      {
+        id: `new-${Date.now()}`,
+        role: "Full Stack Software Engineer",
+        company: "Company Name",
+        period: "2025 — Present",
+        location: "Remote",
+        description: "",
+        achievements: [""],
+        technologies: [],
+      },
+      ...list,
+    ])
+    setTab("experience")
+  }
+
+  const updateExp = (index: number, patch: Partial<Experience>) => {
+    setExperienceList((arr) => arr.map((x, i) => (i === index ? { ...x, ...patch } : x)))
+  }
+
+  return (
+    <AdminShell
+      tab={tab}
+      onTab={setTab}
+      onLogout={logout}
+      stats={{ projects: projects.length, skills: skills.length, resumes: resumeFiles.length, experience: experienceList.length }}
+    >
+      {tab === "overview" && (
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-semibold mb-1">Dashboard</h1>
+            <p className="text-sm text-[#94A3B8]">Manage your portfolio content in one place.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard label="Experience" value={experienceList.length} />
+            <StatCard label="Projects" value={projects.length} sub={`${projects.filter((p) => p.featured).length} featured`} />
+            <StatCard label="Skills" value={skills.length} />
+            <StatCard label="Resumes" value={resumeFiles.length} sub={activeResume || "None active"} />
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <button type="button" onClick={() => setTab("profile")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
+              <p className="font-medium">Edit profile</p>
+              <p className="text-xs text-[#94A3B8] mt-1">Name, hero, contact, links</p>
+            </button>
+            <button type="button" onClick={addExperience} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
+              <p className="font-medium">Add experience</p>
+              <p className="text-xs text-[#94A3B8] mt-1">Company roles & achievements</p>
+            </button>
+            <button type="button" onClick={createProject} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
+              <p className="font-medium">Add project</p>
+              <p className="text-xs text-[#94A3B8] mt-1">Case studies & demos</p>
+            </button>
+            <button type="button" onClick={() => setTab("resume")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
+              <p className="font-medium">Upload resume</p>
+              <p className="text-xs text-[#94A3B8] mt-1">Active CV PDF</p>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {tab === "projects" && (
+        <Panel
+          title="Projects"
+          action={
+            <button type="button" onClick={createProject} className="btn-primary !py-1.5 !px-3 !text-xs">
+              <Plus className="h-3.5 w-3.5" /> Add
+            </button>
+          }
+        >
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+            {projects.map((pr, i) => (
+              <div key={pr.id} className="rounded-lg border border-white/[0.08] p-4 space-y-3 bg-[#111827]/50">
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    onClick={() => toggleFeatured(i)}
+                    className={cn(
+                      "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border transition-colors",
+                      pr.featured ? "border-[#3B82F6] text-[#3B82F6] bg-[#3B82F6]/10" : "border-white/[0.08] text-[#94A3B8]"
+                    )}
+                  >
+                    <Star className={cn("h-3.5 w-3.5", pr.featured && "fill-current")} /> Featured
+                  </button>
+                  <button type="button" onClick={() => deleteProject(i)} className="text-[#94A3B8] hover:text-red-400 p-1">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <input className="input-premium" value={pr.title} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, title: e.target.value } : x)))} placeholder="Title" />
+                <textarea className="input-premium resize-none" rows={2} value={pr.description} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, description: e.target.value } : x)))} placeholder="Description" />
+                <input className="input-premium" value={(pr.tags || []).join(", ")} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, tags: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) } : x)))} placeholder="Tags (comma separated)" />
+                <input className="input-premium" value={pr.image || ""} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, image: e.target.value } : x)))} placeholder="Image URL (Cloudinary, etc.)" />
+                <div className="grid sm:grid-cols-2 gap-2">
+                  <input className="input-premium" value={pr.link || ""} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, link: e.target.value } : x)))} placeholder="Live demo URL" />
+                  <input className="input-premium" value={pr.github || ""} onChange={(e) => setProjects((a) => a.map((x, j) => (j === i ? { ...x, github: e.target.value } : x)))} placeholder="GitHub URL" />
+                </div>
+                <button type="button" disabled={saving} onClick={() => saveProject(pr, i)} className="btn-primary !text-xs">
+                  {saving ? "Saving…" : "Save project"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      {tab === "skills" && (
+        <Panel
+          title="Skills"
+          action={
+            <button type="button" onClick={() => setSkills((s) => [...s, { name: "New Skill", level: 80 }])} className="btn-primary !py-1.5 !px-3 !text-xs">
+              <Plus className="h-3.5 w-3.5" /> Add
+            </button>
+          }
+        >
+          <div className="space-y-3">
+            {skills.map((sk, i) => (
+              <div key={i} className="grid sm:grid-cols-4 gap-2 items-center">
+                <input className="input-premium" value={sk.name} onChange={(e) => setSkills((a) => a.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
+                <input type="number" min={0} max={100} className="input-premium" value={sk.level} onChange={(e) => setSkills((a) => a.map((x, j) => (j === i ? { ...x, level: Number(e.target.value) } : x)))} />
+                <input className="input-premium sm:col-span-1" value={sk.image || ""} onChange={(e) => setSkills((a) => a.map((x, j) => (j === i ? { ...x, image: e.target.value } : x)))} placeholder="Icon URL" />
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => saveSkill(sk, i)} className="btn-primary flex-1 !text-xs">Save</button>
+                  <button
+                    type="button"
+                    onClick={() => (sk.originalName ? fetch(`/api/skills/${encodeURIComponent(sk.originalName)}`, { method: "DELETE", headers: authHeaders() }).then(() => setSkills((a) => a.filter((_, j) => j !== i))) : setSkills((a) => a.filter((_, j) => j !== i)))}
+                    className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
+
+      {tab === "resume" && (
+        <Panel title="Resume / CV">
+          <div className="space-y-4">
+            <label className="block">
+              <span className="text-xs text-[#94A3B8] mb-2 block">Upload PDF</span>
+              <input
+                type="file"
+                accept="application/pdf"
+                className="text-sm text-[#94A3B8] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#3B82F6] file:text-white file:text-sm file:font-medium"
+                onChange={(e) => {
+                  const f = e.target.files?.[0]
+                  if (f) uploadResume(f)
+                }}
+              />
+            </label>
+            {uploading && <p className="text-xs text-[#3B82F6]">Uploading…</p>}
+            <div className="space-y-2">
+              {resumeFiles.map((name) => (
+                <div key={name} className="flex items-center gap-3 p-3 rounded-lg bg-[#111827] border border-white/[0.06]">
+                  <span className="flex-1 text-sm truncate">{name}</span>
+                  {activeResume === name && <span className="text-[10px] text-[#22C55E] uppercase font-medium">Active</span>}
+                  <button type="button" onClick={async () => { await fetch("/api/resume", { method: "PUT", headers: authHeaders(), body: JSON.stringify({ active: name }) }); setActiveResume(name) }} className="btn-secondary !text-xs !py-1.5">Set active</button>
+                  <button type="button" onClick={async () => { await fetch(`/api/resume?name=${encodeURIComponent(name)}`, { method: "DELETE", headers: authHeaders() }); loadAll() }} className="text-red-400 text-xs">Delete</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Panel>
+      )}
+
+      {tab === "profile" && settings && (
+        <Panel title="Profile, hero & contact" action={<button type="button" disabled={saving} onClick={saveSettings} className="btn-primary !py-1.5 !px-3 !text-xs">{saving ? "Saving…" : "Save & publish"}</button>}>
+          <p className="text-xs text-[#94A3B8] mb-6">Changes appear on the live site immediately after saving.</p>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">Full name</label>
+              <input className="input-premium" value={settings.name} onChange={(e) => setSettings({ ...settings, name: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">Job title</label>
+              <input className="input-premium" value={settings.title} onChange={(e) => setSettings({ ...settings, title: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">Hero tagline (under name)</label>
+              <input className="input-premium" value={settings.tagline} onChange={(e) => setSettings({ ...settings, tagline: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">Hero headline (main paragraph)</label>
+              <textarea className="input-premium resize-none" rows={2} value={settings.headline} onChange={(e) => setSettings({ ...settings, headline: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">About summary</label>
+              <textarea className="input-premium resize-none" rows={3} value={settings.description} onChange={(e) => setSettings({ ...settings, description: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">Email</label>
+              <input className="input-premium" type="email" value={settings.email} onChange={(e) => setSettings({ ...settings, email: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">Phone</label>
+              <input className="input-premium" value={settings.phone} onChange={(e) => setSettings({ ...settings, phone: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">Location</label>
+              <input className="input-premium" value={settings.location} onChange={(e) => setSettings({ ...settings, location: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-[#94A3B8] mb-1 block">GitHub username</label>
+              <input
+                className="input-premium"
+                value={settings.githubUsername}
+                onChange={(e) => {
+                  const u = e.target.value.replace(/^@/, "").trim()
+                  setSettings({
+                    ...settings,
+                    githubUsername: u,
+                    social: { ...settings.social, github: `https://github.com/${u}` },
+                  })
+                }}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">Education</label>
+              <input className="input-premium" value={settings.education} onChange={(e) => setSettings({ ...settings, education: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">GitHub profile URL</label>
+              <input className="input-premium" value={settings.social.github} onChange={(e) => setSettings({ ...settings, social: { ...settings.social, github: e.target.value } })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs text-[#94A3B8] mb-1 block">LinkedIn URL</label>
+              <input className="input-premium" value={settings.social.linkedin} onChange={(e) => setSettings({ ...settings, social: { ...settings.social, linkedin: e.target.value } })} />
+            </div>
+            <div className="flex items-center gap-2 sm:col-span-2">
+              <input type="checkbox" id="avail" checked={settings.available} onChange={(e) => setSettings({ ...settings, available: e.target.checked })} className="rounded" />
+              <label htmlFor="avail" className="text-sm">Available for work (shows on site & contact)</label>
+            </div>
+          </div>
+        </Panel>
+      )}
+
+      {tab === "experience" && (
+        <Panel
+          title="Work experience"
+          action={
+            <button type="button" onClick={addExperience} className="btn-primary !py-1.5 !px-3 !text-xs">
+              <Plus className="h-3.5 w-3.5" /> Add company
+            </button>
+          }
+        >
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+            {experienceList.map((exp, i) => (
+              <div key={exp.id} className="rounded-lg border border-white/[0.08] p-4 space-y-3 bg-[#111827]/50">
+                <div className="flex justify-end">
+                  <button type="button" onClick={() => deleteExperience(i)} className="text-[#94A3B8] hover:text-red-400">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  <input className="input-premium" value={exp.role} onChange={(e) => updateExp(i, { role: e.target.value })} placeholder="Role" />
+                  <input className="input-premium" value={exp.company} onChange={(e) => updateExp(i, { company: e.target.value })} placeholder="Company" />
+                  <input className="input-premium" value={exp.period} onChange={(e) => updateExp(i, { period: e.target.value })} placeholder="Period" />
+                  <input className="input-premium" value={exp.location} onChange={(e) => updateExp(i, { location: e.target.value })} placeholder="Location" />
+                </div>
+                <textarea className="input-premium resize-none" rows={2} value={exp.description} onChange={(e) => updateExp(i, { description: e.target.value })} placeholder="Description" />
+                <div>
+                  <label className="text-xs text-[#94A3B8] mb-1 block">Achievements (one per line)</label>
+                  <textarea
+                    className="input-premium resize-none font-mono text-xs"
+                    rows={4}
+                    value={exp.achievements.join("\n")}
+                    onChange={(e) => updateExp(i, { achievements: e.target.value.split("\n").filter(Boolean) })}
+                  />
+                </div>
+                <input
+                  className="input-premium"
+                  value={exp.technologies.join(", ")}
+                  onChange={(e) => updateExp(i, { technologies: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })}
+                  placeholder="Technologies (comma separated)"
+                />
+                <button type="button" disabled={saving} onClick={() => saveExperience(exp, i)} className="btn-primary !text-xs">
+                  {saving ? "Saving…" : "Save experience"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </Panel>
+      )}
+    </AdminShell>
+  )
 }
-
-

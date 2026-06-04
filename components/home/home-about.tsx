@@ -1,82 +1,82 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { motion, useInView } from "framer-motion"
+import { motion } from "framer-motion"
+import { Cloud, Code2, Database, Layers, Zap } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { TiltCard } from "@/components/ui/tilt-card"
-import { siteConfig } from "@/lib/site"
+import { usePublicProfile } from "@/components/providers/site-content-provider"
+import { engineeringMetrics } from "@/lib/site"
+import { copy } from "@/lib/copy"
+import { fadeUp, staggerContainer } from "@/lib/motion"
 
-function Counter({ value, suffix }: { value: number; suffix: string }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!inView) return
-    let start = 0
-    const duration = 1500
-    const step = Math.ceil(value / (duration / 16))
-    const timer = setInterval(() => {
-      start += step
-      if (start >= value) {
-        setCount(value)
-        clearInterval(timer)
-      } else setCount(start)
-    }, 16)
-    return () => clearInterval(timer)
-  }, [inView, value])
-
-  return (
-    <span ref={ref} className="font-display text-3xl sm:text-4xl font-semibold text-gradient">
-      {count}
-      {suffix}
-    </span>
-  )
-}
+const pillars = [
+  { icon: Layers, title: "End-to-end delivery", desc: "From API design to deployment — one owner, fewer handoffs." },
+  { icon: Code2, title: "Backend & APIs", desc: "REST, queues, and integrations your mobile and web clients consume reliably." },
+  { icon: Cloud, title: "AWS & DevOps", desc: "Serverless, containers, CI/CD — environments clients can audit." },
+  { icon: Database, title: "Data layer", desc: "PostgreSQL, MongoDB, Redis — schemas and queries tuned for real traffic." },
+  { icon: Zap, title: "Web3 when you need it", desc: "Indexers, wallets, contracts — production experience on Verana & UniLabs." },
+]
 
 export function HomeAbout() {
+  const profile = usePublicProfile()
+
   return (
-    <section id="about" className="section-pad relative">
+    <section id="about" className="section-pad border-t border-white/[0.06]">
       <div className="section-shell">
         <SectionHeading
-          label="About"
-          title="Engineer. Builder. Product thinker."
-          description="I craft premium digital experiences where engineering excellence meets cinematic design — MERN, AI, and cloud at scale."
+          label={copy.sections.about.label}
+          title={copy.sections.about.title}
+          description={copy.sections.about.description}
         />
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-          <TiltCard className="gradient-border rounded-2xl">
-            <PremiumCard hover={false} className="border-0 bg-transparent shadow-none">
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                I&apos;m <span className="text-white font-medium">{siteConfig.name}</span>, a full stack MERN
-                developer and AI engineer based in {siteConfig.location}. I partner with startups and enterprises to
-                ship products that feel world-class — not like templates.
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-start mb-20">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <PremiumCard hover={false} spotlight>
+              <p className="text-[#94A3B8] leading-relaxed mb-5 text-base">
+                I&apos;m <span className="text-[#F8FAFC] font-semibold">{profile.name}</span>, a{" "}
+                {profile.title.toLowerCase()} in {profile.location}. {profile.description}
               </p>
-              <p className="text-muted-foreground leading-relaxed">
-                From e-commerce platforms and fintech dashboards to blockchain systems and AI integrations — I own the
-                full stack with obsessive attention to performance, UX, and maintainable architecture.
+              <p className="text-xs font-mono text-[#06B6D4] border-l-2 border-[#3B82F6]/50 pl-4">
+                {profile.education}
               </p>
             </PremiumCard>
-          </TiltCard>
+          </motion.div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {siteConfig.stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <PremiumCard className="text-center py-8">
-                  <Counter value={stat.value} suffix={stat.suffix} />
-                  <p className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</p>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-2 gap-3"
+          >
+            {engineeringMetrics.map((m) => (
+              <motion.div key={m.label} variants={fadeUp}>
+                <PremiumCard className="text-center py-7 !p-5" spotlight>
+                  <p className="text-2xl font-bold text-[#F8FAFC] tabular-nums">{m.value}</p>
+                  <p className="text-[11px] text-[#64748B] mt-2 leading-tight">{m.label}</p>
                 </PremiumCard>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
+          {pillars.map((p) => (
+            <motion.div key={p.title} variants={fadeUp}>
+              <PremiumCard className="h-full" spotlight>
+                <p.icon className="h-5 w-5 text-[#3B82F6] mb-5" strokeWidth={1.75} />
+                <h3 className="text-base font-bold text-[#F8FAFC] mb-2">{p.title}</h3>
+                <p className="text-sm text-[#94A3B8] leading-relaxed">{p.desc}</p>
+              </PremiumCard>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )

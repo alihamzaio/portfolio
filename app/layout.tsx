@@ -1,78 +1,37 @@
 import type React from "react"
-import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { Space_Grotesk } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { StructuredData } from "@/components/structured-data"
-import { siteConfig } from "@/lib/site"
+import { buildRootMetadata } from "@/lib/seo"
 import "./globals.css"
 
-const geistSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-inter",
+  display: "swap",
 })
 
-const geistMono = Geist_Mono({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
+  display: "swap",
 })
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-})
+export const metadata = buildRootMetadata()
 
-export const viewport: Viewport = {
-  themeColor: "#050505",
-  width: "device-width",
-  initialScale: 1,
-}
-
-export const metadata: Metadata = {
-  title: {
-    default: `${siteConfig.name} — ${siteConfig.title}`,
-    template: `%s — ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: [
-    siteConfig.name,
-    "Full Stack Developer",
-    "MERN Stack",
-    "AWS Engineer",
-    "Next.js",
-    "Serverless",
-    "TypeScript",
-  ],
-  authors: [{ name: siteConfig.name, url: siteConfig.url }],
-  creator: siteConfig.name,
-  metadataBase: new URL(siteConfig.url),
-  openGraph: {
-    type: "website",
-    url: siteConfig.url,
-    title: `${siteConfig.name} — Premium Full Stack Engineer`,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    locale: "en_US",
-    images: [{ url: "/icon.png", width: 1200, height: 630, alt: siteConfig.name }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${siteConfig.name} — MERN + AWS`,
-    description: siteConfig.description,
-    images: ["/icon.png"],
-  },
-  robots: { index: true, follow: true },
-  icons: { icon: "/favicon.ico", apple: "/apple.png" },
-}
+export { viewport } from "@/lib/viewport"
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <StructuredData />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased noise-overlay`}
         suppressHydrationWarning
       >
         {children}

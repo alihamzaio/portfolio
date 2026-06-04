@@ -1,14 +1,15 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { pageTransition } from "@/lib/motion"
 
 export default function SiteTemplate({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      initial={pageTransition.initial}
+      animate={pageTransition.animate}
+      exit={pageTransition.exit}
+      transition={pageTransition.transition}
     >
       {children}
     </motion.div>

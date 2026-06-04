@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readJsonFile, writeJsonFile, requireAdminToken } from '@/lib/admin'
+import { readJsonFile, requireAdminAuth } from '@/lib/admin'
 import { getStoreJson, setStoreJson } from '@/lib/store'
 
 const JSON_PATH = 'lib/skill.json'
@@ -15,7 +15,7 @@ export async function GET(_: NextRequest, ctx: { params: Promise<{ name: string 
 
 export async function PUT(req: NextRequest, ctx: { params: Promise<{ name: string }> }) {
     const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!requireAdminToken(auth)) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
     const body = await req.json()
     const { level, image, name } = body || {}
     const { name: paramName } = await ctx.params
@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ name: strin
 
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ name: string }> }) {
     const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!requireAdminToken(auth)) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
     const { name } = await ctx.params
     const kv = await getStoreJson('skills')
     const skills = Array.isArray(kv) ? kv : await readJsonFile<any[]>(JSON_PATH).catch(() => [])

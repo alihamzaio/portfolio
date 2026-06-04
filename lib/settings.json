@@ -1,0 +1,19 @@
+{
+  "name": "Ali Hamza",
+  "title": "Full Stack Software Engineer",
+  "tagline": "MERN · AWS Serverless · Blockchain",
+  "headline": "I help teams ship MERN applications, AWS backends, and blockchain features — with maintainable code and clear communication.",
+  "description": "Full Stack Software Engineer (3+ years). Built production systems at Birxment, Exec9, and Explore Logics — REST APIs, AWS serverless, blockchain indexers, and e-commerce/Web3 UIs. Based in Lahore, Pakistan; available remote.",
+  "email": "hamzasarwer9@gmail.com",
+  "phone": "+92 309 7300913",
+  "location": "Lahore, Pakistan",
+  "education": "B.S. Computer Science — University of Education (2019–2023)",
+  "available": true,
+  "githubUsername": "alihamzaio",
+  "social": {
+    "github": "https://github.com/alihamzaio",
+    "linkedin": "https://www.linkedin.com/in/alihamza-fullstack-developer",
+    "email": "mailto:hamzasarwer9@gmail.com"
+  }
+}
+

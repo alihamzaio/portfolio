@@ -29,7 +29,7 @@ export function BlogContent() {
             viewport={{ once: true }}
             className="mb-10"
           >
-            <PremiumCard glow className="p-8 md:p-10">
+            <PremiumCard className="p-8 md:p-10">
               <span className="text-xs font-mono text-[#00FFB2] uppercase tracking-widest">{featured.category}</span>
               <h2 className="font-display text-2xl md:text-3xl font-semibold text-white mt-3 mb-3">{featured.title}</h2>
               <p className="text-muted-foreground leading-relaxed max-w-2xl mb-6">{featured.excerpt}</p>

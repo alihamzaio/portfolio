@@ -44,7 +44,15 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           animate={{ opacity: 1, y: 0 }}
           className="relative rounded-3xl overflow-hidden mb-12 aspect-[21/9] min-h-[240px] border border-white/[0.06]"
         >
-          <Image src={project.image} alt={project.title} fill className="object-cover" priority unoptimized />
+          <Image
+            src={project.image}
+            alt={`${project.title} — project screenshot by Ali Hamza`}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+            unoptimized
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
             <p className="text-xs font-mono tracking-widest uppercase text-[#00FFB2] mb-3">Case Study</p>
@@ -99,7 +107,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
                 <ExternalLink className="h-4 w-4" /> Live demo
               </MagneticButton>
               {project.github !== "#" && (
-                <MagneticButton href={project.github} variant="outline">
+                <MagneticButton href={project.github} variant="secondary">
                   <Github className="h-4 w-4" /> Source code
                 </MagneticButton>
               )}

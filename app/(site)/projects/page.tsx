@@ -1,11 +1,30 @@
-import type { Metadata } from "next"
 import { ProjectsGrid } from "@/components/pages/projects-grid"
+import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
+import { buildPageMetadata } from "@/lib/seo"
+import { siteConfig } from "@/lib/site"
 
-export const metadata: Metadata = {
-  title: "Projects",
-  description: "Premium case studies — MERN + AWS production applications.",
-}
+export const metadata = buildPageMetadata({
+  title: "Projects & Case Studies",
+  description: `Portfolio projects by ${siteConfig.name}: blockchain indexers (Verana), healthcare platforms (HealOps), e-commerce, Web3, and AWS serverless systems.`,
+  path: "/projects",
+  keywords: [
+    "Ali Hamza projects",
+    "MERN stack portfolio",
+    "blockchain project portfolio",
+    "full stack case studies",
+  ],
+})
 
 export default function ProjectsPage() {
-  return <ProjectsGrid />
+  return (
+    <>
+      <PageBreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Projects", path: "/projects" },
+        ]}
+      />
+      <ProjectsGrid />
+    </>
+  )
 }

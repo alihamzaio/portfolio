@@ -33,12 +33,21 @@ async function kvSet(key: string, value: JsonValue): Promise<void> {
     })
 }
 
-function filePathFor(key: 'skills' | 'projects') {
-    const rel = key === 'skills' ? 'lib/skill.json' : 'lib/projects.json'
+type StoreKey = 'skills' | 'projects' | 'settings' | 'experience'
+
+function filePathFor(key: StoreKey) {
+    const rel =
+        key === 'skills'
+            ? 'lib/skill.json'
+            : key === 'projects'
+              ? 'lib/projects.json'
+              : key === 'experience'
+                ? 'lib/experience.json'
+                : 'lib/settings.json'
     return path.join(process.cwd(), rel)
 }
 
-export async function getStoreJson(key: 'skills' | 'projects'): Promise<JsonValue | null> {
+export async function getStoreJson(key: StoreKey): Promise<JsonValue | null> {
     if (hasVercelKV || hasUpstash) {
         return await kvGet(`portfolio:${key}`)
     }
@@ -50,7 +59,7 @@ export async function getStoreJson(key: 'skills' | 'projects'): Promise<JsonValu
     }
 }
 
-export async function setStoreJson(key: 'skills' | 'projects', value: JsonValue): Promise<void> {
+export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<void> {
     if (hasVercelKV || hasUpstash) {
         await kvSet(`portfolio:${key}`, value)
         return

@@ -1,11 +1,24 @@
-import type { Metadata } from "next"
 import { TechStackContent } from "@/components/pages/tech-stack-content"
+import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
+import { buildPageMetadata } from "@/lib/seo"
+import { siteConfig } from "@/lib/site"
 
-export const metadata: Metadata = {
-  title: "Tech Stack",
-  description: "Frontend, backend, cloud, databases, DevOps — the full MERN + AWS toolkit.",
-}
+export const metadata = buildPageMetadata({
+  title: "Tech Stack & Skills",
+  description: `${siteConfig.name}'s tech stack: React, Next.js, Node.js, TypeScript, AWS Lambda, Docker, PostgreSQL, MongoDB, Solidity, and Moleculer microservices.`,
+  path: "/tech-stack",
+})
 
 export default function TechStackPage() {
-  return <TechStackContent />
+  return (
+    <>
+      <PageBreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Tech Stack", path: "/tech-stack" },
+        ]}
+      />
+      <TechStackContent />
+    </>
+  )
 }

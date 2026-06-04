@@ -2,47 +2,53 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import type { MouseEvent } from "react"
 import { motion } from "framer-motion"
 import { Home, User, Layers, Briefcase, Mail } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
 
 const dockItems = [
-  { href: "/#home", icon: Home, label: "Home", id: "home" },
-  { href: "/#about", icon: User, label: "About", id: "about" },
-  { href: "/#skills", icon: Layers, label: "Skills", id: "skills" },
-  { href: "/#projects", icon: Briefcase, label: "Work", id: "projects" },
-  { href: "/#contact", icon: Mail, label: "Contact", id: "contact" },
+  { href: "/#home", icon: Home, label: "Home" },
+  { href: "/#about", icon: User, label: "About" },
+  { href: "/#skills", icon: Layers, label: "Skills" },
+  { href: "/#projects", icon: Briefcase, label: "Work" },
+  { href: "/#contact", icon: Mail, label: "Contact" },
 ]
 
 export function MobileDock() {
   const pathname = usePathname()
   const isHome = pathname === "/"
+  if (!isHome) return null
 
-  const handleClick = (e: React.MouseEvent, href: string) => {
-    if (isHome && href.startsWith("/#")) {
+  const handleClick = (e: MouseEvent, href: string) => {
+    if (shouldSmoothScrollHash(href, pathname)) {
       e.preventDefault()
-      document.getElementById(href.replace("/#", ""))?.scrollIntoView({ behavior: "smooth" })
+      scrollToSection(href)
+      window.history.pushState(null, "", href)
     }
   }
 
-  if (!isHome) return null
-
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 xl:hidden px-2 w-full max-w-md" aria-label="Mobile dock">
-      <div className="flex items-center justify-between gap-0.5 px-2 py-2 rounded-2xl glass-nav border border-white/[0.08] shadow-2xl">
-        {dockItems.map(({ href, icon: Icon, label, id }) => (
+    <motion.nav
+      initial={{ y: 24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.5, duration: 0.5 }}
+      className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 lg:hidden w-[calc(100%-2rem)] max-w-md"
+      aria-label="Mobile navigation"
+    >
+      <div className="flex items-center justify-around py-2.5 px-2 rounded-2xl glass-nav shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        {dockItems.map(({ href, icon: Icon, label }) => (
           <Link
-            key={id}
-            href={href}
+            key={href}
+            href={resolveNavHref(href, pathname)}
             onClick={(e) => handleClick(e, href)}
+            className="flex flex-col items-center py-1 px-3 text-[#64748B] hover:text-[#3B82F6] transition-colors duration-300"
             aria-label={label}
-            className="relative flex flex-col items-center justify-center flex-1 py-2 rounded-xl text-muted-foreground hover:text-[#60A5FA] transition-colors"
           >
-            <Icon className="h-5 w-5" />
-            <span className="text-[9px] mt-0.5 font-medium">{label}</span>
+            <Icon className="h-5 w-5" strokeWidth={1.75} />
           </Link>
         ))}
       </div>
-    </nav>
+    </motion.nav>
   )
 }
