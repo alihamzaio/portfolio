@@ -10,9 +10,17 @@ interface MagneticButtonProps {
   onClick?: () => void
   href?: string
   variant?: "primary" | "ghost" | "outline"
+  type?: "button" | "submit"
 }
 
-export function MagneticButton({ children, className, onClick, href, variant = "primary" }: MagneticButtonProps) {
+export function MagneticButton({
+  children,
+  className,
+  onClick,
+  href,
+  variant = "primary",
+  type = "button",
+}: MagneticButtonProps) {
   const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
 
   const handleMove = (e: MouseEvent) => {
@@ -21,7 +29,7 @@ export function MagneticButton({ children, className, onClick, href, variant = "
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left - rect.width / 2
     const y = e.clientY - rect.top - rect.height / 2
-    el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`
+    el.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`
   }
 
   const handleLeave = () => {
@@ -29,12 +37,12 @@ export function MagneticButton({ children, className, onClick, href, variant = "
   }
 
   const base = cn(
-    "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-300",
+    "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300",
     variant === "primary" &&
-      "bg-[#00FFB2] text-[#050505] hover:shadow-[0_0_32px_rgba(0,255,178,0.45)] hover:bg-[#7CFFCB]",
+      "bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] text-white hover:shadow-[0_0_40px_rgba(59,130,246,0.4)]",
     variant === "outline" &&
-      "border border-white/[0.1] bg-transparent text-foreground hover:border-[#00FFB2]/40 hover:bg-[#00FFB2]/5",
-    variant === "ghost" && "text-muted-foreground hover:text-[#00FFB2]",
+      "border border-white/10 bg-white/5 text-white hover:border-[#3B82F6]/40 hover:bg-[#3B82F6]/10",
+    variant === "ghost" && "text-muted-foreground hover:text-[#60A5FA]",
     className
   )
 
@@ -56,6 +64,7 @@ export function MagneticButton({ children, className, onClick, href, variant = "
   return (
     <motion.button
       ref={ref as React.RefObject<HTMLButtonElement>}
+      type={type}
       onClick={onClick}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}

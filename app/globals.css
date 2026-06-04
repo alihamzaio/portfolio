@@ -4,35 +4,35 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --bg-deep: #050505;
-  --bg-carbon: #0f0f10;
-  --bg-surface: #111111;
-  --bg-elevated: #18181b;
-  --emerald: #00ffb2;
-  --emerald-dark: #00c896;
-  --emerald-soft: #7cffcb;
-  --metallic: #a1a1aa;
-  --text-primary: #ffffff;
-  --text-muted: #e4e4e7;
-  --text-dim: #71717a;
+  --bg-deep: #030712;
+  --bg-navy: #0a0f1e;
+  --bg-surface: #0f1629;
+  --bg-elevated: #151d33;
+  --neon-blue: #3b82f6;
+  --neon-cyan: #22d3ee;
+  --neon-purple: #a855f7;
+  --neon-violet: #8b5cf6;
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
 
   --background: var(--bg-deep);
   --foreground: var(--text-primary);
   --card: var(--bg-surface);
   --card-foreground: var(--text-primary);
-  --popover: var(--bg-carbon);
+  --popover: var(--bg-navy);
   --popover-foreground: var(--text-primary);
-  --primary: var(--emerald);
-  --primary-foreground: #050505;
+  --primary: var(--neon-blue);
+  --primary-foreground: #ffffff;
   --secondary: var(--bg-elevated);
   --secondary-foreground: var(--text-muted);
   --muted: var(--bg-elevated);
   --muted-foreground: var(--text-dim);
-  --accent: var(--emerald-soft);
-  --accent-foreground: var(--bg-deep);
-  --border: rgba(255, 255, 255, 0.06);
-  --input: var(--bg-carbon);
-  --ring: var(--emerald);
+  --accent: var(--neon-purple);
+  --accent-foreground: #ffffff;
+  --border: rgba(148, 163, 184, 0.1);
+  --input: var(--bg-navy);
+  --ring: var(--neon-blue);
   --radius: 0.875rem;
 }
 
@@ -41,31 +41,27 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/40;
+    @apply border-border;
+  }
+
+  *:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--ring) 40%, transparent);
+    outline-offset: 2px;
   }
 
   html {
@@ -79,7 +75,7 @@
   }
 
   ::selection {
-    background: rgba(0, 255, 178, 0.25);
+    background: rgba(59, 130, 246, 0.35);
     color: #fff;
   }
 }
@@ -90,30 +86,47 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#00FFB2] via-[#7CFFCB] to-[#00C896];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#60A5FA] via-[#A78BFA] to-[#22D3EE];
   }
 
-  .glow-emerald {
-    box-shadow: 0 0 60px -12px rgba(0, 255, 178, 0.45);
+  .text-gradient-subtle {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-[#94A3B8] to-[#64748B];
   }
 
-  .glow-emerald-sm {
-    box-shadow: 0 0 24px -4px rgba(0, 255, 178, 0.35);
+  .glow-blue {
+    box-shadow: 0 0 60px -12px rgba(59, 130, 246, 0.5);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 60px -12px rgba(168, 85, 247, 0.4);
+  }
+
+  .glass-nav {
+    @apply bg-[#0a0f1e]/70 backdrop-blur-xl border-b border-white/[0.08];
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   }
 
   .glass-panel {
-    @apply bg-[#0F0F10]/80 backdrop-blur-2xl border border-white/[0.06];
+    @apply bg-[#0f1629]/50 backdrop-blur-2xl border border-white/[0.08];
   }
 
   .glass-card {
-    @apply bg-[#111111]/60 backdrop-blur-xl border border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.5)];
+    @apply bg-[#0f1629]/40 backdrop-blur-xl border border-white/[0.08];
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
+      linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(168, 85, 247, 0.5)) border-box;
+    border: 1px solid transparent;
   }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(0, 255, 178, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 178, 0.03) 1px, transparent 1px);
-    background-size: 72px 72px;
+      linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
 
   .section-shell {
@@ -121,11 +134,11 @@
   }
 
   .section-pad {
-    @apply py-24 md:py-32;
+    @apply py-20 sm:py-24 md:py-32;
   }
 
   .input-premium {
-    @apply w-full px-4 py-3.5 rounded-xl bg-[#0F0F10] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-[#00FFB2]/40 focus:ring-2 focus:ring-[#00FFB2]/15 transition-all;
+    @apply w-full px-4 py-3.5 rounded-xl bg-[#0a0f1e]/80 border border-white/[0.1] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-[#3B82F6]/50 focus:ring-2 focus:ring-[#3B82F6]/20 transition-all;
   }
 
   .line-clamp-2 {
