@@ -1,6 +1,13 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  type ReactNode,
+} from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, ArrowRight, FileDown, Github, Linkedin } from "lucide-react"
@@ -14,7 +21,21 @@ const commands = [
   { id: "linkedin", label: "LinkedIn", href: siteConfig.social.linkedin, icon: Linkedin, external: true },
 ]
 
-export function CommandMenu() {
+type CommandMenuContextValue = {
+  open: boolean
+  setOpen: (open: boolean) => void
+}
+
+const CommandMenuContext = createContext<CommandMenuContextValue | null>(null)
+
+function useCommandMenu() {
+  const ctx = useContext(CommandMenuContext)
+  if (!ctx) throw new Error("useCommandMenu must be used within CommandMenuProvider")
+  return ctx
+}
+
+/** Global provider: keyboard shortcut + modal. Place once in app layout. */
+export function CommandMenuProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState(0)
@@ -63,17 +84,8 @@ export function CommandMenu() {
   }, [open, filtered, selected, run])
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className="hidden md:flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground glass-panel rounded-lg hover:border-[#00FFB2]/20 transition-colors"
-        aria-label="Command menu"
-      >
-        <Search className="h-3.5 w-3.5" />
-        <span className="text-[#71717a]">Command</span>
-        <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] border border-white/[0.08] text-[10px]">⌘K</kbd>
-      </button>
-
+    <CommandMenuContext.Provider value={{ open, setOpen }}>
+      {children}
       <AnimatePresence>
         {open && (
           <>
@@ -90,9 +102,13 @@ export function CommandMenu() {
               exit={{ opacity: 0, scale: 0.96, y: -16 }}
               className="fixed left-1/2 top-[18%] z-[201] w-full max-w-lg -translate-x-1/2 px-4"
             >
-              <div className="glass-panel rounded-2xl overflow-hidden border-[#00FFB2]/10 shadow-2xl glow-emerald-sm">
-                <motion.div className="flex items-center gap-3 border-b border-white/[0.06] px-4 py-3">
-                  <Search className="h-4 w-4 text-[#00FFB2]" />
+              <motion.div
+                className="glass-panel rounded-2xl overflow-hidden border-[#00FFB2]/10 shadow-2xl glow-emerald-sm"
+                role="dialog"
+                aria-label="Command menu"
+              >
+                <div className="flex items-center gap-3 border-b border-white/[0.06] px-4 py-3">
+                  <Search className="h-4 w-4 text-[#00FFB2] shrink-0" />
                   <input
                     autoFocus
                     value={query}
@@ -103,35 +119,66 @@ export function CommandMenu() {
                     placeholder="Navigate anywhere..."
                     className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                   />
-                  <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-[#18181B] text-muted-foreground">ESC</kbd>
-                </motion.div>
+                  <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-[#18181B] text-muted-foreground shrink-0">
+                    ESC
+                  </kbd>
+                </div>
                 <ul className="max-h-72 overflow-y-auto p-2">
-                  {filtered.map((cmd, i) => {
-                    const Icon = cmd.icon
-                    return (
-                      <li key={cmd.id}>
-                        <button
-                          onClick={() => run(cmd)}
-                          onMouseEnter={() => setSelected(i)}
-                          className={cn(
-                            "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors",
-                            selected === i
-                              ? "bg-[#00FFB2]/10 text-[#00FFB2]"
-                              : "text-muted-foreground hover:bg-white/[0.04]"
-                          )}
-                        >
-                          <Icon className="h-4 w-4 shrink-0" />
-                          <span className="flex-1 text-left">{cmd.label}</span>
-                        </button>
-                      </li>
-                    )
-                  })}
+                  {filtered.length === 0 ? (
+                    <li className="px-4 py-6 text-center text-sm text-muted-foreground">No results</li>
+                  ) : (
+                    filtered.map((cmd, i) => {
+                      const Icon = cmd.icon
+                      return (
+                        <li key={cmd.id}>
+                          <button
+                            onClick={() => run(cmd)}
+                            onMouseEnter={() => setSelected(i)}
+                            className={cn(
+                              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors",
+                              selected === i
+                                ? "bg-[#00FFB2]/10 text-[#00FFB2]"
+                                : "text-muted-foreground hover:bg-white/[0.04]"
+                            )}
+                          >
+                            <Icon className="h-4 w-4 shrink-0" />
+                            <span className="flex-1 text-left">{cmd.label}</span>
+                          </button>
+                        </li>
+                      )
+                    })
+                  )}
                 </ul>
-              </div>
+              </motion.div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </>
+    </CommandMenuContext.Provider>
+  )
+}
+
+/** Trigger button — place inside the site header. */
+export function CommandMenuTrigger({ className }: { className?: string }) {
+  const { setOpen } = useCommandMenu()
+
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      className={cn(
+        "hidden lg:flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground",
+        "glass-panel rounded-lg border border-white/[0.06]",
+        "hover:border-[#00FFB2]/25 hover:text-[#00FFB2] transition-colors shrink-0",
+        className
+      )}
+      aria-label="Open command menu"
+    >
+      <Search className="h-3.5 w-3.5" />
+      <span className="text-[#71717a]">Search</span>
+      <kbd className="px-1.5 py-0.5 rounded bg-[#18181B] border border-white/[0.08] text-[10px] font-mono">
+        ⌘K
+      </kbd>
+    </button>
   )
 }
