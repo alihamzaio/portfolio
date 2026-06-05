@@ -2,7 +2,7 @@
 
 import { useRef, type ReactNode, type MouseEvent } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { usePathname } from "next/navigation"
 import {
   getLinkKind,
@@ -10,6 +10,7 @@ import {
   scrollToSection,
   shouldSmoothScrollHash,
 } from "@/lib/navigation"
+import { prefersFinePointer } from "@/lib/motion-prefs"
 import { cn } from "@/lib/utils"
 
 const MotionLink = motion.create(Link)
@@ -36,9 +37,12 @@ export function MagneticButton({
   rel,
 }: MagneticButtonProps) {
   const pathname = usePathname()
+  const reduceMotion = useReducedMotion()
   const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
+  const magnetic = prefersFinePointer() && !reduceMotion
 
   const handleMove = (e: MouseEvent) => {
+    if (!magnetic) return
     const el = ref.current
     if (!el) return
     const rect = el.getBoundingClientRect()
@@ -54,13 +58,19 @@ export function MagneticButton({
   }
 
   const base = cn(
-    "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-all duration-300 will-change-transform",
+    "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow] duration-300",
+    magnetic && "will-change-transform",
     variant === "primary" &&
       "btn-primary px-7 py-3 relative overflow-hidden before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-[radial-gradient(circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.12),transparent_55%)] before:transition-opacity before:duration-300",
     variant === "secondary" && "btn-secondary px-7 py-3",
     variant === "ghost" && "text-[#94A3B8] hover:text-[#F8FAFC] px-3 py-2",
     className
   )
+
+  const tap = reduceMotion ? undefined : { scale: 0.97 }
+  const moveProps = magnetic
+    ? { onMouseMove: handleMove, onMouseLeave: handleLeave }
+    : {}
 
   if (href) {
     const kind = getLinkKind(href)
@@ -81,10 +91,9 @@ export function MagneticButton({
           target={target ?? (kind === "external" ? "_blank" : undefined)}
           rel={rel ?? (kind === "external" ? "noopener noreferrer" : undefined)}
           data-cursor
-          onMouseMove={handleMove}
-          onMouseLeave={handleLeave}
-          whileTap={{ scale: 0.97 }}
+          whileTap={tap}
           className={base}
+          {...moveProps}
         >
           {children}
         </motion.a>
@@ -101,10 +110,9 @@ export function MagneticButton({
         rel={rel}
         data-cursor
         onClick={kind === "hash" ? handleLinkClick : undefined}
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        whileTap={{ scale: 0.97 }}
+        whileTap={tap}
         className={base}
+        {...moveProps}
       >
         {children}
       </MotionLink>
@@ -117,10 +125,9 @@ export function MagneticButton({
       type={type}
       onClick={onClick}
       data-cursor
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      whileTap={{ scale: 0.97 }}
+      whileTap={tap}
       className={base}
+      {...moveProps}
     >
       {children}
     </motion.button>

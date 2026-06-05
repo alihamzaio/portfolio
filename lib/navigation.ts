@@ -1,3 +1,5 @@
+import { prefersReducedMotion } from "@/lib/motion-prefs"
+
 /** Map homepage section hashes to dedicated routes when navigating from other pages */
 export const SECTION_ROUTES: Record<string, string> = {
   home: "/",
@@ -31,7 +33,8 @@ export function getSectionIdFromHash(href: string): string {
 export function scrollToSection(href: string) {
   const id = getSectionIdFromHash(href)
   if (!id) return
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+  const behavior = prefersReducedMotion() ? "auto" : "smooth"
+  document.getElementById(id)?.scrollIntoView({ behavior })
 }
 
 /** Resolve nav href: on home use hash anchors; elsewhere use matching page routes */

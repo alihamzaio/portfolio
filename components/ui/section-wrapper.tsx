@@ -15,6 +15,7 @@ export function SectionWrapper({ id, children, className, variant = "default" }:
   return (
     <section
       id={id}
+      aria-labelledby={id ? `${id}-heading` : undefined}
       className={cn(
         "section-pad relative border-t border-white/[0.06]",
         variant === "elevated" && "section-elevated",

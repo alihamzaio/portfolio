@@ -23,7 +23,9 @@ export async function PUT(req: NextRequest) {
   })
 
   if (body.email && !body.social?.email) {
-    updated.social.email = body.email.includes("@") ? `mailto:${body.email.replace(/^mailto:/, "")}` : base.social.email
+    updated.social.email = body.email.includes("@")
+      ? `mailto:${body.email.replace(/^mailto:/, "")}`
+      : base.social.email
   }
 
   await setStoreJson("settings", updated)

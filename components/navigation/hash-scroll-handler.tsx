@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { scrollToSection } from "@/lib/navigation"
+import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 /** Scroll to section after client navigation to /#section */
 export function HashScrollHandler() {
@@ -14,8 +15,9 @@ export function HashScrollHandler() {
     if (!hash) return
 
     const id = hash.replace("#", "")
+    const behavior = prefersReducedMotion() ? "auto" : "smooth"
     const t = requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+      document.getElementById(id)?.scrollIntoView({ behavior })
     })
     return () => cancelAnimationFrame(t)
   }, [pathname])

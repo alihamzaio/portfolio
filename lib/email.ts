@@ -1,5 +1,6 @@
 import { getAdminEmail } from "./auth"
 import { getResendApiKey, getResendFromEmail } from "./env-server"
+import { OTP_ADMIN_EMAIL } from "./official-email"
 
 function parseResendError(body: string): string {
   try {
@@ -7,7 +8,7 @@ function parseResendError(body: string): string {
     const msg = data.message || data.name || body
 
     if (/only send testing emails to your own/i.test(msg)) {
-      return `Resend test mode: emails can only be sent to the Gmail address you used to sign up at resend.com. Set ADMIN_EMAIL to that exact address, or verify a domain in Resend and use a custom RESEND_FROM_EMAIL.`
+      return `Resend test mode: OTP emails can only be sent to the Gmail address you used to sign up at resend.com (${OTP_ADMIN_EMAIL}).`
     }
     if (/invalid api key/i.test(msg) || /unauthorized/i.test(msg)) {
       return "Invalid RESEND_API_KEY. Copy a new key from resend.com → API Keys, add it to .env, then restart the dev server."
@@ -21,10 +22,12 @@ function parseResendError(body: string): string {
   }
 }
 
-export async function sendOtpEmail(to: string, code: string): Promise<{ ok: boolean; error?: string; devCode?: string }> {
+/** Sends OTP only — recipient is always OTP_ADMIN_EMAIL regardless of request body. */
+export async function sendOtpEmail(_to: string, code: string): Promise<{ ok: boolean; error?: string; devCode?: string }> {
   const apiKey = getResendApiKey()
   const fromRaw = getResendFromEmail()
   const from = fromRaw.includes("<") ? fromRaw : `Portfolio Admin <${fromRaw}>`
+  const to = OTP_ADMIN_EMAIL
 
   if (!apiKey) {
     if (process.env.NODE_ENV === "development") {

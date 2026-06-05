@@ -1,5 +1,5 @@
 import type React from "react"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono, Syne } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { StructuredData } from "@/components/structured-data"
 import { buildRootMetadata } from "@/lib/seo"
@@ -17,6 +17,12 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 })
 
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  display: "swap",
+})
+
 export const metadata = buildRootMetadata()
 
 export { viewport } from "@/lib/viewport"
@@ -31,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
       </head>
       <body
-        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased noise-overlay`}
+        className={`${inter.variable} ${jetbrains.variable} ${syne.variable} font-sans antialiased noise-overlay dot-grid-body`}
         suppressHydrationWarning
       >
         {children}

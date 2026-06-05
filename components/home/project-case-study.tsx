@@ -2,12 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { ArrowUpRight, ExternalLink, Github, Layers } from "lucide-react"
 import type { FeaturedProject } from "@/lib/featured-projects"
 import { MagneticButton } from "@/components/ui/magnetic-button"
+import { TiltShineCard } from "@/components/ui/tilt-shine-card"
 import { cn } from "@/lib/utils"
-import { easeCinematic } from "@/lib/motion"
 
 interface ProjectCaseStudyProps {
   project: FeaturedProject
@@ -17,18 +16,15 @@ interface ProjectCaseStudyProps {
 
 export function ProjectCaseStudy({ project, index, reversed }: ProjectCaseStudyProps) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 48 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.85, delay: index * 0.08, ease: easeCinematic }}
+    <article
+      data-animate
       className={cn(
         "grid lg:grid-cols-2 gap-10 lg:gap-14 items-center",
         reversed && "lg:[&>*:first-child]:order-2"
       )}
     >
-      <div className="relative group">
-        <div className="absolute -inset-4 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.12),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <TiltShineCard className="relative group">
+        <div className="absolute -inset-4 bg-[radial-gradient(ellipse_at_center,rgba(0,217,255,0.12),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0F172A] aspect-[16/10] project-card-glow">
           <Image
             src={project.image}
@@ -45,9 +41,9 @@ export function ProjectCaseStudy({ project, index, reversed }: ProjectCaseStudyP
             </span>
           </div>
         </div>
-      </div>
+      </TiltShineCard>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col" data-animate>
         <p className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#8B5CF6] mb-3">
           0{index + 1} — Product launch
         </p>
@@ -113,6 +109,6 @@ export function ProjectCaseStudy({ project, index, reversed }: ProjectCaseStudyP
           </Link>
         </div>
       </div>
-    </motion.article>
+    </article>
   )
 }

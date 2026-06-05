@@ -1,15 +1,8 @@
+import { OTP_ADMIN_EMAIL } from "./official-email"
+
 /**
  * Server-only environment variables (API routes, lib/email, lib/auth).
- *
- * Do NOT use NEXT_PUBLIC_ for secrets — those are bundled into the browser.
- *
- * | Variable              | NEXT_PUBLIC? | Used for                    |
- * |-----------------------|--------------|-----------------------------|
- * | RESEND_API_KEY        | No           | Admin OTP emails (Resend)   |
- * | RESEND_FROM_EMAIL     | No           | Sender address              |
- * | ADMIN_EMAIL           | No           | Who can log in to /admin    |
- * | NEXT_PUBLIC_SITE_URL  | Yes          | SEO, canonical URLs         |
- * | PORT                  | No           | Local dev port (next dev)   |
+ * OTP recipient is hardcoded — contact email is separate (siteConfig.email).
  */
 
 export function getResendApiKey(): string | undefined {
@@ -22,11 +15,11 @@ export function getResendFromEmail(): string {
   return (process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev").trim()
 }
 
+/** OTP admin recipient — always alilogics007@gmail.com; env cannot override. */
 export function getAdminEmailFromEnv(): string {
-  return (process.env.ADMIN_EMAIL || "hamzasarwer9@gmail.com").toLowerCase().trim()
+  return OTP_ADMIN_EMAIL
 }
 
-/** For debugging only — never expose the actual key */
 export function getResendConfigStatus(): {
   hasApiKey: boolean
   fromEmail: string
@@ -35,6 +28,6 @@ export function getResendConfigStatus(): {
   return {
     hasApiKey: !!getResendApiKey(),
     fromEmail: getResendFromEmail(),
-    adminEmail: getAdminEmailFromEnv(),
+    adminEmail: OTP_ADMIN_EMAIL,
   }
 }

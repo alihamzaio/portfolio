@@ -394,8 +394,14 @@ export default function AdminPage() {
               <textarea className="input-premium resize-none" rows={3} value={settings.description} onChange={(e) => setSettings({ ...settings, description: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Email</label>
-              <input className="input-premium" type="email" value={settings.email} onChange={(e) => setSettings({ ...settings, email: e.target.value })} />
+              <label className="text-xs text-[#94A3B8] mb-1 block">Contact email</label>
+              <input
+                className="input-premium"
+                type="email"
+                value={settings.email}
+                onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+              />
+              <p className="text-[10px] text-[#64748B] mt-1">Public contact only. OTP uses alilogics007@gmail.com.</p>
             </div>
             <div>
               <label className="text-xs text-[#94A3B8] mb-1 block">Phone</label>

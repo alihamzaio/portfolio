@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, Loader2, Mail } from "lucide-react"
+import { ArrowRight, Loader2, Mail, Lock } from "lucide-react"
 import { setAdminSession } from "@/lib/auth-client"
 import { LogoMark } from "@/components/brand/logo"
+import { OTP_ADMIN_EMAIL } from "@/lib/official-email"
 
 interface AdminLoginProps {
   onSuccess: () => void
@@ -12,7 +13,7 @@ interface AdminLoginProps {
 
 export function AdminLogin({ onSuccess }: AdminLoginProps) {
   const [step, setStep] = useState<"email" | "otp">("email")
-  const [email, setEmail] = useState("hamzasarwer9@gmail.com")
+  const email = OTP_ADMIN_EMAIL
   const [otp, setOtp] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -93,19 +94,22 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
+                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#64748B]" />
                 <input
                   id="admin-email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-premium pl-10"
-                  placeholder="hamzasarwer9@gmail.com"
+                  readOnly
+                  aria-readonly="true"
+                  className="input-premium pl-10 pr-10 opacity-80 cursor-not-allowed"
                 />
               </div>
-              <p className="text-[11px] text-[#94A3B8] mt-2">Only your registered admin email can receive a code.</p>
+              <p className="text-[11px] text-[#94A3B8] mt-2">
+                OTP codes are sent only to {OTP_ADMIN_EMAIL}. Contact email is separate.
+              </p>
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}
-            <button type="button" onClick={sendOtp} disabled={loading || !email} className="btn-primary w-full">
+            <button type="button" onClick={sendOtp} disabled={loading} className="btn-primary w-full">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Send OTP <ArrowRight className="h-4 w-4" /></>}
             </button>
           </div>
@@ -133,8 +137,16 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             <button type="button" onClick={verifyOtp} disabled={loading || otp.length !== 6} className="btn-primary w-full">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & sign in"}
             </button>
-            <button type="button" onClick={() => { setStep("email"); setOtp(""); setError("") }} className="text-xs text-[#94A3B8] hover:text-[#F8FAFC] w-full">
-              Use a different email
+            <button
+              type="button"
+              onClick={() => {
+                setStep("email")
+                setOtp("")
+                setError("")
+              }}
+              className="text-xs text-[#94A3B8] hover:text-[#F8FAFC] w-full"
+            >
+              Resend code
             </button>
           </div>
         )}
