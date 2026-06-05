@@ -2,10 +2,9 @@ export const siteConfig = {
   name: "Ali Hamza",
   title: "Full Stack Software Engineer",
   tagline: "MERN · AWS Serverless · Blockchain",
-  headline:
-    "I help teams ship MERN applications, AWS backends, and blockchain features — with maintainable code and clear communication.",
+  headline: "I build things that work. Here's proof.",
   description:
-    "Full Stack Software Engineer (3+ years). Built production systems at Birxment, Exec9, and Explore Logics — REST APIs, AWS serverless, blockchain indexers, and e-commerce/Web3 UIs. Based in Lahore, Pakistan; available remote.",
+    "Full stack engineer (~3 years). Production work at Birxment, Exec9, and Explore Logics — 15+ APIs, 10,000+ indexed blocks, real users on every deploy. Lahore-based, remote-friendly.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",

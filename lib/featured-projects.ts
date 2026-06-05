@@ -15,7 +15,7 @@ export const featuredProjects: FeaturedProject[] = [
     id: "verana",
     title: "Verana — Blockchain Crawler & Indexer",
     overview:
-      "Blockchain indexer at Birxment that ingests 10,000+ blocks via RPC, decodes protocol transactions, and eliminates 90% of direct on-chain reads for client apps.",
+      "Verana's apps were hammering RPC nodes for every block lookup — slow and expensive. I built an indexer that ingests 10,000+ blocks, decodes protocol txs, and cut direct on-chain reads by ~90%. Hardest part: keeping BullMQ workers in sync when nodes lagged without duplicating work.",
     architecture: [
       "BullMQ microservice pipelines with sub-second sync",
       "Moleculer.js services for web, Android, and WebSocket channels",
@@ -35,7 +35,7 @@ export const featuredProjects: FeaturedProject[] = [
     id: "healops",
     title: "HealOps — Healthcare & E-Commerce AWS Platform",
     overview:
-      "Multi-tenant cloud platform at Birxment serving 5+ warehouse, vendor, and store tenants with inventory and order workflows on AWS serverless.",
+      "Five warehouse and vendor tenants needed isolated inventory flows on one AWS stack. I provisioned 12+ resources with Terraform, wired Lambda + DynamoDB + RDS, and plugged Snowflake in for analytics. Lesson learned: tenant boundaries in serverless are easy to sketch, painful to enforce — we got there.",
     architecture: [
       "12+ AWS resources provisioned with Terraform",
       "Lambda serverless services with DynamoDB and RDS",
@@ -54,7 +54,7 @@ export const featuredProjects: FeaturedProject[] = [
     id: "unilabs",
     title: "UniLabs — Blockchain Web Platform",
     overview:
-      "Web3 platform at Exec9 with interactive 3D UI and Ethereum flows for 1,000+ monthly active users — Solidity contracts wired to React for live on-chain state.",
+      "UniLabs wanted DeFi that didn't feel like a spreadsheet. I shipped a Next.js UI with wallet flows and Solidity on mainnet for 1,000+ monthly users. The 3D bits were fun; the unglamorous win was getting contract reads reliable enough that support tickets dropped.",
     architecture: [
       "Next.js frontend with Three.js and Framer Motion",
       "Solidity smart contracts deployed to mainnet",
@@ -74,7 +74,7 @@ export const featuredProjects: FeaturedProject[] = [
     id: "senzi",
     title: "Senzi — Dropshipping E-Commerce Platform",
     overview:
-      "Dropshipping platform connected to 1688 and Taobao APIs with automated catalog sync for 5,000+ SKUs — 60% less manual order handling.",
+      "Manual catalog updates were killing the ops team. I connected 1688 and Taobao APIs and automated 5,000+ SKUs — about 60% less hand-entered orders. Honestly, provider API docs were the real boss fight; the MongoDB schema was the easy part.",
     architecture: [
       "Next.js + Node.js REST services",
       "MongoDB for catalog, orders, and provider workflows",

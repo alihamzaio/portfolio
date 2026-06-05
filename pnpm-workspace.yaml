@@ -2,4 +2,5 @@ packages:
   - "."
 
 allowBuilds:
+  "@tsparticles/engine": true
   sharp: true

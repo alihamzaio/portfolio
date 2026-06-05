@@ -1,79 +1,75 @@
-/** Human-written portfolio copy — synced with resume, used across site & SEO fallbacks */
+/** Portfolio copy — direct, human tone */
 export const copy = {
   hero: {
-    availability: "Open for freelance & full-time — remote worldwide",
-    eyebrow: "Elite Full Stack Engineer",
-    positioning: "I design and ship premium digital products — not just websites.",
-    lead: "Full-stack engineer building production SaaS, APIs, and Web3 systems with startup-level polish.",
-    support:
-      "From blockchain indexers at Birxment to AWS platforms and high-traffic frontends at Exec9 — you get measurable impact, clean architecture, and interfaces clients remember.",
-    ctaWork: "Explore case studies",
-    ctaResume: "Download resume",
-    ctaContact: "Start a project",
+    availability: "Available for freelance & full-time — remote OK",
+    greeting: "HI, I'M",
+    name: "ALI HAMZA",
+    lead: "3+ years shipping production code. 15+ REST APIs. 10,000+ blockchain blocks indexed. 40% fewer prod bugs after we fixed CI.",
+    support: "I build things that work — MERN, AWS serverless, Web3 when it actually makes sense. Based in Lahore, work remote.",
+    ctaPrimary: "Let's talk",
+    ctaViewWork: "View Work ↓",
+    ctaResume: "Resume",
   },
   sections: {
     about: {
       label: "About",
-      title: "Engineering with product intent",
+      title: "Real work, not buzzwords",
       description:
-        "Senior-level delivery across agency and product teams — B.S. Computer Science, then production roles shipping real revenue systems.",
+        "I didn't get into this to write LinkedIn posts. I like shipping — schema to deploy, one owner, fewer surprises.",
     },
     skills: {
-      label: "Capabilities",
-      title: "Stack & craft",
-      description: "Technologies I use to ship — chosen for reliability, scale, and maintainability.",
+      label: "Skills",
+      title: "What I actually use",
+      description: "Tools that survived real projects — not a keyword dump from a job board.",
     },
     projects: {
-      label: "Case studies",
-      title: "Products I've shipped",
-      description:
-        "Real platforms with architecture, metrics, and business impact — presented like product launches, not portfolio thumbnails.",
+      label: "Work",
+      title: "Things I've shipped",
+      description: "Case studies with numbers. What broke, what shipped, what moved the needle.",
     },
     experience: {
       label: "Experience",
-      title: "Career trajectory",
-      description: "Roles where I owned delivery end-to-end — with outcomes that matter to hiring managers.",
+      title: "Where I've worked",
+      description: "Birxment, Exec9, Explore Logics — roles where I owned delivery end-to-end.",
     },
     contact: {
       label: "Contact",
-      title: "Let's build something exceptional",
-      description:
-        "Share your product vision, timeline, and constraints. Thoughtful replies within 24–48 hours.",
+      title: "Say hello",
+      description: "Tell me what you're building. I usually reply within a day or two.",
     },
     offer: {
       label: "Services",
-      title: "How I partner with teams",
-      description: "Clear scopes — so you know exactly what elite engineering engagement looks like.",
+      title: "How I work with teams",
+      description: "Clear scopes. No mystery invoices.",
     },
     testimonials: {
       label: "Proof",
-      title: "Trusted by product teams",
-      description: "Feedback from founders and engineering leads I've shipped with.",
+      title: "What people say",
+      description: "Unedited notes from teams I've shipped with.",
     },
     cta: {
       label: "Hire me",
-      title: "Ready for a product-grade build?",
-      description:
-        "MVP, platform rebuild, or Web3 feature — I'll scope honestly, propose architecture, and deliver with senior frontend craftsmanship.",
+      title: "Need something built?",
+      description: "MVP, rebuild, or a feature you're not sure about — I'll tell you straight if it's worth doing.",
       button: "Discuss your project",
     },
   },
   services: [
     {
-      title: "Product-grade web applications",
-      desc: "Next.js experiences with Node APIs, auth, admin, and deployment pipelines your team can extend.",
+      title: "Web applications",
+      desc: "Next.js, Node APIs, auth, admin — with deploy docs your team can run without me.",
     },
     {
-      title: "AWS & serverless platforms",
-      desc: "Lambda, DynamoDB, RDS, Terraform — multi-tenant systems built for auditability and scale.",
+      title: "AWS & serverless",
+      desc: "Lambda, DynamoDB, Terraform. Multi-tenant setups I've debugged at 2am so you don't have to.",
     },
     {
-      title: "Blockchain & Web3 systems",
-      desc: "Indexers, wallet flows, smart contract integrations — production pipelines like Verana.",
+      title: "Blockchain systems",
+      desc: "Indexers and wallet flows — when on-chain data is the product, not a slide deck flex.",
     },
     {
-      title: "Performance & design systems",
-      desc: "Core Web Vitals, component libraries, and handover docs — polish that survives beyond launch.",
+      title: "Performance & handover",
+      desc: "Core Web Vitals, component libraries, docs that outlive the contract.",
     },
   ],
 } as const

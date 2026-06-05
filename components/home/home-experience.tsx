@@ -1,20 +1,39 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useEffect, useRef } from "react"
 import { Briefcase, TrendingUp } from "lucide-react"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { useSiteContent } from "@/components/providers/site-content-provider"
-import { fadeUp, staggerContainer } from "@/lib/motion"
 import { copy } from "@/lib/copy"
 
 export function HomeExperience() {
   const { experiences } = useSiteContent()
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const line = lineRef.current
+    if (!section || !line) return
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) {
+          line.classList.add("is-drawn")
+          obs.disconnect()
+        }
+      },
+      { threshold: 0.15 }
+    )
+    obs.observe(section)
+    return () => obs.disconnect()
+  }, [])
 
   return (
     <SectionWrapper id="experience" variant="muted" className="[&_.section-shell]:max-w-4xl">
       <SectionHeading
+        sectionId="experience"
         label={copy.sections.experience.label}
         title={copy.sections.experience.title}
         description={copy.sections.experience.description}
@@ -22,34 +41,29 @@ export function HomeExperience() {
         className="mx-auto"
       />
 
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-8%" }}
-        className="relative"
-      >
+      <div ref={sectionRef} className="relative">
         <div
-          className="absolute left-[19px] top-8 bottom-8 w-px bg-gradient-to-b from-[#3B82F6] via-[#06B6D4]/50 to-transparent"
+          ref={lineRef}
+          className="timeline-draw absolute left-[19px] top-8 bottom-8 w-px bg-gradient-to-b from-[#00D9FF] via-[#06B6D4]/50 to-transparent"
           aria-hidden
         />
 
         <div className="space-y-10">
           {experiences.map((exp, i) => (
-            <motion.article
+            <article
               key={exp.id}
-              variants={fadeUp}
-              className="relative pl-14"
+              data-animate
+              data-timeline-side={i % 2 === 0 ? "left" : "right"}
+              className="relative pl-14 timeline-card-enter"
+              style={
+                {
+                  "--timeline-from": i % 2 === 0 ? "-60px" : "60px",
+                } as React.CSSProperties
+              }
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 + i * 0.05, type: "spring", stiffness: 400, damping: 28 }}
-                className="absolute left-0 top-7 flex h-10 w-10 items-center justify-center rounded-xl border border-[#3B82F6]/30 bg-[#0F172A] shadow-[0_0_24px_rgba(59,130,246,0.2)]"
-              >
-                <Briefcase className="h-4 w-4 text-[#3B82F6]" />
-              </motion.div>
+              <div className="absolute left-0 top-7 flex h-10 w-10 items-center justify-center rounded-xl border border-[#00D9FF]/30 bg-[#0F172A] shadow-[0_0_24px_rgba(0,217,255,0.2)]">
+                <Briefcase className="h-4 w-4 text-[#00D9FF]" />
+              </div>
 
               <PremiumCard spotlight className="!p-6 sm:!p-8">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
@@ -71,7 +85,7 @@ export function HomeExperience() {
                 <ul className="space-y-3 mb-6">
                   {exp.achievements.map((a) => (
                     <li key={a} className="text-sm text-[#94A3B8] flex gap-3 leading-relaxed">
-                      <TrendingUp className="h-4 w-4 text-[#3B82F6] shrink-0 mt-0.5" />
+                      <TrendingUp className="h-4 w-4 text-[#00D9FF] shrink-0 mt-0.5" />
                       {a}
                     </li>
                   ))}
@@ -88,10 +102,10 @@ export function HomeExperience() {
                   ))}
                 </div>
               </PremiumCard>
-            </motion.article>
+            </article>
           ))}
         </div>
-      </motion.div>
+      </div>
     </SectionWrapper>
   )
 }

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, ArrowRight } from "lucide-react"
 import { navItems } from "@/lib/site"
-import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
+import { resolveNavHref, shouldSmoothScrollHash } from "@/lib/navigation"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { Logo } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
@@ -58,16 +58,15 @@ export function SiteHeader() {
     setMobileOpen(false)
     if (shouldSmoothScrollHash(href, pathname)) {
       e.preventDefault()
-      scrollToSection(href)
-      window.history.pushState(null, "", href)
     }
   }
 
   return (
     <header
+      data-site-header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        scrolled || mobileOpen ? "glass-nav py-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)]" : "py-6 bg-transparent"
+        "fixed top-[2px] left-0 right-0 z-50 transition-[transform,background,padding,box-shadow] duration-500",
+        scrolled || mobileOpen ? "glass-nav py-3" : "py-5 sm:py-6 bg-transparent"
       )}
     >
       <div className="section-shell">
@@ -92,24 +91,15 @@ export function SiteHeader() {
                 <Link
                   key={item.id}
                   href={resolveNavHref(item.href, pathname)}
-                  onClick={(e) => {
-                    if (shouldSmoothScrollHash(item.href, pathname)) {
-                      handleNavClick(e, item.href)
-                    }
-                  }}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  aria-current={active ? "true" : undefined}
                   className={cn(
-                    "relative px-4 py-2 text-[13px] font-medium rounded-xl transition-colors duration-300",
-                    active ? "text-[#F8FAFC]" : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                    "relative px-4 py-2.5 text-[13px] font-medium rounded-xl transition-colors duration-300",
+                    active ? "nav-link-active-cyan" : "text-[#94A3B8] hover:text-[#F8FAFC]"
                   )}
                 >
-                  {active && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 rounded-xl bg-white/[0.08] border border-white/[0.06]"
-                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                    />
-                  )}
                   <span className="relative">{item.label}</span>
+                  {active && <span className="nav-active-dot" aria-hidden />}
                 </Link>
               )
             })}
@@ -118,11 +108,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/#contact"
-              onClick={(e) => {
-                if (shouldSmoothScrollHash("/#contact", pathname)) {
-                  handleNavClick(e, "/#contact")
-                }
-              }}
+              onClick={(e) => handleNavClick(e, "/#contact")}
               className="hidden sm:inline-flex items-center gap-1.5 btn-primary text-[13px] !py-2.5 !px-5"
               data-cursor
             >
@@ -166,15 +152,11 @@ export function SiteHeader() {
                 >
                   <Link
                     href={item.href}
-                    onClick={(e) => {
-                      if (shouldSmoothScrollHash(item.href, pathname)) {
-                        handleNavClick(e, item.href)
-                      }
-                    }}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     className={cn(
                       "block px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
                       activeId === item.id && isHome
-                        ? "bg-white/[0.08] text-[#F8FAFC] border border-white/[0.06]"
+                        ? "bg-[#00D9FF]/10 text-[#00D9FF] border border-[#00D9FF]/25"
                         : "text-[#94A3B8]"
                     )}
                   >

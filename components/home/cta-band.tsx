@@ -1,20 +1,15 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { copy } from "@/lib/copy"
-import { easeCinematic, viewportOnce } from "@/lib/motion"
 
 export function CtaBand() {
   return (
     <section className="section-pad pb-12 relative">
       <div className="section-shell">
-        <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewportOnce}
-          transition={{ duration: 0.85, ease: easeCinematic }}
+        <div
+          data-animate
           className="relative rounded-3xl overflow-hidden border border-[#3B82F6]/20 bg-[#0F172A]/60 backdrop-blur-2xl p-12 md:p-16 text-center"
         >
           <div className="absolute inset-0 mesh-hero opacity-60 pointer-events-none" />
@@ -45,7 +40,7 @@ export function CtaBand() {
               </MagneticButton>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
