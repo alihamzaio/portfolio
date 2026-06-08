@@ -27,11 +27,11 @@ export async function sendOtpEmail(_to: string, code: string): Promise<{ ok: boo
   const apiKey = getResendApiKey()
   const fromRaw = getResendFromEmail()
   const from = fromRaw.includes("<") ? fromRaw : `Portfolio Admin <${fromRaw}>`
+  // OTP recipient — do not change
   const to = OTP_ADMIN_EMAIL
 
   if (!apiKey) {
     if (process.env.NODE_ENV === "development") {
-      console.log(`[DEV OTP] Email: ${to} | Code: ${code}`)
       return { ok: true, devCode: code }
     }
     return {
@@ -65,7 +65,6 @@ export async function sendOtpEmail(_to: string, code: string): Promise<{ ok: boo
   if (!res.ok) {
     const errText = await res.text()
     const error = parseResendError(errText)
-    console.error("[Resend]", res.status, error)
     return { ok: false, error }
   }
 

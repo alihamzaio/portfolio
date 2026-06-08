@@ -30,8 +30,8 @@ export function ScrollProgress() {
       className="fixed top-0 left-0 right-0 z-[60] h-[2px] origin-left pointer-events-none will-change-transform"
       style={{
         transform: "scaleX(0)",
-        background: "#00D9FF",
-        boxShadow: "0 0 12px rgba(0, 217, 255, 0.5)",
+        background: "#06b6d4",
+        boxShadow: "0 0 12px rgba(6, 182, 212, 0.45)",
       }}
       aria-hidden
     />

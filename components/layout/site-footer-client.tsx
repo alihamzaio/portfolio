@@ -27,8 +27,8 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
   }
 
   return (
-    <footer className="border-t border-white/[0.08] mt-16 bg-black">
-      <div className="section-shell py-14 md:py-16">
+    <footer className="border-t border-white/[0.06] mt-20 bg-[#0a0f1a]/80 backdrop-blur-xl">
+      <div className="section-shell py-16 md:py-20">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
           <div className="max-w-sm">
             <Link href="/" className="inline-block mb-4 group">
@@ -63,7 +63,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
               href={profile.social.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-neutral-500 hover:text-white flex items-center gap-1.5 transition-colors"
+              className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
               GitHub <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
@@ -71,15 +71,18 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
               href={profile.social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-neutral-500 hover:text-white flex items-center gap-1.5 transition-colors"
+              className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
               LinkedIn <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-600">
-          <p>© {year} {profile.name}</p>
+        <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-600">
+          <div className="text-center sm:text-left">
+            <p>© {year} {profile.name}</p>
+            <p className="text-neutral-500 mt-1">Made by Ali Hamza</p>
+          </div>
           <button
             type="button"
             onClick={scrollTop}

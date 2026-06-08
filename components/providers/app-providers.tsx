@@ -4,6 +4,7 @@ import { useState, useEffect, type ReactNode } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { LoadingOverlay } from "@/components/effects/loading-overlay"
 import { AmbientScene } from "@/components/effects/ambient-scene"
+import { SiteParticleBg } from "@/components/effects/site-particle-bg"
 import { Spotlight } from "@/components/effects/spotlight"
 import { ScrollProgress } from "@/components/effects/scroll-progress"
 import { EnhancementRuntime } from "@/components/effects/enhancement-runtime"
@@ -28,6 +29,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <ScrollProgress />
       <AnimatePresence mode="wait">{!ready && !reduceMotion && <LoadingOverlay key="loader" />}</AnimatePresence>
       {!reduceMotion && <AmbientScene />}
+      {!reduceMotion && <SiteParticleBg />}
       {!reduceMotion && <Spotlight />}
       <motion.div
         className="relative z-10"

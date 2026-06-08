@@ -15,8 +15,9 @@ export function getResendFromEmail(): string {
   return (process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev").trim()
 }
 
-/** OTP admin recipient — always alilogics007@gmail.com; env cannot override. */
+/** OTP admin recipient — env cannot override. */
 export function getAdminEmailFromEnv(): string {
+  // OTP recipient — do not change
   return OTP_ADMIN_EMAIL
 }
 

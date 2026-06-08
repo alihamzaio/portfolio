@@ -22,7 +22,7 @@ export function ProjectsBento() {
             initial={{ opacity: 0, y: 28 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: i * 0.1 }}
-            className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-neutral-950 min-h-[280px] ${
+            className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0f1a] min-h-[280px] transition-colors duration-300 hover:border-cyan-500/25 ${
               isFeatured ? "md:col-span-2 lg:col-span-2 min-h-[360px]" : ""
             }`}
           >
@@ -39,20 +39,15 @@ export function ProjectsBento() {
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/50 to-transparent" />
             </div>
             <div className="relative p-6">
-              <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 mb-2">
-                Case study 0{i + 1}
-              </p>
+              <p className="accent-label mb-2">Case study 0{i + 1}</p>
               <h3 className="text-lg font-bold text-white mb-2">{project.title}</h3>
               <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {project.metrics.slice(0, 2).map((m) => (
-                  <span
-                    key={m.label}
-                    className="text-[10px] px-2 py-1 rounded-md bg-white/5 text-neutral-400 border border-white/10"
-                  >
+                  <span key={m.label} className="premium-chip text-[10px] px-2 py-1">
                     {m.value} {m.label}
                   </span>
                 ))}
@@ -62,7 +57,7 @@ export function ProjectsBento() {
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-white hover:text-neutral-300 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-sky-300 transition-colors"
                 >
                   View live <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>

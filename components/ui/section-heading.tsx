@@ -8,8 +8,9 @@ interface SectionHeadingProps {
   description?: string
   align?: "left" | "center"
   className?: string
-  /** Matches parent SectionWrapper id for aria-labelledby */
   sectionId?: string
+  /** Use h1 on standalone pages for SEO */
+  headingLevel?: 1 | 2
 }
 
 export function SectionHeading({
@@ -19,12 +20,15 @@ export function SectionHeading({
   align = "left",
   className,
   sectionId,
+  headingLevel = 2,
 }: SectionHeadingProps) {
+  const TitleTag = headingLevel === 1 ? "h1" : "h2"
+
   return (
     <header
       data-animate
       className={cn(
-        "mb-20 md:mb-24",
+        "mb-16 md:mb-20 lg:mb-24",
         align === "center" && "text-center mx-auto max-w-3xl",
         align === "left" && "max-w-3xl",
         className
@@ -36,23 +40,21 @@ export function SectionHeading({
           align === "center" && "justify-center"
         )}
       >
-        <span className="h-px w-8 bg-gradient-to-r from-[#00D9FF] to-[#06B6D4]" aria-hidden />
-        <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[#06B6D4]">
-          {label}
-        </p>
-        <span className="h-px w-8 bg-gradient-to-l from-[#00D9FF] to-[#06B6D4]" aria-hidden />
+        <span className="h-px w-8 bg-gradient-to-r from-cyan-400/80 to-blue-500/40" aria-hidden />
+        <p className="accent-label">{label}</p>
+        <span className="h-px w-8 bg-gradient-to-l from-cyan-400/80 to-blue-500/40" aria-hidden />
       </div>
       <div data-heading-reveal className="overflow-hidden mb-0">
-        <h2
+        <TitleTag
           id={sectionId ? `${sectionId}-heading` : undefined}
           data-heading-inner
-          className="text-3xl sm:text-4xl md:text-[3.25rem] font-bold tracking-tight text-[#F8FAFC] leading-[1.05]"
+          className="section-title"
         >
           {title}
-        </h2>
+        </TitleTag>
       </div>
       {description && (
-        <p data-animate className="mt-6 text-base sm:text-lg text-[#94A3B8] leading-relaxed max-w-2xl mx-auto">
+        <p data-animate className="mt-6 text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl mx-auto">
           {description}
         </p>
       )}
