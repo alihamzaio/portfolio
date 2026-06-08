@@ -42,8 +42,8 @@ export function initPremiumCursor() {
     const size = hovering ? 56 : 40
     ring.style.width = `${size}px`
     ring.style.height = `${size}px`
-    ring.style.borderColor = hovering ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"
-    ring.style.background = hovering ? "rgba(255,255,255,0.06)" : "transparent"
+    ring.style.borderColor = hovering ? "rgba(34,211,238,0.65)" : "rgba(255,255,255,0.25)"
+    ring.style.background = hovering ? "rgba(59,130,246,0.12)" : "transparent"
     ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`
 
     trailPos.forEach((p, i) => {

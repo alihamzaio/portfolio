@@ -1,15 +1,15 @@
 "use client"
 
 import { ArrowUpRight } from "lucide-react"
+import { PremiumSection } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { ProjectsBento } from "@/components/home/projects-bento"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { copy } from "@/lib/copy"
 
 export function HomeProjects() {
   return (
-    <SectionWrapper id="projects" variant="elevated">
+    <PremiumSection id="projects" variant="elevated">
       <SectionHeading
         sectionId="projects"
         label={copy.sections.projects.label}
@@ -24,6 +24,6 @@ export function HomeProjects() {
           Full project archive <ArrowUpRight className="h-4 w-4" />
         </MagneticButton>
       </div>
-    </SectionWrapper>
+    </PremiumSection>
   )
 }

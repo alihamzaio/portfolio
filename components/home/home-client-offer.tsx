@@ -1,8 +1,10 @@
 "use client"
 
 import { Code2, Cloud, Blocks, Gauge } from "lucide-react"
+import { PremiumGrid } from "@/components/premium/premium-grid"
+import { PremiumIcon } from "@/components/premium/premium-icon"
+import { PremiumSection } from "@/components/premium/premium-section"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { SectionWrapper } from "@/components/ui/section-wrapper"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { SmartLink } from "@/components/ui/smart-link"
 import { copy } from "@/lib/copy"
@@ -11,36 +13,36 @@ const icons = [Code2, Cloud, Blocks, Gauge]
 
 export function HomeClientOffer() {
   return (
-    <SectionWrapper id="offer">
-        <SectionHeading
-          sectionId="offer"
-          label={copy.sections.offer.label}
-          title={copy.sections.offer.title}
-          description={copy.sections.offer.description}
-        />
+    <PremiumSection id="offer" variant="muted">
+      <SectionHeading
+        sectionId="offer"
+        label={copy.sections.offer.label}
+        title={copy.sections.offer.title}
+        description={copy.sections.offer.description}
+      />
 
-        <div data-animate-stagger className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {copy.services.map((service, i) => {
-            const Icon = icons[i] ?? Code2
-            return (
-              <div key={service.title} data-animate>
-                <PremiumCard className="h-full" spotlight>
-                  <Icon className="h-5 w-5 text-[#3B82F6] mb-5" strokeWidth={1.75} />
-                  <h3 className="text-base font-bold text-[#F8FAFC] mb-2">{service.title}</h3>
-                  <p className="text-sm text-[#94A3B8] leading-relaxed">{service.desc}</p>
-                </PremiumCard>
-              </div>
-            )
-          })}
-        </div>
+      <PremiumGrid cols="4">
+        {copy.services.map((service, i) => {
+          const Icon = icons[i] ?? Code2
+          return (
+            <div key={service.title} data-animate>
+              <PremiumCard className="h-full" spotlight>
+                <PremiumIcon icon={Icon} className="mb-5" />
+                <h3 className="text-base font-bold text-white mb-2">{service.title}</h3>
+                <p className="text-sm text-neutral-400 leading-relaxed">{service.desc}</p>
+              </PremiumCard>
+            </div>
+          )
+        })}
+      </PremiumGrid>
 
-        <p data-animate className="mt-12 text-center text-sm text-[#64748B] max-w-lg mx-auto">
-          Fixed-scope milestones or monthly retainer — whatever fits your roadmap.{" "}
-          <SmartLink href="/#contact" className="text-[#3B82F6] hover:underline">
-            Tell me what you need
-          </SmartLink>
-          .
-        </p>
-    </SectionWrapper>
+      <p data-animate className="mt-12 text-center text-sm text-neutral-500 max-w-lg mx-auto">
+        Fixed-scope milestones or monthly retainer — whatever fits your roadmap.{" "}
+        <SmartLink href="/#contact" className="text-cyan-400 hover:text-sky-300 hover:underline">
+          Tell me what you need
+        </SmartLink>
+        .
+      </p>
+    </PremiumSection>
   )
 }

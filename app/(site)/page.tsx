@@ -3,7 +3,7 @@ import { SectionSkeleton } from "@/components/ui/section-skeleton"
 
 const HomeHero = dynamic(
   () => import("@/components/home/home-hero").then((m) => ({ default: m.HomeHero })),
-  { loading: () => <div className="min-h-[100dvh] bg-black animate-pulse" aria-hidden /> }
+  { loading: () => <div className="min-h-[100dvh] bg-[#0a0f1a] animate-pulse" aria-hidden /> }
 )
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
 import { buildPageMetadata, SEO_KEYWORDS } from "@/lib/seo"

@@ -152,7 +152,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         )}
 
         <p className="text-[10px] text-[#64748b] mt-6 text-center">
-          Session saved locally for 7 days · Powered by Resend
+          Session saved locally for 7 days
         </p>
       </motion.div>
     </main>

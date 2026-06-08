@@ -66,7 +66,7 @@ export function SiteHeader() {
       data-site-header
       className={cn(
         "fixed top-[2px] left-0 right-0 z-50 transition-[transform,background,padding,box-shadow] duration-500",
-        scrolled || mobileOpen ? "glass-nav py-3" : "py-5 sm:py-6 bg-transparent"
+        scrolled || mobileOpen ? "glass-nav py-3.5" : "py-6 sm:py-7 bg-transparent"
       )}
     >
       <div className="section-shell">
@@ -95,7 +95,7 @@ export function SiteHeader() {
                   aria-current={active ? "true" : undefined}
                   className={cn(
                     "relative px-4 py-2.5 text-[13px] font-medium rounded-xl transition-colors duration-300",
-                    active ? "nav-link-active-cyan" : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                    active ? "nav-link-active-cyan" : "text-neutral-400 hover:text-white"
                   )}
                 >
                   <span className="relative">{item.label}</span>
@@ -134,7 +134,7 @@ export function SiteHeader() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 top-[60px] z-40 bg-[#020617]/95 backdrop-blur-3xl"
+            className="lg:hidden fixed inset-0 top-[60px] z-40 bg-[#0a0f1a]/95 backdrop-blur-3xl"
           >
             <motion.nav
               initial={{ opacity: 0, y: 16 }}
@@ -156,8 +156,8 @@ export function SiteHeader() {
                     className={cn(
                       "block px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
                       activeId === item.id && isHome
-                        ? "bg-[#00D9FF]/10 text-[#00D9FF] border border-[#00D9FF]/25"
-                        : "text-[#94A3B8]"
+                        ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/25"
+                        : "text-neutral-400"
                     )}
                   >
                     {item.label}
