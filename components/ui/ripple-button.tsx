@@ -36,7 +36,8 @@ export function RippleButton({ children, className, type = "button", disabled, o
       disabled={disabled}
       onClick={handleClick}
       className={cn("btn-primary relative overflow-hidden", className)}
-      data-cursor
+      data-cursor="button"
+      data-cursor-magnetic
     >
       <span className="relative z-[1] inline-flex items-center justify-center gap-2">{children}</span>
     </button>

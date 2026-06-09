@@ -12,6 +12,8 @@ export function TechStackTicker() {
         {items.map((item, i) => (
           <div
             key={`${item.name}-${i}`}
+            data-cursor="skill"
+            data-cursor-magnetic
             className="flex items-center gap-2.5 shrink-0 opacity-70 hover:opacity-100 transition-opacity"
           >
             <Image src={item.icon} alt="" width={22} height={22} unoptimized />

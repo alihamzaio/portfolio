@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type ReactNode, type MouseEvent } from "react"
+import { type ReactNode, type MouseEvent } from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { usePathname } from "next/navigation"
@@ -10,7 +10,6 @@ import {
   scrollToSection,
   shouldSmoothScrollHash,
 } from "@/lib/navigation"
-import { prefersFinePointer } from "@/lib/motion-prefs"
 import { cn } from "@/lib/utils"
 
 const MotionLink = motion.create(Link)
@@ -24,6 +23,8 @@ interface MagneticButtonProps {
   type?: "button" | "submit"
   target?: string
   rel?: string
+  cursorMode?: "button" | "contact" | "external"
+  cursorLabel?: string
 }
 
 export function MagneticButton({
@@ -35,35 +36,21 @@ export function MagneticButton({
   type = "button",
   target,
   rel,
+  cursorMode = "button",
+  cursorLabel,
 }: MagneticButtonProps) {
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
-  const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
-  const [magnetic, setMagnetic] = useState(false)
 
-  useEffect(() => {
-    setMagnetic(prefersFinePointer() && !reduceMotion)
-  }, [reduceMotion])
-
-  const handleMove = (e: MouseEvent) => {
-    if (!magnetic) return
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const x = e.clientX - rect.left - rect.width / 2
-    const y = e.clientY - rect.top - rect.height / 2
-    el.style.transform = `translate(${x * 0.14}px, ${y * 0.14}px)`
-    el.style.setProperty("--bx", `${((e.clientX - rect.left) / rect.width) * 100}%`)
-    el.style.setProperty("--by", `${((e.clientY - rect.top) / rect.height) * 100}%`)
-  }
-
-  const handleLeave = () => {
-    if (ref.current) ref.current.style.transform = "translate(0, 0)"
+  const cursorProps = {
+    "data-cursor": cursorMode,
+    "data-cursor-magnetic": true,
+    ...(cursorLabel ? { "data-cursor-label": cursorLabel } : {}),
+    ...(cursorMode === "external" ? { "data-cursor-arrow": "true" } : {}),
   }
 
   const base = cn(
     "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow] duration-300",
-    magnetic && "will-change-transform",
     variant === "primary" &&
       "btn-primary px-7 py-3 relative overflow-hidden before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-[radial-gradient(circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.12),transparent_55%)] before:transition-opacity before:duration-300",
     variant === "secondary" && "btn-secondary px-7 py-3",
@@ -72,12 +59,10 @@ export function MagneticButton({
   )
 
   const tap = reduceMotion ? undefined : { scale: 0.97 }
-  const moveProps = magnetic
-    ? { onMouseMove: handleMove, onMouseLeave: handleLeave }
-    : {}
 
   if (href) {
     const kind = getLinkKind(href)
+    const mode = kind === "external" || kind === "download" ? "external" : cursorMode
 
     const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
       if (shouldSmoothScrollHash(href, pathname)) {
@@ -90,14 +75,15 @@ export function MagneticButton({
     if (kind === "external" || kind === "download") {
       return (
         <motion.a
-          ref={ref as React.RefObject<HTMLAnchorElement>}
           href={href}
           target={target ?? (kind === "external" ? "_blank" : undefined)}
           rel={rel ?? (kind === "external" ? "noopener noreferrer" : undefined)}
-          data-cursor
+          data-cursor={mode}
+          data-cursor-magnetic
+          {...(cursorLabel ? { "data-cursor-label": cursorLabel } : {})}
+          data-cursor-arrow="true"
           whileTap={tap}
           className={base}
-          {...moveProps}
         >
           {children}
         </motion.a>
@@ -105,18 +91,19 @@ export function MagneticButton({
     }
 
     const linkHref = kind === "hash" ? resolveNavHref(href, pathname) : href
+    const isContact = href.includes("contact")
 
     return (
       <MotionLink
-        ref={ref as React.RefObject<HTMLAnchorElement>}
         href={linkHref}
         target={target}
         rel={rel}
-        data-cursor
+        data-cursor={isContact ? "contact" : cursorMode}
+        data-cursor-magnetic
+        {...(cursorLabel ? { "data-cursor-label": cursorLabel } : {})}
         onClick={kind === "hash" ? handleLinkClick : undefined}
         whileTap={tap}
         className={base}
-        {...moveProps}
       >
         {children}
       </MotionLink>
@@ -125,13 +112,11 @@ export function MagneticButton({
 
   return (
     <motion.button
-      ref={ref as React.RefObject<HTMLButtonElement>}
       type={type}
       onClick={onClick}
-      data-cursor
+      {...cursorProps}
       whileTap={tap}
       className={base}
-      {...moveProps}
     >
       {children}
     </motion.button>

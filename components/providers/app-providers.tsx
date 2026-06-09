@@ -7,6 +7,7 @@ import { AmbientScene } from "@/components/effects/ambient-scene"
 import { SiteParticleBg } from "@/components/effects/site-particle-bg"
 import { Spotlight } from "@/components/effects/spotlight"
 import { ScrollProgress } from "@/components/effects/scroll-progress"
+import { PremiumCursor } from "@/components/cursor/premium-cursor"
 import { EnhancementRuntime } from "@/components/effects/enhancement-runtime"
 import { getIntroDelayMs } from "@/lib/motion-prefs"
 
@@ -25,6 +26,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
   return (
     <>
+      <PremiumCursor />
       <EnhancementRuntime />
       <ScrollProgress />
       <AnimatePresence mode="wait">{!ready && !reduceMotion && <LoadingOverlay key="loader" />}</AnimatePresence>

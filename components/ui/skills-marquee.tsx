@@ -12,7 +12,7 @@ export function SkillsMarquee() {
     <div className="skills-marquee-wrap mt-12" data-animate>
       <div className="skills-marquee-track">
         {track.map((skill, i) => (
-          <span key={`${skill.name}-${i}`} className="skill-marquee-pill">
+          <span key={`${skill.name}-${i}`} className="skill-marquee-pill" data-cursor="skill" data-cursor-magnetic>
             {skill.icon && (
               <Image src={skill.icon} alt="" width={14} height={14} unoptimized className="shrink-0" />
             )}

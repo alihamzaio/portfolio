@@ -37,7 +37,8 @@ export function PremiumGlassCta({ children, href, className, delay = 0.4 }: Prem
       <Link
         href={href}
         onClick={handleClick}
-        data-cursor
+        data-cursor="contact"
+        data-cursor-magnetic
         className={cn("premium-glass-cta group relative inline-flex", className)}
       >
         <span className="premium-glass-cta-inner relative z-[1] inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold text-white">

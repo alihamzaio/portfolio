@@ -78,7 +78,7 @@ export function HomeContact() {
                     target={"external" in row && row.external ? "_blank" : undefined}
                     rel={"external" in row && row.external ? "noopener noreferrer" : undefined}
                     className="flex gap-3 group"
-                    data-cursor
+                    data-cursor="link"
                   >
                     {content}
                   </a>

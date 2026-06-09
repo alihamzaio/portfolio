@@ -21,7 +21,7 @@ export function ProjectsGrid() {
       <PremiumGrid cols="3">
         {projects.slice(0, 12).map((project, i) => (
           <PremiumReveal key={project.id} delay={(i % 6) * 0.05}>
-            <Link href={`/projects/${project.slug}`} data-cursor>
+            <Link href={`/projects/${project.slug}`} data-cursor="project">
               <PremiumCard className="p-0 overflow-hidden group h-full flex flex-col" spotlight>
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <Image

@@ -71,7 +71,7 @@ export function SiteHeader() {
     >
       <div className="section-shell">
         <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="shrink-0 group" data-cursor aria-label={`${profile.name} — Home`}>
+          <Link href="/" className="shrink-0 group" data-cursor="link" aria-label={`${profile.name} — Home`}>
             <Logo
               name={profile.name}
               showName
@@ -111,7 +111,8 @@ export function SiteHeader() {
               href="/#contact"
               onClick={(e) => handleNavClick(e, "/#contact")}
               className="hidden sm:inline-flex items-center gap-1.5 btn-primary text-[13px] !py-2.5 !px-5"
-              data-cursor
+              data-cursor="contact"
+              data-cursor-magnetic
             >
               Contact
               <ArrowRight className="h-3.5 w-3.5" />
