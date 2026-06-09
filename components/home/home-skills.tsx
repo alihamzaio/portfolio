@@ -24,7 +24,7 @@ export function HomeSkills() {
       <PremiumGrid cols="3" className="mt-12">
         {skillCategories.map((cat) => (
           <div key={cat.id} data-animate className="premium-surface rounded-2xl p-6">
-            <p className="accent-label mb-2">{cat.title}</p>
+            <p className="meta-label mb-2">{cat.title}</p>
             <p className="text-sm text-neutral-500 mb-6">{cat.description}</p>
             <div className="flex flex-wrap gap-2">
               {cat.skills.map((skill) => (

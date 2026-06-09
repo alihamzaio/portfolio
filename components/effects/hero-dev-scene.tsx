@@ -36,25 +36,25 @@ function DevCore() {
   useFrame((state) => {
     const t = state.clock.elapsedTime
     if (group.current) {
-      group.current.rotation.y = t * 0.18 + mouse.current.x * 0.25
-      group.current.rotation.x = Math.sin(t * 0.3) * 0.12 + mouse.current.y * 0.15
+      group.current.rotation.y = t * 0.18 + mouse.current.x * 0.2
+      group.current.rotation.x = Math.sin(t * 0.3) * 0.08 + mouse.current.y * 0.1
     }
     if (knot.current) knot.current.rotation.z = t * 0.12
     if (inner.current) inner.current.rotation.y = -t * 0.35
   })
 
   return (
-    <group ref={group}>
+    <group ref={group} scale={0.82} position={[0, 0.05, 0]}>
       <mesh ref={knot}>
-        <torusKnotGeometry args={[1.05, 0.28, 128, 16]} />
+        <torusKnotGeometry args={[0.95, 0.24, 128, 16]} />
         <meshBasicMaterial color={brand.blue} wireframe transparent opacity={0.55} />
       </mesh>
       <mesh ref={inner}>
-        <icosahedronGeometry args={[0.55, 1]} />
+        <icosahedronGeometry args={[0.48, 1]} />
         <meshBasicMaterial color={brand.cyan} wireframe transparent opacity={0.75} />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.55, 0.012, 8, 64]} />
+        <torusGeometry args={[1.35, 0.01, 8, 64]} />
         <meshBasicMaterial color={brand.sky} transparent opacity={0.35} />
       </mesh>
     </group>
@@ -140,13 +140,13 @@ export function HeroDevScene() {
         </motion.span>
       ))}
 
-      <div className="absolute inset-x-4 top-6 h-[220px]">
+      <div className="absolute inset-x-2 top-4 bottom-[7.5rem] overflow-visible pointer-events-none">
         {mounted && !reduceMotion ? (
           <Canvas
-            camera={{ position: [0, 0, 4.2], fov: 42 }}
+            camera={{ position: [0, 0.1, 5.4], fov: 36, near: 0.1, far: 100 }}
             dpr={[1, 1.5]}
             gl={{ alpha: true, antialias: true }}
-            style={{ background: "transparent" }}
+            style={{ background: "transparent", width: "100%", height: "100%" }}
           >
             <DevCore />
           </Canvas>

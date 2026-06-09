@@ -22,7 +22,7 @@ export function TechStackContent() {
         {skillCategories.map((cat, ci) => (
           <PremiumReveal key={cat.id} delay={ci * 0.06}>
             <PremiumCard className="h-full" spotlight>
-              <p className="accent-label mb-2">{cat.title}</p>
+              <p className="meta-label mb-2">{cat.title}</p>
               <p className="text-sm text-neutral-500 mb-6">{cat.description}</p>
               <div className="flex flex-wrap gap-2">
                 {cat.skills.map((skill) => (

@@ -18,6 +18,8 @@ export function SectionHeader({
   className,
   align = "center",
 }: SectionHeaderProps) {
+  const showLabel = label.trim().toLowerCase() !== title.trim().toLowerCase()
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -30,16 +32,10 @@ export function SectionHeader({
         className
       )}
     >
-      <span className="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-primary/80 mb-4">
-        <span className="h-px w-6 bg-primary/50" />
-        {label}
-        <span className="h-px w-6 bg-primary/50" />
-      </span>
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4">
-        {title}
-      </h2>
+      {showLabel && <p className="section-label mb-3">{label}</p>}
+      <h2 className="section-title mb-4">{title}</h2>
       {description && (
-        <p className="text-muted-foreground text-base md:text-lg leading-relaxed">{description}</p>
+        <p className="text-neutral-400 text-base md:text-lg leading-relaxed">{description}</p>
       )}
     </motion.div>
   )
