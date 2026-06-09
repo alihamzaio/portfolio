@@ -43,8 +43,8 @@ const HomeContact = dynamic(
 )
 
 export const metadata = buildPageMetadata({
-  title: `${siteConfig.name} — ${siteConfig.title} | MERN, AWS & Web3`,
-  description: `${siteConfig.headline} ${siteConfig.description}`,
+  title: `${siteConfig.name} — Full Stack Developer | MERN, AWS & Blockchain`,
+  description: siteConfig.description,
   path: "/",
   ogImage: "/opengraph-image",
   keywords: [

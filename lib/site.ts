@@ -1,15 +1,16 @@
 export const siteConfig = {
   name: "Ali Hamza",
-  title: "Full Stack Software Engineer",
+  title: "Full Stack Developer",
   tagline: "MERN · AWS Serverless · Blockchain",
-  headline: "I build things that work. Here's proof.",
+  headline:
+    "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
   description:
-    "Full stack engineer (~3 years). Production work at Birxment, Exec9, and Explore Logics — 15+ APIs, 10,000+ indexed blocks, real users on every deploy. Lahore-based, remote-friendly.",
+    "Full Stack Developer with 3+ years of experience in React, Next.js, Node.js, AWS serverless, REST APIs, and blockchain. Based in Lahore, Pakistan. Open to remote work.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",
   location: "Lahore, Pakistan",
-  education: "B.S. Computer Science — University of Education (2019–2023)",
+  education: "B.S. Computer Science, University of Education (2019–2023)",
   initials: "AH",
   available: true,
   social: {
@@ -20,18 +21,20 @@ export const siteConfig = {
   resumeUrl: "/api/resume/download",
   githubUsername: "alihamzaio",
   specialties: [
+    "Full Stack Development",
     "MERN Stack",
+    "Next.js",
     "AWS Serverless",
+    "REST API Development",
     "Blockchain / Web3",
-    "Microservices",
-    "PostgreSQL & MongoDB",
+    "MongoDB & PostgreSQL",
   ],
 } as const
 
 export const engineeringMetrics = [
-  { label: "REST APIs delivered", value: "15+" },
+  { label: "REST APIs built", value: "15+" },
   { label: "Blocks indexed (Verana)", value: "10,000+" },
-  { label: "Fewer prod defects", value: "40%" },
+  { label: "Fewer production defects", value: "40%" },
   { label: "SKUs automated (Senzi)", value: "5,000+" },
 ] as const
 

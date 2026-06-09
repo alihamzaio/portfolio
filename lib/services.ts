@@ -4,26 +4,26 @@ export const services = [
   {
     icon: Code2,
     title: "Web Development",
-    description: "Scalable MERN & Next.js applications with premium UI, robust APIs, and production-grade architecture.",
+    description: "MERN and Next.js applications with REST APIs and production deployment.",
   },
   {
     icon: Brain,
     title: "AI Integration",
-    description: "LLM workflows, intelligent automation, chat interfaces, and AI-powered product features.",
+    description: "LLM workflows, automation, chat interfaces, and AI-powered features.",
   },
   {
     icon: Smartphone,
     title: "Mobile-First Apps",
-    description: "Responsive, performant experiences optimized for every device with flawless interaction design.",
+    description: "Responsive web applications optimized for mobile and desktop.",
   },
   {
     icon: Cloud,
     title: "SaaS Development",
-    description: "End-to-end SaaS platforms — auth, billing, dashboards, multi-tenant systems on AWS.",
+    description: "SaaS platforms with auth, billing, dashboards, and multi-tenant systems on AWS.",
   },
   {
     icon: Palette,
-    title: "UI/UX Engineering",
-    description: "Cinematic interfaces with motion design, design systems, and conversion-focused experiences.",
+    title: "UI Engineering",
+    description: "React interfaces with design systems and component libraries.",
   },
 ]

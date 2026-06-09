@@ -80,7 +80,7 @@ export function buildHomePageGraph() {
       },
       {
         "@type": "ItemList",
-        name: "Professional Experience",
+        name: "Work Experience",
         itemListElement: experiences.map((job, index) => ({
           "@type": "ListItem",
           position: index + 1,

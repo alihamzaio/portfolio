@@ -4,8 +4,8 @@ import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
-  title: "Tech Stack & Skills",
-  description: `${siteConfig.name}'s tech stack: React, Next.js, Node.js, TypeScript, AWS Lambda, Docker, PostgreSQL, MongoDB, Solidity, and Moleculer microservices.`,
+  title: "Tech Stack",
+  description: `${siteConfig.name}'s technical stack: React, Next.js, Node.js, Express.js, TypeScript, MongoDB, PostgreSQL, AWS Lambda, Docker, Kubernetes, Solidity, and REST API development.`,
   path: "/tech-stack",
 })
 

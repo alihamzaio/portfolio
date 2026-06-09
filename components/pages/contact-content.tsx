@@ -14,7 +14,7 @@ export function ContactContent() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Project inquiry from ${form.name}`)
+    const subject = encodeURIComponent(`Inquiry from ${form.name}`)
     const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)
     window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`
   }
@@ -35,8 +35,8 @@ export function ContactContent() {
       <SectionHeading
         headingLevel={1}
         label="Contact"
-        title="Let's build something exceptional"
-        description="Tell me about your product, timeline, and vision. I'll respond within 24 hours."
+        title="Contact"
+        description="Describe your project, role, or technical requirements. I reply within one business day."
         align="center"
         className="mx-auto"
       />
@@ -108,7 +108,7 @@ export function ContactContent() {
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   className="input-premium resize-none flex-1 min-h-[120px] w-full"
-                  placeholder="Describe your project..."
+                  placeholder="What are you building? Include timeline and stack if known."
                 />
               </div>
               <RippleButton type="submit" className="w-full sm:w-auto">

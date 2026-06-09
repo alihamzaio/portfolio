@@ -1,8 +1,8 @@
 export const HERO_ROLE_LINES = [
   "Full Stack Developer",
-  "System Architect",
-  "Performance Engineer",
-  "Open Source Contributor",
+  "MERN Stack Developer",
+  "Next.js Developer",
+  "AWS & Serverless Engineer",
 ] as const
 
 export const TECH_STACK_TICKER = [
@@ -28,8 +28,8 @@ export const RADAR_SKILLS = [
 ] as const
 
 export const ABOUT_STATS = [
-  { label: "Years Experience", value: 3, suffix: "+" },
-  { label: "Projects Delivered", value: 26, suffix: "+" },
-  { label: "Clients Worldwide", value: 12, suffix: "+" },
-  { label: "Open Source", value: 8, suffix: "+" },
+  { label: "Years of experience", value: 3, suffix: "+" },
+  { label: "Projects completed", value: 26, suffix: "+" },
+  { label: "Clients", value: 12, suffix: "+" },
+  { label: "Production APIs", value: 15, suffix: "+" },
 ] as const

@@ -10,15 +10,15 @@ import { PremiumCard } from "@/components/ui/premium-card"
 
 const defaultMetrics = [
   { label: "Stack", value: "MERN" },
-  { label: "Delivery", value: "Production" },
-  { label: "Scale", value: "Global" },
+  { label: "Status", value: "Production" },
+  { label: "Scope", value: "Full Stack" },
 ]
 
 const defaultArchitecture = [
-  "React / Next.js frontend",
-  "Node.js REST API layer",
+  "React or Next.js frontend",
+  "Node.js and Express.js REST API layer",
   "MongoDB or PostgreSQL data store",
-  "Docker + CI/CD deployment",
+  "Docker-based CI/CD deployment",
 ]
 
 interface ProjectDetailProps {
@@ -56,7 +56,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-            <p className="accent-label mb-3">Case Study</p>
+            <p className="accent-label mb-3">Project</p>
             <h1 className="font-display text-3xl md:text-5xl font-semibold text-white max-w-4xl">{project.title}</h1>
           </div>
         </motion.div>

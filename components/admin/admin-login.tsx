@@ -79,7 +79,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         className="w-full max-w-md glass-card rounded-2xl p-8 md:p-10"
       >
         <div className="flex items-center gap-3 mb-8">
-          <LogoMark size={48} />
+          <LogoMark size={48} instanceId="login" />
           <div>
             <h1 className="text-xl font-bold text-[#F8FAFC]">Admin access</h1>
             <p className="text-xs text-[#94A3B8]">Secure login via email OTP</p>

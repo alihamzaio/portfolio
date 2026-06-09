@@ -2,7 +2,7 @@
     {
     "id": 26,
     "title": "Adam Store – Full E-Commerce Platform",
-    "description": "A complete e-commerce platform featuring customer storefront, admin dashboard, and backend API system for product, order, and user management.",
+    "description": "MERN e-commerce platform with customer storefront, admin dashboard, and REST API for products, orders, and users.",
     "tags": [
         "React.js",
         "Node.js",
@@ -16,7 +16,7 @@
         "Full-Stack Development"
     ],
     "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761813538/adam_rjkkm9.png",
-    "details": "Developed the entire Adam Store e-commerce system including both customer-facing and admin dashboards. The customer side provides product browsing, cart management, and order placement with secure authentication and responsive UI. The admin dashboard enables full control over inventory, orders, users, and analytics. The backend was built using Node.js, Express.js, and MongoDB with RESTful APIs and Axios integration for smooth data communication. The platform ensures scalability, performance, and an intuitive management experience for store operators.",
+    "details": "Built the full Adam Store system: customer storefront with product browsing, cart, and checkout; admin dashboard for inventory, orders, and user management; Node.js and Express backend with MongoDB and REST APIs.",
     "link": "https://adamstore.pk/",
     "github": "https://github.com/Adam-store-Ecomerce/"
 }
@@ -24,7 +24,7 @@
     {
         "id": 25,
         "title": "Verana Blockchain Crawler & Indexing System",
-        "description": "A high-performance blockchain data crawler and indexer with PostgreSQL storage and RESTful API exposure.",
+        "description": "Blockchain crawler and indexer with PostgreSQL storage and REST API access.",
         "tags": [
             "Node.js",
             "Express.js",
@@ -36,14 +36,14 @@
             "CI/CD"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659471/ver_imkwft.png",
-        "details": "Developed a distributed blockchain crawler and indexer system for Verana Network that parses blockchain data and stores it efficiently in PostgreSQL. Built scalable background workers using Bull.js and service-based architecture with Moleculer.js. Designed RESTful APIs for external data access and implemented CI/CD pipelines for automated deployment using Docker. The system ensures reliability, scalability, and optimized data synchronization across blockchain nodes.",
+        "details": "Built a distributed blockchain crawler and indexer for Verana Network. Background workers (Bull.js) and Moleculer.js services parse and store blockchain data in PostgreSQL. REST APIs expose indexed data. Docker-based CI/CD for deployment.",
         "link": "https://idx.testnet.verana.network/verana/",
         "github": "#"
     },
     {
         "id": 24,
         "title": "MagicCraft – NFT & Blockchain Gaming Platform",
-        "description": "UI enhancement and feature integration for MagicCraft’s blockchain-based NFT gaming platform, focusing on NFT rentals, marketplace interactions, and gameplay economy systems.",
+        "description": "Frontend work on MagicCraft's NFT gaming platform: marketplace, rentals, and gameplay dashboards.",
         "tags": [
             "React js",
             "React",
@@ -55,14 +55,14 @@
             "UI/UX Design"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659251/sd_mz51gt.png",
-        "details": "Contributed to the MagicCraft blockchain gaming platform by improving the front-end UI/UX using Next.js and Tailwind CSS. Enhanced NFT marketplace pages, rental features, and real-time gameplay dashboards. Worked on Web3 integrations with wallet connectivity, NFT metadata handling, and Polymarket-based transaction logic for digital assets. Focused on seamless player experience and optimized loading performance across the platform.",
+        "details": "Contributed to MagicCraft's React frontend with Next.js and Tailwind CSS. Built NFT marketplace pages, rental flows, and gameplay dashboards. Integrated wallet connectivity, NFT metadata, and Polymarket transaction logic.",
         "link": "https://app.magiccraft.io/",
         "github": "#"
     },
     {
         "id": 23,
         "title": "HandenPols – Healthcare Service Platform",
-        "description": "A modern healthcare service platform built using Next.js and Tailwind CSS for HandenPols, focused on therapy, rehabilitation, and patient engagement through a clean, accessible, and responsive design.",
+        "description": "Healthcare services website built with Next.js and Tailwind CSS for therapy and rehabilitation programs.",
         "tags": [
             "Next.js",
             "Tailwind CSS",
@@ -74,14 +74,14 @@
             "SEO Optimization"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659066/hd_ac14ig.png",
-        "details": "Developed a sleek and responsive healthcare website for HandenPols using Next.js and Tailwind CSS. The project emphasizes accessibility, high performance, and a seamless user journey for therapy and rehabilitation services. Built with modular components, optimized SEO, and mobile-first responsiveness to ensure a professional, trustworthy online presence.",
+        "details": "Built the HandenPols website with Next.js and Tailwind CSS. Modular components, accessible layouts, SEO configuration, and mobile-responsive pages for therapy and rehabilitation services.",
         "link": "https://handenpols.nl/",
         "github": "#"
     },
     {
         "id": 22,
         "title": "Solanity Grid – Energy & Gas Dashboard",
-        "description": "A real-time data dashboard for gas, oil and weather conditions, designed for operational monitoring and analytics.",
+        "description": "Real-time dashboard for gas, oil, and weather data used in operational monitoring.",
         "tags": [
             "React",
             "JavaScript",
@@ -92,14 +92,14 @@
             "Data Visualization"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761658831/1_Dashboard_nhr9pz.png",
-        "details": "Developed the Solanity Grid portal to visualize dynamic data in the energy sector, including gas, oil and weather metrics. The system loads data via secure RESTful APIs and displays interactive charts, tables and mapping components. Built with React and TypeScript for performance, and styled via Tailwind CSS for a modern, responsive layout.",
+        "details": "Built the Solanity Grid portal to display energy sector data (gas, oil, weather) from REST APIs. React and TypeScript frontend with charts, tables, and map components. Tailwind CSS for layout.",
         "link": "https://grid.solanity.co.uk/login",
         "github": "#"
     },
     {
         "id": 21,
         "title": "Truvest Capital Market Website",
-        "description": "Finance-platform website providing access to fintech banking products and trade-finance services, built with a React frontend.",
+        "description": "React frontend for a financial services platform offering trade finance and banking products.",
         "tags": [
             "React",
             "Create-React-App",
@@ -108,14 +108,14 @@
             "Finance Platform"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761658611/sd_u8zupy.png",
-        "details": "Developed the frontend for Truvest Capital Market GmbH, a financial services platform offering trade finance, private advisory, and fintech banking products. Built using Create-React-App for a fast and modern user interface, with responsive design and seamless user experience across devices. The site integrates with backend portals and banking APIs for user on-boarding and secure service delivery. :contentReference[oaicite:1]{index=1}",
+        "details": "Built the frontend for Truvest Capital Market GmbH using Create React App. Responsive layouts and integration with backend portals and banking APIs for onboarding and service access.",
         "link": "https://truvest.de/",
         "github": "#"
     },
     {
         "id": 20,
         "title": "RizzDate - App Landing Page",
-        "description": "A high-converting landing page for the RizzDate mobile app, built to highlight its voice-first dating experience with smooth animations and a modern design.",
+        "description": "Next.js landing page for the RizzDate mobile dating app.",
         "tags": [
             "Next.js",
             "Tailwind CSS",
@@ -126,14 +126,14 @@
             "Landing Page"
         ],
         "image": "https://www.exec9.com/_next/image?url=%2Frizzdate-case-study.png&w=1920&q=75",
-        "details": "Developed a visually engaging landing page for RizzDate, a voice-first dating app. The site was built using Next.js and Tailwind CSS, with Framer Motion for fluid animations and smooth section transitions. It focuses on storytelling through clean UI, responsive layouts, and SEO optimization to enhance discoverability. The design communicates the app’s key features — voice matching, real-time chat, and video calls — while maintaining a modern, emotionally resonant aesthetic consistent with the app’s branding.",
+        "details": "Built a landing page for RizzDate using Next.js, Tailwind CSS, and Framer Motion. Pages cover voice matching, chat, and video call features. Responsive layout and SEO setup.",
         "link": "https://rizzdate.app/",
         "github": "#"
     },
     {
         "id": 19,
         "title": "EPA Onboarding Portal",
-        "description": "A bilingual onboarding portal for the Dubai government built with pure HTML, CSS, and JavaScript.",
+        "description": "Bilingual onboarding portal for the Dubai government built with HTML, CSS, and JavaScript.",
         "tags": [
             "HTML",
             "CSS",
@@ -143,14 +143,14 @@
             "Government Portal"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761658347/zn_vieqjg.png",
-        "details": "Developed a responsive bilingual onboarding website for the Dubai government using HTML, CSS, and vanilla JavaScript. Implemented dual language support (English and Arabic) with a smooth toggle system. Focused on accessibility, professional layout, and compliance with government design standards for a clean and user-friendly interface.",
+        "details": "Built a bilingual onboarding website for the Dubai government using HTML, CSS, and vanilla JavaScript. English and Arabic language toggle. Accessible layout following government design standards.",
         "link": "https://www.epa.org.ae/",
         "github": "#"
     },
     {
         "id": 18,
         "title": "Liddy Silver Interiors",
-        "description": "A refined interior design showcase website featuring smooth transitions and elegant layouts for a premium design studio.",
+        "description": "Interior design portfolio site with project galleries and image sliders.",
         "tags": [
             "React",
             "Swiper.js",
@@ -159,14 +159,14 @@
             "CSS Animations"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761658124/ld_nzg5rq.png",
-        "details": "Developed a visually engaging portfolio website for Liddy Silver Interiors using React and Swiper.js to display interactive project slides. Implemented dynamic background color transitions for immersive user experience. Focused on a minimal, editorial aesthetic with smooth animations and responsive layouts to highlight luxury interior design projects.",
+        "details": "Built a portfolio site for Liddy Silver Interiors using React and Swiper.js. Project galleries with background color transitions. Responsive layouts.",
         "link": "https://liddysilver.com/project2",
         "github": "#"
     },
     {
         "id": 17,
         "title": "LivingWall Landing Page",
-        "description": "A modern and lightweight company landing page showcasing LivingWall’s sustainable design services with smooth animations and fast loading speed.",
+        "description": "Company landing page for LivingWall's sustainable design services.",
         "tags": [
             "React",
             "Vite",
@@ -176,14 +176,14 @@
             "SEO Optimization"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761657893/lv_svdh0x.png",
-        "details": "Developed a clean and elegant landing page for LivingWall using React with Vite for optimized performance. Bootstrap components were customized with CSS transforms and transitions to achieve subtle animations. The layout is fully responsive and optimized for cross-device compatibility.",
+        "details": "Built a landing page with React and Vite. Bootstrap components with CSS transforms for page transitions. Responsive layout.",
         "link": "https://livingwall.au/",
         "github": "#"
     },
     {
         "id": 16,
         "title": "PyMC Labs",
-        "description": "Agency website for Bayesian modeling experts providing AI and probabilistic consulting services.",
+        "description": "Agency website for Bayesian modeling and probabilistic consulting.",
         "tags": [
             "Next.js",
             "Tailwind CSS",
@@ -193,14 +193,14 @@
             "Blog System"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761657699/pymc_fwwaho.png",
-        "details": "Developed a professional agency website for PyMC Labs, featuring service showcases, AI and probabilistic consulting details, and a blog publishing system powered by Strapi CMS. Integrated a dynamic CRM backend and SEO-friendly architecture using Next.js with Tailwind CSS.",
+        "details": "Built the PyMC Labs website with Next.js and Tailwind CSS. Service pages, blog (Strapi CMS), and CRM integration.",
         "link": "https://www.pymc-labs.com/",
         "github": "#"
     },
     {
         "id": 15,
         "title": "Devencodes – Software Company Portfolio",
-        "description": "A sleek, high-performance company portfolio showcasing software solutions and creative expertise.",
+        "description": "Software company portfolio built with Next.js.",
         "tags": [
             "Next.js",
             "Tailwind CSS",
@@ -210,14 +210,14 @@
             "Cloudinary"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761657418/devencodes_ws50n4.png",
-        "details": "Built a modern and responsive company portfolio for Devencodes using Next.js and Tailwind CSS. Integrated Framer Motion for dynamic animations and smooth transitions, while leveraging ShadCN UI and Aeternity UI for polished interface components. Designed for speed, accessibility, and brand presence with a professional dark theme aesthetic.",
+        "details": "Built Devencodes' portfolio with Next.js, Tailwind CSS, and Framer Motion. Shadcn UI components. Dark theme layout.",
         "link": "https://www.devencodes.com/",
         "github": "#"
     },
     {
         "id": 14,
         "title": "DotGod Medical Dashboard",
-        "description": "Comprehensive healthcare data management dashboard with dynamic REST API integration.",
+        "description": "Healthcare data management dashboard with REST API integration.",
         "tags": [
             "Next.js",
             "React",
@@ -229,14 +229,14 @@
             "TypeScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761657172/Dashboard_wtnmjb.png",
-        "details": "DotGod is a full-stack healthcare data management platform designed to centralize and manage patient and medical record data. The dashboard dynamically fetches and displays data from RESTful APIs, featuring secure authentication, role-based access, and group-based data insertion from uploaded files. Built with a scalable MERN architecture, the system offers real-time updates, advanced analytics, and a sleek, responsive UI.",
+        "details": "Full-stack healthcare platform centralizing patient and medical records. Dashboard reads from REST APIs with authentication and role-based access. File upload for group data insertion. MERN stack with real-time updates.",
         "link": "https://dotgod.nl",
         "github": "#"
     },
     {
         "id": 13,
         "title": "Pest Insights Dashboard",
-        "description": "Data-driven operational dashboard for pest-control services, delivering insights from scheduling, technician routing, and business KPIs in real time.",
+        "description": "Operational dashboard for pest-control services with scheduling, routing, and business KPIs.",
         "tags": [
             "React.js",
             "Node.js",
@@ -246,14 +246,14 @@
             "RESTful API"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761656734/Dashboard_sgcwe2.jpg",
-        "details": "Frontend: React.js is used to create a fast, dynamic dashboard UI with data-driven charts and smooth admin interactions. Backend: Express.js handles company creation, Google Sheets data parsing, and provides API endpoints for metrics retrieval. Database: MongoDB stores company profiles, imported campaign metrics, and computed insights for quick retrieval. Data Sync: Google Sheets API integration ensures smooth imports and synchronization with external spreadsheets.",
+        "details": "React.js dashboard with charts and admin interactions. Express.js backend for company creation, Google Sheets data parsing, and metrics API endpoints. MongoDB stores company profiles and campaign metrics. Google Sheets API for data import.",
         "link": "https://app.pestinsights.com/",
         "github": "#"
     },
     {
         "id": 12,
         "title": " Kype.io",
-        "description": "KYPI is a campaign performance tracking dashboard built for a client who previously relied on manual workflows to manage and analyze marketing data.",
+        "description": "Campaign performance tracking dashboard replacing manual marketing data workflows.",
         "tags": [
             "React.js",
             "Express.js",
@@ -265,14 +265,14 @@
             "Chart.js"
         ],
         "image": "https://www.exec9.com/_next/image?url=%2Fkypi.png&w=1920&q=75",
-        "details": "KYPI is a campaign performance tracking dashboard built for a client who previously relied on manual workflows to manage and analyze marketing data. Designed with simplicity and speed in mind, KYPI enables the admin to create new companies with a single click and import campaign performance data directly from a shared Google Sheet. The platform processes this data and displays it using interactive charts and metric summaries, eliminating repetitive manual tracking. Built using React, Express, and MongoDB, KYPI provides real-time insights with minimal input.",
+        "details": "Built KYPI, a campaign performance dashboard for a client managing marketing data manually. Admin can create companies and import campaign data from Google Sheets. React frontend with Chart.js visualizations. Express and MongoDB backend.",
         "link": "https://dashboard.kypi.io/",
         "github": "#"
     },
     {
         "id": 11,
-        "title": " UniLabs - AI-Powered DeFi Asset Management",
-        "description": "UniLabs represents a bold step forward in crypto investing—bringing AI, automation, and DeFi together in one powerful platform.",
+        "title": " UniLabs - DeFi Asset Management",
+        "description": "DeFi web platform with Next.js frontend, Solidity contracts, and wallet integration.",
         "tags": [
             "MongoDB",
             "Express",
@@ -286,14 +286,14 @@
             "Node.js"
         ],
         "image": "https://www.exec9.com/_next/image?url=%2Funilabs-case-study.png&w=1920&q=75",
-        "details": "UniLabs is the first AI-powered decentralized finance (DeFi) asset management platform designed to democratize access to advanced crypto investment strategies. It leverages AI models, predictive analytics, and decentralized technologies to help users identify and invest in high-growth crypto projects. With features like smart contract auditing, automated portfolio balancing, and real-time market analysis, UniLabs offers a structured, data-driven approach to building generational wealth in the Web3 economy.",
+        "details": "Built UniLabs, a Web3 asset management platform. Next.js frontend with wallet connection, Solidity contracts on Ethereum mainnet, and Ethers.js for contract reads and transactions.",
         "link": "https://unliabs-web.cloud.exec9.com/",
         "github": "#"
     },
     {
         "id": 10,
         "title": "Senzi",
-        "description": "Full MERN stack e-commerce platform with real-time features.",
+        "description": "Dropshipping e-commerce platform for the Libyan market with 1688 and Taobao API integrations.",
         "tags": [
             "MongoDB",
             "Express",
@@ -304,14 +304,14 @@
             "Node.js"
         ],
         "image": "https://www.exec9.com/_next/image?url=%2Fsenzi-case-study.png&w=1920&q=75",
-        "details": "Senzi is a full-featured dropshipping platform designed specifically for the Libyan market. It empowers users to browse and import products directly from Chinese e-commerce giants 1688 and Taobao. The platform offers both an admin and user panel for streamlined operations. Built using modern technologies such as Next.js, Express, MongoDB, and React-Bootstrap, Senzi provides a seamless experience for store owners and individual resellers looking to source products globally.",
+        "details": "Built Senzi with Next.js, Express, and MongoDB. Admin and user panels for catalog management. Integrations with 1688 and Taobao for product import. Order processing workflows.",
         "link": "https://senzi.ly/",
         "github": "#"
     },
     {
         "id": 1,
         "title": "Fanatic Website",
-        "description": "Modern e-commerce style React application with responsive UI and smooth animations.",
+        "description": "React e-commerce application with responsive product layouts.",
         "tags": [
             "React",
             "Bootstrap",
@@ -319,14 +319,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654505/Fanatic.com_cyvmpr.png",
-        "details": "Developed a fully responsive React-based e-commerce experience with elegant product layouts and animation effects. Focused on reusable components and performance optimization.",
+        "details": "Built a responsive React e-commerce site with product layouts and reusable components.",
         "link": "https://fanatic.onrender.com/",
         "github": "https://github.com/AliHamza0007/fanatic"
     },
     {
         "id": 2,
         "title": "Foodpanda Clone",
-        "description": "Food delivery platform clone with Google API and Redux integration.",
+        "description": "Food delivery web app with Google Maps API and Redux state management.",
         "tags": [
             "React",
             "Redux",
@@ -334,14 +334,14 @@
             "GoogleAPI"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654500/Foodpanda_nz27yg.png",
-        "details": "Built a Foodpanda-style web app with dynamic menus, map integration, and real-time updates. Implemented Redux for state management and API integration.",
+        "details": "Built a Foodpanda-style web app with menus, map integration, and order updates. Redux for state management and API integration.",
         "link": "https://foodpanda-xo5w.onrender.com/",
         "github": "https://github.com/AliHamza0007/FoodPanda"
     },
     {
         "id": 3,
         "title": "Mr & Mrs ",
-        "description": "Interactive shopping experience with animations and stylish design.",
+        "description": "React storefront with product catalog and cart functionality.",
         "tags": [
             "React",
             "Bootstrap",
@@ -349,14 +349,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654503/mr_mrs.com_geprvo.png",
-        "details": "Created a visually engaging storefront using React and Framer Motion. Optimized UX and responsive layout for a seamless shopping experience.",
+        "details": "Built a React storefront with Framer Motion page transitions and responsive layout.",
         "link": "https://mr-mrs.onrender.com/",
         "github": "https://github.com/AliHamza0007/mr_mrs"
     },
     {
         "id": 4,
         "title": "Speed Cart",
-        "description": "Fast and responsive online shopping cart built with React.",
+        "description": "React shopping cart interface with responsive layout.",
         "tags": [
             "React",
             "Bootstrap",
@@ -364,14 +364,14 @@
             "Responsive Design"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654502/Speed_Cart_j83kfm.png",
-        "details": "Developed an optimized and fully responsive e-commerce cart interface. Integrated smooth user interactions and modular React components.",
+        "details": "Built a responsive e-commerce cart interface with modular React components.",
         "link": "https://speed-cart.onrender.com/",
         "github": "https://github.com/AliHamza0007/speed_Cart"
     },
     {
         "id": 5,
         "title": "Osteopathe Montréal",
-        "description": "Professional service website with clean UI and React components.",
+        "description": "Service website for an osteopathy clinic in Montréal.",
         "tags": [
             "React",
             "Bootstrap",
@@ -379,14 +379,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654501/Osteopathe_Montreal-_Traitment_xkrduh.png",
-        "details": "Built a responsive website for a Montréal-based osteopathy clinic, focusing on clarity, accessibility, and optimized performance.",
+        "details": "Built a responsive website for a Montréal osteopathy clinic with accessible layout and service pages.",
         "link": "https://osteopathe-montreal.onrender.com/",
         "github": "https://github.com/AliHamza0007/Oesteopathe-Montreal"
     },
     {
         "id": 6,
         "title": "SeaTrans Maritime",
-        "description": "Corporate React site for a shipping and logistics company.",
+        "description": "Corporate website for a shipping and logistics company.",
         "tags": [
             "React",
             "Bootstrap",
@@ -394,14 +394,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654502/SEATRANS_MARITIME_S.A_aqv1px.png",
-        "details": "Developed a React-based website for a maritime logistics company. Focused on navigation, responsive layouts, and a professional visual theme.",
+        "details": "Built a React website for a maritime logistics company with service pages and responsive navigation.",
         "link": "https://sea-trans.onrender.com/",
         "github": "https://github.com/AliHamza0007/sea-trans"
     },
     {
         "id": 7,
         "title": "SolutionM4 ",
-        "description": "Theme customization and builder web app.",
+        "description": "Theme builder web app for generating responsive website templates.",
         "tags": [
             "React",
             "Bootstrap",
@@ -409,14 +409,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654503/SolutionM4_Theme_Maker_lw2cab.png",
-        "details": "Created a theme builder for generating responsive website templates dynamically. Built with reusable React components and Bootstrap.",
+        "details": "Built a theme builder for generating responsive website templates with reusable React components and Bootstrap.",
         "link": "https://solutionm4.onrender.com/",
         "github": "https://github.com/AliHamza0007/solutionM4"
     },
     {
         "id": 8,
         "title": "Techno Solution",
-        "description": "IT solutions website with sleek design and React-based UI.",
+        "description": "IT services company website built with React.",
         "tags": [
             "React",
             "Bootstrap",
@@ -424,14 +424,14 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654506/Techno_Sloution_f13tmu.png",
-        "details": "Built a tech solutions website for business services. Focused on UI consistency and page transition effects.",
+        "details": "Built a tech services website with consistent UI components and page transitions.",
         "link": "https://techno-im5l.onrender.com/",
         "github": "https://github.com/AliHamza0007/techno_Sloution"
     },
     {
         "id": 9,
         "title": "Bizkar Website",
-        "description": "React-based business site with a responsive and modern layout.",
+        "description": "Corporate business website built with React and Bootstrap.",
         "tags": [
             "React",
             "Bootstrap",
@@ -439,7 +439,7 @@
             "JavaScript"
         ],
         "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654503/Bizkar_aukpjx.png",
-        "details": "Developed a corporate website using React and Bootstrap with modern UI/UX principles. Deployed on Render for live hosting.",
+        "details": "Built a corporate website using React and Bootstrap. Deployed on Render.",
         "link": "https://bizkar-production.onrender.com/",
         "github": "https://github.com/AliHamza0007/Bizkar"
     }

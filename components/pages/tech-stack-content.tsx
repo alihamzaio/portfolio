@@ -12,8 +12,8 @@ export function TechStackContent() {
       <SectionHeading
         headingLevel={1}
         label="Tech Stack"
-        title="The engineering arsenal"
-        description="A curated, battle-tested stack for shipping premium products — from interface to infrastructure."
+        title="Technical stack"
+        description="Languages, frameworks, and infrastructure used to build and maintain production web applications."
         align="center"
         className="mx-auto"
       />

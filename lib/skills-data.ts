@@ -4,7 +4,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: "languages",
     title: "Languages",
-    description: "Core languages for full-stack and smart contract development",
+    description: "Languages used for full-stack and smart contract development",
     skills: [
       { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
       { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
@@ -17,7 +17,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: "frontend",
     title: "Frontend",
-    description: "Product interfaces with React, Next.js, and modern CSS",
+    description: "React and Next.js interfaces with TypeScript and CSS",
     skills: [
       { name: "React.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
       { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
@@ -30,7 +30,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: "backend",
     title: "Backend",
-    description: "APIs, microservices, and event-driven workers",
+    description: "Node.js services, REST APIs, and background workers",
     skills: [
       { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
       { name: "Express.js" },
@@ -44,7 +44,7 @@ export const skillCategories: SkillCategory[] = [
   {
     id: "databases",
     title: "Databases",
-    description: "Relational, document, and cache layers at scale",
+    description: "Relational, document, and cache layers for production workloads",
     skills: [
       { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
       { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },

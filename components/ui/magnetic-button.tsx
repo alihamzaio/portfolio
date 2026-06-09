@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, type ReactNode, type MouseEvent } from "react"
+import { useEffect, useRef, useState, type ReactNode, type MouseEvent } from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { usePathname } from "next/navigation"
@@ -39,7 +39,11 @@ export function MagneticButton({
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
   const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
-  const magnetic = prefersFinePointer() && !reduceMotion
+  const [magnetic, setMagnetic] = useState(false)
+
+  useEffect(() => {
+    setMagnetic(prefersFinePointer() && !reduceMotion)
+  }, [reduceMotion])
 
   const handleMove = (e: MouseEvent) => {
     if (!magnetic) return

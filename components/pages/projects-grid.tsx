@@ -14,8 +14,8 @@ export function ProjectsGrid() {
       <SectionHeading
         headingLevel={1}
         label="Projects"
-        title="Premium case studies"
-        description="Production applications engineered for global clients — each built to perform, scale, and impress."
+        title="Projects"
+        description="Web applications, APIs, and blockchain systems built for clients in e-commerce, healthcare, fintech, and Web3."
       />
 
       <PremiumGrid cols="3">
@@ -40,7 +40,7 @@ export function ProjectsGrid() {
                   </h3>
                   <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.description}</p>
                   <span className="inline-flex items-center gap-1 text-xs text-cyan-400">
-                    View case study <ArrowUpRight className="h-3.5 w-3.5" />
+                    View project <ArrowUpRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
               </PremiumCard>

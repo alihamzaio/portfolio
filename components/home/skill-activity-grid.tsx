@@ -8,7 +8,7 @@ const TOP = skillsData.slice(0, 14)
 function SkillActivityGridInner() {
   return (
     <div className="p-5 sm:p-6 rounded-2xl premium-surface">
-      <p className="text-xs font-mono text-neutral-500 mb-4 uppercase tracking-widest">Stack proficiency</p>
+      <p className="text-xs font-mono text-neutral-500 mb-4 uppercase tracking-widest">Primary technologies</p>
       <div className="grid grid-cols-7 sm:grid-cols-14 gap-1">
         {TOP.map((skill) => {
           const cells = Math.round((skill.level / 100) * 5)

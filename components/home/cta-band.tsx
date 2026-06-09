@@ -16,7 +16,7 @@ export function CtaBand() {
         {copy.sections.cta.button} <ArrowRight className="h-4 w-4" />
       </MagneticButton>
       <MagneticButton href="/api/resume/download" variant="secondary">
-        Get my resume
+        Download resume
       </MagneticButton>
     </PremiumCta>
   )

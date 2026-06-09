@@ -42,7 +42,7 @@ export function ProjectsBento() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/50 to-transparent" />
             </div>
             <div className="relative p-6">
-              <p className="accent-label mb-2">Case study 0{i + 1}</p>
+              <p className="accent-label mb-2">Project 0{i + 1}</p>
               <h3 className="text-lg font-bold text-white mb-2">{project.title}</h3>
               <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
               <div className="flex flex-wrap gap-2 mb-3">
@@ -59,7 +59,7 @@ export function ProjectsBento() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-sky-300 transition-colors"
                 >
-                  View live <ArrowUpRight className="h-3.5 w-3.5" />
+                  Open live site <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>
               )}
             </div>

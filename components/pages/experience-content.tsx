@@ -12,8 +12,8 @@ export function ExperienceContent() {
       <SectionHeading
         headingLevel={1}
         label="Experience"
-        title="Building at elite velocity"
-        description="A track record of shipping production systems for global clients across fintech, e-commerce, healthcare, and Web3."
+        title="Work history"
+        description="Three years in full stack and MERN stack roles building APIs, cloud infrastructure, and production web applications."
       />
 
       <div className="relative">

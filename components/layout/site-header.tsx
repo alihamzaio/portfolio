@@ -77,6 +77,7 @@ export function SiteHeader() {
               showName
               size={42}
               animated
+              instanceId="header"
               className="transition-opacity group-hover:opacity-95"
             />
           </Link>
@@ -112,7 +113,7 @@ export function SiteHeader() {
               className="hidden sm:inline-flex items-center gap-1.5 btn-primary text-[13px] !py-2.5 !px-5"
               data-cursor
             >
-              Hire me
+              Contact
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
             <button
@@ -169,7 +170,7 @@ export function SiteHeader() {
                 onClick={(e) => handleNavClick(e, "/#contact")}
                 className="mt-5 btn-primary justify-center py-3.5"
               >
-                Hire me
+                Contact
               </Link>
             </motion.nav>
           </motion.div>
