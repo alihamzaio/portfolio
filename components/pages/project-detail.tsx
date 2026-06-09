@@ -101,11 +101,11 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
               </div>
             </PremiumCard>
             <div className="flex flex-col gap-3">
-              <MagneticButton href={project.link}>
+              <MagneticButton href={project.link} cursorMode="external" cursorLabel="Open Demo">
                 <ExternalLink className="h-4 w-4" /> Live demo
               </MagneticButton>
               {project.github !== "#" && (
-                <MagneticButton href={project.github} variant="secondary">
+                <MagneticButton href={project.github} variant="secondary" cursorMode="external" cursorLabel="GitHub">
                   <Github className="h-4 w-4" /> Source code
                 </MagneticButton>
               )}

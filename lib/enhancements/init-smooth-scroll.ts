@@ -15,7 +15,7 @@ export function initSmoothScrollLerp() {
       animating = false
       return
     }
-    currentY += (targetY - currentY) * 0.08
+    currentY += (targetY - currentY) * 0.18
     window.scrollTo(0, currentY)
     raf = requestAnimationFrame(tick)
   }

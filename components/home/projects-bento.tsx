@@ -19,6 +19,7 @@ export function ProjectsBento() {
         return (
           <motion.article
             key={project.id}
+            data-cursor="project"
             initial={{ opacity: 0, y: 28 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: i * 0.1 }}
@@ -57,6 +58,9 @@ export function ProjectsBento() {
                   href={project.demo}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-cursor="external"
+                  data-cursor-label="Open Demo"
+                  data-cursor-arrow="true"
                   className="inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-sky-300 transition-colors"
                 >
                   Open live site <ArrowUpRight className="h-3.5 w-3.5" />

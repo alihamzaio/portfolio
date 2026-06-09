@@ -499,23 +499,160 @@
     background-size: 32px 32px;
   }
 
-  .premium-cursor-active {
+  /* Premium custom cursor */
+  .custom-cursor-active,
+  .custom-cursor-active a,
+  .custom-cursor-active button {
     cursor: none;
   }
 
-  .premium-cursor-active a,
-  .premium-cursor-active button {
-    cursor: none;
+  .custom-cursor-active input,
+  .custom-cursor-active textarea,
+  .custom-cursor-active select,
+  .custom-cursor-active [contenteditable="true"] {
+    cursor: text;
   }
 
-  .premium-cursor-ring {
+  .pc {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .pc.pc--visible {
+    opacity: 1;
+  }
+
+  .pc[data-mode="hidden"] {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .pc__dot,
+  .pc__ring,
+  .pc__glow,
+  .pc__label {
     position: fixed;
     top: 0;
     left: 0;
-    width: 40px;
-    height: 40px;
     pointer-events: none;
-    z-index: 10000;
+    will-change: transform;
+  }
+
+  .pc__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #f8fafc;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.55);
+    z-index: 10004;
+  }
+
+  .pc__ring {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    z-index: 10003;
+    transition:
+      width 0.18s ease,
+      height 0.18s ease,
+      border-color 0.18s ease,
+      background 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .pc__glow {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%);
+    z-index: 10002;
+    opacity: 0.22;
+    will-change: transform, opacity;
+  }
+
+  .pc__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #e2e8f0;
+    background: rgba(10, 15, 26, 0.88);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    backdrop-filter: blur(8px);
+    z-index: 10005;
+    white-space: nowrap;
+    transform-origin: top left;
+  }
+
+  .pc__label-arrow {
+    font-size: 0.75rem;
+    color: #22d3ee;
+    line-height: 1;
+  }
+
+  .pc[data-mode="link"] .pc__ring {
+    border-color: rgba(34, 211, 238, 0.5);
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.15);
+  }
+
+  .pc[data-mode="button"] .pc__ring,
+  .pc[data-mode="contact"] .pc__ring {
+    border-color: rgba(59, 130, 246, 0.55);
+    background: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+
+  .pc[data-mode="project"] .pc__ring {
+    border-color: rgba(34, 211, 238, 0.6);
+    background: rgba(34, 211, 238, 0.06);
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.18);
+  }
+
+  .pc[data-mode="external"] .pc__ring {
+    border-color: rgba(125, 211, 252, 0.5);
+    box-shadow: 0 0 14px rgba(125, 211, 252, 0.12);
+  }
+
+  .pc[data-mode="skill"] .pc__ring {
+    border-color: rgba(96, 165, 250, 0.45);
+    transform-origin: center;
+  }
+
+  .pc[data-theme="light"] .pc__dot {
+    background: #0f172a;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+  }
+
+  .pc[data-theme="light"] .pc__ring {
+    border-color: rgba(15, 23, 42, 0.35);
+  }
+
+  .pc[data-theme="light"] .pc__label {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(59, 130, 246, 0.2);
+  }
+
+  @media (pointer: coarse) {
+    .pc {
+      display: none !important;
+    }
+
+    .custom-cursor-active,
+    .custom-cursor-active a,
+    .custom-cursor-active button {
+      cursor: auto;
+    }
   }
 
   .hero-morph-blob {
@@ -746,24 +883,6 @@
     box-shadow: 0 0 32px rgba(255, 255, 255, 0.12);
   }
 
-  .cursor-trail-ring {
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-  }
-
-  .cursor-trail-dot {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 6px;
-    margin: -3px 0 0 -3px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.35);
-    pointer-events: none;
-    z-index: 9999;
-  }
 
   .hero-premium-title {
     font-size: clamp(3rem, 8vw, 6.25rem);
@@ -1036,8 +1155,7 @@
     transform: none !important;
   }
 
-  .premium-cursor-dot,
-  .premium-cursor-ring {
+  .pc {
     display: none !important;
   }
 
