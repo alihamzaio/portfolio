@@ -49,7 +49,7 @@ export function HomeContact() {
                 className={`h-2 w-2 rounded-full shrink-0 ${profile.available ? "bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-neutral-500"}`}
               />
               <span className="text-sm text-white">
-                {profile.available ? "Available for opportunities" : "Not available"}
+                {profile.available ? "Available for full-time and contract work" : "Not currently available"}
               </span>
             </div>
           </PremiumCard>

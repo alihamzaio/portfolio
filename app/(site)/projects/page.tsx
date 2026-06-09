@@ -4,8 +4,8 @@ import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
-  title: "Projects & Case Studies",
-  description: `Portfolio projects by ${siteConfig.name}: blockchain indexers (Verana), healthcare platforms (HealOps), e-commerce, Web3, and AWS serverless systems.`,
+  title: "Projects",
+  description: `Production projects by ${siteConfig.name}: blockchain indexer (Verana), AWS healthcare platform (HealOps), MERN e-commerce, DeFi Web3 apps, and REST API systems.`,
   path: "/projects",
   keywords: [
     "Ali Hamza projects",

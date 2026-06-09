@@ -15,8 +15,8 @@ export function BlogContent() {
       <SectionHeading
         headingLevel={1}
         label="Blog"
-        title="Engineering journal"
-        description="Thoughts on architecture, performance, cloud systems, and building brands that feel premium."
+        title="Technical writing"
+        description="Notes on full stack development, AWS serverless, Next.js performance, and blockchain indexing."
         align="center"
         className="mx-auto"
       />
@@ -33,7 +33,7 @@ export function BlogContent() {
               </span>
               <span>{featured.date}</span>
             </div>
-            <p className="mt-6 text-sm text-neutral-500">Full articles coming soon — stay tuned.</p>
+            <p className="mt-6 text-sm text-neutral-500">Full articles are in progress.</p>
           </PremiumCard>
         </PremiumReveal>
       )}

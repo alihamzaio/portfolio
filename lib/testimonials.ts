@@ -1,30 +1,30 @@
 export const testimonials = [
   {
     quote:
-      "Ali delivered a production-ready platform that exceeded our expectations. The attention to performance and UI polish is exceptional.",
-    author: "Product Lead",
-    role: "Fintech Startup",
-    company: "Exec9 Client",
+      "Ali owned the full stack on our blockchain indexer: architecture, APIs, and deployment. The system has been stable in production and his updates were clear and on schedule.",
+    author: "Engineering Manager",
+    role: "Web3 Infrastructure",
+    company: "Verana Network",
   },
   {
     quote:
-      "Rare combination of full stack depth and design sensibility. Our e-commerce launch was smooth, fast, and beautifully executed.",
+      "We needed an e-commerce platform with admin tooling and order workflows. Ali delivered a working production system on the MERN stack with clear communication throughout.",
     author: "Founder",
     role: "E-Commerce",
     company: "Adam Store",
   },
   {
     quote:
-      "He architected our blockchain indexer with reliability and speed. Communication was clear and delivery was always on schedule.",
-    author: "Engineering Manager",
-    role: "Web3",
-    company: "Verana Network",
+      "Solid full stack work across React, Node.js, and third-party integrations. He understood our product constraints and shipped features we could maintain.",
+    author: "Product Lead",
+    role: "SaaS",
+    company: "Exec9 Client",
   },
   {
     quote:
-      "The dashboard he built transformed how we track operations. Clean code, great documentation, and a pleasure to work with.",
+      "The healthcare dashboard centralized patient data from multiple sources into one interface. Documented APIs and reliable delivery.",
     author: "Operations Director",
-    role: "Healthcare SaaS",
+    role: "Healthcare",
     company: "Enterprise Client",
   },
 ]

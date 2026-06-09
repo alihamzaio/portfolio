@@ -4,23 +4,25 @@ import { siteConfig } from "@/lib/site"
 /** Primary keywords for portfolio discovery in search */
 export const SEO_KEYWORDS = [
   siteConfig.name,
-  "Ali Hamza developer",
-  "Ali Hamza full stack developer",
-  "Full Stack Software Engineer",
+  "Ali Hamza Full Stack Developer",
+  "Full Stack Developer",
   "Full Stack Developer Lahore",
   "Full Stack Developer Pakistan",
   "MERN Stack Developer",
-  "MERN Stack Developer Lahore",
-  "AWS Serverless Developer",
-  "Blockchain Developer Pakistan",
+  "React Developer",
   "Next.js Developer",
-  "React Developer Lahore",
   "Node.js Developer",
   "TypeScript Developer",
-  "PostgreSQL Developer",
-  "Web3 Developer",
+  "AWS Developer",
+  "Serverless Architecture",
+  "REST API Development",
+  "Cloud Infrastructure",
+  "MongoDB Developer",
+  "Express.js Developer",
+  "JavaScript Developer",
+  "Blockchain Development",
+  "Web3 Development",
   "hire full stack developer Pakistan",
-  "software engineer portfolio",
   ...siteConfig.specialties,
 ] as const
 
@@ -114,7 +116,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
 /** Root layout defaults — merged with per-page metadata */
 export function buildRootMetadata(): Metadata {
   const home = buildPageMetadata({
-    title: `${siteConfig.title} — MERN, AWS Serverless & Blockchain`,
+    title: `${siteConfig.name} — Full Stack Developer | MERN, AWS & Blockchain`,
     description: siteConfig.description,
     path: "/",
   })
@@ -128,7 +130,7 @@ export function buildRootMetadata(): Metadata {
   return {
     ...home,
     title: {
-      default: `${siteConfig.name} | ${siteConfig.title} — Lahore, Pakistan`,
+      default: `${siteConfig.name} — Full Stack Developer | Lahore, Pakistan`,
       template: `%s | ${siteConfig.name}`,
     },
     metadataBase: new URL(siteConfig.url),

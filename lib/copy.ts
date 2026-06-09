@@ -1,75 +1,90 @@
-/** Portfolio copy — direct, human tone */
+/** Portfolio copy */
 export const copy = {
   hero: {
-    availability: "Available for freelance & full-time — remote OK",
+    availability: "Available for full-time roles and contract work",
     greeting: "HI, I'M",
     name: "ALI HAMZA",
-    lead: "3+ years shipping production code. 15+ REST APIs. 10,000+ blockchain blocks indexed. 40% fewer prod bugs after we fixed CI.",
-    support: "I build things that work — MERN, AWS serverless, Web3 when it actually makes sense. Based in Lahore, work remote.",
-    ctaPrimary: "Let's talk",
-    ctaViewWork: "View Work ↓",
-    ctaResume: "Resume",
+    lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations.",
+    support:
+      "Primary stack: React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS.",
+    ctaPrimary: "Contact",
+    ctaViewWork: "View projects",
+    ctaResume: "Download resume",
   },
   sections: {
     about: {
       label: "About",
-      title: "Real work, not buzzwords",
+      title: "Background",
       description:
-        "I didn't get into this to write LinkedIn posts. I like shipping — schema to deploy, one owner, fewer surprises.",
+        "Three years building production systems for startups and product teams. Work spans APIs, cloud infrastructure, frontends, and deployment.",
     },
     skills: {
       label: "Skills",
-      title: "What I actually use",
-      description: "Tools that survived real projects — not a keyword dump from a job board.",
+      title: "Technologies",
+      description:
+        "JavaScript and TypeScript across React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS serverless.",
     },
     projects: {
-      label: "Work",
-      title: "Things I've shipped",
-      description: "Case studies with numbers. What broke, what shipped, what moved the needle.",
+      label: "Projects",
+      title: "Selected projects",
+      description:
+        "Production applications in e-commerce, healthcare, fintech, and blockchain.",
     },
     experience: {
       label: "Experience",
-      title: "Where I've worked",
-      description: "Birxment, Exec9, Explore Logics — roles where I owned delivery end-to-end.",
+      title: "Work history",
+      description:
+        "Full stack roles building REST APIs, cloud infrastructure, and web applications in Lahore and remote.",
     },
     contact: {
       label: "Contact",
-      title: "Say hello",
-      description: "Tell me what you're building. I usually reply within a day or two.",
+      title: "Contact",
+      description:
+        "Send your requirements, timeline, and technical constraints. I typically reply within one business day.",
     },
     offer: {
       label: "Services",
-      title: "How I work with teams",
-      description: "Clear scopes. No mystery invoices.",
+      title: "What I work on",
+      description:
+        "End-to-end development for teams that need an engineer to own implementation and delivery.",
     },
     testimonials: {
-      label: "Proof",
-      title: "What people say",
-      description: "Unedited notes from teams I've shipped with.",
+      label: "Testimonials",
+      title: "References",
+      description: "Feedback from engineering leads and founders on recent work.",
     },
     cta: {
-      label: "Hire me",
-      title: "Need something built?",
-      description: "MVP, rebuild, or a feature you're not sure about — I'll tell you straight if it's worth doing.",
-      button: "Discuss your project",
+      label: "Next step",
+      title: "Interested in working together?",
+      description:
+        "Available for full-time roles and contract work: web applications, REST APIs, AWS infrastructure, and blockchain integrations.",
+      button: "Contact",
     },
   },
   services: [
     {
-      title: "Web applications",
-      desc: "Next.js, Node APIs, auth, admin — with deploy docs your team can run without me.",
+      title: "Full Stack Web Applications",
+      desc: "React and Next.js frontends with Node.js, Express, and MongoDB backends. Built for maintainability under production load.",
     },
     {
-      title: "AWS & serverless",
-      desc: "Lambda, DynamoDB, Terraform. Multi-tenant setups I've debugged at 2am so you don't have to.",
+      title: "REST API Development",
+      desc: "APIs with authentication, validation, and third-party integrations for web, mobile, and partner use.",
     },
     {
-      title: "Blockchain systems",
-      desc: "Indexers and wallet flows — when on-chain data is the product, not a slide deck flex.",
+      title: "AWS Cloud & Serverless",
+      desc: "Lambda, API Gateway, DynamoDB, and RDS. Provisioned with Terraform and deployed through CI/CD.",
     },
     {
-      title: "Performance & handover",
-      desc: "Core Web Vitals, component libraries, docs that outlive the contract.",
+      title: "Blockchain & Web3 Development",
+      desc: "Smart contracts, wallet integration, RPC indexing, and on-chain data pipelines.",
+    },
+    {
+      title: "Performance & Reliability",
+      desc: "Database tuning, caching, load optimization, and monitoring for uptime and predictable response times.",
+    },
+    {
+      title: "Deployment & Maintenance",
+      desc: "Docker, Kubernetes, automated releases, and production support.",
     },
   ],
 } as const

@@ -71,7 +71,7 @@ export default function OgImage() {
               lineHeight: 1.5,
             }}
           >
-            MERN · AWS · Blockchain · Full-stack for startups & product teams
+            {siteConfig.tagline}
           </div>
         </div>
         <div style={{ fontSize: 17, color: "#64748B" }}>github.com/alihamzaio</div>

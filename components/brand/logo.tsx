@@ -1,22 +1,22 @@
 "use client"
 
-import { useId } from "react"
 import { cn } from "@/lib/utils"
 
 interface LogoMarkProps {
   size?: number
   className?: string
   animated?: boolean
+  /** Stable SVG id suffix when multiple logos render on one page */
+  instanceId?: string
 }
 
 /**
  * AH monogram for Ali Hamza — A has apex + crossbar (not N-shaped).
  * Cyan dot = status accent on the badge corner, not part of the letterforms.
  */
-export function LogoMark({ size = 40, className, animated = false }: LogoMarkProps) {
-  const uid = useId().replace(/:/g, "")
-  const grad = `lm-${uid}`
-  const bg = `lb-${uid}`
+export function LogoMark({ size = 40, className, animated = false, instanceId = "default" }: LogoMarkProps) {
+  const grad = `ah-logo-grad-${instanceId}`
+  const bg = `ah-logo-bg-${instanceId}`
 
   return (
     <svg
@@ -92,14 +92,22 @@ interface LogoProps {
   size?: number
   className?: string
   animated?: boolean
+  instanceId?: string
 }
 
-export function Logo({ name = "Ali Hamza", showName = true, size = 40, className, animated }: LogoProps) {
+export function Logo({
+  name = "Ali Hamza",
+  showName = true,
+  size = 40,
+  className,
+  animated,
+  instanceId = "default",
+}: LogoProps) {
   const first = name.split(" ")[0]
 
   return (
     <span className={cn("inline-flex items-center gap-3", className)}>
-      <LogoMark size={size} animated={animated} />
+      <LogoMark size={size} animated={animated} instanceId={instanceId} />
       {showName && (
         <span className="flex flex-col leading-none">
           <span className="text-[15px] font-bold tracking-tight text-[#F8FAFC]">{first}</span>

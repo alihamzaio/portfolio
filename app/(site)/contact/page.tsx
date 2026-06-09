@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
   title: "Contact",
-  description: `Contact ${siteConfig.name} for full stack engineering roles and projects. Email ${siteConfig.email}, ${siteConfig.location}. Available for remote work.`,
+  description: `Contact ${siteConfig.name} for full-time roles and contract work. Full Stack Developer working with MERN stack, Next.js, AWS serverless, and blockchain. ${siteConfig.email}, ${siteConfig.location}.`,
   path: "/contact",
 })
 

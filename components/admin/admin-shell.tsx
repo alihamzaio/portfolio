@@ -50,7 +50,7 @@ function SidebarNav({
     <>
       <div className="flex items-center gap-3 mb-10 px-1">
         <div className="relative">
-          <LogoMark size={44} />
+          <LogoMark size={44} instanceId="admin" />
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#22C55E] border-2 border-[#0F172A]" />
         </div>
         <div>

@@ -1,15 +1,33 @@
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
-const EASE = "cubic-bezier(0.16, 1, 0.3, 1)"
+const ACTIVE_CLASS = "scroll-reveal-active"
+const boundAnimate = new WeakSet<Element>()
+const boundHeading = new WeakSet<Element>()
+
+function isInViewport(rect: DOMRect) {
+  return rect.top < window.innerHeight && rect.bottom > 0
+}
 
 function showImmediately(el: HTMLElement) {
-  el.style.opacity = "1"
-  el.style.transform = "translateY(0) translateX(0)"
   el.classList.add("is-visible")
 }
 
 function revealHeading(inner: HTMLElement) {
-  inner.style.transform = "translateY(0)"
+  inner.classList.add("is-heading-visible")
+}
+
+function primeInViewElements() {
+  document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
+    if (isInViewport(el.getBoundingClientRect())) {
+      el.classList.add("is-visible")
+    }
+  })
+
+  document.querySelectorAll<HTMLElement>("[data-heading-reveal]").forEach((wrap) => {
+    if (!isInViewport(wrap.getBoundingClientRect())) return
+    const inner = wrap.querySelector<HTMLElement>("[data-heading-inner]")
+    inner?.classList.add("is-heading-visible")
+  })
 }
 
 export function initScrollReveal() {
@@ -18,9 +36,9 @@ export function initScrollReveal() {
   if (reduced) {
     document.querySelectorAll<HTMLElement>("[data-animate]").forEach(showImmediately)
     document.querySelectorAll<HTMLElement>("[data-heading-inner]").forEach(revealHeading)
-    document.body.classList.add("motion-reduce-active")
+    document.documentElement.classList.add("motion-reduce-active")
     return () => {
-      document.body.classList.remove("motion-reduce-active")
+      document.documentElement.classList.remove("motion-reduce-active")
     }
   }
 
@@ -29,19 +47,12 @@ export function initScrollReveal() {
   const reveal = (el: HTMLElement, delay: number) => {
     if (seen.has(el)) return
     seen.add(el)
-    el.style.willChange = "transform, opacity"
-    el.style.transition = `opacity 700ms ${EASE}, transform 700ms ${EASE}`
-    el.style.transitionDelay = `${delay}ms`
-    requestAnimationFrame(() => {
-      el.style.opacity = "1"
-      el.classList.add("is-visible")
-      if (!el.classList.contains("timeline-card-enter")) {
-        el.style.transform = "translateY(0)"
+    window.setTimeout(() => {
+      if (delay > 0) {
+        el.style.setProperty("--reveal-delay", `${delay}ms`)
       }
-      window.setTimeout(() => {
-        el.style.willChange = "auto"
-      }, 700 + delay)
-    })
+      el.classList.add("is-visible")
+    }, delay)
   }
 
   const observer = new IntersectionObserver(
@@ -64,25 +75,20 @@ export function initScrollReveal() {
 
   const bind = () => {
     document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
-      if (el.dataset.revealBound) return
-      el.dataset.revealBound = "1"
-      el.style.opacity = "0"
-      el.style.transform = "translateY(40px)"
+      if (boundAnimate.has(el) || el.classList.contains("is-visible")) return
+      boundAnimate.add(el)
       observer.observe(el)
     })
 
     document.querySelectorAll<HTMLElement>("[data-heading-reveal]").forEach((wrap) => {
-      if (wrap.dataset.revealBound) return
-      wrap.dataset.revealBound = "1"
+      if (boundHeading.has(wrap)) return
       const inner = wrap.querySelector<HTMLElement>("[data-heading-inner]")
-      if (!inner) return
-      inner.style.transform = "translateY(100%)"
-      inner.style.transition = "transform 800ms cubic-bezier(0.76, 0, 0.24, 1)"
+      if (!inner || inner.classList.contains("is-heading-visible")) return
+      boundHeading.add(wrap)
       const hObs = new IntersectionObserver(
         ([e]) => {
           if (!e?.isIntersecting) return
-          inner.style.transform = "translateY(0)"
-          inner.style.willChange = "auto"
+          inner.classList.add("is-heading-visible")
           hObs.disconnect()
         },
         { threshold: 0.3 }
@@ -91,12 +97,23 @@ export function initScrollReveal() {
     })
   }
 
+  primeInViewElements()
+  document.documentElement.classList.add(ACTIVE_CLASS)
   bind()
-  const mo = new MutationObserver(bind)
+
+  let bindFrame = 0
+  const mo = new MutationObserver(() => {
+    cancelAnimationFrame(bindFrame)
+    bindFrame = requestAnimationFrame(() => {
+      bindFrame = requestAnimationFrame(bind)
+    })
+  })
   mo.observe(document.body, { childList: true, subtree: true })
 
   return () => {
+    cancelAnimationFrame(bindFrame)
     observer.disconnect()
     mo.disconnect()
+    document.documentElement.classList.remove(ACTIVE_CLASS)
   }
 }

@@ -44,7 +44,7 @@ export function HomeAbout() {
           <AboutStatsRow />
           <div className="mt-8 flex justify-center lg:justify-start">
             <MagneticButton href={profile.resumeUrl} variant="secondary" className="premium-cv-btn">
-              <Download className="h-4 w-4" /> Download CV
+              <Download className="h-4 w-4" /> Download resume
             </MagneticButton>
           </div>
         </div>

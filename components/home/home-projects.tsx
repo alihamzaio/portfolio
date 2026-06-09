@@ -21,7 +21,7 @@ export function HomeProjects() {
 
       <div data-animate className="mt-14 flex justify-center">
         <MagneticButton href="/projects" variant="secondary">
-          Full project archive <ArrowUpRight className="h-4 w-4" />
+          View all projects <ArrowUpRight className="h-4 w-4" />
         </MagneticButton>
       </div>
     </PremiumSection>

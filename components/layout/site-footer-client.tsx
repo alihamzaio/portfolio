@@ -32,7 +32,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
           <div className="max-w-sm">
             <Link href="/" className="inline-block mb-4 group">
-              <Logo name={profile.name} showName size={40} />
+              <Logo name={profile.name} showName size={40} instanceId="footer" />
             </Link>
             <p className="text-sm text-neutral-500 leading-relaxed">
               {profile.title} · {profile.location}

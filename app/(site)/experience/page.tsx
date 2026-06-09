@@ -4,8 +4,8 @@ import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
-  title: "Work Experience",
-  description: `${siteConfig.name}'s experience: Full Stack Engineer at Birxment, MERN Developer at Exec9, React Developer at Explore Logics — Lahore, Pakistan.`,
+  title: "Experience",
+  description: `${siteConfig.name}'s work history: Full Stack Software Engineer at Birxment, MERN Stack Developer at Exec9, React.js Developer at Explore Logics. 3+ years building APIs, cloud infrastructure, and web applications.`,
   path: "/experience",
   keywords: [
     "Ali Hamza experience",
