@@ -37,7 +37,7 @@ export function HomeHero() {
                   initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="accent-label mb-8"
+                  className="text-xs text-neutral-500 mb-8"
                 >
                   {copy.hero.availability}
                 </motion.p>

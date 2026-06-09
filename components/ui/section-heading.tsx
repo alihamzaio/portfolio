@@ -23,38 +23,35 @@ export function SectionHeading({
   headingLevel = 2,
 }: SectionHeadingProps) {
   const TitleTag = headingLevel === 1 ? "h1" : "h2"
+  const showLabel = label.trim().toLowerCase() !== title.trim().toLowerCase()
 
   return (
     <header
       data-animate
       className={cn(
-        "mb-16 md:mb-20 lg:mb-24",
+        "mb-14 md:mb-16 lg:mb-20",
         align === "center" && "text-center mx-auto max-w-3xl",
         align === "left" && "max-w-3xl",
         className
       )}
     >
-      <div
-        className={cn(
-          "flex items-center gap-3 mb-5",
-          align === "center" && "justify-center"
-        )}
+      {showLabel && (
+        <p className={cn("section-label mb-3", align === "center" && "mx-auto")}>{label}</p>
+      )}
+      <TitleTag
+        id={sectionId ? `${sectionId}-heading` : undefined}
+        className="section-title"
       >
-        <span className="h-px w-8 bg-gradient-to-r from-cyan-400/80 to-blue-500/40" aria-hidden />
-        <p className="accent-label">{label}</p>
-        <span className="h-px w-8 bg-gradient-to-l from-cyan-400/80 to-blue-500/40" aria-hidden />
-      </div>
-      <div data-heading-reveal className="overflow-hidden mb-0">
-        <TitleTag
-          id={sectionId ? `${sectionId}-heading` : undefined}
-          data-heading-inner
-          className="section-title"
-        >
-          {title}
-        </TitleTag>
-      </div>
+        {title}
+      </TitleTag>
       {description && (
-        <p data-animate className="mt-6 text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl mx-auto">
+        <p
+          data-animate
+          className={cn(
+            "mt-4 text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl",
+            align === "center" && "mx-auto"
+          )}
+        >
           {description}
         </p>
       )}

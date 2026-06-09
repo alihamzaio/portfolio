@@ -43,8 +43,7 @@ export function ProjectsBento() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/50 to-transparent" />
             </div>
             <div className="relative p-6">
-              <p className="accent-label mb-2">Project 0{i + 1}</p>
-              <h3 className="text-lg font-bold text-white mb-2">{project.title}</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">{project.title}</h3>
               <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {project.metrics.slice(0, 2).map((m) => (

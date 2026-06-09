@@ -56,7 +56,6 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-            <p className="accent-label mb-3">Project</p>
             <h1 className="font-display text-3xl md:text-5xl font-semibold text-white max-w-4xl">{project.title}</h1>
           </div>
         </motion.div>
@@ -91,7 +90,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
 
           <div className="space-y-6">
             <PremiumCard>
-              <p className="accent-label mb-4">Tech stack</p>
+              <p className="meta-label mb-4">Tech stack</p>
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <span key={tag} className="premium-chip text-xs px-2.5 py-1">

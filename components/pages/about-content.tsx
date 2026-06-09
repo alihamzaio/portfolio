@@ -74,7 +74,7 @@ export function AboutContent() {
 
         <PremiumReveal direction="right" delay={0.1}>
           <PremiumCard>
-            <p className="accent-label mb-6">Technical focus</p>
+            <p className="meta-label mb-6">Skills</p>
             <PremiumProgressList items={skills} columns={1} />
           </PremiumCard>
         </PremiumReveal>

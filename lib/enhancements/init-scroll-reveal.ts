@@ -2,7 +2,6 @@ import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 const ACTIVE_CLASS = "scroll-reveal-active"
 const boundAnimate = new WeakSet<Element>()
-const boundHeading = new WeakSet<Element>()
 
 function isInViewport(rect: DOMRect) {
   return rect.top < window.innerHeight && rect.bottom > 0
@@ -12,21 +11,11 @@ function showImmediately(el: HTMLElement) {
   el.classList.add("is-visible")
 }
 
-function revealHeading(inner: HTMLElement) {
-  inner.classList.add("is-heading-visible")
-}
-
 function primeInViewElements() {
   document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
     if (isInViewport(el.getBoundingClientRect())) {
       el.classList.add("is-visible")
     }
-  })
-
-  document.querySelectorAll<HTMLElement>("[data-heading-reveal]").forEach((wrap) => {
-    if (!isInViewport(wrap.getBoundingClientRect())) return
-    const inner = wrap.querySelector<HTMLElement>("[data-heading-inner]")
-    inner?.classList.add("is-heading-visible")
   })
 }
 
@@ -35,7 +24,6 @@ export function initScrollReveal() {
 
   if (reduced) {
     document.querySelectorAll<HTMLElement>("[data-animate]").forEach(showImmediately)
-    document.querySelectorAll<HTMLElement>("[data-heading-inner]").forEach(revealHeading)
     document.documentElement.classList.add("motion-reduce-active")
     return () => {
       document.documentElement.classList.remove("motion-reduce-active")
@@ -78,22 +66,6 @@ export function initScrollReveal() {
       if (boundAnimate.has(el) || el.classList.contains("is-visible")) return
       boundAnimate.add(el)
       observer.observe(el)
-    })
-
-    document.querySelectorAll<HTMLElement>("[data-heading-reveal]").forEach((wrap) => {
-      if (boundHeading.has(wrap)) return
-      const inner = wrap.querySelector<HTMLElement>("[data-heading-inner]")
-      if (!inner || inner.classList.contains("is-heading-visible")) return
-      boundHeading.add(wrap)
-      const hObs = new IntersectionObserver(
-        ([e]) => {
-          if (!e?.isIntersecting) return
-          inner.classList.add("is-heading-visible")
-          hObs.disconnect()
-        },
-        { threshold: 0.3 }
-      )
-      hObs.observe(wrap)
     })
   }
 

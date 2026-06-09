@@ -22,7 +22,7 @@ function AboutTimelineInner({ experiences }: { experiences: Experience[] }) {
             className="relative"
           >
             <span className="absolute -left-8 top-1.5 h-3 w-3 rounded-full border-2 border-cyan-400 bg-[#0a0f1a]" />
-            <p className="text-[10px] font-mono text-cyan-400/80 uppercase tracking-wider mb-1">
+            <p className="meta-label mb-1">
               {exp.period}
             </p>
             <h3 className="text-base font-bold text-white">{exp.role}</h3>
