@@ -12,6 +12,7 @@ import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { siteConfig } from "@/lib/site"
+import { copy } from "@/lib/copy"
 
 const pillars = [
   {
@@ -54,20 +55,12 @@ export function AboutContent() {
         description="3+ years building web applications, cloud infrastructure, APIs, and blockchain integrations for startups and product teams."
       />
 
-      <div className="grid lg:grid-cols-2 gap-16 mb-20">
-        <PremiumReveal direction="left" className="space-y-6 text-neutral-400 text-lg leading-relaxed">
-          <p>
-            I&apos;m a <span className="text-white font-medium">Full Stack Developer</span> based in{" "}
-            {siteConfig.location}. I work with engineering teams and founders on production software.
-          </p>
-          <p>
-            My work spans MERN stack applications, Next.js platforms, AWS serverless systems, REST APIs,
-            and blockchain integrations. I handle architecture, implementation, and deployment.
-          </p>
-          <p>
-            Available for full-time roles and contract work on web applications, APIs, and cloud infrastructure.
-          </p>
-          <MagneticButton href="/contact" className="mt-4">
+      <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 mb-12 sm:mb-20">
+        <PremiumReveal direction="left" className="space-y-5 sm:space-y-6 text-neutral-400 text-base sm:text-lg leading-relaxed break-words">
+          {copy.sections.about.bio.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          <MagneticButton href="/contact" className="mt-2 btn-responsive sm:w-auto">
             Contact
           </MagneticButton>
         </PremiumReveal>

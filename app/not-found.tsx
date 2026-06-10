@@ -10,7 +10,7 @@ export const metadata = buildPageMetadata({
 
 export default function NotFound() {
   return (
-    <main className="min-h-[80vh] flex items-center justify-center section-shell px-6">
+    <main className="min-h-[80vh] flex items-center justify-center section-shell">
       <div className="text-center max-w-md">
         <p className="meta-label mb-4">404</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-[#F8FAFC] mb-4 tracking-tight">
@@ -19,11 +19,11 @@ export default function NotFound() {
         <p className="text-[#94A3B8] mb-8 leading-relaxed">
           The URL may be outdated or incorrect. Use the links below to return to the portfolio or contact page.
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/" className="btn-primary px-6 py-3">
+        <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 w-full max-w-xs sm:max-w-none mx-auto">
+          <Link href="/" className="btn-primary btn-responsive px-6 py-3">
             Go to homepage
           </Link>
-          <Link href="/#contact" className="btn-secondary px-6 py-3">
+          <Link href="/#contact" className="btn-secondary btn-responsive px-6 py-3">
             Contact
           </Link>
         </div>

@@ -39,22 +39,22 @@ export function HomeTestimonials() {
         className="mx-auto"
       />
 
-      <div data-animate className="relative max-w-3xl mx-auto min-h-[240px]">
+      <div data-animate className="relative max-w-3xl mx-auto min-h-[200px] sm:min-h-[240px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
             {...motionProps}
             transition={{ duration: reduceMotion ? 0 : 0.55, ease: easeCinematic }}
           >
-            <PremiumPanel centered className="!p-10 sm:!p-14 gradient-border">
-              <Quote className="h-7 w-7 text-cyan-400/40 mx-auto mb-6" aria-hidden />
+            <PremiumPanel centered className="!p-6 sm:!p-10 md:!p-14 gradient-border">
+              <Quote className="h-6 w-6 sm:h-7 sm:w-7 text-cyan-400/40 mx-auto mb-4 sm:mb-6" aria-hidden />
               <blockquote>
-                <p className="text-lg sm:text-xl text-white/95 leading-relaxed mb-8 font-medium">
+                <p className="text-base sm:text-lg md:text-xl text-white/95 leading-relaxed mb-6 sm:mb-8 font-medium break-words">
                   &ldquo;{current.quote}&rdquo;
                 </p>
                 <footer>
-                  <p className="font-semibold text-white">{current.author}</p>
-                  <p className="text-sm text-neutral-500 mt-1">
+                  <p className="font-semibold text-white break-words">{current.author}</p>
+                  <p className="text-sm text-neutral-500 mt-1 break-words">
                     {current.role} · {current.company}
                   </p>
                 </footer>
@@ -64,7 +64,7 @@ export function HomeTestimonials() {
         </AnimatePresence>
       </div>
 
-      <div className="flex justify-center gap-2 mt-10" role="tablist" aria-label="Testimonials">
+      <div className="flex justify-center gap-1 sm:gap-2 mt-8 sm:mt-10" role="tablist" aria-label="Testimonials">
         {testimonials.map((_, i) => (
           <button
             key={i}
@@ -72,13 +72,18 @@ export function HomeTestimonials() {
             role="tab"
             aria-selected={i === index}
             onClick={() => setIndex(i)}
-            className={`h-1 rounded-full transition-[width,background-color] duration-400 ${
-              i === index
-                ? "w-10 bg-gradient-to-r from-blue-500 to-cyan-400"
-                : "w-2 bg-white/15 hover:bg-white/25"
-            }`}
+            className="inline-flex items-center justify-center min-h-11 min-w-11 p-3"
             aria-label={`Testimonial ${i + 1}`}
-          />
+          >
+            <span
+              className={`block h-1 rounded-full transition-[width,background-color] duration-400 ${
+                i === index
+                  ? "w-10 bg-gradient-to-r from-blue-500 to-cyan-400"
+                  : "w-2 bg-white/15 hover:bg-white/25"
+              }`}
+              aria-hidden
+            />
+          </button>
         ))}
       </div>
     </PremiumSection>

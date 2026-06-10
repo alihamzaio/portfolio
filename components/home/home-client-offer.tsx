@@ -28,8 +28,8 @@ export function HomeClientOffer() {
             <div key={service.title} data-animate>
               <PremiumCard className="h-full" spotlight>
                 <PremiumIcon icon={Icon} className="mb-5" />
-                <h3 className="text-base font-bold text-white mb-2">{service.title}</h3>
-                <p className="text-sm text-neutral-400 leading-relaxed">{service.desc}</p>
+                <h3 className="text-base font-bold text-white mb-2 break-words">{service.title}</h3>
+                <p className="text-sm text-neutral-400 leading-relaxed break-words">{service.desc}</p>
               </PremiumCard>
             </div>
           )

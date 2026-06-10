@@ -7,9 +7,9 @@ const TOP = skillsData.slice(0, 14)
 
 function SkillActivityGridInner() {
   return (
-    <div className="p-5 sm:p-6 rounded-2xl premium-surface">
-      <p className="meta-label mb-4">Stack</p>
-      <div className="grid grid-cols-7 sm:grid-cols-14 gap-1">
+    <div className="p-4 sm:p-6 rounded-2xl premium-surface overflow-hidden min-w-0 w-full max-w-full">
+      <p className="meta-label mb-3 sm:mb-4">Stack</p>
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-1">
         {TOP.map((skill) => {
           const cells = Math.round((skill.level / 100) * 5)
           return (
@@ -17,7 +17,7 @@ function SkillActivityGridInner() {
               {Array.from({ length: 5 }).map((_, row) => (
                 <div
                   key={row}
-                  className={`h-2 w-full rounded-sm ${
+                  className={`h-2.5 sm:h-2 w-full rounded-sm ${
                     4 - row < cells ? "bg-cyan-500/80" : "bg-white/[0.06]"
                   }`}
                 />
@@ -26,9 +26,9 @@ function SkillActivityGridInner() {
           )
         })}
       </div>
-      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3">
+      <div className="flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-1.5 mt-3">
         {TOP.map((s) => (
-          <span key={s.name} className="text-[9px] text-neutral-600 font-mono">
+          <span key={s.name} className="text-[10px] sm:text-[9px] text-neutral-600 font-mono break-words">
             {s.name}
           </span>
         ))}

@@ -2,7 +2,6 @@
 
 import { Download } from "lucide-react"
 import { PremiumSection } from "@/components/premium"
-import { ProfileAvatar } from "@/components/ui/profile-avatar"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { AboutOrbLazy } from "@/components/effects/about-orb-lazy"
@@ -26,25 +25,30 @@ export function HomeAbout() {
         description={copy.sections.about.description}
       />
 
-      <div className="relative z-[1] grid lg:grid-cols-2 gap-14 lg:gap-16 items-start">
-        <div data-animate>
-          <div className="flex items-center gap-5 mb-8 lg:hidden">
-            <ProfileAvatar name={profile.name} size={88} />
-            <p className="text-sm text-neutral-400">{profile.title}</p>
+      <div className="relative z-[1] grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start min-w-0">
+        <div data-animate className="min-w-0">
+          <div className="space-y-4">
+            {copy.sections.about.bio.map((paragraph) => (
+              <p key={paragraph} className="text-neutral-400 leading-relaxed max-w-lg break-words">
+                {paragraph}
+              </p>
+            ))}
           </div>
-          <p className="text-neutral-400 leading-relaxed mb-8 max-w-lg">
-            I&apos;m {profile.name} — {profile.title.toLowerCase()} in {profile.location}.{" "}
-            {profile.description}
-          </p>
-          <AboutTimeline experiences={experiences} />
+          <div className="mt-6 sm:mt-8">
+            <AboutTimeline experiences={experiences} />
+          </div>
         </div>
 
-        <div data-animate>
+        <div data-animate className="min-w-0">
           <SkillsRadar />
           <AboutStatsRow />
           <div className="mt-8 flex justify-center lg:justify-start">
-            <MagneticButton href={profile.resumeUrl} variant="secondary" className="premium-cv-btn">
-              <Download className="h-4 w-4" /> Download resume
+            <MagneticButton
+              href={profile.resumeUrl}
+              variant="secondary"
+              className="premium-cv-btn btn-responsive sm:w-auto"
+            >
+              <Download className="h-4 w-4 shrink-0" /> Download resume
             </MagneticButton>
           </div>
         </div>

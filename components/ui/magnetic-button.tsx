@@ -50,7 +50,7 @@ export function MagneticButton({
   }
 
   const base = cn(
-    "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow] duration-300",
+    "inline-flex items-center justify-center gap-2 min-h-11 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow] duration-300",
     variant === "primary" &&
       "btn-primary px-7 py-3 relative overflow-hidden before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-[radial-gradient(circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.12),transparent_55%)] before:transition-opacity before:duration-300",
     variant === "secondary" && "btn-secondary px-7 py-3",

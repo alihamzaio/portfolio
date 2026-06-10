@@ -39,13 +39,13 @@
   --input: #0f172a;
   --ring: var(--accent-primary);
   --radius: 0.875rem;
-  --site-header-height: 5.625rem;
-  --hero-nav-gap: 3rem;
+  --site-header-height: 4.75rem;
+  --hero-nav-gap: 2rem;
 }
 
 @media (min-width: 640px) {
   :root {
-    --site-header-height: 6.125rem;
+    --site-header-height: 5.5rem;
     --hero-nav-gap: 3.5rem;
   }
 }
@@ -86,12 +86,15 @@
   html {
     scroll-behavior: smooth;
     background: var(--bg-primary);
+    overflow-x: clip;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     letter-spacing: -0.014em;
+    overflow-x: clip;
+    min-width: 0;
   }
 
   h1,
@@ -139,7 +142,8 @@
   }
 
   .section-title {
-    @apply text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.1];
+    font-size: clamp(1.625rem, 4.5vw + 0.5rem, 3rem);
+    @apply font-semibold tracking-tight text-white leading-[1.15] text-balance break-words;
   }
 
   .premium-surface {
@@ -291,16 +295,22 @@
   }
 
   .section-shell {
-    @apply max-w-[1200px] mx-auto px-6 sm:px-10 lg:px-12;
+    @apply max-w-[1200px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12 w-full min-w-0;
   }
 
   .section-pad {
-    @apply py-24 sm:py-28 md:py-32 lg:py-36;
+    @apply py-16 sm:py-24 md:py-28 lg:py-32 xl:py-36;
   }
 
   .hero-pad {
     padding-top: calc(var(--site-header-height) + var(--hero-nav-gap));
-    @apply pb-24 sm:pb-28 md:pb-32 lg:pb-36;
+    @apply pb-16 sm:pb-24 md:pb-28 lg:pb-32 xl:pb-36;
+  }
+
+  body[data-mobile-nav-open="true"] .mobile-dock {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 1rem);
   }
 
   .page-top-pad {
@@ -308,7 +318,11 @@
   }
 
   .section-stack {
-    @apply space-y-10 md:space-y-12 lg:space-y-14;
+    @apply space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14;
+  }
+
+  .btn-responsive {
+    @apply w-full sm:w-auto;
   }
 
   .font-mono {
@@ -336,7 +350,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 min-h-11 px-7 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-300;
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.1) inset,
@@ -352,7 +366,7 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-sm font-medium transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 min-h-11 px-7 py-3 rounded-xl text-sm font-medium transition-all duration-300;
     color: var(--text-primary);
     background: var(--glass);
     border: 1px solid var(--border-subtle);
@@ -661,6 +675,15 @@
     .custom-cursor-active button {
       cursor: auto;
     }
+
+    .glass-card-interactive:hover,
+    .premium-card-hover:hover {
+      transform: none;
+    }
+
+    .tech-ticker:hover .tech-ticker-track {
+      animation-play-state: running;
+    }
   }
 
   .hero-morph-blob {
@@ -772,6 +795,12 @@
     transform: translateY(40px) translateX(var(--timeline-from, -60px));
   }
 
+  @media (max-width: 639px) {
+    html.scroll-reveal-active .timeline-card-enter[data-animate]:not(.is-visible) {
+      transform: translateY(24px);
+    }
+  }
+
   .timeline-card-enter[data-animate].is-visible,
   [data-animate].is-visible {
     opacity: 1 !important;
@@ -881,9 +910,11 @@
 
 
   .hero-premium-title {
-    font-size: clamp(3rem, 8vw, 6.25rem);
-    line-height: 0.95;
-    letter-spacing: -0.05em;
+    font-size: clamp(2.25rem, 7vw + 0.35rem, 6.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
     background: linear-gradient(110deg, #ffffff 0%, #7dd3fc 40%, #3b82f6 75%, #06b6d4 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -891,9 +922,11 @@
   }
 
   .hero-amber-title {
-    font-size: clamp(3rem, 8vw, 6.25rem);
-    line-height: 0.95;
-    letter-spacing: -0.05em;
+    font-size: clamp(2.25rem, 7vw + 0.35rem, 6.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
     background: linear-gradient(110deg, #ffffff 0%, #7dd3fc 40%, #3b82f6 75%, #06b6d4 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -941,11 +974,13 @@
 
   .tech-ticker {
     mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    contain: inline-size;
   }
 
   .tech-ticker-track {
     width: max-content;
     animation: tech-ticker-scroll 26s linear infinite;
+    will-change: transform;
   }
 
   .tech-ticker:hover .tech-ticker-track {

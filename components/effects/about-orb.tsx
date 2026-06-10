@@ -25,8 +25,16 @@ export function AboutOrb() {
   if (reduceMotion) return null
 
   return (
-    <div className="absolute inset-0 pointer-events-none opacity-40" aria-hidden>
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 1.25]} gl={{ alpha: true }}>
+    <div
+      className="absolute inset-0 pointer-events-none opacity-30 md:opacity-40 hidden sm:block overflow-hidden"
+      aria-hidden
+    >
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        dpr={[1, 1.25]}
+        gl={{ alpha: true }}
+        style={{ width: "100%", height: "100%" }}
+      >
         <Orb />
       </Canvas>
     </div>

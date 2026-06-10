@@ -17,6 +17,10 @@ export const copy = {
       title: "Background",
       description:
         "Three years building production systems for startups and product teams. Work spans APIs, cloud infrastructure, frontends, and deployment.",
+        bio: [
+          "Over the last 3+ years, I've worked on web applications, backend services, cloud infrastructure, and blockchain-related projects. My primary stack includes React, Next.js, Node.js, MongoDB, and AWS.",
+          "I work remotely from Lahore and have collaborated with startups, product teams, and international clients. Open to both full-time and contract opportunities.",
+        ]
     },
     skills: {
       label: "Skills",

@@ -30,7 +30,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
   const architecture = project.architecture ?? defaultArchitecture
 
   return (
-    <article className="relative pt-28 pb-20 section-pad">
+    <article className="relative page-top-pad section-pad">
       <div className="section-glow absolute inset-0 pointer-events-none" aria-hidden />
       <div className="section-shell relative z-[1]">
         <Link
@@ -43,7 +43,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative rounded-3xl overflow-hidden mb-12 aspect-[21/9] min-h-[240px] border border-white/[0.06]"
+          className="relative rounded-2xl sm:rounded-3xl overflow-hidden mb-8 sm:mb-12 aspect-[16/10] sm:aspect-[21/9] min-h-[200px] sm:min-h-[240px] border border-white/[0.06]"
         >
           <Image
             src={project.image}
@@ -55,12 +55,14 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-            <h1 className="font-display text-3xl md:text-5xl font-semibold text-white max-w-4xl">{project.title}</h1>
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 md:p-12">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-5xl font-semibold text-white max-w-4xl break-words text-balance">
+              {project.title}
+            </h1>
           </div>
         </motion.div>
 
-        <motion.div className="grid lg:grid-cols-3 gap-8 mb-12">
+        <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
           {metrics.map((m) => (
             <PremiumCard key={m.label} className="text-center">
               <p className="text-2xl font-semibold text-cyan-400">{m.value}</p>
@@ -69,7 +71,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           ))}
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
+        <div className="grid lg:grid-cols-3 gap-8 sm:gap-12">
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h2 className="font-display text-xl font-semibold text-white mb-4">Overview</h2>
@@ -100,12 +102,18 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
               </div>
             </PremiumCard>
             <div className="flex flex-col gap-3">
-              <MagneticButton href={project.link} cursorMode="external" cursorLabel="Open Demo">
-                <ExternalLink className="h-4 w-4" /> Live demo
+              <MagneticButton href={project.link} cursorMode="external" cursorLabel="Open Demo" className="btn-responsive">
+                <ExternalLink className="h-4 w-4 shrink-0" /> Live demo
               </MagneticButton>
               {project.github !== "#" && (
-                <MagneticButton href={project.github} variant="secondary" cursorMode="external" cursorLabel="GitHub">
-                  <Github className="h-4 w-4" /> Source code
+                <MagneticButton
+                  href={project.github}
+                  variant="secondary"
+                  cursorMode="external"
+                  cursorLabel="GitHub"
+                  className="btn-responsive"
+                >
+                  <Github className="h-4 w-4 shrink-0" /> Source code
                 </MagneticButton>
               )}
             </div>

@@ -34,7 +34,7 @@ export function ProjectsGrid() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] to-transparent opacity-80" />
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <h3 className="font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors line-clamp-2">
                     {project.title}
                   </h3>

@@ -15,14 +15,16 @@ export function PremiumCta({ label, title, description, children }: PremiumCtaPr
   const showLabel = label.trim().toLowerCase() !== title.trim().toLowerCase()
 
   return (
-    <PremiumSection className="!py-24 sm:!py-28 md:!py-32 border-t-0">
+    <PremiumSection className="!py-16 sm:!py-24 md:!py-28 lg:!py-32 border-t-0">
       <PremiumPanel centered>
         {showLabel && <p className="section-label mb-3">{label}</p>}
-        <h2 className="section-title text-3xl md:text-4xl mb-4">{title}</h2>
-        <p className="text-neutral-400 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
+        <h2 className="section-title mb-4">{title}</h2>
+        <p className="text-neutral-400 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto text-balance">
           {description}
         </p>
-        <div className="flex flex-wrap justify-center gap-4">{children}</div>
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mx-auto sm:mx-0">
+          {children}
+        </div>
       </PremiumPanel>
     </PremiumSection>
   )

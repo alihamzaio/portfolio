@@ -23,11 +23,11 @@ export function ProjectsBento() {
             initial={{ opacity: 0, y: 28 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: i * 0.1 }}
-            className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0f1a] min-h-[280px] transition-colors duration-300 hover:border-cyan-500/25 ${
-              isFeatured ? "md:col-span-2 lg:col-span-2 min-h-[360px]" : ""
+            className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0f1a] min-h-[240px] sm:min-h-[280px] transition-colors duration-300 hover:border-cyan-500/25 ${
+              isFeatured ? "md:col-span-2 lg:col-span-2 min-h-[280px] sm:min-h-[360px]" : ""
             }`}
           >
-            <div className={`relative overflow-hidden ${isFeatured ? "h-56 md:h-64" : "h-44"}`}>
+            <div className={`relative overflow-hidden ${isFeatured ? "h-48 sm:h-56 md:h-64" : "h-40 sm:h-44"}`}>
               <Image
                 src={project.image}
                 alt={project.title}
@@ -42,12 +42,14 @@ export function ProjectsBento() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/50 to-transparent" />
             </div>
-            <div className="relative p-6">
-              <h3 className="text-lg font-semibold text-white mb-2">{project.title}</h3>
+            <div className="relative p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-2 line-clamp-2 break-words">
+                {project.title}
+              </h3>
               <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {project.metrics.slice(0, 2).map((m) => (
-                  <span key={m.label} className="premium-chip text-[10px] px-2 py-1">
+                  <span key={m.label} className="premium-chip text-[11px] sm:text-[10px] px-2 py-1 break-words">
                     {m.value} {m.label}
                   </span>
                 ))}

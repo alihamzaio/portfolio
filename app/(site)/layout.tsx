@@ -5,6 +5,7 @@ import { HashScrollHandler } from "@/components/navigation/hash-scroll-handler"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { MobileDock } from "@/components/layout/mobile-dock"
+import { MainContent } from "@/components/layout/main-content"
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <AppProviders>
@@ -17,9 +18,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <SiteHeader />
-        <main id="main-content" className="relative z-[2] min-h-screen pb-24 lg:pb-0" role="main">
-          {children}
-        </main>
+        <MainContent>{children}</MainContent>
         <SiteFooter />
         <MobileDock />
       </SiteContentProvider>

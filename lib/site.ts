@@ -5,7 +5,7 @@ export const siteConfig = {
   headline:
     "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
   description:
-    "Full Stack Developer with 3+ years of experience in React, Next.js, Node.js, AWS serverless, REST APIs, and blockchain. Based in Lahore, Pakistan. Open to remote work.",
+    "Full stack developer building web applications, REST APIs, and AWS infrastructure. Based in Lahore, Pakistan.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",
