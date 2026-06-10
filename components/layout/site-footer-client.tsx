@@ -27,19 +27,19 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
   }
 
   return (
-    <footer className="border-t border-white/[0.06] mt-20 bg-[#0a0f1a]/80 backdrop-blur-xl">
-      <div className="section-shell py-16 md:py-20">
+    <footer className="border-t border-white/[0.06] mt-12 sm:mt-16 md:mt-20 bg-[#0a0f1a]/80 backdrop-blur-xl">
+      <div className="section-shell py-12 sm:py-16 md:py-20">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
           <div className="max-w-sm">
             <Link href="/" className="inline-block mb-4 group">
               <Logo name={profile.name} showName size={40} instanceId="footer" />
             </Link>
-            <p className="text-sm text-neutral-500 leading-relaxed">
+            <p className="text-sm text-neutral-500 leading-relaxed break-words">
               {profile.title} · {profile.location}
             </p>
             <a
               href={`mailto:${profile.email}`}
-              className="text-sm text-neutral-600 hover:text-white mt-2 inline-block transition-colors"
+              className="text-sm text-neutral-600 hover:text-white mt-2 inline-block transition-colors break-all"
             >
               {profile.email}
             </a>
@@ -86,7 +86,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
           <button
             type="button"
             onClick={scrollTop}
-            className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 min-h-11 px-2 text-neutral-500 hover:text-white transition-colors"
           >
             Back to top <ArrowUp className="h-3.5 w-3.5" />
           </button>

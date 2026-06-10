@@ -34,14 +34,16 @@ function CountUp({ end, suffix }: { end: number; suffix: string }) {
 
 function AboutStatsRowInner() {
   return (
-    <div className="grid grid-cols-2 gap-4 mt-8">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8">
       {ABOUT_STATS.map((s) => (
         <div
           key={s.label}
-          className="premium-surface rounded-xl p-4 text-center"
+          className="premium-surface rounded-xl p-3 sm:p-4 text-center min-w-0"
         >
           <CountUp end={s.value} suffix={s.suffix} />
-          <p className="text-[10px] text-neutral-500 mt-2 uppercase tracking-wide">{s.label}</p>
+          <p className="text-[10px] text-neutral-500 mt-2 uppercase tracking-wide text-balance leading-snug">
+            {s.label}
+          </p>
         </div>
       ))}
     </div>

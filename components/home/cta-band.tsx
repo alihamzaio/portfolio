@@ -12,10 +12,10 @@ export function CtaBand() {
       title={copy.sections.cta.title}
       description={copy.sections.cta.description}
     >
-      <MagneticButton href="/#contact">
-        {copy.sections.cta.button} <ArrowRight className="h-4 w-4" />
+      <MagneticButton href="/#contact" className="btn-responsive">
+        {copy.sections.cta.button} <ArrowRight className="h-4 w-4 shrink-0" />
       </MagneticButton>
-      <MagneticButton href="/api/resume/download" variant="secondary">
+      <MagneticButton href="/api/resume/download" variant="secondary" className="btn-responsive">
         Download resume
       </MagneticButton>
     </PremiumCta>

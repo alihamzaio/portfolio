@@ -31,7 +31,7 @@ function SkillsRadarInner() {
   const polygon = dataPoints.map((p) => `${p.x},${p.y}`).join(" ")
 
   return (
-    <svg ref={ref} viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[240px] mx-auto">
+    <svg ref={ref} viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[min(100%,220px)] sm:max-w-[240px] mx-auto">
       {[0.25, 0.5, 0.75, 1].map((scale) => (
         <polygon
           key={scale}

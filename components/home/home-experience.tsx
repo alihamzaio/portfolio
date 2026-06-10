@@ -54,7 +54,7 @@ export function HomeExperience() {
               key={exp.id}
               data-animate
               data-timeline-side={i % 2 === 0 ? "left" : "right"}
-              className="relative pl-14 timeline-card-enter"
+              className="relative pl-12 sm:pl-14 timeline-card-enter min-w-0"
               style={
                 {
                   "--timeline-from": i % 2 === 0 ? "-60px" : "60px",
@@ -68,7 +68,9 @@ export function HomeExperience() {
               <PremiumCard spotlight className="!p-6 sm:!p-8">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
                   <div>
-                    <h3 className="text-xl font-semibold text-white tracking-tight">{exp.role}</h3>
+                    <h3 className="text-lg sm:text-xl font-semibold text-white tracking-tight break-words">
+                      {exp.role}
+                    </h3>
                     <p className="text-sm text-cyan-400/90 font-medium mt-1">{exp.company}</p>
                   </div>
                   <p className="text-xs text-neutral-500 font-mono sm:text-right shrink-0">
@@ -81,7 +83,7 @@ export function HomeExperience() {
 
                 <ul className="space-y-3 mb-6">
                   {exp.achievements.map((a) => (
-                    <li key={a} className="text-sm text-neutral-400 flex gap-3 leading-relaxed">
+                    <li key={a} className="text-sm text-neutral-400 flex gap-3 leading-relaxed break-words">
                       <TrendingUp className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
                       {a}
                     </li>

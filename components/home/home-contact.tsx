@@ -48,7 +48,7 @@ export function HomeContact() {
               <span
                 className={`h-2 w-2 rounded-full shrink-0 ${profile.available ? "bg-emerald-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-neutral-500"}`}
               />
-              <span className="text-sm text-white">
+              <span className="text-sm text-white text-balance break-words">
                 {profile.available ? "Available for full-time and contract work" : "Not currently available"}
               </span>
             </div>
@@ -63,7 +63,7 @@ export function HomeContact() {
                 <PremiumIcon icon={Icon} size={16} className="mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-xs text-neutral-500">{row.label}</p>
-                  <p className="text-sm text-white truncate group-hover:text-sky-300 transition-colors">
+                  <p className="text-sm text-white break-all sm:truncate group-hover:text-sky-300 transition-colors">
                     {value}
                   </p>
                 </div>
@@ -91,7 +91,7 @@ export function HomeContact() {
         </div>
 
         <div data-animate className="lg:col-span-3 flex flex-col h-full min-h-0">
-          <PremiumCard hover={false} className="flex-1 flex flex-col !p-5 h-full min-h-[320px] lg:min-h-0">
+          <PremiumCard hover={false} className="flex-1 flex flex-col !p-4 sm:!p-5 h-full min-h-0 lg:min-h-0">
             <form onSubmit={handleSubmit} className="flex flex-col flex-1 gap-4 h-full">
               <div className="grid sm:grid-cols-2 gap-4 shrink-0">
                 <FloatingField
@@ -119,7 +119,7 @@ export function HomeContact() {
               />
 
               <div className="shrink-0 pt-0">
-                <RippleButton type="submit">
+                <RippleButton type="submit" className="w-full sm:w-auto">
                   Send message <Send className="h-4 w-4" />
                 </RippleButton>
               </div>

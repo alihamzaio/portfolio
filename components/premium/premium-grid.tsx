@@ -20,7 +20,7 @@ const colClass = {
 function PremiumGridInner({ children, className, cols = "auto", stagger = true }: PremiumGridProps) {
   return (
     <div
-      className={cn("grid gap-6 lg:gap-7", colClass[cols], className)}
+      className={cn("grid gap-4 sm:gap-6 lg:gap-7", colClass[cols], className)}
       {...(stagger ? { "data-animate-stagger": true } : {})}
     >
       {children}

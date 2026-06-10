@@ -24,20 +24,20 @@ export function HomeHero() {
     <section
       id="home"
       aria-label="Introduction"
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden bg-[#0a0f1a] hero-pad"
+      className="relative min-h-[100dvh] flex flex-col bg-[#0a0f1a] hero-pad"
     >
       <HeroParticleLazy />
 
-      <div className="section-shell relative z-10 flex flex-1 flex-col">
-        <div className="pt-8 sm:pt-12 lg:pt-16">
-          <div className="grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 xl:gap-24 items-center">
-            <div className="max-w-3xl">
+      <div className="section-shell relative z-10 flex flex-1 flex-col min-w-0 w-full max-w-full">
+        <div className="pt-4 sm:pt-8 md:pt-12 lg:pt-16 min-w-0 w-full">
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_auto] gap-8 sm:gap-12 lg:gap-20 xl:gap-24 items-center min-w-0 w-full">
+            <div className="min-w-0 w-full max-w-3xl">
               {profile.available && (
                 <motion.p
                   initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="text-xs text-neutral-500 mb-8"
+                  className="text-xs text-neutral-500 mb-6 sm:mb-8 text-balance break-words w-full"
                 >
                   {copy.hero.availability}
                 </motion.p>
@@ -47,7 +47,7 @@ export function HomeHero() {
                 initial={reduceMotion ? false : { opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0, ease }}
-                className="hero-premium-title font-bold tracking-tight mb-6"
+                className="hero-premium-title font-bold tracking-tight mb-6 w-full min-w-0 max-w-full break-words"
               >
                 {profile.name}
               </motion.h1>
@@ -56,10 +56,10 @@ export function HomeHero() {
                 initial={reduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, delay: 0.2, ease }}
-                className="text-xl sm:text-2xl min-h-[2.5rem] font-medium mb-8"
+                className="text-lg sm:text-xl md:text-2xl min-h-[3rem] sm:min-h-[2.5rem] font-medium mb-6 sm:mb-8 w-full min-w-0 break-words"
               >
                 {reduceMotion ? (
-                  <span className="text-neutral-300">{HERO_ROLE_LINES[0]}</span>
+                  <span className="text-neutral-300 break-words">{HERO_ROLE_LINES[0]}</span>
                 ) : (
                   <TypeAnimation
                     sequence={roleSequence}
@@ -67,7 +67,7 @@ export function HomeHero() {
                     speed={45}
                     repeat={Infinity}
                     deletionSpeed={50}
-                    className="text-neutral-300"
+                    className="text-neutral-300 break-words [white-space:normal]"
                   />
                 )}
               </motion.div>
@@ -76,20 +76,24 @@ export function HomeHero() {
                 initial={reduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35, ease }}
-                className="text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl mb-12"
+                className="text-base sm:text-lg text-neutral-400 leading-relaxed w-full max-w-2xl mb-8 sm:mb-12 break-words [overflow-wrap:anywhere]"
               >
                 {copy.hero.lead}
               </motion.p>
 
-              <div className="flex flex-wrap items-center gap-4">
-                <PremiumGlassCta href="/#contact" delay={reduceMotion ? 0 : 0.4}>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 w-full min-w-0 max-w-full sm:max-w-none">
+                <PremiumGlassCta
+                  href="/#contact"
+                  delay={reduceMotion ? 0 : 0.4}
+                  className="btn-responsive"
+                >
                   {copy.hero.ctaPrimary}
                 </PremiumGlassCta>
-                <MagneticButton href="/#projects" variant="secondary">
+                <MagneticButton href="/#projects" variant="secondary" className="btn-responsive">
                   {copy.hero.ctaViewWork}
                 </MagneticButton>
-                <MagneticButton href={profile.resumeUrl} variant="secondary">
-                  <Download className="h-4 w-4" /> {copy.hero.ctaResume}
+                <MagneticButton href={profile.resumeUrl} variant="secondary" className="btn-responsive">
+                  <Download className="h-4 w-4 shrink-0" /> {copy.hero.ctaResume}
                 </MagneticButton>
               </div>
             </div>
@@ -100,7 +104,7 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div className="section-stack pt-10 sm:pt-14 lg:pt-16">
+        <div className="section-stack pt-6 sm:pt-10 md:pt-14 lg:pt-16 min-w-0 w-full max-w-full overflow-hidden">
           <TechStackTicker />
           <SkillActivityGrid />
         </div>

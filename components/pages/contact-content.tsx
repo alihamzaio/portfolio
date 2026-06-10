@@ -50,7 +50,9 @@ export function ContactContent() {
                   <PremiumIcon icon={item.icon} size={20} />
                   <div>
                     <p className="text-xs text-neutral-500 uppercase tracking-wider">{item.label}</p>
-                    <p className="text-sm text-white group-hover:text-cyan-400 transition-colors mt-1">{item.value}</p>
+                    <p className="text-sm text-white break-all sm:break-normal group-hover:text-cyan-400 transition-colors mt-1">
+                      {item.value}
+                    </p>
                   </div>
                 </a>
               ) : (
@@ -67,7 +69,7 @@ export function ContactContent() {
         </PremiumReveal>
 
         <PremiumReveal delay={0.1} className="lg:col-span-3 flex flex-col min-h-0">
-          <PremiumCard hover={false} className="flex-1 flex flex-col !p-5 min-h-[320px]">
+          <PremiumCard hover={false} className="flex-1 flex flex-col !p-4 sm:!p-5 min-h-0">
             <form onSubmit={handleSubmit} className="flex flex-col flex-1 gap-4">
               <div className="grid sm:grid-cols-2 gap-4 shrink-0">
                 <div>

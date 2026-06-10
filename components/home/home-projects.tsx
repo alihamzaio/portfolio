@@ -19,9 +19,9 @@ export function HomeProjects() {
 
       <ProjectsBento />
 
-      <div data-animate className="mt-14 flex justify-center">
-        <MagneticButton href="/projects" variant="secondary">
-          View all projects <ArrowUpRight className="h-4 w-4" />
+      <div data-animate className="mt-10 sm:mt-14 flex justify-center px-0">
+        <MagneticButton href="/projects" variant="secondary" className="btn-responsive max-w-md sm:max-w-none">
+          View all projects <ArrowUpRight className="h-4 w-4 shrink-0" />
         </MagneticButton>
       </div>
     </PremiumSection>

@@ -58,7 +58,7 @@ export function HeroParticleField() {
   if (!mounted || reduceMotion) {
     return (
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none overflow-hidden"
         aria-hidden
         style={{
           background: "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(59,130,246,0.08), transparent 70%)",
@@ -67,15 +67,27 @@ export function HeroParticleField() {
     )
   }
 
+  const particleCount =
+    typeof window !== "undefined"
+      ? window.innerWidth < 480
+        ? 350
+        : window.innerWidth < 768
+          ? 550
+          : 1200
+      : 550
+
+  const dpr: [number, number] =
+    typeof window !== "undefined" && window.innerWidth < 768 ? [1, 1] : [1, 1.5]
+
   return (
-    <div className="absolute inset-0 z-0">
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 60 }}
-        dpr={[1, 1.5]}
+        dpr={dpr}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
         style={{ background: "transparent" }}
       >
-        <Particles count={typeof window !== "undefined" && window.innerWidth < 768 ? 600 : 1200} />
+        <Particles count={particleCount} />
       </Canvas>
     </div>
   )

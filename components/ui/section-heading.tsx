@@ -29,7 +29,7 @@ export function SectionHeading({
     <header
       data-animate
       className={cn(
-        "mb-14 md:mb-16 lg:mb-20",
+        "mb-10 sm:mb-12 md:mb-16 lg:mb-20",
         align === "center" && "text-center mx-auto max-w-3xl",
         align === "left" && "max-w-3xl",
         className
@@ -40,7 +40,7 @@ export function SectionHeading({
       )}
       <TitleTag
         id={sectionId ? `${sectionId}-heading` : undefined}
-        className="section-title"
+        className="section-title break-words"
       >
         {title}
       </TitleTag>

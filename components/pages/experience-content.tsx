@@ -24,7 +24,7 @@ export function ExperienceContent() {
 
         <div className="space-y-10">
           {experiences.map((exp, i) => (
-            <PremiumReveal key={exp.id} direction="left" delay={i * 0.1} className="relative pl-14">
+            <PremiumReveal key={exp.id} direction="left" delay={i * 0.1} className="relative pl-12 sm:pl-14 min-w-0">
               <div className="absolute left-0 top-6 flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/30 bg-[#0a0f1a] shadow-[0_0_24px_rgba(59,130,246,0.15)]">
                 <PremiumIcon icon={Briefcase} size={16} />
               </div>
@@ -32,7 +32,7 @@ export function ExperienceContent() {
               <PremiumCard spotlight>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-4">
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{exp.role}</h3>
+                    <h3 className="font-semibold text-white text-lg break-words">{exp.role}</h3>
                     <p className="text-cyan-400 font-medium">{exp.company}</p>
                   </div>
                   <div className="text-sm text-neutral-500 sm:text-right">
@@ -43,7 +43,7 @@ export function ExperienceContent() {
                 <p className="text-sm text-neutral-400 mb-5 leading-relaxed">{exp.description}</p>
                 <ul className="space-y-2 mb-5">
                   {exp.achievements.map((a) => (
-                    <li key={a} className="flex gap-2 text-sm text-neutral-300">
+                    <li key={a} className="flex gap-2 text-sm text-neutral-300 break-words">
                       <TrendingUp className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
                       {a}
                     </li>
