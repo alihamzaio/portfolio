@@ -295,7 +295,7 @@
   }
 
   /* Explicit h1 sizing — avoids Chrome H1UserAgentFontSizeInSection deprecation */
-  :is(section, article, nav, aside) h1 {
+  :is(section, article, nav, aside, main) h1 {
     font-size: clamp(1.875rem, 4vw + 0.5rem, 3.75rem);
   }
 
@@ -782,6 +782,12 @@
     @apply absolute left-1/2 -translate-x-1/2 -bottom-0.5 w-1 h-1 rounded-full;
     background: var(--accent-dot);
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.55);
+  }
+
+  /* Visible before scroll-reveal JS — required for Lighthouse FCP in dev */
+  html:not(.scroll-reveal-active) [data-animate] {
+    opacity: 1;
+    transform: none;
   }
 
   [data-animate] {
