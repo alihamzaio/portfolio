@@ -16,7 +16,7 @@ interface SiteContentContextValue {
 const SiteContentContext = createContext<SiteContentContextValue>({
   settings: defaultSettings,
   experiences: staticExperiences,
-  loading: true,
+  loading: false,
   refresh: async () => {},
 })
 
@@ -55,7 +55,7 @@ export function usePublicProfile() {
 export function SiteContentProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings)
   const [experiences, setExperiences] = useState<Experience[]>(staticExperiences)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const refresh = async () => {
     try {
@@ -73,7 +73,12 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    refresh()
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => void refresh(), { timeout: 5000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const t = window.setTimeout(() => void refresh(), 2500)
+    return () => window.clearTimeout(t)
   }, [])
 
   return (

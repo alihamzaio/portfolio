@@ -2,7 +2,6 @@
 
 import { type ReactNode, type MouseEvent } from "react"
 import Link from "next/link"
-import { motion, useReducedMotion } from "framer-motion"
 import { usePathname } from "next/navigation"
 import {
   getLinkKind,
@@ -11,8 +10,6 @@ import {
   shouldSmoothScrollHash,
 } from "@/lib/navigation"
 import { cn } from "@/lib/utils"
-
-const MotionLink = motion.create(Link)
 
 interface MagneticButtonProps {
   children: ReactNode
@@ -40,7 +37,6 @@ export function MagneticButton({
   cursorLabel,
 }: MagneticButtonProps) {
   const pathname = usePathname()
-  const reduceMotion = useReducedMotion()
 
   const cursorProps = {
     "data-cursor": cursorMode,
@@ -50,15 +46,13 @@ export function MagneticButton({
   }
 
   const base = cn(
-    "inline-flex items-center justify-center gap-2 min-h-11 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow] duration-300",
+    "inline-flex items-center justify-center gap-2 min-h-11 rounded-xl text-sm font-semibold transition-[color,background,border-color,box-shadow,transform] duration-300 motion-safe:active:scale-[0.97]",
     variant === "primary" &&
       "btn-primary px-7 py-3 relative overflow-hidden before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-[radial-gradient(circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.12),transparent_55%)] before:transition-opacity before:duration-300",
     variant === "secondary" && "btn-secondary px-7 py-3",
     variant === "ghost" && "text-[#94A3B8] hover:text-[#F8FAFC] px-3 py-2",
     className
   )
-
-  const tap = reduceMotion ? undefined : { scale: 0.97 }
 
   if (href) {
     const kind = getLinkKind(href)
@@ -74,7 +68,7 @@ export function MagneticButton({
 
     if (kind === "external" || kind === "download") {
       return (
-        <motion.a
+        <a
           href={href}
           target={target ?? (kind === "external" ? "_blank" : undefined)}
           rel={rel ?? (kind === "external" ? "noopener noreferrer" : undefined)}
@@ -82,11 +76,10 @@ export function MagneticButton({
           data-cursor-magnetic
           {...(cursorLabel ? { "data-cursor-label": cursorLabel } : {})}
           data-cursor-arrow="true"
-          whileTap={tap}
           className={base}
         >
           {children}
-        </motion.a>
+        </a>
       )
     }
 
@@ -94,7 +87,7 @@ export function MagneticButton({
     const isContact = href.includes("contact")
 
     return (
-      <MotionLink
+      <Link
         href={linkHref}
         target={target}
         rel={rel}
@@ -102,23 +95,16 @@ export function MagneticButton({
         data-cursor-magnetic
         {...(cursorLabel ? { "data-cursor-label": cursorLabel } : {})}
         onClick={kind === "hash" ? handleLinkClick : undefined}
-        whileTap={tap}
         className={base}
       >
         {children}
-      </MotionLink>
+      </Link>
     )
   }
 
   return (
-    <motion.button
-      type={type}
-      onClick={onClick}
-      {...cursorProps}
-      whileTap={tap}
-      className={base}
-    >
+    <button type={type} onClick={onClick} {...cursorProps} className={base}>
       {children}
-    </motion.button>
+    </button>
   )
 }

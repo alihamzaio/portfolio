@@ -30,7 +30,7 @@ export function HomeSkills() {
               {cat.skills.map((skill) => (
                 <span key={skill.name} className="premium-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs">
                   {skill.icon && (
-                    <Image src={skill.icon} alt="" width={14} height={14} unoptimized />
+                    <Image src={skill.icon} alt={`${skill.name} icon`} width={14} height={14} unoptimized />
                   )}
                   {skill.name}
                 </span>

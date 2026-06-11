@@ -1,10 +1,7 @@
+import { HomeHero } from "@/components/home/home-hero"
 import dynamic from "next/dynamic"
 import { SectionSkeleton } from "@/components/ui/section-skeleton"
 
-const HomeHero = dynamic(
-  () => import("@/components/home/home-hero").then((m) => ({ default: m.HomeHero })),
-  { loading: () => <div className="min-h-[100dvh] bg-[#0a0f1a] animate-pulse" aria-hidden /> }
-)
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
 import { buildPageMetadata, SEO_KEYWORDS } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
@@ -43,7 +40,7 @@ const HomeContact = dynamic(
 )
 
 export const metadata = buildPageMetadata({
-  title: `${siteConfig.name} — Full Stack Developer | MERN, AWS & Blockchain`,
+  title: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
   description: siteConfig.description,
   path: "/",
   ogImage: "/opengraph-image",

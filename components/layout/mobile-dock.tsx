@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { MouseEvent } from "react"
-import { motion } from "framer-motion"
 import { Home, User, Layers, Briefcase, Mail } from "lucide-react"
 import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
 
@@ -29,10 +28,7 @@ export function MobileDock() {
   }
 
   return (
-    <motion.nav
-      initial={{ y: 24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.5, duration: 0.5 }}
+    <nav
       className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 lg:hidden w-[calc(100%-1.5rem)] max-w-md mobile-dock"
       aria-label="Mobile navigation"
     >
@@ -49,6 +45,6 @@ export function MobileDock() {
           </Link>
         ))}
       </div>
-    </motion.nav>
+    </nav>
   )
 }

@@ -50,7 +50,33 @@ export function SiteHeader() {
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
+    const header = document.querySelector<HTMLElement>("[data-site-header]")
+    let lastY = window.scrollY
+    let hidden = false
+
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 12)
+
+      if (!header) return
+      if (y > lastY && y > 80) {
+        if (!hidden) {
+          hidden = true
+          header.style.transform = "translateY(-100%)"
+        }
+      } else if (y < lastY || y <= 80) {
+        if (hidden) {
+          hidden = false
+          header.style.transform = "translateY(0)"
+        }
+      }
+      lastY = y
+    }
+
+    if (header) {
+      header.style.transition = "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)"
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])

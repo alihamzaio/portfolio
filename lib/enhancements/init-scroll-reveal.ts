@@ -65,6 +65,9 @@ export function initScrollReveal() {
     document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
       if (boundAnimate.has(el) || el.classList.contains("is-visible")) return
       boundAnimate.add(el)
+      if (isInViewport(el.getBoundingClientRect())) {
+        el.classList.add("is-visible")
+      }
       observer.observe(el)
     })
   }

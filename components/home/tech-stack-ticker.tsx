@@ -16,7 +16,7 @@ export function TechStackTicker() {
             data-cursor-magnetic
             className="flex items-center gap-2.5 shrink-0 opacity-70 hover:opacity-100 transition-opacity"
           >
-            <Image src={item.icon} alt="" width={22} height={22} unoptimized />
+            <Image src={item.icon} alt={`${item.name} logo`} width={22} height={22} unoptimized />
             <span className="text-sm font-medium text-neutral-400 whitespace-nowrap">{item.name}</span>
           </div>
         ))}
