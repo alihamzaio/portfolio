@@ -1,46 +1,52 @@
 "use client"
 
 import { useState, useEffect, type ReactNode } from "react"
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
-import { LoadingOverlay } from "@/components/effects/loading-overlay"
-import { AmbientScene } from "@/components/effects/ambient-scene"
-import { SiteParticleBg } from "@/components/effects/site-particle-bg"
-import { Spotlight } from "@/components/effects/spotlight"
-import { ScrollProgress } from "@/components/effects/scroll-progress"
-import { PremiumCursor } from "@/components/cursor/premium-cursor"
-import { EnhancementRuntime } from "@/components/effects/enhancement-runtime"
-import { getIntroDelayMs } from "@/lib/motion-prefs"
+import dynamic from "next/dynamic"
+import { prefersReducedMotion } from "@/lib/motion-prefs"
+
+const PremiumCursor = dynamic(
+  () => import("@/components/cursor/premium-cursor").then((m) => m.PremiumCursor),
+  { ssr: false }
+)
+const EnhancementRuntime = dynamic(
+  () => import("@/components/effects/enhancement-runtime").then((m) => m.EnhancementRuntime),
+  { ssr: false }
+)
+const ScrollProgress = dynamic(
+  () => import("@/components/effects/scroll-progress").then((m) => m.ScrollProgress),
+  { ssr: false }
+)
+const AmbientScene = dynamic(
+  () => import("@/components/effects/ambient-scene").then((m) => m.AmbientScene),
+  { ssr: false }
+)
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  const reduceMotion = useReducedMotion()
-  const [ready, setReady] = useState(reduceMotion ?? false)
+  const [effectsReady, setEffectsReady] = useState(false)
 
   useEffect(() => {
-    if (reduceMotion) {
-      setReady(true)
-      return
+    if (prefersReducedMotion()) return
+
+    const enable = () => setEffectsReady(true)
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(enable, { timeout: 4000 })
+      return () => window.cancelIdleCallback(id)
     }
-    const t = setTimeout(() => setReady(true), getIntroDelayMs())
-    return () => clearTimeout(t)
-  }, [reduceMotion])
+    const t = window.setTimeout(enable, 2000)
+    return () => window.clearTimeout(t)
+  }, [])
 
   return (
     <>
-      <PremiumCursor />
-      <EnhancementRuntime />
-      <ScrollProgress />
-      <AnimatePresence mode="wait">{!ready && !reduceMotion && <LoadingOverlay key="loader" />}</AnimatePresence>
-      {!reduceMotion && <AmbientScene />}
-      {!reduceMotion && <SiteParticleBg />}
-      {!reduceMotion && <Spotlight />}
-      <motion.div
-        className="relative z-10"
-        initial={{ opacity: reduceMotion ? 1 : 0 }}
-        animate={{ opacity: ready ? 1 : 0 }}
-        transition={{ duration: reduceMotion ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {children}
-      </motion.div>
+      {effectsReady && (
+        <>
+          <PremiumCursor />
+          <EnhancementRuntime />
+          <ScrollProgress />
+          {!prefersReducedMotion() && <AmbientScene />}
+        </>
+      )}
+      <div className="relative z-10">{children}</div>
     </>
   )
 }

@@ -5,7 +5,7 @@ export const siteConfig = {
   headline:
     "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
   description:
-    "Full stack developer building web applications, REST APIs, and AWS infrastructure. Based in Lahore, Pakistan.",
+    "Full Stack Developer with 3+ years of experience building scalable web applications, REST APIs, AWS cloud solutions, and blockchain-based systems.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",

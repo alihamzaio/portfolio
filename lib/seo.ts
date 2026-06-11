@@ -81,7 +81,13 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
     title: fullTitle,
     description: options.description,
     keywords,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        "x-default": canonical,
+      },
+    },
     openGraph: {
       type: options.type ?? "website",
       url: canonical,
@@ -116,7 +122,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
 /** Root layout defaults — merged with per-page metadata */
 export function buildRootMetadata(): Metadata {
   const home = buildPageMetadata({
-    title: `${siteConfig.name} — Full Stack Developer | MERN, AWS & Blockchain`,
+    title: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
     description: siteConfig.description,
     path: "/",
   })
@@ -130,7 +136,7 @@ export function buildRootMetadata(): Metadata {
   return {
     ...home,
     title: {
-      default: `${siteConfig.name} — Full Stack Developer | Lahore, Pakistan`,
+      default: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
       template: `%s | ${siteConfig.name}`,
     },
     metadataBase: new URL(siteConfig.url),

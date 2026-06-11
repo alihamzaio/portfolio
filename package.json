@@ -2,6 +2,12 @@
   "name": "ali_hamza",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 92",
+    "safari >= 15.4"
+  ],
   "scripts": {
     "build": "set BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true&& set BROWSERSLIST_IGNORE_OLD_DATA=true&& next build",
     "dev": "next dev",
@@ -9,17 +15,14 @@
     "start": "next start"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
     "@react-three/fiber": "^9.0.0",
     "@vercel/analytics": "latest",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "latest",
     "lucide-react": "^0.454.0",
     "next": "^16.0.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-type-animation": "^3.2.0",
     "tailwind-merge": "^2.5.5",
     "three": "^0.172.0"
   },

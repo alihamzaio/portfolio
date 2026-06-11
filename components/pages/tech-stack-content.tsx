@@ -28,7 +28,7 @@ export function TechStackContent() {
                 {cat.skills.map((skill) => (
                   <span key={skill.name} className="premium-chip inline-flex items-center gap-2 px-3 py-2 text-sm">
                     {skill.icon && (
-                      <Image src={skill.icon} alt="" width={14} height={14} unoptimized />
+                      <Image src={skill.icon} alt={`${skill.name} icon`} width={14} height={14} unoptimized />
                     )}
                     {skill.name}
                   </span>

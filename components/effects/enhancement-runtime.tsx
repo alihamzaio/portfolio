@@ -2,9 +2,7 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { initSmoothScrollLerp } from "@/lib/enhancements/init-smooth-scroll"
 import { initScrollReveal } from "@/lib/enhancements/init-scroll-reveal"
-import { initNavbarScroll } from "@/lib/enhancements/init-navbar"
 
 function scheduleScrollReveal(onReady: () => void | (() => void)) {
   let cleanup: void | (() => void)
@@ -51,13 +49,8 @@ export function EnhancementRuntime() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const cleanups = [initSmoothScrollLerp(), initNavbarScroll()]
     const scrollCleanup = scheduleScrollReveal(() => initScrollReveal())
-
-    return () => {
-      cleanups.forEach((fn) => fn?.())
-      scrollCleanup()
-    }
+    return () => scrollCleanup()
   }, [pathname])
 
   return null
