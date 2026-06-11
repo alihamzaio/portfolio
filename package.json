@@ -11,9 +11,6 @@
   "scripts": {
     "build": "set BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true&& set BROWSERSLIST_IGNORE_OLD_DATA=true&& next build",
     "dev": "next dev -p 4000",
-    "dev:https": "next dev --experimental-https -p 4000",
-    "lighthouse:dev": "node scripts/lighthouse-dev.mjs",
-    "lighthouse:prod": "node scripts/lighthouse-prod.mjs",
     "lint": "eslint .",
     "start": "next start"
   },
