@@ -3,14 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "browserslist": [
-    "chrome >= 92",
-    "edge >= 92",
-    "firefox >= 92",
-    "safari >= 15.4"
+    "chrome >= 107",
+    "edge >= 107",
+    "firefox >= 104",
+    "safari >= 16"
   ],
   "scripts": {
     "build": "set BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true&& set BROWSERSLIST_IGNORE_OLD_DATA=true&& next build",
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
+    "dev:https": "next dev --experimental-https -p 4000",
+    "lighthouse:dev": "node scripts/lighthouse-dev.mjs",
+    "lighthouse:prod": "node scripts/lighthouse-prod.mjs",
     "lint": "eslint .",
     "start": "next start"
   },

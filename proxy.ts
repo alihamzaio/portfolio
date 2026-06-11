@@ -1,8 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { buildContentSecurityPolicy } from "@/lib/csp"
 
-const isProd = process.env.NODE_ENV === "production"
-
 function buildSecurityHeaders(csp: string) {
   return [
     { key: "Content-Security-Policy", value: csp },
@@ -16,14 +14,11 @@ function buildSecurityHeaders(csp: string) {
       key: "Permissions-Policy",
       value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
     },
-    ...(isProd
-      ? [
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-        ]
-      : []),
+    // Always emit HSTS — Lighthouse checks header presence (browser ignores on HTTP).
+    {
+      key: "Strict-Transport-Security",
+      value: "max-age=63072000; includeSubDomains; preload",
+    },
   ] as const
 }
 

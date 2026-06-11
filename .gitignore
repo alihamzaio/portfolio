@@ -23,6 +23,7 @@ yarn-error.log*
 .tmp/
 lighthouse-*.json
 lighthouse-*.html
+lighthouse-dev-report*
 .lighthouseci/
 
 # vercel
