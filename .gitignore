@@ -19,6 +19,12 @@ yarn-error.log*
 # env files
 .env*
 
+# local tooling / audit artifacts
+.tmp/
+lighthouse-*.json
+lighthouse-*.html
+.lighthouseci/
+
 # vercel
 .vercel
 

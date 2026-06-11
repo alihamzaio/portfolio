@@ -1,6 +1,12 @@
+import { baselineSecurityHeaders, sourceMapHeaders, staticAssetHeaders } from "./lib/security-headers.mjs"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  productionBrowserSourceMaps: true,
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "www.exec9.com" },
@@ -8,14 +14,24 @@ const nextConfig = {
       { protocol: "https", hostname: "ghchart.rshah.org" },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   async headers() {
+    const baselineSecurity = baselineSecurityHeaders
+
     return [
       {
         source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-        ],
+        headers: baselineSecurity,
+      },
+      {
+        source: "/_next/static/:path*.map",
+        headers: sourceMapHeaders,
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: staticAssetHeaders,
       },
       {
         source: "/sitemap.xml",
