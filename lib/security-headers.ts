@@ -1,8 +1,8 @@
-import { buildContentSecurityPolicy, type CspOptions } from "./csp"
+import { buildContentSecurityPolicy } from "./csp"
 
 const isProd = process.env.NODE_ENV === "production"
 
-/** Security headers applied on every HTML navigation (via middleware). */
+/** Security headers applied on every HTML navigation (via proxy). */
 export function buildSecurityHeaders(csp: string) {
   return [
     { key: "Content-Security-Policy", value: csp },
@@ -27,8 +27,8 @@ export function buildSecurityHeaders(csp: string) {
   ] as const
 }
 
-export function buildRequestSecurityHeaders(options: CspOptions) {
-  const csp = buildContentSecurityPolicy(options)
+export function buildRequestSecurityHeaders(nonce: string) {
+  const csp = buildContentSecurityPolicy({ nonce })
   return buildSecurityHeaders(csp)
 }
 
