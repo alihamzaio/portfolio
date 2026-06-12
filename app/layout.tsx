@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         suppressHydrationWarning
       >
         {children}
-        {process.env.VERCEL === "1" ? <AnalyticsDeferred /> : null}
+        <AnalyticsDeferred />
       </body>
     </html>
   )
