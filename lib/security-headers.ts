@@ -1,7 +1,5 @@
 import { buildContentSecurityPolicy } from "./csp"
 
-const isProd = process.env.NODE_ENV === "production"
-
 /** Security headers applied on every HTML navigation (via proxy). */
 export function buildSecurityHeaders(csp: string) {
   return [
@@ -16,19 +14,15 @@ export function buildSecurityHeaders(csp: string) {
       key: "Permissions-Policy",
       value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
     },
-    ...(isProd
-      ? [
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-        ]
-      : []),
+    {
+      key: "Strict-Transport-Security",
+      value: "max-age=63072000; includeSubDomains; preload",
+    },
   ] as const
 }
 
-export function buildRequestSecurityHeaders(nonce: string) {
-  const csp = buildContentSecurityPolicy({ nonce })
+export function buildRequestSecurityHeaders(nonce: string, isSecure: boolean) {
+  const csp = buildContentSecurityPolicy({ nonce, isSecure })
   return buildSecurityHeaders(csp)
 }
 

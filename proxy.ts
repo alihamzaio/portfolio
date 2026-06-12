@@ -1,9 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { buildContentSecurityPolicy } from "@/lib/csp"
 
-const isProd = process.env.NODE_ENV === "production"
+function isSecureRequest(request: NextRequest) {
+  const forwarded = request.headers.get("x-forwarded-proto")
+  if (forwarded) {
+    return forwarded.split(",")[0]?.trim() === "https"
+  }
+  return request.nextUrl.protocol === "https:"
+}
 
-function buildProductionSecurityHeaders(csp: string) {
+function buildSecurityHeaders(csp: string) {
   return [
     { key: "Content-Security-Policy", value: csp },
     { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
@@ -25,24 +31,19 @@ function buildProductionSecurityHeaders(csp: string) {
 
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64")
+  const isSecure = isSecureRequest(request)
+  const csp = buildContentSecurityPolicy({ nonce, isSecure })
 
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set("x-nonce", nonce)
-
-  if (isProd) {
-    const csp = buildContentSecurityPolicy({ nonce })
-    requestHeaders.set("Content-Security-Policy", csp)
-  }
+  requestHeaders.set("Content-Security-Policy", csp)
 
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   })
 
-  if (isProd) {
-    const csp = buildContentSecurityPolicy({ nonce })
-    for (const header of buildProductionSecurityHeaders(csp)) {
-      response.headers.set(header.key, header.value)
-    }
+  for (const header of buildSecurityHeaders(csp)) {
+    response.headers.set(header.key, header.value)
   }
 
   return response

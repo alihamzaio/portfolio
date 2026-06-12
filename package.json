@@ -10,9 +10,10 @@
   ],
   "scripts": {
     "build": "set BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true&& set BROWSERSLIST_IGNORE_OLD_DATA=true&& next build",
-    "dev": "next dev -p 4000",
+    "dev": "next dev --webpack -p 4000",
     "lint": "eslint .",
-    "start": "next start"
+    "preview": "next build && next start -p 4000",
+    "start": "next start -p 4000"
   },
   "dependencies": {
     "@react-three/fiber": "^9.0.0",
