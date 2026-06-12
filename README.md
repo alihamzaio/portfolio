@@ -565,3 +565,4 @@ Private portfolio — © Ali Hamza. All rights reserved.
 
 **Author:** Ali Hamza · Full Stack Software Engineer  
 **Contact:** [hamzasarwer9@gmail.com](mailto:hamzasarwer9@gmail.com) · [GitHub — alihamzaio](https://github.com/alihamzaio) · [LinkedIn](https://www.linkedin.com/in/alihamza-fullstack-developer)
+    
