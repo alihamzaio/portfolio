@@ -31,7 +31,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <title>Ali Hamza | Full Stack Developer (MERN, AWS & Web3)</title>
         <meta name="description" content={siteConfig.description} />
+        <link rel="canonical" href={siteConfig.url.replace(/\/$/, "")} />
       </head>
       <body
         className={`${inter.variable} ${jetbrains.variable} font-sans antialiased noise-overlay dot-grid-body`}
