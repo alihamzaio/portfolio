@@ -17,13 +17,21 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
+  htmlLimitedBots: /.*/,
   async headers() {
     const baselineSecurity = baselineSecurityHeaders
 
     return [
       {
         source: "/(.*)",
-        headers: baselineSecurity,
+        headers: [
+          ...baselineSecurity,
+          {
+            key: "Link",
+            value:
+              "<https://res.cloudinary.com>; rel=preconnect; crossorigin, <https://res.cloudinary.com>; rel=dns-prefetch",
+          },
+        ],
       },
       {
         source: "/_next/static/:path*.map",

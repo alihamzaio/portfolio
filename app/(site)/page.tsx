@@ -57,7 +57,7 @@ export const revalidate = 3600
 
 export default function HomePage() {
   return (
-    <>
+    <div className="pb-24 lg:pb-0">
       <HomePageJsonLd />
       <HomeHero />
       <HomeClientOffer />
@@ -68,6 +68,6 @@ export default function HomePage() {
       <HomeTestimonials />
       <CtaBand />
       <HomeContact />
-    </>
+    </div>
   )
 }
