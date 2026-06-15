@@ -17,7 +17,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  htmlLimitedBots: /.*/,
+  // RegExp object — must be in config so metadata is not streamed outside <head>.
+  htmlLimitedBots: /[\s\S]*/,
   async headers() {
     const baselineSecurity = baselineSecurityHeaders
 
