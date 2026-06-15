@@ -931,7 +931,8 @@
     background: linear-gradient(110deg, #ffffff 0%, #7dd3fc 40%, #3b82f6 75%, #06b6d4 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    color: #f8fafc;
+    -webkit-text-fill-color: transparent;
   }
 
   .hero-amber-title {
