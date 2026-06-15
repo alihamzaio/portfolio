@@ -4,7 +4,7 @@ import { Download } from "lucide-react"
 import { PremiumSection } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { MagneticButton } from "@/components/ui/magnetic-button"
-import { AboutOrbLazy } from "@/components/effects/about-orb-lazy"
+import { AboutOrb } from "@/components/effects/about-orb"
 import { AboutTimeline } from "@/components/home/about-timeline"
 import { SkillsRadar } from "@/components/home/skills-radar"
 import { AboutStatsRow } from "@/components/home/about-stats-row"
@@ -17,7 +17,7 @@ export function HomeAbout() {
 
   return (
     <PremiumSection id="about" variant="elevated" className="relative overflow-hidden">
-      <AboutOrbLazy />
+      <AboutOrb />
       <SectionHeading
         sectionId="about"
         label={copy.sections.about.label}
