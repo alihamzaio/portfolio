@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { useReducedMotion } from "framer-motion"
 import type { Mesh } from "three"
@@ -22,7 +22,11 @@ function Orb() {
 
 export function AboutOrb() {
   const reduceMotion = useReducedMotion()
-  if (reduceMotion) return null
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted || reduceMotion) return null
 
   return (
     <div

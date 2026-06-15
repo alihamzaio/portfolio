@@ -80,7 +80,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
 
         <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-600">
           <div className="text-center sm:text-left">
-            <p>© {year} {profile.name}</p>
+            <p suppressHydrationWarning>© {year} {profile.name}</p>
             <p className="text-neutral-500 mt-1">Made by Ali Hamza</p>
           </div>
           <button
