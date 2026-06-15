@@ -1,13 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import dynamic from "next/dynamic"
+import { useState, useEffect, type ComponentType } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
-
-const HeroParticleCanvas = dynamic(
-  () => import("@/components/effects/hero-particle-canvas").then((m) => m.HeroParticleCanvas),
-  { ssr: false }
-)
 
 function HeroParticleFallback() {
   return (
@@ -27,6 +21,7 @@ export function HeroParticleField() {
   const [mounted, setMounted] = useState(false)
   const [allowCanvas, setAllowCanvas] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [ParticleCanvas, setParticleCanvas] = useState<ComponentType | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -34,9 +29,20 @@ export function HeroParticleField() {
     setReduceMotion(prefersReducedMotion())
   }, [])
 
-  // Match the server bailout placeholder until after hydration.
+  useEffect(() => {
+    if (!mounted || reduceMotion || !allowCanvas) return
+    let cancelled = false
+    import("@/components/effects/hero-particle-canvas").then((mod) => {
+      if (!cancelled) setParticleCanvas(() => mod.HeroParticleCanvas)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [mounted, reduceMotion, allowCanvas])
+
   if (!mounted) return null
   if (reduceMotion || !allowCanvas) return <HeroParticleFallback />
+  if (!ParticleCanvas) return <HeroParticleFallback />
 
-  return <HeroParticleCanvas />
+  return <ParticleCanvas />
 }

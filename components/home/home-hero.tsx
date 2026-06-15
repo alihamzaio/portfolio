@@ -5,8 +5,8 @@ import { ChevronDown, Download } from "lucide-react"
 import { siteConfig } from "@/lib/site"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { PremiumGlassCta } from "@/components/ui/amber-glass-cta"
+import { HeroParticleField } from "@/components/effects/hero-particle-field"
 import { HeroDevSceneLazy } from "@/components/effects/hero-dev-scene-lazy"
-import { HeroParticleLazy } from "@/components/effects/hero-particle-lazy"
 import { TechStackTicker } from "@/components/home/tech-stack-ticker"
 import { SkillActivityGrid } from "@/components/home/skill-activity-grid"
 import { HeroRoleLine } from "@/components/home/hero-role-line"
@@ -25,7 +25,7 @@ export function HomeHero() {
       aria-label="Introduction"
       className="relative min-h-[100dvh] flex flex-col bg-[#0a0f1a] hero-pad"
     >
-      <HeroParticleLazy />
+      <HeroParticleField />
 
       <div className="section-shell relative z-10 flex flex-1 flex-col min-w-0 w-full max-w-full">
         <div className="pt-4 sm:pt-8 md:pt-12 lg:pt-16 min-w-0 w-full">
