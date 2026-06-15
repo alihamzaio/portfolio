@@ -12,7 +12,7 @@ interface HeroNameRevealProps {
 
 export function HeroNameReveal({ lines, className, lineClassName }: HeroNameRevealProps) {
   const reduceMotion = useReducedMotion()
-  const [ready, setReady] = useState(!!reduceMotion)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     if (reduceMotion) {

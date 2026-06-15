@@ -17,7 +17,7 @@ function easeOutQuad(t: number) {
 export function StatsCounter({ value, label }: { value: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
-  const [display, setDisplay] = useState(reduceMotion ? value : "0")
+  const [display, setDisplay] = useState("0")
   const ran = useRef(false)
 
   useEffect(() => {

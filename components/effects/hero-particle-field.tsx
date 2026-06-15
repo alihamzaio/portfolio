@@ -34,9 +34,9 @@ export function HeroParticleField() {
     setReduceMotion(prefersReducedMotion())
   }, [])
 
-  if (!mounted || reduceMotion || !allowCanvas) {
-    return <HeroParticleFallback />
-  }
+  // Match the server bailout placeholder until after hydration.
+  if (!mounted) return null
+  if (reduceMotion || !allowCanvas) return <HeroParticleFallback />
 
   return <HeroParticleCanvas />
 }
