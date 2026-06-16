@@ -1,26 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import dynamic from "next/dynamic"
-
-const Analytics = dynamic(
-  () => import("@vercel/analytics/next").then((m) => m.Analytics),
-  { ssr: false }
-)
+import { useEffect, useState, type ComponentType } from "react"
 
 function isLocalHost(hostname: string) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]"
 }
 
 export function AnalyticsDeferred() {
-  const [enabled, setEnabled] = useState(false)
+  const [Analytics, setAnalytics] = useState<ComponentType | null>(null)
 
   useEffect(() => {
-    if (!isLocalHost(window.location.hostname)) {
-      setEnabled(true)
+    if (isLocalHost(window.location.hostname)) return
+    let cancelled = false
+    import("@vercel/analytics/next").then((mod) => {
+      if (!cancelled) setAnalytics(() => mod.Analytics)
+    })
+    return () => {
+      cancelled = true
     }
   }, [])
 
-  if (!enabled) return null
+  if (!Analytics) return null
   return <Analytics />
 }

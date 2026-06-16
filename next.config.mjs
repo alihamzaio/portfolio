@@ -28,6 +28,10 @@ const nextConfig = {
         headers: [
           ...baselineSecurity,
           {
+            key: "X-Site-Build",
+            value: "seo-head-v3",
+          },
+          {
             key: "Link",
             value:
               "<https://res.cloudinary.com>; rel=preconnect; crossorigin, <https://res.cloudinary.com>; rel=dns-prefetch",

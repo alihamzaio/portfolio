@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { ChevronDown, Download } from "lucide-react"
 import { siteConfig } from "@/lib/site"
 import { MagneticButton } from "@/components/ui/magnetic-button"
@@ -13,12 +12,6 @@ import { HeroRoleLine } from "@/components/home/hero-role-line"
 import { copy } from "@/lib/copy"
 
 export function HomeHero() {
-  const [showDevScene, setShowDevScene] = useState(false)
-
-  useEffect(() => {
-    setShowDevScene(window.matchMedia("(min-width: 1024px)").matches)
-  }, [])
-
   return (
     <section
       id="home"
@@ -64,7 +57,7 @@ export function HomeHero() {
             </div>
 
             <div className="hidden lg:flex justify-center items-center">
-              {showDevScene ? <HeroDevSceneLazy /> : null}
+              <HeroDevSceneLazy />
             </div>
           </div>
         </div>
