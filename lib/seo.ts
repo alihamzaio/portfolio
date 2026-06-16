@@ -79,6 +79,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
 
   return {
     title: fullTitle,
+    description: options.description,
     keywords,
     alternates: {
       canonical,
