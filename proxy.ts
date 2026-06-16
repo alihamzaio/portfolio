@@ -47,6 +47,8 @@ export function proxy(request: NextRequest) {
     response.headers.set(header.key, header.value)
   }
 
+  response.headers.set("X-Site-Build", "seo-head-v2")
+
   return response
 }
 

@@ -9,7 +9,7 @@
     "safari >= 16"
   ],
   "scripts": {
-    "build": "set BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true&& set BROWSERSLIST_IGNORE_OLD_DATA=true&& next build",
+    "build": "next build",
     "dev": "next dev --webpack -p 4000",
     "lint": "eslint .",
     "preview": "next build && next start -p 4000",
