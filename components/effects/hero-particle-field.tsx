@@ -40,7 +40,7 @@ export function HeroParticleField() {
     }
   }, [mounted, reduceMotion, allowCanvas])
 
-  if (!mounted) return null
+  if (!mounted) return <HeroParticleFallback />
   if (reduceMotion || !allowCanvas) return <HeroParticleFallback />
   if (!ParticleCanvas) return <HeroParticleFallback />
 

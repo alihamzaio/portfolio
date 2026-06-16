@@ -1,33 +1,37 @@
 "use client"
 
-import { useState, useEffect, type ReactNode } from "react"
-import dynamic from "next/dynamic"
+import { useState, useEffect, type ComponentType, type ReactNode } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
-const PremiumCursor = dynamic(
-  () => import("@/components/cursor/premium-cursor").then((m) => m.PremiumCursor),
-  { ssr: false }
-)
-const EnhancementRuntime = dynamic(
-  () => import("@/components/effects/enhancement-runtime").then((m) => m.EnhancementRuntime),
-  { ssr: false }
-)
-const ScrollProgress = dynamic(
-  () => import("@/components/effects/scroll-progress").then((m) => m.ScrollProgress),
-  { ssr: false }
-)
-const AmbientScene = dynamic(
-  () => import("@/components/effects/ambient-scene").then((m) => m.AmbientScene),
-  { ssr: false }
-)
+type EffectModule = {
+  PremiumCursor: ComponentType
+  EnhancementRuntime: ComponentType
+  ScrollProgress: ComponentType
+  AmbientScene: ComponentType
+}
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  const [effectsReady, setEffectsReady] = useState(false)
+  const [effects, setEffects] = useState<EffectModule | null>(null)
 
   useEffect(() => {
     if (prefersReducedMotion()) return
 
-    const enable = () => setEffectsReady(true)
+    const enable = () => {
+      Promise.all([
+        import("@/components/cursor/premium-cursor"),
+        import("@/components/effects/enhancement-runtime"),
+        import("@/components/effects/scroll-progress"),
+        import("@/components/effects/ambient-scene"),
+      ]).then(([cursor, runtime, progress, ambient]) => {
+        setEffects({
+          PremiumCursor: cursor.PremiumCursor,
+          EnhancementRuntime: runtime.EnhancementRuntime,
+          ScrollProgress: progress.ScrollProgress,
+          AmbientScene: ambient.AmbientScene,
+        })
+      })
+    }
+
     if (typeof window.requestIdleCallback === "function") {
       const id = window.requestIdleCallback(enable, { timeout: 4000 })
       return () => window.cancelIdleCallback(id)
@@ -36,16 +40,17 @@ export function AppProviders({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(t)
   }, [])
 
+  const PremiumCursor = effects?.PremiumCursor
+  const EnhancementRuntime = effects?.EnhancementRuntime
+  const ScrollProgress = effects?.ScrollProgress
+  const AmbientScene = effects?.AmbientScene
+
   return (
     <>
-      {effectsReady && (
-        <>
-          <PremiumCursor />
-          <EnhancementRuntime />
-          <ScrollProgress />
-          {!prefersReducedMotion() && <AmbientScene />}
-        </>
-      )}
+      {PremiumCursor && <PremiumCursor />}
+      {EnhancementRuntime && <EnhancementRuntime />}
+      {ScrollProgress && <ScrollProgress />}
+      {!prefersReducedMotion() && AmbientScene && <AmbientScene />}
       <div className="relative z-10">{children}</div>
     </>
   )
