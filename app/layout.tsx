@@ -4,6 +4,13 @@ import { Inter, JetBrains_Mono } from "next/font/google"
 import { AnalyticsDeferred } from "@/components/analytics-deferred"
 import { StructuredData } from "@/components/structured-data"
 import { buildRootMetadata } from "@/lib/seo"
+import {
+  HOME_CANONICAL,
+  HOME_KEYWORDS,
+  HOME_META_DESCRIPTION,
+  HOME_PAGE_TITLE,
+  HOME_ROBOTS,
+} from "@/lib/seo-head"
 import { siteConfig } from "@/lib/site"
 import "./globals.css"
 
@@ -31,9 +38,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <title>Ali Hamza | Full Stack Developer (MERN, AWS & Web3)</title>
-        <meta name="description" content={siteConfig.description} />
-        <link rel="canonical" href={siteConfig.url.replace(/\/$/, "")} />
+        <title>{HOME_PAGE_TITLE}</title>
+        <meta name="description" content={HOME_META_DESCRIPTION} />
+        <meta name="keywords" content={HOME_KEYWORDS} />
+        <meta name="author" content={siteConfig.name} />
+        <meta name="robots" content={HOME_ROBOTS} />
+        <link rel="canonical" href={HOME_CANONICAL} />
       </head>
       <body
         className={`${inter.variable} ${jetbrains.variable} font-sans antialiased noise-overlay dot-grid-body`}
