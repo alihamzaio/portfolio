@@ -79,7 +79,6 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
 
   return {
     title: fullTitle,
-    description: options.description,
     keywords,
     alternates: {
       canonical,
@@ -121,11 +120,9 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
 
 /** Root layout defaults — merged with per-page metadata */
 export function buildRootMetadata(): Metadata {
-  const home = buildPageMetadata({
-    title: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
-    description: siteConfig.description,
-    path: "/",
-  })
+  const og = resolveOgImage("/opengraph-image")
+  const homeTitle = "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)"
+  const canonical = absoluteUrl("/")
 
   const verification: Metadata["verification"] = {}
   const google = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? process.env.GOOGLE_SITE_VERIFICATION
@@ -134,12 +131,44 @@ export function buildRootMetadata(): Metadata {
   if (bing) verification.other = { "msvalidate.01": bing }
 
   return {
-    ...home,
     title: {
-      default: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
+      default: homeTitle,
       template: `%s | ${siteConfig.name}`,
     },
     metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        "x-default": canonical,
+      },
+    },
+    openGraph: {
+      type: "website",
+      url: canonical,
+      title: `${homeTitle} | ${siteConfig.name}`,
+      description: siteConfig.description,
+      siteName: `${siteConfig.name} — Portfolio`,
+      locale: "en_US",
+      images: [og],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${homeTitle} | ${siteConfig.name}`,
+      description: siteConfig.description,
+      images: [og.url],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
     authors: [{ name: siteConfig.name, url: absoluteUrl() }],
     creator: siteConfig.name,
     publisher: siteConfig.name,

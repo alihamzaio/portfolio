@@ -3,8 +3,6 @@ import dynamic from "next/dynamic"
 import { SectionSkeleton } from "@/components/ui/section-skeleton"
 
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
-import { buildPageMetadata, SEO_KEYWORDS } from "@/lib/seo"
-import { siteConfig } from "@/lib/site"
 
 const HomeClientOffer = dynamic(
   () => import("@/components/home/home-client-offer").then((m) => ({ default: m.HomeClientOffer })),
@@ -38,20 +36,6 @@ const HomeContact = dynamic(
   () => import("@/components/home/home-contact").then((m) => ({ default: m.HomeContact })),
   { loading: () => <SectionSkeleton lines={2} /> }
 )
-
-export const metadata = buildPageMetadata({
-  title: "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)",
-  description: siteConfig.description,
-  path: "/",
-  ogImage: "/opengraph-image",
-  keywords: [
-    ...SEO_KEYWORDS,
-    "hire full stack developer",
-    "freelance MERN developer Pakistan",
-    "Ali Hamza portfolio",
-    "blockchain developer Lahore",
-  ],
-})
 
 export const revalidate = 3600
 
