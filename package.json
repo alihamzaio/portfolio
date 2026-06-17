@@ -2,6 +2,10 @@
   "name": "ali_hamza",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": ">=20"
+  },
   "browserslist": [
     "chrome >= 107",
     "edge >= 107",
