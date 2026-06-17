@@ -136,8 +136,6 @@ export function buildRootMetadata(): Metadata {
       default: homeTitle,
       template: `%s | ${siteConfig.name}`,
     },
-    description: siteConfig.description,
-    keywords: [...SEO_KEYWORDS],
     metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical,
