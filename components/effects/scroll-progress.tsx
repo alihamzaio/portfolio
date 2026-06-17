@@ -11,10 +11,17 @@ export function ScrollProgress() {
     const bar = barRef.current
     if (!bar) return
 
+    let ticking = false
+
     const onScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0
-      bar.style.transform = `scaleX(${progress})`
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        ticking = false
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+        const progress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0
+        bar.style.transform = `scaleX(${progress})`
+      })
     }
 
     onScroll()

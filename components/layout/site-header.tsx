@@ -53,24 +53,30 @@ export function SiteHeader() {
     const header = document.querySelector<HTMLElement>("[data-site-header]")
     let lastY = window.scrollY
     let hidden = false
+    let ticking = false
 
     const onScroll = () => {
-      const y = window.scrollY
-      setScrolled(y > 12)
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        ticking = false
+        const y = window.scrollY
+        setScrolled(y > 12)
 
-      if (!header) return
-      if (y > lastY && y > 80) {
-        if (!hidden) {
-          hidden = true
-          header.style.transform = "translateY(-100%)"
+        if (!header) return
+        if (y > lastY && y > 80) {
+          if (!hidden) {
+            hidden = true
+            header.style.transform = "translateY(-100%)"
+          }
+        } else if (y < lastY || y <= 80) {
+          if (hidden) {
+            hidden = false
+            header.style.transform = "translateY(0)"
+          }
         }
-      } else if (y < lastY || y <= 80) {
-        if (hidden) {
-          hidden = false
-          header.style.transform = "translateY(0)"
-        }
-      }
-      lastY = y
+        lastY = y
+      })
     }
 
     if (header) {
@@ -314,31 +320,9 @@ export function SiteHeader() {
                   aria-expanded={mobileOpen}
                   aria-controls="mobile-nav-panel"
                 >
-                  <AnimatePresence mode="wait" initial={false}>
-                    {mobileOpen ? (
-                      <motion.span
-                        key="close-icon"
-                        initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
-                        className="inline-flex"
-                      >
-                        <X className="h-5 w-5" />
-                      </motion.span>
-                    ) : (
-                      <motion.span
-                        key="menu-icon"
-                        initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                        animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                        exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                        transition={{ duration: 0.2 }}
-                        className="inline-flex"
-                      >
-                        <Menu className="h-5 w-5" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
+                  <span className="inline-flex transition-opacity duration-200">
+                    {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                  </span>
                 </button>
               </div>
             </div>
