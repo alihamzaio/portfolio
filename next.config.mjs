@@ -17,8 +17,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
   },
-  // RegExp object — must be in config so metadata is not streamed outside <head>.
-  htmlLimitedBots: /[\s\S]*/,
+  // Disable metadata streaming so <meta name="description"> stays in <head> for Lighthouse.
+  htmlLimitedBots: /.*/,
   async headers() {
     const baselineSecurity = baselineSecurityHeaders
 
