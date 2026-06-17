@@ -38,6 +38,7 @@
   --border: var(--border-subtle);
   --input: #0f172a;
   --ring: var(--accent-primary);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --radius: 0.875rem;
   --site-header-height: 4.75rem;
   --hero-nav-gap: 2rem;

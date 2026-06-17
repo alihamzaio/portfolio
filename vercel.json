@@ -13,6 +13,10 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "X-Site-Build",
+          "value": "seo-v4"
+        },
+        {
           "key": "Strict-Transport-Security",
           "value": "max-age=63072000; includeSubDomains; preload"
         },

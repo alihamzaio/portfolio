@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import type React from "react"
-import { Inter, JetBrains_Mono } from "next/font/google"
+import { Inter } from "next/font/google"
 import { AnalyticsDeferred } from "@/components/analytics-deferred"
 import { StructuredData } from "@/components/structured-data"
 import { buildRootMetadata } from "@/lib/seo"
@@ -22,14 +22,6 @@ const inter = Inter({
   preload: true,
 })
 
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-  weight: ["400", "500"],
-  preload: false,
-})
-
 export const metadata = buildRootMetadata()
 
 export { viewport } from "@/lib/viewport"
@@ -46,7 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="canonical" href={HOME_CANONICAL} />
       </head>
       <body
-        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased noise-overlay dot-grid-body`}
+        className={`${inter.variable} font-sans antialiased noise-overlay dot-grid-body`}
         suppressHydrationWarning
       >
         <StructuredData />
