@@ -69,7 +69,7 @@ export function HomeHero() {
       </div>
 
       <div className="relative z-10 flex justify-center pb-8 pt-6" aria-hidden>
-        <ChevronDown className="h-6 w-6 text-cyan-400/60 motion-safe:animate-bounce" />
+        <ChevronDown className="h-6 w-6 text-cyan-400/60 motion-safe:hero-chevron-bounce" />
       </div>
     </section>
   )

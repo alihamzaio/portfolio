@@ -32,11 +32,25 @@ export function HeroParticleField() {
   useEffect(() => {
     if (!mounted || reduceMotion || !allowCanvas) return
     let cancelled = false
-    import("@/components/effects/hero-particle-canvas").then((mod) => {
-      if (!cancelled) setParticleCanvas(() => mod.HeroParticleCanvas)
-    })
+
+    const loadCanvas = () => {
+      import("@/components/effects/hero-particle-canvas").then((mod) => {
+        if (!cancelled) setParticleCanvas(() => mod.HeroParticleCanvas)
+      })
+    }
+
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(loadCanvas, { timeout: 5000 })
+      return () => {
+        cancelled = true
+        window.cancelIdleCallback(id)
+      }
+    }
+
+    const t = window.setTimeout(loadCanvas, 2500)
     return () => {
       cancelled = true
+      window.clearTimeout(t)
     }
   }, [mounted, reduceMotion, allowCanvas])
 

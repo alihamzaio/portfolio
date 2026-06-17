@@ -4,7 +4,6 @@ import { useState, useEffect, type ComponentType, type ReactNode } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 type EffectModule = {
-  PremiumCursor: ComponentType
   EnhancementRuntime: ComponentType
   ScrollProgress: ComponentType
   AmbientScene: ComponentType
@@ -12,19 +11,28 @@ type EffectModule = {
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [effects, setEffects] = useState<EffectModule | null>(null)
+  const [PremiumCursor, setPremiumCursor] = useState<ComponentType | null>(null)
 
   useEffect(() => {
     if (prefersReducedMotion()) return
 
-    const enable = () => {
+    const loadCursor = () => {
+      import("@/components/cursor/premium-cursor").then((mod) => {
+        setPremiumCursor(() => mod.PremiumCursor)
+      })
+    }
+
+    const onInteract = () => loadCursor()
+    window.addEventListener("pointerdown", onInteract, { once: true, passive: true })
+    window.addEventListener("mousemove", onInteract, { once: true, passive: true })
+
+    const loadEffects = () => {
       Promise.all([
-        import("@/components/cursor/premium-cursor"),
         import("@/components/effects/enhancement-runtime"),
         import("@/components/effects/scroll-progress"),
         import("@/components/effects/ambient-scene"),
-      ]).then(([cursor, runtime, progress, ambient]) => {
+      ]).then(([runtime, progress, ambient]) => {
         setEffects({
-          PremiumCursor: cursor.PremiumCursor,
           EnhancementRuntime: runtime.EnhancementRuntime,
           ScrollProgress: progress.ScrollProgress,
           AmbientScene: ambient.AmbientScene,
@@ -33,14 +41,22 @@ export function AppProviders({ children }: { children: ReactNode }) {
     }
 
     if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(enable, { timeout: 4000 })
-      return () => window.cancelIdleCallback(id)
+      const id = window.requestIdleCallback(loadEffects, { timeout: 6000 })
+      return () => {
+        window.cancelIdleCallback(id)
+        window.removeEventListener("pointerdown", onInteract)
+        window.removeEventListener("mousemove", onInteract)
+      }
     }
-    const t = window.setTimeout(enable, 2000)
-    return () => window.clearTimeout(t)
+
+    const t = window.setTimeout(loadEffects, 3000)
+    return () => {
+      window.clearTimeout(t)
+      window.removeEventListener("pointerdown", onInteract)
+      window.removeEventListener("mousemove", onInteract)
+    }
   }, [])
 
-  const PremiumCursor = effects?.PremiumCursor
   const EnhancementRuntime = effects?.EnhancementRuntime
   const ScrollProgress = effects?.ScrollProgress
   const AmbientScene = effects?.AmbientScene
