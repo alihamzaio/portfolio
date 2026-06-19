@@ -4,7 +4,7 @@ import { baselineSecurityHeaders, sourceMapHeaders, staticAssetHeaders } from ".
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  productionBrowserSourceMaps: false,
+  productionBrowserSourceMaps: true,
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -29,7 +29,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v4",
+            value: "seo-v5",
           },
           {
             key: "Link",
