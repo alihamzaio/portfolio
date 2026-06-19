@@ -22,6 +22,9 @@ const inter = Inter({
   preload: true,
 })
 
+/** Static root layout — bakes <head> SEO tags into HTML at build time for Lighthouse. */
+export const dynamic = "force-static"
+
 export const metadata = buildRootMetadata()
 
 export { viewport } from "@/lib/viewport"

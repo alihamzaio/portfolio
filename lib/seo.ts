@@ -132,18 +132,7 @@ export function buildRootMetadata(): Metadata {
   if (bing) verification.other = { "msvalidate.01": bing }
 
   return {
-    title: {
-      default: homeTitle,
-      template: `%s | ${siteConfig.name}`,
-    },
     metadataBase: new URL(siteConfig.url),
-    alternates: {
-      canonical,
-      languages: {
-        en: canonical,
-        "x-default": canonical,
-      },
-    },
     openGraph: {
       type: "website",
       url: canonical,
@@ -158,17 +147,6 @@ export function buildRootMetadata(): Metadata {
       title: `${homeTitle} | ${siteConfig.name}`,
       description: siteConfig.description,
       images: [og.url],
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
     },
     authors: [{ name: siteConfig.name, url: absoluteUrl() }],
     creator: siteConfig.name,
