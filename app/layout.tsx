@@ -33,7 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* site-build:seo-v6 — visible in View Source when production is updated */}
+        {/* site-build:seo-v7 — search View Source for this to confirm production updated */}
         <title>{HOME_PAGE_TITLE}</title>
         <meta name="description" content={HOME_META_DESCRIPTION} />
         <meta name="keywords" content={HOME_KEYWORDS} />
