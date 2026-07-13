@@ -50,7 +50,7 @@ export function MagneticButton({
     variant === "primary" &&
       "btn-primary px-7 py-3 relative overflow-hidden before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-[radial-gradient(circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.12),transparent_55%)] before:transition-opacity before:duration-300",
     variant === "secondary" && "btn-secondary px-7 py-3",
-    variant === "ghost" && "text-[#94A3B8] hover:text-[#F8FAFC] px-3 py-2",
+    variant === "ghost" && "text-[#A3B0C2] hover:text-[#F8FAFC] px-3 py-2",
     className
   )
 

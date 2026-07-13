@@ -111,7 +111,7 @@ export function Logo({
       {showName && (
         <span className="logo-name flex flex-col leading-none min-w-0">
           <span className="text-[15px] font-bold tracking-tight text-[#F8FAFC] truncate">{first}</span>
-          <span className="text-[10px] font-mono text-[#64748B] mt-1 tracking-wide uppercase">Developer</span>
+          <span className="text-[10px] font-mono text-[#A3B0C2] mt-1 tracking-wide uppercase">Developer</span>
         </span>
       )}
     </span>
