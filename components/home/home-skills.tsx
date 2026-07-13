@@ -1,10 +1,10 @@
 "use client"
 
-import Image from "next/image"
 import { PremiumGrid, PremiumSection } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { SkillsMarquee } from "@/components/ui/skills-marquee"
 import { SkillProgressGrid } from "@/components/home/skill-progress-grid"
+import { SkillIcon } from "@/components/ui/skill-icon"
 import { skillCategories } from "@/lib/skills-data"
 import { copy } from "@/lib/copy"
 
@@ -29,9 +29,7 @@ export function HomeSkills() {
             <div className="flex flex-wrap gap-2">
               {cat.skills.map((skill) => (
                 <span key={skill.name} className="premium-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs">
-                  {skill.icon && (
-                    <Image src={skill.icon} alt={`${skill.name} icon`} width={14} height={14} unoptimized />
-                  )}
+                  <SkillIcon skill={skill} />
                   {skill.name}
                 </span>
               ))}

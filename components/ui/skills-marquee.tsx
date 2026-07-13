@@ -1,7 +1,7 @@
 "use client"
 
-import Image from "next/image"
 import { skillCategories } from "@/lib/skills-data"
+import { SkillIcon } from "@/components/ui/skill-icon"
 
 const allSkills = skillCategories.flatMap((c) => c.skills)
 
@@ -13,9 +13,7 @@ export function SkillsMarquee() {
       <div className="skills-marquee-track">
         {track.map((skill, i) => (
           <span key={`${skill.name}-${i}`} className="skill-marquee-pill" data-cursor="skill" data-cursor-magnetic>
-            {skill.icon && (
-              <Image src={skill.icon} alt={`${skill.name} icon`} width={14} height={14} unoptimized className="shrink-0" />
-            )}
+            <SkillIcon skill={skill} />
             {skill.name}
           </span>
         ))}
