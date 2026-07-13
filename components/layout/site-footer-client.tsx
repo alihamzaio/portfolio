@@ -39,7 +39,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             </p>
             <a
               href={`mailto:${profile.email}`}
-              className="text-sm text-neutral-600 hover:text-white mt-2 inline-block transition-colors break-all"
+              className="text-sm text-neutral-400 hover:text-white mt-2 inline-block transition-colors break-all"
             >
               {profile.email}
             </a>
@@ -78,7 +78,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-600">
+        <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
           <div className="text-center sm:text-left">
             <p suppressHydrationWarning>© {year} {profile.name}</p>
             <p className="text-neutral-500 mt-1">Made by Ali Hamza</p>

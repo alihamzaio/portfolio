@@ -54,7 +54,7 @@ export const copy = {
     },
     testimonials: {
       label: "Testimonials",
-      title: "References",
+      title: "Client feedback",
       description: "Feedback from engineering leads and founders on recent work.",
     },
     cta: {

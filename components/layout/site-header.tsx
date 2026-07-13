@@ -174,7 +174,7 @@ export function SiteHeader() {
                   href="/"
                   onClick={() => closeMobile()}
                   className="min-w-0 shrink"
-                  aria-label={`${profile.name} — Home`}
+                  aria-label={`${profile.name} - Home`}
                 >
                   <Logo
                     name={profile.name}
@@ -264,7 +264,7 @@ export function SiteHeader() {
                 href="/"
                 className="shrink min-w-0 group"
                 data-cursor="link"
-                aria-label={`${profile.name} — Home`}
+                aria-label={`${profile.name} - Home`}
                 onClick={() => closeMobile()}
               >
                 <Logo

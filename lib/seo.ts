@@ -54,7 +54,7 @@ function resolveOgImage(
       url: absoluteUrl(DEFAULT_OG_PATH),
       width: 1200,
       height: 630,
-      alt: `${siteConfig.name} — ${siteConfig.title}`,
+      alt: `${siteConfig.name} - ${siteConfig.title}`,
     }
   }
   if (typeof ogImage === "string") {
@@ -93,7 +93,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
       url: canonical,
       title: `${fullTitle} | ${siteConfig.name}`,
       description: options.description,
-      siteName: `${siteConfig.name} — Portfolio`,
+      siteName: `${siteConfig.name} - Portfolio`,
       locale: "en_US",
       images: [og],
     },
@@ -138,7 +138,7 @@ export function buildRootMetadata(): Metadata {
       url: canonical,
       title: `${homeTitle} | ${siteConfig.name}`,
       description: siteConfig.description,
-      siteName: `${siteConfig.name} — Portfolio`,
+      siteName: `${siteConfig.name} - Portfolio`,
       locale: "en_US",
       images: [og],
     },

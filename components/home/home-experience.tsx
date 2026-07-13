@@ -92,7 +92,7 @@ export function HomeExperience() {
 
                 <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.06]">
                   {exp.technologies.map((t) => (
-                    <span key={t} className="premium-chip text-[10px] font-medium px-2.5 py-1">
+                    <span key={t} className="premium-chip text-xs font-medium px-2.5 py-1">
                       {t}
                     </span>
                   ))}

@@ -5,7 +5,7 @@ export const experiences: Experience[] = [
     id: "birxment",
     role: "Full Stack Software Engineer",
     company: "Birxment",
-    period: "August 2025 — Present",
+    period: "August 2025 - Present",
     location: "Remote",
     description:
       "Lead engineer on a blockchain indexer and an AWS serverless healthcare and e-commerce platform. Responsible for architecture, REST API development, and production deployment.",
@@ -21,7 +21,7 @@ export const experiences: Experience[] = [
     id: "exec9",
     role: "MERN Stack Developer",
     company: "Exec9",
-    period: "June 2024 — July 2025",
+    period: "June 2024 - July 2025",
     location: "Remote",
     description:
       "Full stack developer on 6+ production applications across e-commerce, CMS, and Web3, from API design through frontend implementation.",
@@ -37,7 +37,7 @@ export const experiences: Experience[] = [
     id: "explore-logics",
     role: "React.js Developer",
     company: "Explore Logics",
-    period: "July 2023 — May 2024",
+    period: "July 2023 - May 2024",
     location: "Lahore, Pakistan",
     description:
       "Frontend developer migrating legacy HTML and WordPress sites to React.js and maintaining 8+ client-facing applications.",

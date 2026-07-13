@@ -10,7 +10,7 @@ export const siteConfig = {
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",
   location: "Lahore, Pakistan",
-  education: "B.S. Computer Science, University of Education (2019–2023)",
+  education: "B.S. Computer Science, University of Education (2019-2023)",
   initials: "AH",
   available: true,
   social: {

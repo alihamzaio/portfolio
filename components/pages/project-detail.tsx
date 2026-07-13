@@ -47,7 +47,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         >
           <Image
             src={project.image}
-            alt={`${project.title} — project screenshot by Ali Hamza`}
+            alt={`${project.title} - project screenshot by Ali Hamza`}
             fill
             className="object-cover"
             priority
@@ -105,7 +105,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
               <MagneticButton href={project.link} cursorMode="external" cursorLabel="Open Demo" className="btn-responsive">
                 <ExternalLink className="h-4 w-4 shrink-0" /> Live demo
               </MagneticButton>
-              {project.github !== "#" && (
+              {project.github && (
                 <MagneticButton
                   href={project.github}
                   variant="secondary"

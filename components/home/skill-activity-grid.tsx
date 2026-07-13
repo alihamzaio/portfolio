@@ -28,7 +28,7 @@ function SkillActivityGridInner() {
       </div>
       <div className="flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-1.5 mt-3">
         {TOP.map((s) => (
-          <span key={s.name} className="text-[10px] sm:text-[9px] text-neutral-600 font-mono break-words">
+          <span key={s.name} className="text-xs sm:text-[11px] text-neutral-400 font-mono break-words">
             {s.name}
           </span>
         ))}

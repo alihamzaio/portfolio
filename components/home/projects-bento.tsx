@@ -49,7 +49,7 @@ export function ProjectsBento() {
               <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
               <div className="flex flex-wrap gap-2 mb-3">
                 {project.metrics.slice(0, 2).map((m) => (
-                  <span key={m.label} className="premium-chip text-[11px] sm:text-[10px] px-2 py-1 break-words">
+                  <span key={m.label} className="premium-chip text-xs px-2 py-1 break-words">
                     {m.value} {m.label}
                   </span>
                 ))}

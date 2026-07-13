@@ -25,7 +25,7 @@ export function HomeHero() {
           <div className="grid lg:grid-cols-[minmax(0,1fr)_auto] gap-8 sm:gap-12 lg:gap-20 xl:gap-24 items-center min-w-0 w-full">
             <div className="min-w-0 w-full max-w-3xl">
               {siteConfig.available && (
-                <p className="text-xs text-neutral-500 mb-6 sm:mb-8 text-balance break-words w-full">
+                <p className="text-sm text-neutral-400 mb-6 sm:mb-8 text-balance break-words w-full">
                   {copy.hero.availability}
                 </p>
               )}

@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState, type ComponentType } from "react"
+import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
 
 function DevSceneFallback() {
   return (
@@ -11,24 +12,20 @@ function DevSceneFallback() {
   )
 }
 
+const HeroDevScene = dynamic(
+  () => import("@/components/effects/hero-dev-scene").then((m) => m.HeroDevScene),
+  { ssr: false, loading: () => <DevSceneFallback /> }
+)
+
 /** Loads hero dev scene on desktop after mount — avoids SSR bailout hydration errors. */
 export function HeroDevSceneLazy() {
-  const [mounted, setMounted] = useState(false)
-  const [DevScene, setDevScene] = useState<ComponentType | null>(null)
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     if (!window.matchMedia("(min-width: 1024px)").matches) return
-    let cancelled = false
-    import("@/components/effects/hero-dev-scene").then((mod) => {
-      if (!cancelled) setDevScene(() => mod.HeroDevScene)
-    })
-    return () => {
-      cancelled = true
-    }
+    setShow(true)
   }, [])
 
-  if (!mounted) return null
-  if (!DevScene) return <DevSceneFallback />
-  return <DevScene />
+  if (!show) return null
+  return <HeroDevScene />
 }

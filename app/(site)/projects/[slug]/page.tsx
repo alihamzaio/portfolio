@@ -21,11 +21,11 @@ export async function generateMetadata({ params }: Props) {
   const tagKeywords = (project.tags ?? []).slice(0, 8)
   return buildPageMetadata({
     title: project.title,
-    description: `${project.description} — Built by ${siteConfig.name}, ${siteConfig.title}.`,
+    description: `${project.description} - Built by ${siteConfig.name}, ${siteConfig.title}.`,
     path: `/projects/${slug}`,
     keywords: [project.title, ...tagKeywords, siteConfig.name],
     ogImage: project.image
-      ? { url: project.image, alt: `${project.title} — ${siteConfig.name}` }
+      ? { url: project.image, alt: `${project.title} - ${siteConfig.name}` }
       : undefined,
     type: "article",
   })

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, type ComponentType } from "react"
+import dynamic from "next/dynamic"
+import { useState, useEffect } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 function HeroParticleFallback() {
@@ -16,12 +17,16 @@ function HeroParticleFallback() {
   )
 }
 
-/** Loads Three.js only on desktop — mobile gets CSS gradient only (no 822KB chunk). */
+const HeroParticleCanvas = dynamic(
+  () => import("@/components/effects/hero-particle-canvas").then((m) => m.HeroParticleCanvas),
+  { ssr: false, loading: () => <HeroParticleFallback /> }
+)
+
+/** Loads Three.js only on desktop — mobile gets CSS gradient only. */
 export function HeroParticleField() {
   const [mounted, setMounted] = useState(false)
   const [allowCanvas, setAllowCanvas] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
-  const [ParticleCanvas, setParticleCanvas] = useState<ComponentType | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -29,34 +34,8 @@ export function HeroParticleField() {
     setReduceMotion(prefersReducedMotion())
   }, [])
 
-  useEffect(() => {
-    if (!mounted || reduceMotion || !allowCanvas) return
-    let cancelled = false
-
-    const loadCanvas = () => {
-      import("@/components/effects/hero-particle-canvas").then((mod) => {
-        if (!cancelled) setParticleCanvas(() => mod.HeroParticleCanvas)
-      })
-    }
-
-    if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(loadCanvas, { timeout: 5000 })
-      return () => {
-        cancelled = true
-        window.cancelIdleCallback(id)
-      }
-    }
-
-    const t = window.setTimeout(loadCanvas, 2500)
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-    }
-  }, [mounted, reduceMotion, allowCanvas])
-
   if (!mounted) return <HeroParticleFallback />
   if (reduceMotion || !allowCanvas) return <HeroParticleFallback />
-  if (!ParticleCanvas) return <HeroParticleFallback />
 
-  return <ParticleCanvas />
+  return <HeroParticleCanvas />
 }

@@ -209,7 +209,7 @@ export default function AdminPage() {
         id: `new-${Date.now()}`,
         role: "Full Stack Software Engineer",
         company: "Company Name",
-        period: "2025 — Present",
+        period: "2025 - Present",
         location: "Remote",
         description: "",
         achievements: [""],

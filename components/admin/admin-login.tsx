@@ -120,7 +120,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             </p>
             {devCode && (
               <p className="text-xs p-3 rounded-lg bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/20">
-                Dev mode — OTP: <strong className="tracking-widest">{devCode}</strong>
+                Dev mode - OTP: <strong className="tracking-widest">{devCode}</strong>
               </p>
             )}
             <input

@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       ok: true,
       message: `OTP sent to ${getAdminEmail()}`,
       expiresAt: result.expiresAt,
-      ...(sent.devCode ? { devCode: sent.devCode, devNote: "RESEND_API_KEY not set — use code from server console" } : {}),
+      ...(sent.devCode ? { devCode: sent.devCode, devNote: "RESEND_API_KEY not set - use code from server console" } : {}),
     })
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 })
