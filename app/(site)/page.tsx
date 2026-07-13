@@ -1,8 +1,9 @@
 import { HomeHero } from "@/components/home/home-hero"
 import nextDynamic from "next/dynamic"
 import { SectionSkeleton } from "@/components/ui/section-skeleton"
-
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
+import { buildPageMetadata, HOME_PAGE_TITLE } from "@/lib/seo"
+import { siteConfig } from "@/lib/site"
 
 const HomeClientOffer = nextDynamic(
   () => import("@/components/home/home-client-offer").then((m) => ({ default: m.HomeClientOffer })),
@@ -39,6 +40,13 @@ const HomeContact = nextDynamic(
 
 export const dynamic = "force-static"
 export const revalidate = 3600
+
+export const metadata = buildPageMetadata({
+  title: HOME_PAGE_TITLE,
+  description: siteConfig.description,
+  path: "/",
+  absoluteTitle: true,
+})
 
 export default function HomePage() {
   return (

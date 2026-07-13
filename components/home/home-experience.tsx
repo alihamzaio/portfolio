@@ -73,7 +73,7 @@ export function HomeExperience() {
                     </h3>
                     <p className="text-sm text-cyan-400/90 font-medium mt-1">{exp.company}</p>
                   </div>
-                  <p className="text-xs text-neutral-500 font-mono sm:text-right shrink-0">
+                  <p className="text-xs text-neutral-400 font-mono sm:text-right shrink-0">
                     {exp.period}
                     <span className="block sm:inline sm:ml-2">{exp.location}</span>
                   </p>

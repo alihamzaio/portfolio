@@ -8,6 +8,7 @@ export const metadata = buildPageMetadata({
   description: `Technical writing by ${siteConfig.name} on MERN stack development, AWS serverless architecture, Next.js performance, REST APIs, and blockchain indexing.`,
   path: "/blog",
   type: "website",
+  noIndex: true,
 })
 
 export default function BlogPage() {
