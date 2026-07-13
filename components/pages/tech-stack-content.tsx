@@ -1,9 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
+import { SkillIcon } from "@/components/ui/skill-icon"
 import { skillCategories } from "@/lib/skills-data"
 
 export function TechStackContent() {
@@ -27,9 +27,7 @@ export function TechStackContent() {
               <div className="flex flex-wrap gap-2">
                 {cat.skills.map((skill) => (
                   <span key={skill.name} className="premium-chip inline-flex items-center gap-2 px-3 py-2 text-sm">
-                    {skill.icon && (
-                      <Image src={skill.icon} alt={`${skill.name} icon`} width={14} height={14} unoptimized />
-                    )}
+                    <SkillIcon skill={skill} />
                     {skill.name}
                   </span>
                 ))}

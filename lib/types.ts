@@ -31,6 +31,8 @@ export interface SkillItem {
   name: string
   icon?: string
   level?: number
+  /** Black/monochrome logos — invert so they stay visible on dark theme */
+  invertIcon?: boolean
 }
 
 export interface SkillCategory {

@@ -11,6 +11,8 @@ const nextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "www.exec9.com" },
       { protocol: "https", hostname: "cdn.jsdelivr.net" },
+      { protocol: "https", hostname: "cdn.simpleicons.org" },
+      { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "ghchart.rshah.org" },
     ],
   },
