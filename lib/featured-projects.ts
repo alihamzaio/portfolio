@@ -13,7 +13,7 @@ export interface FeaturedProject {
 export const featuredProjects: FeaturedProject[] = [
   {
     id: "verana",
-    title: "Verana — Blockchain Crawler & Indexer",
+    title: "Verana: Blockchain Crawler & Indexer",
     overview:
       "Client applications queried RPC nodes for every block lookup, which was slow and expensive at scale. Built a distributed indexer ingesting 10,000+ blocks with BullMQ workers and Moleculer.js services. PostgreSQL-backed APIs reduced direct on-chain reads by about 90%.",
     architecture: [
@@ -33,7 +33,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     id: "healops",
-    title: "HealOps — Healthcare & E-Commerce AWS Platform",
+    title: "HealOps: Healthcare & E-Commerce AWS Platform",
     overview:
       "Five warehouse and vendor tenants needed isolated inventory flows on a shared AWS stack. Built Terraform-provisioned serverless architecture with Lambda, DynamoDB, RDS, and Snowflake analytics. Multi-tenant platform across four business domains with 12+ managed AWS resources.",
     architecture: [
@@ -52,7 +52,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     id: "unilabs",
-    title: "UniLabs — DeFi Web Platform",
+    title: "UniLabs: DeFi Web Platform",
     overview:
       "Web3 asset management product requiring wallet flows and on-chain reads. Built Next.js frontend with Solidity contracts on mainnet and Ethers.js integration. Serves 1,000+ monthly users with contract state reads and reduced support load.",
     architecture: [
@@ -72,7 +72,7 @@ export const featuredProjects: FeaturedProject[] = [
   },
   {
     id: "senzi",
-    title: "Senzi — Dropshipping E-Commerce Platform",
+    title: "Senzi: Dropshipping E-Commerce Platform",
     overview:
       "Manual catalog updates blocked operations for a Libya-focused dropshipping business. Built MERN stack platform with 1688 and Taobao API integrations and automated order pipelines. 5,000+ SKUs synced with about 60% less manual order handling.",
     architecture: [

@@ -50,7 +50,7 @@ export async function sendOtpEmail(_to: string, code: string): Promise<{ ok: boo
     body: JSON.stringify({
       from,
       to: [to],
-      subject: `${code} — Your admin login code`,
+      subject: `${code} - Your admin login code`,
       html: `
         <div style="font-family: Inter, system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
           <p style="color: #64748b; font-size: 14px;">Portfolio admin login</p>

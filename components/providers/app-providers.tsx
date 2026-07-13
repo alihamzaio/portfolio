@@ -1,72 +1,65 @@
 "use client"
 
-import { useState, useEffect, type ComponentType, type ReactNode } from "react"
+import dynamic from "next/dynamic"
+import { useState, useEffect, type ReactNode } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
-type EffectModule = {
-  EnhancementRuntime: ComponentType
-  ScrollProgress: ComponentType
-  AmbientScene: ComponentType
-}
+const PremiumCursor = dynamic(
+  () => import("@/components/cursor/premium-cursor").then((m) => m.PremiumCursor),
+  { ssr: false }
+)
+
+const EnhancementRuntime = dynamic(
+  () => import("@/components/effects/enhancement-runtime").then((m) => m.EnhancementRuntime),
+  { ssr: false }
+)
+
+const ScrollProgress = dynamic(
+  () => import("@/components/effects/scroll-progress").then((m) => m.ScrollProgress),
+  { ssr: false }
+)
+
+const AmbientScene = dynamic(
+  () => import("@/components/effects/ambient-scene").then((m) => m.AmbientScene),
+  { ssr: false }
+)
 
 export function AppProviders({ children }: { children: ReactNode }) {
-  const [effects, setEffects] = useState<EffectModule | null>(null)
-  const [PremiumCursor, setPremiumCursor] = useState<ComponentType | null>(null)
+  const [enableExtras, setEnableExtras] = useState(false)
+  const [enableCursor, setEnableCursor] = useState(false)
 
   useEffect(() => {
     if (prefersReducedMotion()) return
 
-    const loadCursor = () => {
-      import("@/components/cursor/premium-cursor").then((mod) => {
-        setPremiumCursor(() => mod.PremiumCursor)
-      })
-    }
-
-    const onInteract = () => loadCursor()
+    const onInteract = () => setEnableCursor(true)
     window.addEventListener("pointerdown", onInteract, { once: true, passive: true })
     window.addEventListener("mousemove", onInteract, { once: true, passive: true })
 
-    const loadEffects = () => {
-      Promise.all([
-        import("@/components/effects/enhancement-runtime"),
-        import("@/components/effects/scroll-progress"),
-        import("@/components/effects/ambient-scene"),
-      ]).then(([runtime, progress, ambient]) => {
-        setEffects({
-          EnhancementRuntime: runtime.EnhancementRuntime,
-          ScrollProgress: progress.ScrollProgress,
-          AmbientScene: ambient.AmbientScene,
-        })
-      })
-    }
+    let idleId = 0
+    let timer = 0
+
+    const enable = () => setEnableExtras(true)
 
     if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(loadEffects, { timeout: 6000 })
-      return () => {
-        window.cancelIdleCallback(id)
-        window.removeEventListener("pointerdown", onInteract)
-        window.removeEventListener("mousemove", onInteract)
-      }
+      idleId = window.requestIdleCallback(enable, { timeout: 6000 })
+    } else {
+      timer = window.setTimeout(enable, 3000)
     }
 
-    const t = window.setTimeout(loadEffects, 3000)
     return () => {
-      window.clearTimeout(t)
+      if (idleId) window.cancelIdleCallback(idleId)
+      if (timer) window.clearTimeout(timer)
       window.removeEventListener("pointerdown", onInteract)
       window.removeEventListener("mousemove", onInteract)
     }
   }, [])
 
-  const EnhancementRuntime = effects?.EnhancementRuntime
-  const ScrollProgress = effects?.ScrollProgress
-  const AmbientScene = effects?.AmbientScene
-
   return (
     <>
-      {PremiumCursor && <PremiumCursor />}
-      {EnhancementRuntime && <EnhancementRuntime />}
-      {ScrollProgress && <ScrollProgress />}
-      {!prefersReducedMotion() && AmbientScene && <AmbientScene />}
+      {enableCursor ? <PremiumCursor /> : null}
+      {enableExtras ? <EnhancementRuntime /> : null}
+      {enableExtras ? <ScrollProgress /> : null}
+      {enableExtras && !prefersReducedMotion() ? <AmbientScene /> : null}
       <div className="relative z-10">{children}</div>
     </>
   )

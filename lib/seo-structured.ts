@@ -16,7 +16,7 @@ export function buildSiteGraph() {
         "@type": "WebSite",
         "@id": websiteId,
         url: absoluteUrl(),
-        name: `${siteConfig.name} — Portfolio`,
+        name: `${siteConfig.name} - Portfolio`,
         description: siteConfig.description,
         inLanguage: "en-US",
         publisher: { "@id": personId },
@@ -88,7 +88,7 @@ export function buildHomePageGraph() {
             "@type": "OrganizationRole",
             roleName: job.role,
             description: job.description,
-            startDate: job.period.split("—")[0]?.trim(),
+            startDate: job.period.split(/\s[-–—]\s/)[0]?.trim(),
             worksFor: {
               "@type": "Organization",
               name: job.company,

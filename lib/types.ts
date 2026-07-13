@@ -6,11 +6,13 @@ export interface Project {
   tags: string[]
   image: string
   link: string
-  github: string
+  github?: string
   slug?: string
   metrics?: { label: string; value: string }[]
   architecture?: string[]
   featured?: boolean
+  /** Learning/demo work — hidden from the public projects grid */
+  hidden?: boolean
 }
 
 export interface Experience {

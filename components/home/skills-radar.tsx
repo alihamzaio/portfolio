@@ -55,7 +55,7 @@ function SkillsRadarInner() {
               y={label.y}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-neutral-500 text-[8px] font-mono"
+              className="fill-neutral-400 text-[10px] font-mono"
             >
               {s.label}
             </text>

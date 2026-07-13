@@ -26,7 +26,7 @@ export function HomeContact() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     const subject = encodeURIComponent(`Inquiry from ${form.name}`)
-    const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
+    const body = encodeURIComponent(`${form.message}\n\n- ${form.name} (${form.email})`)
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
   }
 

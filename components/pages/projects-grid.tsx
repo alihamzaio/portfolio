@@ -6,9 +6,11 @@ import { ArrowUpRight } from "lucide-react"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { projects } from "@/lib/projects"
+import { getShowcaseProjects } from "@/lib/projects"
 
 export function ProjectsGrid() {
+  const projects = getShowcaseProjects(12)
+
   return (
     <PremiumPage>
       <SectionHeading
@@ -19,7 +21,7 @@ export function ProjectsGrid() {
       />
 
       <PremiumGrid cols="3">
-        {projects.slice(0, 12).map((project, i) => (
+        {projects.map((project, i) => (
           <PremiumReveal key={project.id} delay={(i % 6) * 0.05}>
             <Link href={`/projects/${project.slug}`} data-cursor="project">
               <PremiumCard className="p-0 overflow-hidden group h-full flex flex-col" spotlight>
