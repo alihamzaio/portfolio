@@ -16,7 +16,7 @@ export default function NotFound() {
         <h1 className="text-3xl sm:text-4xl font-bold text-[#F8FAFC] mb-4 tracking-tight">
           Page not found
         </h1>
-        <p className="text-[#94A3B8] mb-8 leading-relaxed">
+        <p className="text-[#C5D0DE] mb-8 leading-relaxed">
           The URL may be outdated or incorrect. Use the links below to return to the portfolio or contact page.
         </p>
         <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 w-full max-w-xs sm:max-w-none mx-auto">

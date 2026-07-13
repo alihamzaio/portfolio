@@ -16,9 +16,10 @@
   --accent-glow-cyan: rgba(6, 182, 212, 0.14);
   --accent-glow-violet: rgba(125, 211, 252, 0.1);
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  /* Brighter secondary/muted for readable body copy on dark navy */
+  --text-secondary: #c5d0de;
+  --text-muted: #a3b0c2;
+  --border-subtle: rgba(255, 255, 255, 0.12);
   --border-glow: rgba(59, 130, 246, 0.32);
 
   --background: var(--bg-primary);
@@ -72,6 +73,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Remap mid neutrals used for body/labels — default Tailwind greys were too dim on #0a0f1a */
+  --color-neutral-300: #e2e8f0;
+  --color-neutral-400: #c5d0de;
+  --color-neutral-500: #a3b0c2;
+  --color-neutral-600: #8494a8;
 }
 
 @layer base {
@@ -122,16 +128,16 @@
   }
 
   .section-label {
-    @apply text-xs font-medium uppercase tracking-[0.14em] text-neutral-500;
+    @apply text-xs font-medium uppercase tracking-[0.14em] text-neutral-400;
   }
 
   .meta-label {
-    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-500;
+    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-400;
   }
 
   /** @deprecated Use .section-label or .meta-label */
   .accent-label {
-    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-500;
+    @apply text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-400;
   }
 
   .text-accent {
@@ -148,7 +154,7 @@
   }
 
   .premium-surface {
-    @apply border border-white/[0.08] bg-white/[0.02] transition-colors duration-300;
+    @apply border border-white/[0.12] bg-white/[0.02] transition-colors duration-300;
   }
 
   .premium-surface:hover {
@@ -157,7 +163,7 @@
   }
 
   .premium-chip {
-    @apply rounded-lg border border-white/[0.08] bg-white/[0.03] text-neutral-400 transition-all duration-300;
+    @apply rounded-lg border border-white/[0.12] bg-white/[0.03] text-neutral-400 transition-all duration-300;
   }
 
   .premium-chip:hover {
@@ -722,9 +728,9 @@
 
   .skill-marquee-pill {
     @apply inline-flex items-center gap-1.5 px-4 py-2 text-xs rounded-full shrink-0;
-    color: #94a3b8;
+    color: var(--text-secondary);
     background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
@@ -748,7 +754,11 @@
   .floating-field .floating-input {
     @apply w-full px-4 pt-6 pb-3 rounded-xl text-white text-sm transition-all;
     background: #0a0f1a;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .floating-field .floating-input::placeholder {
+    color: var(--text-muted);
   }
 
   .floating-field .floating-input:focus {
@@ -758,7 +768,7 @@
   }
 
   .floating-label {
-    @apply absolute left-4 top-3.5 text-xs text-neutral-500 pointer-events-none transition-all duration-200;
+    @apply absolute left-4 top-3.5 text-xs text-neutral-400 pointer-events-none transition-all duration-200;
   }
 
   .floating-input:focus ~ .floating-label,
