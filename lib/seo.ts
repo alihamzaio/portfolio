@@ -34,6 +34,8 @@ export function absoluteUrl(path = ""): string {
 
 export const DEFAULT_OG_PATH = "/opengraph-image"
 
+export const HOME_PAGE_TITLE = "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)"
+
 type PageSeoOptions = {
   /** Page title segment (template adds site name in root layout) */
   title: string
@@ -44,6 +46,8 @@ type PageSeoOptions = {
   noIndex?: boolean
   ogImage?: string | { url: string; alt?: string; width?: number; height?: number }
   type?: "website" | "article"
+  /** Use absolute title (no template suffix) */
+  absoluteTitle?: boolean
 }
 
 function resolveOgImage(
@@ -74,11 +78,10 @@ function resolveOgImage(
 export function buildPageMetadata(options: PageSeoOptions): Metadata {
   const canonical = absoluteUrl(options.path)
   const og = resolveOgImage(options.ogImage)
-  const fullTitle = options.title
   const keywords = options.keywords ?? [...SEO_KEYWORDS]
 
   return {
-    title: fullTitle,
+    title: options.absoluteTitle ? { absolute: options.title } : options.title,
     description: options.description,
     keywords,
     alternates: {
@@ -91,7 +94,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
     openGraph: {
       type: options.type ?? "website",
       url: canonical,
-      title: `${fullTitle} | ${siteConfig.name}`,
+      title: options.title,
       description: options.description,
       siteName: `${siteConfig.name} - Portfolio`,
       locale: "en_US",
@@ -99,7 +102,7 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${fullTitle} | ${siteConfig.name}`,
+      title: options.title,
       description: options.description,
       images: [og.url],
     },
@@ -119,11 +122,14 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
   }
 }
 
-/** Root layout defaults — merged with per-page metadata */
+/**
+ * Root layout defaults. Title + description MUST live here so Next.js
+ * can place them in <head> (required for Lighthouse SEO).
+ */
 export function buildRootMetadata(): Metadata {
   const og = resolveOgImage("/opengraph-image")
-  const homeTitle = "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)"
   const canonical = absoluteUrl("/")
+  const description = siteConfig.description
 
   const verification: Metadata["verification"] = {}
   const google = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? process.env.GOOGLE_SITE_VERIFICATION
@@ -133,26 +139,50 @@ export function buildRootMetadata(): Metadata {
 
   return {
     metadataBase: new URL(siteConfig.url),
+    title: {
+      default: HOME_PAGE_TITLE,
+      template: `%s | ${siteConfig.name}`,
+    },
+    description,
+    keywords: [...SEO_KEYWORDS],
+    authors: [{ name: siteConfig.name, url: absoluteUrl() }],
+    creator: siteConfig.name,
+    publisher: siteConfig.name,
+    category: "technology",
+    applicationName: `${siteConfig.name} Portfolio`,
+    alternates: {
+      canonical,
+      languages: {
+        en: canonical,
+        "x-default": canonical,
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
     openGraph: {
       type: "website",
       url: canonical,
-      title: `${homeTitle} | ${siteConfig.name}`,
-      description: siteConfig.description,
+      title: HOME_PAGE_TITLE,
+      description,
       siteName: `${siteConfig.name} - Portfolio`,
       locale: "en_US",
       images: [og],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${homeTitle} | ${siteConfig.name}`,
-      description: siteConfig.description,
+      title: HOME_PAGE_TITLE,
+      description,
       images: [og.url],
     },
-    authors: [{ name: siteConfig.name, url: absoluteUrl() }],
-    creator: siteConfig.name,
-    publisher: siteConfig.name,
-    category: "technology",
-    applicationName: `${siteConfig.name} Portfolio`,
     ...(Object.keys(verification).length > 0 ? { verification } : {}),
     icons: {
       icon: [

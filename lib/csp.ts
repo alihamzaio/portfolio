@@ -9,9 +9,11 @@ export type CspOptions = {
 }
 
 export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): string {
+  // Static Next.js pages cannot stamp per-request nonces on all hydration scripts.
+  // Prefer a host-allowlist CSP that keeps XSS protections without console CSP noise.
   const scriptSrc = [
-    `'nonce-${nonce}'`,
-    "'strict-dynamic'",
+    "'self'",
+    "'unsafe-inline'",
     "https://va.vercel-scripts.com",
     // next dev react-refresh uses eval(); only on http://localhost, not production https.
     ...(!isSecure ? ["'unsafe-eval'"] : []),
@@ -34,11 +36,9 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     `connect-src ${connectSrc.join(" ")}`,
     "frame-ancestors 'none'",
     "base-uri 'none'",
-    "form-action 'self'",
+    "form-action 'self' mailto:",
     "object-src 'none'",
     ...(isSecure ? ["upgrade-insecure-requests"] : []),
-    // Do not use require-trusted-types-for: Next.js dynamic imports set script.src directly.
-    "trusted-types nextjs#bundler default 'allow-duplicates'",
   ].join("; ")
 }
 

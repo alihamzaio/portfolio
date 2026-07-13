@@ -234,8 +234,8 @@ export function SiteHeader() {
                     onClick={(e) => handleNavClick(e, "/#contact")}
                     className="btn-primary btn-responsive justify-center w-full"
                   >
-                    Contact
-                    <ArrowRight className="h-4 w-4 shrink-0" />
+                    Hire me
+                    <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
                   </Link>
                 </motion.div>
               </nav>
@@ -309,8 +309,8 @@ export function SiteHeader() {
                   data-cursor="contact"
                   data-cursor-magnetic
                 >
-                  Contact
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  Hire me
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
                 </Link>
                 <button
                   type="button"

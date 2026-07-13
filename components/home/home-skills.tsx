@@ -25,7 +25,7 @@ export function HomeSkills() {
         {skillCategories.map((cat) => (
           <div key={cat.id} data-animate className="premium-surface rounded-2xl p-4 sm:p-6">
             <p className="meta-label mb-2">{cat.title}</p>
-            <p className="text-sm text-neutral-500 mb-6">{cat.description}</p>
+            <p className="text-sm text-neutral-400 mb-6">{cat.description}</p>
             <div className="flex flex-wrap gap-2">
               {cat.skills.map((skill) => (
                 <span key={skill.name} className="premium-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs">

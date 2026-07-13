@@ -36,7 +36,7 @@ export function HomeClientOffer() {
         })}
       </PremiumGrid>
 
-      <p data-animate className="mt-12 text-center text-sm text-neutral-500 max-w-lg mx-auto">
+      <p data-animate className="mt-12 text-center text-sm text-neutral-400 max-w-lg mx-auto">
         Fixed-scope milestones or ongoing contract work.{" "}
         <SmartLink href="/#contact" className="text-cyan-400 hover:text-sky-300 hover:underline">
           Send your requirements

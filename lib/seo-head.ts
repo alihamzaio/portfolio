@@ -1,8 +1,7 @@
-import { SEO_KEYWORDS, absoluteUrl } from "@/lib/seo"
+import { SEO_KEYWORDS, absoluteUrl, HOME_PAGE_TITLE } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
-/** Default home page title — rendered in layout <head> for Lighthouse SEO */
-export const HOME_PAGE_TITLE = "Ali Hamza | Full Stack Developer (MERN, AWS & Web3)"
+export { HOME_PAGE_TITLE }
 
 export const HOME_META_DESCRIPTION = siteConfig.description
 

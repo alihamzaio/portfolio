@@ -15,7 +15,7 @@ const contactRows = [
   { key: "email", icon: Mail, label: "Email", getValue: (p: ReturnType<typeof usePublicProfile>) => p.email, href: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
   { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone },
   { key: "location", icon: MapPin, label: "Location", getValue: (p: ReturnType<typeof usePublicProfile>) => p.location },
-  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "LinkedIn", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
+  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
   { key: "github", icon: Github, label: "GitHub", getValue: (p: ReturnType<typeof usePublicProfile>) => `GitHub · ${p.githubUsername}`, href: (p: ReturnType<typeof usePublicProfile>) => p.social.github, external: true },
 ] as const
 
@@ -62,7 +62,7 @@ export function HomeContact() {
               <>
                 <PremiumIcon icon={Icon} size={16} className="mt-0.5" />
                 <div className="min-w-0">
-                  <p className="text-xs text-neutral-500">{row.label}</p>
+                  <p className="text-xs text-neutral-400">{row.label}</p>
                   <p className="text-sm text-white break-all sm:truncate group-hover:text-sky-300 transition-colors">
                     {value}
                   </p>

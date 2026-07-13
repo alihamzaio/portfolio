@@ -29,7 +29,7 @@ function AboutTimelineInner({ experiences }: { experiences: Experience[] }) {
             <p className="text-sm text-neutral-400 mb-2 break-words">{exp.company} · {exp.location}</p>
             <ul className="space-y-1.5">
               {exp.achievements.slice(0, 3).map((a) => (
-                <li key={a} className="text-sm text-neutral-500 flex gap-2 break-words">
+                <li key={a} className="text-sm text-neutral-400 flex gap-2 break-words">
                   <span className="text-cyan-400 shrink-0">▸</span>
                   {a}
                 </li>

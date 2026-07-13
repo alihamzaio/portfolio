@@ -54,7 +54,7 @@ export function HomeTestimonials() {
                 </p>
                 <footer>
                   <p className="font-semibold text-white break-words">{current.author}</p>
-                  <p className="text-sm text-neutral-500 mt-1 break-words">
+                  <p className="text-sm text-neutral-400 mt-1 break-words">
                     {current.role} · {current.company}
                   </p>
                 </footer>
