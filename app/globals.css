@@ -934,8 +934,8 @@
 
 
   .hero-premium-title {
-    font-size: clamp(2.25rem, 7vw + 0.35rem, 6.25rem);
-    line-height: 1;
+    font-size: clamp(1.85rem, 5.5vw + 0.35rem, 4.25rem);
+    line-height: 1.08;
     letter-spacing: -0.04em;
     text-wrap: balance;
     overflow-wrap: anywhere;

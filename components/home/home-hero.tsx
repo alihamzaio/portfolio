@@ -30,11 +30,8 @@ export function HomeHero() {
                 </p>
               )}
 
-              <h1 className="mb-6 w-full min-w-0 max-w-full break-words text-balance">
-                <span className="hero-premium-title font-bold tracking-tight block">Ali Hamza</span>
-                <span className="mt-3 block text-xl sm:text-2xl md:text-3xl font-semibold text-white tracking-tight">
-                  Full Stack Developer
-                </span>
+              <h1 className="hero-premium-title font-bold tracking-tight mb-6 w-full min-w-0 max-w-full break-words text-balance">
+                Ali Hamza, Full Stack Developer
               </h1>
 
               <p className="text-lg sm:text-xl md:text-2xl min-h-[3rem] sm:min-h-[2.5rem] font-medium mb-6 sm:mb-8 w-full min-w-0 break-words">
