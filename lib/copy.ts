@@ -4,10 +4,11 @@ export const copy = {
     availability: "Available for full-time roles and contract work",
     greeting: "HI, I'M",
     name: "ALI HAMZA",
-    lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations.",
+    h1: "Ali Hamza, Full Stack Developer",
+    lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations for startups and product teams.",
     support:
-      "Primary stack: React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS.",
-    ctaPrimary: "Contact",
+      "I work with React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS. Based in Lahore, Pakistan, and open to remote full-time and contract roles worldwide.",
+    ctaPrimary: "Let's talk",
     ctaViewWork: "View projects",
     ctaResume: "Download resume",
   },
@@ -16,10 +17,10 @@ export const copy = {
       label: "About",
       title: "Background",
       description:
-        "Three years building production systems for startups and product teams. Work spans APIs, cloud infrastructure, frontends, and deployment.",
+        "Three years building production systems for startups and product teams across APIs, cloud infrastructure, modern frontends, and reliable deployments.",
         bio: [
-          "Over the last 3+ years, I've worked on web applications, backend services, cloud infrastructure, and blockchain-related projects. My primary stack includes React, Next.js, Node.js, MongoDB, and AWS.",
-          "I work remotely from Lahore and have collaborated with startups, product teams, and international clients. Open to both full-time and contract opportunities.",
+          "Over the last 3+ years, I've worked on web applications, backend services, cloud infrastructure, and blockchain-related projects. My primary stack includes React, Next.js, Node.js, MongoDB, PostgreSQL, and AWS.",
+          "I work remotely from Lahore and have collaborated with startups, product teams, and international clients. Open to both full-time and contract opportunities focused on shipping maintainable production software.",
         ]
     },
     skills: {

@@ -34,8 +34,8 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             <Link href="/" className="inline-block mb-4 group">
               <Logo name={profile.name} showName size={40} instanceId="footer" />
             </Link>
-            <p className="text-sm text-neutral-500 leading-relaxed break-words">
-              {profile.title} · {profile.location}
+            <p className="text-sm text-neutral-400 leading-relaxed break-words">
+              {profile.title} based in {profile.location}. Building MERN, Next.js, AWS serverless, and blockchain products.
             </p>
             <a
               href={`mailto:${profile.email}`}
@@ -65,7 +65,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
               rel="noopener noreferrer"
               className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
-              GitHub <ArrowUpRight className="h-3.5 w-3.5" />
+              GitHub profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
               href={profile.social.linkedin}
@@ -73,7 +73,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
               rel="noopener noreferrer"
               className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
-              LinkedIn <ArrowUpRight className="h-3.5 w-3.5" />
+              LinkedIn profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
             </a>
           </div>
         </div>
