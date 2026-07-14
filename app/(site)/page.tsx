@@ -1,4 +1,6 @@
 import { HomeHero } from "@/components/home/home-hero"
+import { HomeAbout } from "@/components/home/home-about"
+import { HomeExperience } from "@/components/home/home-experience"
 import nextDynamic from "next/dynamic"
 import { SectionSkeleton } from "@/components/ui/section-skeleton"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
@@ -9,10 +11,6 @@ const HomeClientOffer = nextDynamic(
   () => import("@/components/home/home-client-offer").then((m) => ({ default: m.HomeClientOffer })),
   { loading: () => <SectionSkeleton lines={4} /> }
 )
-const HomeAbout = nextDynamic(
-  () => import("@/components/home/home-about").then((m) => ({ default: m.HomeAbout })),
-  { loading: () => <SectionSkeleton lines={2} /> }
-)
 const HomeSkills = nextDynamic(
   () => import("@/components/home/home-skills").then((m) => ({ default: m.HomeSkills })),
   { loading: () => <SectionSkeleton lines={3} /> }
@@ -20,10 +18,6 @@ const HomeSkills = nextDynamic(
 const HomeProjects = nextDynamic(
   () => import("@/components/home/home-projects").then((m) => ({ default: m.HomeProjects })),
   { loading: () => <SectionSkeleton lines={2} /> }
-)
-const HomeExperience = nextDynamic(
-  () => import("@/components/home/home-experience").then((m) => ({ default: m.HomeExperience })),
-  { loading: () => <SectionSkeleton lines={3} /> }
 )
 const HomeTestimonials = nextDynamic(
   () => import("@/components/home/home-testimonials").then((m) => ({ default: m.HomeTestimonials })),
@@ -54,6 +48,7 @@ export default function HomePage() {
       <HomePageJsonLd />
       <HomeHero />
       <HomeClientOffer />
+      {/* Static imports so crawlers always get real about/experience copy in HTML */}
       <HomeAbout />
       <HomeSkills />
       <HomeProjects />

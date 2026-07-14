@@ -31,7 +31,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v8",
+            value: "seo-v9",
           },
           {
             key: "Link",

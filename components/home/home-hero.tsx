@@ -30,16 +30,22 @@ export function HomeHero() {
                 </p>
               )}
 
-              <h1 className="hero-premium-title font-bold tracking-tight mb-6 w-full min-w-0 max-w-full break-words">
-                {siteConfig.name}
+              <h1 className="mb-6 w-full min-w-0 max-w-full break-words text-balance">
+                <span className="hero-premium-title font-bold tracking-tight block">Ali Hamza</span>
+                <span className="mt-3 block text-xl sm:text-2xl md:text-3xl font-semibold text-white tracking-tight">
+                  Full Stack Developer
+                </span>
               </h1>
 
               <p className="text-lg sm:text-xl md:text-2xl min-h-[3rem] sm:min-h-[2.5rem] font-medium mb-6 sm:mb-8 w-full min-w-0 break-words">
                 <HeroRoleLine />
               </p>
 
-              <p className="text-base sm:text-lg text-neutral-400 leading-relaxed w-full max-w-2xl mb-8 sm:mb-12 break-words [overflow-wrap:anywhere]">
+              <p className="text-base sm:text-lg text-neutral-400 leading-relaxed w-full max-w-2xl mb-4 sm:mb-5 break-words [overflow-wrap:anywhere]">
                 {copy.hero.lead}
+              </p>
+              <p className="text-sm sm:text-base text-neutral-400 leading-relaxed w-full max-w-2xl mb-8 sm:mb-12 break-words [overflow-wrap:anywhere]">
+                {copy.hero.support}
               </p>
 
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 w-full min-w-0 max-w-full sm:max-w-none">
