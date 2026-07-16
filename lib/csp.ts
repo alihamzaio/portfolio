@@ -15,6 +15,8 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "'self'",
     "'unsafe-inline'",
     "https://va.vercel-scripts.com",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
     // next dev react-refresh uses eval(); only on http://localhost, not production https.
     ...(!isSecure ? ["'unsafe-eval'"] : []),
   ]
@@ -23,6 +25,9 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "'self'",
     "https://vitals.vercel-insights.com",
     "https://va.vercel-scripts.com",
+    "https://www.google-analytics.com",
+    "https://region1.google-analytics.com",
+    "https://www.googletagmanager.com",
     ...(!isSecure ? ["ws://localhost:*", "wss://localhost:*"] : []),
   ]
 
@@ -31,7 +36,7 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     `script-src ${scriptSrc.join(" ")}`,
     "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://res.cloudinary.com https://www.exec9.com https://cdn.jsdelivr.net https://ghchart.rshah.org",
+    "img-src 'self' data: blob: https://res.cloudinary.com https://www.exec9.com https://cdn.jsdelivr.net https://ghchart.rshah.org https://www.google-analytics.com https://www.googletagmanager.com",
     "font-src 'self' data:",
     `connect-src ${connectSrc.join(" ")}`,
     "frame-ancestors 'none'",

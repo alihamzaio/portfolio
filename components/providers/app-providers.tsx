@@ -5,22 +5,22 @@ import { useState, useEffect, type ReactNode } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 const PremiumCursor = dynamic(
-  () => import("@/components/cursor/premium-cursor").then((m) => m.PremiumCursor),
+  () => import("@/components/cursor/premium-cursor").then((m) => m.PremiumCursor).catch(() => ({ default: () => null })),
   { ssr: false }
 )
 
 const EnhancementRuntime = dynamic(
-  () => import("@/components/effects/enhancement-runtime").then((m) => m.EnhancementRuntime),
+  () => import("@/components/effects/enhancement-runtime").then((m) => m.EnhancementRuntime).catch(() => ({ default: () => null })),
   { ssr: false }
 )
 
 const ScrollProgress = dynamic(
-  () => import("@/components/effects/scroll-progress").then((m) => m.ScrollProgress),
+  () => import("@/components/effects/scroll-progress").then((m) => m.ScrollProgress).catch(() => ({ default: () => null })),
   { ssr: false }
 )
 
 const AmbientScene = dynamic(
-  () => import("@/components/effects/ambient-scene").then((m) => m.AmbientScene),
+  () => import("@/components/effects/ambient-scene").then((m) => m.AmbientScene).catch(() => ({ default: () => null })),
   { ssr: false }
 )
 
