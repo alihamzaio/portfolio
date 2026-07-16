@@ -57,6 +57,41 @@ export function buildSiteGraph() {
           name: job.company,
         })),
       },
+      {
+        "@type": ["LocalBusiness", "ProfessionalService"],
+        "@id": `${absoluteUrl()}/#localbusiness`,
+        name: `${siteConfig.name} Full Stack Development`,
+        description: siteConfig.description,
+        url: absoluteUrl(),
+        image: absoluteUrl("/icon"),
+        telephone: siteConfig.phone,
+        email: siteConfig.email,
+        priceRange: "$$",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Lahore",
+          addressRegion: "Punjab",
+          addressCountry: "PK",
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 31.5204,
+          longitude: 74.3587,
+        },
+        areaServed: [
+          { "@type": "City", name: "Lahore" },
+          { "@type": "Country", name: "Pakistan" },
+          { "@type": "Place", name: "Remote" },
+        ],
+        openingHoursSpecification: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "09:00",
+          closes: "18:00",
+        },
+        sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
+        founder: { "@id": personId },
+      },
     ],
   }
 }

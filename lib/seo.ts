@@ -34,8 +34,8 @@ export function absoluteUrl(path = ""): string {
 
 export const DEFAULT_OG_PATH = "/opengraph-image"
 
-/** Keep under ~55–60 chars / ~580px for SEO tools */
-export const HOME_PAGE_TITLE = "Ali Hamza | Full Stack Developer"
+/** Ideal SERP length: 50–60 characters */
+export const HOME_PAGE_TITLE = "Ali Hamza | Full Stack Developer in Lahore, Pakistan"
 
 type PageSeoOptions = {
   /** Page title segment (template adds site name in root layout) */
