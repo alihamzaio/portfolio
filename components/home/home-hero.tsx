@@ -41,8 +41,11 @@ export function HomeHero() {
               <p className="text-base sm:text-lg text-neutral-400 leading-relaxed w-full max-w-2xl mb-4 sm:mb-5 break-words [overflow-wrap:anywhere]">
                 {copy.hero.lead}
               </p>
-              <p className="text-sm sm:text-base text-neutral-400 leading-relaxed w-full max-w-2xl mb-8 sm:mb-12 break-words [overflow-wrap:anywhere]">
+              <p className="text-sm sm:text-base text-neutral-400 leading-relaxed w-full max-w-2xl mb-4 sm:mb-5 break-words [overflow-wrap:anywhere]">
                 {copy.hero.support}
+              </p>
+              <p className="text-sm sm:text-base text-neutral-400 leading-relaxed w-full max-w-2xl mb-8 sm:mb-12 break-words [overflow-wrap:anywhere]">
+                {copy.hero.detail}
               </p>
 
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 w-full min-w-0 max-w-full sm:max-w-none">
