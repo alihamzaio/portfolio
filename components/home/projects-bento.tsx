@@ -46,7 +46,14 @@ export function ProjectsBento() {
               <h3 className="text-base sm:text-lg font-semibold text-white mb-2 line-clamp-2 break-words">
                 {project.title}
               </h3>
-              <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.overview}</p>
+              <p className="text-sm text-neutral-400 line-clamp-2 mb-3">{project.overview}</p>
+              <ul className="text-xs text-neutral-500 space-y-1 mb-4 list-disc pl-4">
+                {project.architecture.slice(0, 3).map((point) => (
+                  <li key={point} className="line-clamp-2">
+                    {point}
+                  </li>
+                ))}
+              </ul>
               <div className="flex flex-wrap gap-2 mb-3">
                 {project.metrics.slice(0, 2).map((m) => (
                   <span key={m.label} className="premium-chip text-xs px-2 py-1 break-words">

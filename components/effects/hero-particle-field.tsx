@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic"
 import { useState, useEffect } from "react"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
+import { supportsWebGL } from "@/lib/webgl"
 
 function HeroParticleFallback() {
   return (
@@ -18,7 +19,7 @@ function HeroParticleFallback() {
 }
 
 const HeroParticleCanvas = dynamic(
-  () => import("@/components/effects/hero-particle-canvas").then((m) => m.HeroParticleCanvas),
+  () => import("@/components/effects/hero-particle-canvas").then((m) => m.HeroParticleCanvas).catch(() => ({ default: () => null })),
   { ssr: false, loading: () => <HeroParticleFallback /> }
 )
 
@@ -30,7 +31,8 @@ export function HeroParticleField() {
 
   useEffect(() => {
     setMounted(true)
-    setAllowCanvas(window.matchMedia("(min-width: 1024px)").matches)
+    const desktop = window.matchMedia("(min-width: 1024px)").matches
+    setAllowCanvas(desktop && supportsWebGL())
     setReduceMotion(prefersReducedMotion())
   }, [])
 

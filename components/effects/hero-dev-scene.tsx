@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import type { Group, Mesh } from "three"
 import { brand } from "@/lib/brand"
 import { engineeringMetrics } from "@/lib/site"
+import { supportsWebGL } from "@/lib/webgl"
 
 const CODE_LINES = [
   "const stack = ['React', 'Next', 'Node']",
@@ -102,8 +103,14 @@ function CodeTerminal({ reduceMotion }: { reduceMotion: boolean }) {
 export function HeroDevScene() {
   const reduceMotion = useReducedMotion()
   const [mounted, setMounted] = useState(false)
+  const [webglReady, setWebglReady] = useState(false)
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+    setWebglReady(supportsWebGL())
+  }, [])
+
+  const showCanvas = mounted && !reduceMotion && webglReady
 
   return (
     <motion.div
@@ -141,7 +148,7 @@ export function HeroDevScene() {
       ))}
 
       <div className="absolute inset-x-2 top-4 bottom-[7.5rem] overflow-visible pointer-events-none">
-        {mounted && !reduceMotion ? (
+        {showCanvas ? (
           <Canvas
             camera={{ position: [0, 0.1, 5.4], fov: 36, near: 0.1, far: 100 }}
             dpr={[1, 1.5]}

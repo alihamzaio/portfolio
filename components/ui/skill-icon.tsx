@@ -18,7 +18,7 @@ export function SkillIcon({
   const image = (
     <Image
       src={skill.icon}
-      alt=""
+      alt={`${skill.name} technology logo`}
       width={size}
       height={size}
       unoptimized

@@ -9,6 +9,11 @@ import { Logo } from "@/components/brand/logo"
 import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
 import type { NavItem } from "@/lib/site"
 
+function obfuscatedMailto(email: string) {
+  const [user, domain] = email.split("@")
+  return `mailto:${user}@${domain}`
+}
+
 export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] }) {
   const profile = usePublicProfile()
   const pathname = usePathname()
@@ -37,12 +42,15 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             <p className="text-sm text-neutral-400 leading-relaxed break-words">
               {profile.title} based in {profile.location}. Building MERN, Next.js, AWS serverless, and blockchain products.
             </p>
-            <a
-              href={`mailto:${profile.email}`}
-              className="text-sm text-neutral-400 hover:text-white mt-2 inline-block transition-colors break-all"
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = obfuscatedMailto(profile.email)
+              }}
+              className="text-sm text-neutral-400 hover:text-white mt-2 inline-block transition-colors text-left"
             >
-              {profile.email}
-            </a>
+              Send an email
+            </button>
           </div>
 
           <nav className="flex flex-wrap gap-x-8 gap-y-2" aria-label="Footer">
@@ -86,6 +94,9 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
           <div className="text-center sm:text-left">
             <p suppressHydrationWarning>© {year} {profile.name}</p>
             <p className="text-neutral-500 mt-1">Made by Ali Hamza</p>
+            <Link href="/privacy" className="text-neutral-500 hover:text-white mt-2 inline-block transition-colors">
+              Privacy policy
+            </Link>
           </div>
           <button
             type="button"

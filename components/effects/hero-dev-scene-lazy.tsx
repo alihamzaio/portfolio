@@ -13,7 +13,7 @@ function DevSceneFallback() {
 }
 
 const HeroDevScene = dynamic(
-  () => import("@/components/effects/hero-dev-scene").then((m) => m.HeroDevScene),
+  () => import("@/components/effects/hero-dev-scene").then((m) => m.HeroDevScene).catch(() => ({ default: () => null })),
   { ssr: false, loading: () => <DevSceneFallback /> }
 )
 

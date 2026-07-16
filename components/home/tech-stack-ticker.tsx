@@ -14,7 +14,14 @@ export function TechStackTicker() {
         {items.map((item, i) => {
           const dark = DARK_TICKER.has(item.name)
           const logo = (
-            <Image src={item.icon} alt="" width={22} height={22} unoptimized className="shrink-0 object-contain" />
+            <Image
+              src={item.icon}
+              alt={`${item.name} technology logo`}
+              width={22}
+              height={22}
+              unoptimized
+              className="shrink-0 object-contain"
+            />
           )
 
           return (

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import type React from "react"
 import { Inter } from "next/font/google"
 import { AnalyticsDeferred } from "@/components/analytics-deferred"
+import { GoogleAnalytics } from "@/components/google-analytics"
 import { StructuredData } from "@/components/structured-data"
 import { buildRootMetadata } from "@/lib/seo"
 import "./globals.css"
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       >
         <StructuredData />
         {children}
+        <GoogleAnalytics />
         <AnalyticsDeferred />
       </body>
     </html>

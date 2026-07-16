@@ -12,7 +12,7 @@ import { RippleButton } from "@/components/ui/ripple-button"
 import { copy } from "@/lib/copy"
 
 const contactRows = [
-  { key: "email", icon: Mail, label: "Email", getValue: (p: ReturnType<typeof usePublicProfile>) => p.email, href: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
+  { key: "email", icon: Mail, label: "Email", getValue: () => "Send an email", action: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
   { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone },
   { key: "location", icon: MapPin, label: "Location", getValue: (p: ReturnType<typeof usePublicProfile>) => p.location },
   { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
@@ -58,6 +58,7 @@ export function HomeContact() {
             const Icon = row.icon
             const value = row.getValue(profile)
             const href = "href" in row && row.href ? row.href(profile) : undefined
+            const action = "action" in row && row.action ? row.action(profile) : undefined
             const content = (
               <>
                 <PremiumIcon icon={Icon} size={16} className="mt-0.5" />
@@ -82,6 +83,17 @@ export function HomeContact() {
                   >
                     {content}
                   </a>
+                ) : action ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.location.href = action
+                    }}
+                    className="flex gap-3 group text-left w-full"
+                    data-cursor="link"
+                  >
+                    {content}
+                  </button>
                 ) : (
                   <div className="flex gap-3">{content}</div>
                 )}

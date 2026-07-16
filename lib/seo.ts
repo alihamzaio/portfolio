@@ -187,9 +187,11 @@ export function buildRootMetadata(): Metadata {
     ...(Object.keys(verification).length > 0 ? { verification } : {}),
     icons: {
       icon: [
+        { url: "/favicon.ico", sizes: "32x32" },
         { url: "/favicon.svg", type: "image/svg+xml" },
         { url: "/icon", type: "image/png", sizes: "32x32" },
       ],
+      shortcut: "/favicon.ico",
       apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
     },
     manifest: "/manifest.webmanifest",
