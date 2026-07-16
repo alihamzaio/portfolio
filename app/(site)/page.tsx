@@ -1,36 +1,15 @@
 import { HomeHero } from "@/components/home/home-hero"
+import { HomeClientOffer } from "@/components/home/home-client-offer"
 import { HomeAbout } from "@/components/home/home-about"
+import { HomeSkills } from "@/components/home/home-skills"
+import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
-import nextDynamic from "next/dynamic"
-import { SectionSkeleton } from "@/components/ui/section-skeleton"
+import { HomeTestimonials } from "@/components/home/home-testimonials"
+import { CtaBand } from "@/components/home/cta-band"
+import { HomeContact } from "@/components/home/home-contact"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
 import { buildPageMetadata, HOME_PAGE_TITLE } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
-
-const HomeClientOffer = nextDynamic(
-  () => import("@/components/home/home-client-offer").then((m) => ({ default: m.HomeClientOffer })),
-  { loading: () => <SectionSkeleton lines={4} /> }
-)
-const HomeSkills = nextDynamic(
-  () => import("@/components/home/home-skills").then((m) => ({ default: m.HomeSkills })),
-  { loading: () => <SectionSkeleton lines={3} /> }
-)
-const HomeProjects = nextDynamic(
-  () => import("@/components/home/home-projects").then((m) => ({ default: m.HomeProjects })),
-  { loading: () => <SectionSkeleton lines={2} /> }
-)
-const HomeTestimonials = nextDynamic(
-  () => import("@/components/home/home-testimonials").then((m) => ({ default: m.HomeTestimonials })),
-  { loading: () => <SectionSkeleton lines={1} /> }
-)
-const CtaBand = nextDynamic(
-  () => import("@/components/home/cta-band").then((m) => ({ default: m.CtaBand })),
-  { loading: () => <SectionSkeleton lines={1} /> }
-)
-const HomeContact = nextDynamic(
-  () => import("@/components/home/home-contact").then((m) => ({ default: m.HomeContact })),
-  { loading: () => <SectionSkeleton lines={2} /> }
-)
 
 export const dynamic = "force-static"
 export const revalidate = 3600
@@ -48,7 +27,7 @@ export default function HomePage() {
       <HomePageJsonLd />
       <HomeHero />
       <HomeClientOffer />
-      {/* Static imports so crawlers always get real about/experience copy in HTML */}
+      {/* Static imports so crawlers get full on-page copy in the HTML response */}
       <HomeAbout />
       <HomeSkills />
       <HomeProjects />

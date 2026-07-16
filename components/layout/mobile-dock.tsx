@@ -7,11 +7,11 @@ import { Home, User, Layers, Briefcase, Mail } from "lucide-react"
 import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
 
 const dockItems = [
-  { href: "/#home", icon: Home, label: "Home" },
-  { href: "/#about", icon: User, label: "About" },
-  { href: "/#skills", icon: Layers, label: "Skills" },
-  { href: "/#projects", icon: Briefcase, label: "Work" },
-  { href: "/#contact", icon: Mail, label: "Contact" },
+  { href: "/#home", icon: Home, label: "Top" },
+  { href: "/#about", icon: User, label: "Bio" },
+  { href: "/#skills", icon: Layers, label: "Stack" },
+  { href: "/#projects", icon: Briefcase, label: "Portfolio" },
+  { href: "/#contact", icon: Mail, label: "Reach out" },
 ]
 
 export function MobileDock() {

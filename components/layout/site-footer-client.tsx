@@ -45,7 +45,7 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             </a>
           </div>
 
-          <nav className="flex flex-wrap gap-x-8 gap-y-2">
+          <nav className="flex flex-wrap gap-x-8 gap-y-2" aria-label="Footer">
             {navItems.map((item) => (
               <Link
                 key={item.id}
@@ -53,7 +53,11 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
                 onClick={(e) => handleNavClick(e, item.href)}
                 className="text-sm text-neutral-500 hover:text-white transition-colors"
               >
-                {item.label}
+                {item.label === "Home"
+                  ? "Back to home"
+                  : item.label === "Work"
+                    ? "View work"
+                    : `${item.label} overview`}
               </Link>
             ))}
           </nav>
