@@ -47,7 +47,7 @@ export function proxy(request: NextRequest) {
     response.headers.set(header.key, header.value)
   }
 
-  response.headers.set("X-Site-Build", "seo-v11")
+  response.headers.set("X-Site-Build", "seo-v12")
 
   return response
 }
@@ -56,7 +56,7 @@ export const config = {
   matcher: [
     {
       source:
-        "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|icon|apple-icon|manifest.webmanifest|robots.txt|sitemap.xml|opengraph-image).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|icon|apple-icon|manifest.webmanifest|robots.txt|sitemap.xml|llms.txt|opengraph-image).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
