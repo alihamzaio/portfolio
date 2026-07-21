@@ -141,6 +141,13 @@ export const copy = {
       ],
     },
   },
+  seoExtra: [
+    "Teams hiring a Full Stack Developer in Lahore often need one engineer who can move between product UI, API design, and cloud deployment without long handoffs. That is the shape of work I take on: own the implementation path, keep stakeholders informed, and leave behind systems that are operable after the project ends.",
+    "For startups, the priority is usually speed with guardrails: a maintainable Next.js or React frontend, a typed Node.js API, and an AWS footprint that will not surprise finance next quarter. For product companies, the priority is usually reliability and clarity: fewer production defects, cleaner service boundaries, and documentation that onboarding engineers can trust.",
+    "Engagements typically cover discovery, architecture notes, milestone delivery, staging demos, production release, and a short hypercare window. Communication stays written and specific so decisions about scope, risk, and trade-offs are easy to revisit. If you need MERN, Next.js, AWS serverless, REST APIs, or blockchain indexing delivered by someone who has shipped those systems before, the contact section is the fastest next step.",
+    "I also help teams recover velocity on existing products. That can mean untangling a slow release pipeline, replacing fragile RPC-heavy blockchain reads with an indexer, splitting a crowded admin dashboard into clearer workflows, or bringing TypeScript and tests into the hottest modules first. The common thread is practical engineering that protects users and keeps delivery measurable.",
+    "Whether the outcome is a new customer-facing app, an internal operations platform, or a cloud migration, success looks the same: working software in production, clear ownership, and a team that can continue without depending on tribal knowledge. That is the standard I use for full-time and contract collaborations alike.",
+  ],
   services: [
     {
       title: "Full Stack Web Applications",
