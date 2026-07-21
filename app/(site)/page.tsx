@@ -1,13 +1,11 @@
 import { HomeHero } from "@/components/home/home-hero"
 import { HomeClientOffer } from "@/components/home/home-client-offer"
 import { HomeAbout } from "@/components/home/home-about"
-import { HomeApproach } from "@/components/home/home-approach"
+import { HomeSeoProse } from "@/components/home/home-seo-prose"
 import { HomeSkills } from "@/components/home/home-skills"
-import { HomeStackNarrative } from "@/components/home/home-stack-narrative"
 import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
 import { HomeTestimonials } from "@/components/home/home-testimonials"
-import { HomeFaq } from "@/components/home/home-faq"
 import { CtaBand } from "@/components/home/cta-band"
 import { HomeContact } from "@/components/home/home-contact"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
@@ -30,15 +28,12 @@ export default function HomePage() {
       <HomePageJsonLd />
       <HomeHero />
       <HomeClientOffer />
-      {/* Static imports so crawlers get full on-page copy in the HTML response */}
       <HomeAbout />
-      <HomeApproach />
+      <HomeSeoProse />
       <HomeSkills />
-      <HomeStackNarrative />
       <HomeProjects />
       <HomeExperience />
       <HomeTestimonials />
-      <HomeFaq />
       <CtaBand />
       <HomeContact />
     </div>

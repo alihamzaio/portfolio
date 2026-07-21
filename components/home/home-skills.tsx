@@ -4,7 +4,6 @@ import { PremiumGrid, PremiumSection } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { SkillsMarquee } from "@/components/ui/skills-marquee"
 import { SkillProgressGrid } from "@/components/home/skill-progress-grid"
-import { SkillIcon } from "@/components/ui/skill-icon"
 import { skillCategories } from "@/lib/skills-data"
 import { copy } from "@/lib/copy"
 
@@ -28,8 +27,7 @@ export function HomeSkills() {
             <p className="text-sm text-neutral-400 mb-6">{cat.description}</p>
             <div className="flex flex-wrap gap-2">
               {cat.skills.map((skill) => (
-                <span key={skill.name} className="premium-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs">
-                  <SkillIcon skill={skill} />
+                <span key={skill.name} className="premium-chip inline-flex items-center px-3 py-1.5 text-xs">
                   {skill.name}
                 </span>
               ))}
