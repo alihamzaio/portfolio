@@ -53,18 +53,19 @@ type PageSeoOptions = {
 
 function resolveOgImage(
   ogImage: PageSeoOptions["ogImage"]
-): { url: string; width: number; height: number; alt: string } {
+): { url: string; width: number; height: number; alt: string; type: string } {
   if (!ogImage) {
     return {
       url: absoluteUrl(DEFAULT_OG_PATH),
       width: 1200,
       height: 630,
       alt: `${siteConfig.name} - ${siteConfig.title}`,
+      type: "image/png",
     }
   }
   if (typeof ogImage === "string") {
     const url = ogImage.startsWith("http") ? ogImage : absoluteUrl(ogImage)
-    return { url, width: 1200, height: 630, alt: siteConfig.name }
+    return { url, width: 1200, height: 630, alt: siteConfig.name, type: "image/png" }
   }
   const url = ogImage.url.startsWith("http") ? ogImage.url : absoluteUrl(ogImage.url)
   return {
@@ -72,6 +73,7 @@ function resolveOgImage(
     width: ogImage.width ?? 1200,
     height: ogImage.height ?? 630,
     alt: ogImage.alt ?? siteConfig.name,
+    type: "image/png",
   }
 }
 

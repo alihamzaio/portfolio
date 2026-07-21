@@ -22,7 +22,14 @@ const nextConfig = {
   // Disable metadata streaming so <meta name="description"> stays in <head> for Lighthouse.
   htmlLimitedBots: /.*/,
   async redirects() {
-    return [{ source: "/favicon.ico", destination: "/icon", permanent: false }]
+    return [
+      { source: "/favicon.ico", destination: "/icon", permanent: false },
+      { source: "/index.html", destination: "/", permanent: true },
+      { source: "/index.php", destination: "/", permanent: true },
+      { source: "/index.htm", destination: "/", permanent: true },
+      { source: "/home.html", destination: "/", permanent: true },
+      { source: "/home.php", destination: "/", permanent: true },
+    ]
   },
   async headers() {
     const baselineSecurity = baselineSecurityHeaders
@@ -34,7 +41,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v12",
+            value: "seo-v13",
           },
           {
             key: "Link",

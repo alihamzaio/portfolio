@@ -1,6 +1,7 @@
 import { HomeHero } from "@/components/home/home-hero"
 import { HomeClientOffer } from "@/components/home/home-client-offer"
 import { HomeAbout } from "@/components/home/home-about"
+import { HomeApproach } from "@/components/home/home-approach"
 import { HomeSkills } from "@/components/home/home-skills"
 import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
@@ -29,6 +30,7 @@ export default function HomePage() {
       <HomeClientOffer />
       {/* Static imports so crawlers get full on-page copy in the HTML response */}
       <HomeAbout />
+      <HomeApproach />
       <HomeSkills />
       <HomeProjects />
       <HomeExperience />

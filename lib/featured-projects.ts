@@ -29,7 +29,7 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     techStack: ["Node.js", "Express.js", "Moleculer.js", "BullMQ", "PostgreSQL", "Redis", "Docker", "Jest"],
     image: "https://res.cloudinary.com/dfjnm7kyu/image/upload/w_800,q_auto,f_auto/v1761659471/ver_imkwft.png",
-    demo: "https://idx.testnet.verana.network/verana/",
+    demo: "https://idx.testnet.verana.network/",
   },
   {
     id: "healops",
@@ -67,7 +67,7 @@ export const featuredProjects: FeaturedProject[] = [
       { label: "stack", value: "Web3" },
     ],
     techStack: ["Next.js", "Solidity", "Ethereum", "Ethers.js", "TypeScript", "Node.js"],
-    image: "https://www.exec9.com/_next/image?url=%2Funilabs-case-study.png&w=640&q=75",
+    image: "/projects/unilabs.svg",
     demo: "https://unliabs-web.cloud.exec9.com/",
   },
   {
@@ -87,7 +87,7 @@ export const featuredProjects: FeaturedProject[] = [
       { label: "manual work reduced", value: "60%" },
     ],
     techStack: ["Next.js", "Node.js", "MongoDB", "Express.js", "REST APIs"],
-    image: "https://www.exec9.com/_next/image?url=%2Fsenzi-case-study.png&w=640&q=75",
+    image: "/projects/senzi.svg",
     demo: "https://senzi.ly/",
   },
 ]
