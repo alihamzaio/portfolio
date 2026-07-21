@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { AnalyticsDeferred } from "@/components/analytics-deferred"
 import { GoogleAnalytics } from "@/components/google-analytics"
 import { StructuredData } from "@/components/structured-data"
+import { OpenGraphTags } from "@/components/seo/open-graph-tags"
 import { buildRootMetadata } from "@/lib/seo"
 import "./globals.css"
 
@@ -25,6 +26,9 @@ export { viewport } from "@/lib/viewport"
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark" prefix="og: https://ogp.me/ns#" suppressHydrationWarning>
+      <head>
+        <OpenGraphTags />
+      </head>
       <body
         className={`${inter.variable} font-sans antialiased noise-overlay dot-grid-body`}
         suppressHydrationWarning

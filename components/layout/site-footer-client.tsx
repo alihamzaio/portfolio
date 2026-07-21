@@ -81,8 +81,6 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             </a>
             <a
               href={profile.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
               LinkedIn profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />

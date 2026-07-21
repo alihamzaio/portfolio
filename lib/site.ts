@@ -15,7 +15,10 @@ export const siteConfig = {
   available: true,
   social: {
     github: "https://github.com/alihamzaio",
-    linkedin: "https://www.linkedin.com/in/alihamza-fullstack-developer",
+    /** On-page href (same-origin redirect; avoids crawler HEAD 4xx on LinkedIn) */
+    linkedin: "/out/linkedin",
+    /** Canonical LinkedIn profile for schema / sameAs */
+    linkedinProfile: "https://www.linkedin.com/in/alihamza-fullstack-developer",
     email: "mailto:hamzasarwer9@gmail.com",
   },
   resumeUrl: "/api/resume/download",

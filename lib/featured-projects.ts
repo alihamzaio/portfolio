@@ -29,7 +29,7 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     techStack: ["Node.js", "Express.js", "Moleculer.js", "BullMQ", "PostgreSQL", "Redis", "Docker", "Jest"],
     image: "https://res.cloudinary.com/dfjnm7kyu/image/upload/w_800,q_auto,f_auto/v1761659471/ver_imkwft.png",
-    demo: "https://idx.testnet.verana.network/",
+    github: "https://github.com/verana-labs/verana-indexer",
   },
   {
     id: "healops",
