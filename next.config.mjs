@@ -24,11 +24,17 @@ const nextConfig = {
   async redirects() {
     return [
       { source: "/favicon.ico", destination: "/icon", permanent: false },
-      { source: "/index.html", destination: "/", permanent: true },
-      { source: "/index.php", destination: "/", permanent: true },
-      { source: "/index.htm", destination: "/", permanent: true },
-      { source: "/home.html", destination: "/", permanent: true },
-      { source: "/home.php", destination: "/", permanent: true },
+      { source: "/index.html", destination: "/", statusCode: 301 },
+      { source: "/index.php", destination: "/", statusCode: 301 },
+      { source: "/index.htm", destination: "/", statusCode: 301 },
+      { source: "/home.html", destination: "/", statusCode: 301 },
+      { source: "/home.php", destination: "/", statusCode: 301 },
+      // Soft external redirects so SEO crawlers (HEAD) don't hit bot-blocked hosts
+      {
+        source: "/out/linkedin",
+        destination: "https://www.linkedin.com/in/alihamza-fullstack-developer",
+        statusCode: 301,
+      },
     ]
   },
   async headers() {
@@ -41,7 +47,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v13",
+            value: "seo-v14",
           },
           {
             key: "Link",

@@ -6,6 +6,7 @@ import { HomeSkills } from "@/components/home/home-skills"
 import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
 import { HomeTestimonials } from "@/components/home/home-testimonials"
+import { HomeFaq } from "@/components/home/home-faq"
 import { CtaBand } from "@/components/home/cta-band"
 import { HomeContact } from "@/components/home/home-contact"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
@@ -35,6 +36,7 @@ export default function HomePage() {
       <HomeProjects />
       <HomeExperience />
       <HomeTestimonials />
+      <HomeFaq />
       <CtaBand />
       <HomeContact />
     </div>

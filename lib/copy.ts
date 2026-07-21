@@ -4,7 +4,7 @@ export const copy = {
     availability: "Available for full-time roles and contract work",
     greeting: "HI, I'M",
     name: "ALI HAMZA",
-    h1: "Ali Hamza | Full Stack Developer in Lahore, Pakistan",
+    h1: "Ali Hamza, Full Stack Developer",
     lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations for startups and product teams.",
     support:
       "I work with React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS. Based in Lahore, Pakistan, and open to remote full-time and contract roles worldwide.",
@@ -80,6 +80,35 @@ export const copy = {
         "Cloud work usually lands on AWS serverless: Lambda, API Gateway, DynamoDB or RDS, plus Terraform for infrastructure that can be recreated. For blockchain projects I focus on indexing, wallet flows, Solidity contract interfaces, and reducing expensive on-chain reads with cached API layers.",
         "Before release I add automated tests where they protect critical paths, set up CI/CD, and document how to run, deploy, and monitor the system. After launch I help stabilize performance, fix production issues quickly, and hand over a codebase other engineers can extend without reverse engineering.",
         "This process has supported e-commerce platforms, healthcare dashboards, DeFi interfaces, and blockchain indexers used by real users. The goal is always the same: ship maintainable software that stays reliable under load and is easy for the next engineer to own.",
+        "I prefer written requirements, short feedback loops, and demos at each milestone so stakeholders can validate progress before the next slice of work begins. That reduces rework, keeps scope honest, and makes it easier to measure delivery against business outcomes rather than activity alone.",
+        "When joining an existing codebase I start with the highest-risk paths: authentication, payments, data migrations, and deployment. From there I stabilize tooling, improve typing and tests where they pay off, and only then expand features so velocity does not come at the cost of production trust.",
+      ],
+    },
+    faq: {
+      label: "FAQ",
+      title: "Common questions about working together",
+      description: "Practical answers for hiring managers and founders evaluating a full stack engagement.",
+      items: [
+        {
+          q: "What kind of roles and contracts do you take?",
+          a: "I am available for full-time remote roles and contract work. Typical engagements include product engineering on React and Next.js frontends, Node.js REST APIs, AWS serverless platforms, and blockchain indexing or wallet-integrated web apps.",
+        },
+        {
+          q: "Which technologies do you use day to day?",
+          a: "My primary stack is JavaScript and TypeScript with React, Next.js, Node.js, Express, MongoDB, PostgreSQL, Redis, and AWS services such as Lambda, API Gateway, DynamoDB, and RDS. For Web3 work I use Solidity, Ethers.js, and indexing pipelines that reduce direct RPC load.",
+        },
+        {
+          q: "How do you handle delivery and communication?",
+          a: "I work in clear milestones with written updates, pull requests, and demoable increments. You get visibility into architecture decisions, risks, and trade-offs early enough to change direction without wasting a full sprint.",
+        },
+        {
+          q: "Can you join an existing team and codebase?",
+          a: "Yes. I regularly inherit production systems, improve reliability and developer experience, and ship features alongside existing engineers. I document as I go so the team is not blocked when the engagement ends.",
+        },
+        {
+          q: "Where are you based and what timezone do you work in?",
+          a: "I am based in Lahore, Pakistan (PKT) and collaborate with international clients across overlapping business hours. Remote-first communication via async updates plus scheduled calls works well for distributed product teams.",
+        },
       ],
     },
   },

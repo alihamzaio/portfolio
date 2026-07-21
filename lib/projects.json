@@ -37,7 +37,7 @@
     ],
     "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659471/ver_imkwft.png",
     "details": "Built a distributed blockchain crawler and indexer for Verana Network. Background workers (Bull.js) and Moleculer.js services parse and store blockchain data in PostgreSQL. REST APIs expose indexed data. Docker-based CI/CD for deployment.",
-    "link": "https://idx.testnet.verana.network/",
+    "link": "https://github.com/verana-labs/verana-indexer",
     "featured": true,
     "github": "https://github.com/verana-labs/verana-indexer"
   },

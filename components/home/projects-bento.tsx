@@ -62,17 +62,17 @@ export function ProjectsBento() {
                   </span>
                 ))}
               </div>
-              {project.demo && (
+              {(project.demo || project.github) && (
                 <Link
-                  href={project.demo}
+                  href={project.demo || project.github!}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="external"
-                  data-cursor-label="Open Demo"
+                  data-cursor-label={project.demo ? "Open Demo" : "Open Source"}
                   data-cursor-arrow="true"
                   className="inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-sky-300 transition-colors"
                 >
-                  Open live site <ArrowUpRight className="h-3.5 w-3.5" />
+                  {project.demo ? "Open live site" : "View source"} <ArrowUpRight className="h-3.5 w-3.5" />
                 </Link>
               )}
             </div>

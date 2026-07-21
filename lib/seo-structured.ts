@@ -43,7 +43,7 @@ export function buildSiteGraph() {
           "@type": "CollegeOrUniversity",
           name: "University of Education",
         },
-        sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
+        sameAs: [siteConfig.social.github, siteConfig.social.linkedinProfile],
         knowsAbout: [
           ...siteConfig.specialties,
           "REST APIs",
@@ -89,7 +89,7 @@ export function buildSiteGraph() {
           opens: "09:00",
           closes: "18:00",
         },
-        sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
+        sameAs: [siteConfig.social.github, siteConfig.social.linkedinProfile],
         founder: { "@id": personId },
       },
     ],

@@ -47,7 +47,26 @@ export function proxy(request: NextRequest) {
     response.headers.set(header.key, header.value)
   }
 
-  response.headers.set("X-Site-Build", "seo-v13")
+  response.headers.set("X-Site-Build", "seo-v14")
+
+  const path = request.nextUrl.pathname.toLowerCase()
+  if (
+    path === "/index.html" ||
+    path === "/index.php" ||
+    path === "/index.htm" ||
+    path === "/home.html" ||
+    path === "/home.php"
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/"
+    url.search = ""
+    const redirect = NextResponse.redirect(url, 301)
+    for (const header of buildSecurityHeaders(csp)) {
+      redirect.headers.set(header.key, header.value)
+    }
+    redirect.headers.set("X-Site-Build", "seo-v14")
+    return redirect
+  }
 
   return response
 }

@@ -31,7 +31,11 @@ export const defaultSettings: SiteSettings = {
   education: siteConfig.education,
   available: siteConfig.available,
   githubUsername: siteConfig.githubUsername,
-  social: { ...siteConfig.social },
+  social: {
+    github: siteConfig.social.github,
+    linkedin: siteConfig.social.linkedin,
+    email: siteConfig.social.email,
+  },
 }
 
 export function mergeSettings(partial: Partial<SiteSettings> | null): SiteSettings {
