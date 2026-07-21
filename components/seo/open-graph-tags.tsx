@@ -1,4 +1,4 @@
-import { HOME_PAGE_TITLE, absoluteUrl, DEFAULT_OG_PATH } from "@/lib/seo"
+import { HOME_PAGE_TITLE, absoluteUrl } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
 /**
@@ -8,7 +8,7 @@ export function OpenGraphTags() {
   const title = HOME_PAGE_TITLE
   const description = siteConfig.description
   const url = absoluteUrl("/")
-  const image = absoluteUrl(DEFAULT_OG_PATH)
+  const image = absoluteUrl("/og.png")
 
   return (
     <>

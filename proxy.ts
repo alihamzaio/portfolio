@@ -47,7 +47,7 @@ export function proxy(request: NextRequest) {
     response.headers.set(header.key, header.value)
   }
 
-  response.headers.set("X-Site-Build", "seo-v14")
+  response.headers.set("X-Site-Build", "seo-v15")
 
   const path = request.nextUrl.pathname.toLowerCase()
   if (
@@ -64,7 +64,7 @@ export function proxy(request: NextRequest) {
     for (const header of buildSecurityHeaders(csp)) {
       redirect.headers.set(header.key, header.value)
     }
-    redirect.headers.set("X-Site-Build", "seo-v14")
+    redirect.headers.set("X-Site-Build", "seo-v15")
     return redirect
   }
 

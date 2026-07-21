@@ -3,6 +3,7 @@ import { HomeClientOffer } from "@/components/home/home-client-offer"
 import { HomeAbout } from "@/components/home/home-about"
 import { HomeApproach } from "@/components/home/home-approach"
 import { HomeSkills } from "@/components/home/home-skills"
+import { HomeStackNarrative } from "@/components/home/home-stack-narrative"
 import { HomeProjects } from "@/components/home/home-projects"
 import { HomeExperience } from "@/components/home/home-experience"
 import { HomeTestimonials } from "@/components/home/home-testimonials"
@@ -33,6 +34,7 @@ export default function HomePage() {
       <HomeAbout />
       <HomeApproach />
       <HomeSkills />
+      <HomeStackNarrative />
       <HomeProjects />
       <HomeExperience />
       <HomeTestimonials />
