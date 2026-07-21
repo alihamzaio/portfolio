@@ -24,7 +24,7 @@ export { viewport } from "@/lib/viewport"
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" prefix="og: https://ogp.me/ns#" suppressHydrationWarning>
       <body
         className={`${inter.variable} font-sans antialiased noise-overlay dot-grid-body`}
         suppressHydrationWarning

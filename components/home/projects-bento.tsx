@@ -31,6 +31,7 @@ export function ProjectsBento() {
               <Image
                 src={project.image}
                 alt={project.title}
+                title={project.title}
                 fill
                 sizes={
                   isFeatured

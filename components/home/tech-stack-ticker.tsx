@@ -17,6 +17,7 @@ export function TechStackTicker() {
             <Image
               src={item.icon}
               alt={`${item.name} technology logo`}
+              title={`${item.name} technology logo`}
               width={22}
               height={22}
               unoptimized

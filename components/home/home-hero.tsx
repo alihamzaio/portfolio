@@ -31,7 +31,7 @@ export function HomeHero() {
               )}
 
               <h1 className="hero-premium-title font-bold tracking-tight mb-6 w-full min-w-0 max-w-full break-words text-balance">
-                Ali Hamza, Full Stack Developer
+                {copy.hero.h1}
               </h1>
 
               <p className="text-lg sm:text-xl md:text-2xl min-h-[3rem] sm:min-h-[2.5rem] font-medium mb-6 sm:mb-8 w-full min-w-0 break-words">

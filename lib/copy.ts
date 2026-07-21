@@ -4,7 +4,7 @@ export const copy = {
     availability: "Available for full-time roles and contract work",
     greeting: "HI, I'M",
     name: "ALI HAMZA",
-    h1: "Ali Hamza, Full Stack Developer",
+    h1: "Ali Hamza | Full Stack Developer in Lahore, Pakistan",
     lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations for startups and product teams.",
     support:
       "I work with React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS. Based in Lahore, Pakistan, and open to remote full-time and contract roles worldwide.",
@@ -68,6 +68,19 @@ export const copy = {
       description:
         "Available for full-time roles and contract work: web applications, REST APIs, AWS infrastructure, and blockchain integrations.",
       button: "Contact",
+    },
+    approach: {
+      label: "Process",
+      title: "How I deliver production software",
+      description:
+        "A clear delivery process from discovery through launch, designed for startups and product teams that need reliable full stack execution.",
+      paragraphs: [
+        "Every engagement starts with clarifying the product goal, technical constraints, and what success looks like in production. I map the current system, identify risks around data, auth, deployment, and third-party APIs, then propose a delivery plan with milestones the team can review early.",
+        "For web applications I build React and Next.js interfaces with TypeScript, accessible layouts, and clear component boundaries. On the backend I design REST APIs with validation, authentication, and predictable error handling so mobile and partner clients can integrate without guesswork.",
+        "Cloud work usually lands on AWS serverless: Lambda, API Gateway, DynamoDB or RDS, plus Terraform for infrastructure that can be recreated. For blockchain projects I focus on indexing, wallet flows, Solidity contract interfaces, and reducing expensive on-chain reads with cached API layers.",
+        "Before release I add automated tests where they protect critical paths, set up CI/CD, and document how to run, deploy, and monitor the system. After launch I help stabilize performance, fix production issues quickly, and hand over a codebase other engineers can extend without reverse engineering.",
+        "This process has supported e-commerce platforms, healthcare dashboards, DeFi interfaces, and blockchain indexers used by real users. The goal is always the same: ship maintainable software that stays reliable under load and is easy for the next engineer to own.",
+      ],
     },
   },
   services: [
