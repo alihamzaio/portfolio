@@ -5,7 +5,7 @@ export const siteConfig = {
   headline:
     "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
   description:
-    "Ali Hamza is a Full Stack Developer in Lahore building MERN, Next.js, AWS, REST APIs, and blockchain apps for startups and product teams.",
+    "Ali Hamza is a Full Stack Developer in Lahore building MERN, Next.js, AWS serverless, REST APIs, and blockchain apps for startups and product teams worldwide.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://alihamza-fawn.vercel.app",
   email: "hamzasarwer9@gmail.com",
   phone: "+92 309 7300913",

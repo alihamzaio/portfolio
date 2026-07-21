@@ -69,9 +69,9 @@ export function HomeExperience() {
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
                   <div>
                     <h3 className="text-lg sm:text-xl font-semibold text-white tracking-tight break-words">
-                      {exp.role}
+                      {exp.role} at {exp.company}
                     </h3>
-                    <p className="text-sm text-cyan-400/90 font-medium mt-1">{exp.company}</p>
+                    <p className="text-sm text-cyan-400/90 font-medium mt-1">{exp.location}</p>
                   </div>
                   <p className="text-xs text-neutral-400 font-mono sm:text-right shrink-0">
                     {exp.period}

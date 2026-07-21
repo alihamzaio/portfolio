@@ -48,7 +48,7 @@ export function HomeAbout() {
               variant="secondary"
               className="premium-cv-btn btn-responsive sm:w-auto"
             >
-              <Download className="h-4 w-4 shrink-0" /> Download resume
+              <Download className="h-4 w-4 shrink-0" /> Get my CV
             </MagneticButton>
           </div>
         </div>

@@ -32,8 +32,23 @@ export function HeroParticleField() {
   useEffect(() => {
     setMounted(true)
     const desktop = window.matchMedia("(min-width: 1024px)").matches
-    setAllowCanvas(desktop && supportsWebGL())
     setReduceMotion(prefersReducedMotion())
+    if (!desktop || prefersReducedMotion()) return
+
+    let idleId = 0
+    let timer = 0
+    const enable = () => setAllowCanvas(supportsWebGL())
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(enable, { timeout: 5000 })
+    } else {
+      timer = window.setTimeout(enable, 3000)
+    }
+
+    return () => {
+      if (idleId) window.cancelIdleCallback(idleId)
+      if (timer) window.clearTimeout(timer)
+    }
   }, [])
 
   if (!mounted) return <HeroParticleFallback />

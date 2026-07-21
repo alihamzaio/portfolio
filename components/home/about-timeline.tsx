@@ -25,7 +25,7 @@ function AboutTimelineInner({ experiences }: { experiences: Experience[] }) {
             <p className="meta-label mb-1">
               {exp.period}
             </p>
-            <h3 className="text-base font-bold text-white break-words">{exp.role}</h3>
+            <p className="text-base font-bold text-white break-words">{exp.role}</p>
             <p className="text-sm text-neutral-400 mb-2 break-words">{exp.company} · {exp.location}</p>
             <ul className="space-y-1.5">
               {exp.achievements.slice(0, 3).map((a) => (

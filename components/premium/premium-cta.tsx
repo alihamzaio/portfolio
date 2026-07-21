@@ -18,7 +18,7 @@ export function PremiumCta({ label, title, description, children }: PremiumCtaPr
     <PremiumSection className="!py-16 sm:!py-24 md:!py-28 lg:!py-32 border-t-0">
       <PremiumPanel centered>
         {showLabel && <p className="section-label mb-3">{label}</p>}
-        <h2 className="section-title mb-4">{title}</h2>
+        <p className="section-title mb-4">{title}</p>
         <p className="text-neutral-400 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto text-balance">
           {description}
         </p>

@@ -36,9 +36,10 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
       <div className="section-shell py-12 sm:py-16 md:py-20">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
           <div className="max-w-sm">
-            <Link href="/" className="inline-block mb-4 group">
-              <Logo name={profile.name} showName size={40} instanceId="footer" />
+            <Link href="/" className="inline-block mb-4 group" aria-label="Ali Hamza Portfolio home">
+              <Logo name={profile.name} showName={false} size={40} instanceId="footer" />
             </Link>
+            <p className="text-sm font-semibold text-white mb-1">Ali Hamza Portfolio</p>
             <p className="text-sm text-neutral-400 leading-relaxed break-words">
               {profile.title} based in {profile.location}. Building MERN, Next.js, AWS serverless, and blockchain products.
             </p>
