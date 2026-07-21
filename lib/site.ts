@@ -15,9 +15,9 @@ export const siteConfig = {
   available: true,
   social: {
     github: "https://github.com/alihamzaio",
-    /** On-page href (same-origin redirect; avoids crawler HEAD 4xx on LinkedIn) */
-    linkedin: "/out/linkedin",
-    /** Canonical LinkedIn profile for schema / sameAs */
+    /** On-page path (200 OK hub page; LinkedIn blocks many bot HEAD checks) */
+    linkedin: "/linkedin",
+    /** Canonical LinkedIn profile for schema / sameAs / client navigation */
     linkedinProfile: "https://www.linkedin.com/in/alihamza-fullstack-developer",
     email: "mailto:hamzasarwer9@gmail.com",
   },

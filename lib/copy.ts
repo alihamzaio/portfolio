@@ -109,6 +109,35 @@ export const copy = {
           q: "Where are you based and what timezone do you work in?",
           a: "I am based in Lahore, Pakistan (PKT) and collaborate with international clients across overlapping business hours. Remote-first communication via async updates plus scheduled calls works well for distributed product teams.",
         },
+        {
+          q: "Do you build greenfield products or improve existing systems?",
+          a: "Both. I can start from a blank repository with architecture, CI/CD, and the first production release, or join a live product to reduce incidents, speed up delivery, and clean up API and database boundaries that slow the team down.",
+        },
+        {
+          q: "What does a typical first two weeks look like?",
+          a: "Week one focuses on discovery: access, architecture notes, risk list, and a short delivery plan. Week two usually ships the first milestone, such as an API slice, dashboard flow, or infrastructure foundation that stakeholders can review in a staging environment.",
+        },
+        {
+          q: "How do you approach testing and production readiness?",
+          a: "I prioritize tests around money paths, auth, and data integrity, then add monitoring and clear runbooks. The aim is not maximum coverage theater, but enough automated checks and operational clarity that releases stay predictable.",
+        },
+        {
+          q: "Can you help with AWS cost, performance, and reliability?",
+          a: "Yes. Common work includes right-sizing Lambda and database resources, caching hot reads, tightening IAM and networking, and removing chatty service calls that inflate latency and cloud spend without improving product outcomes.",
+        },
+      ],
+    },
+    stackNarrative: {
+      label: "Stack",
+      title: "Full stack capabilities in plain language",
+      description:
+        "A concise overview of how frontend, backend, cloud, and Web3 skills combine on real product work.",
+      paragraphs: [
+        "Frontend delivery centers on React and Next.js with TypeScript. I build responsive interfaces, reusable component systems, and data-heavy dashboards that stay fast on mobile and desktop. Accessibility, predictable loading states, and clear empty states are part of the default quality bar.",
+        "Backend delivery centers on Node.js and Express REST APIs with strong validation and auth. Services talk to MongoDB or PostgreSQL depending on the data model, with Redis for caching and queues when background work needs isolation from request latency.",
+        "Cloud delivery centers on AWS serverless patterns: API Gateway, Lambda, DynamoDB, RDS, and Terraform-managed infrastructure. This keeps environments reproducible and makes it easier for a small team to operate production without a large platform staff.",
+        "Web3 delivery covers wallet connection flows, Solidity contract interfaces, and indexing layers that store chain data in PostgreSQL so product UIs are not blocked on expensive RPC reads. That pattern supported crawler and DeFi work with measurable reductions in direct on-chain traffic.",
+        "Across all of these layers I care about ownership: documented APIs, migration notes, deployment steps, and handover that lets another engineer continue without archaeology. That is how contract work stays valuable after the engagement ends.",
       ],
     },
   },

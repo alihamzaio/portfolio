@@ -29,13 +29,11 @@ const nextConfig = {
       { source: "/index.htm", destination: "/", statusCode: 301 },
       { source: "/home.html", destination: "/", statusCode: 301 },
       { source: "/home.php", destination: "/", statusCode: 301 },
-      // Soft external redirects so SEO crawlers (HEAD) don't hit bot-blocked hosts
-      {
-        source: "/out/linkedin",
-        destination: "https://www.linkedin.com/in/alihamza-fullstack-developer",
-        statusCode: 301,
-      },
+      { source: "/out/linkedin", destination: "/linkedin", statusCode: 301 },
     ]
+  },
+  async rewrites() {
+    return [{ source: "/og.png", destination: "/opengraph-image" }]
   },
   async headers() {
     const baselineSecurity = baselineSecurityHeaders
@@ -47,7 +45,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v14",
+            value: "seo-v15",
           },
           {
             key: "Link",

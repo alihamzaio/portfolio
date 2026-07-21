@@ -32,7 +32,7 @@ export function absoluteUrl(path = ""): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`
 }
 
-export const DEFAULT_OG_PATH = "/opengraph-image"
+export const DEFAULT_OG_PATH = "/og.png"
 
 /** Ideal SERP length: 50–60 characters */
 export const HOME_PAGE_TITLE = "Ali Hamza | Full Stack Developer in Lahore, Pakistan"
