@@ -12,8 +12,9 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   preload: true,
+  adjustFontFallback: true,
 })
 
 /** Static root layout so SEO tags stay in the initial HTML <head>. */

@@ -4,7 +4,7 @@ export const copy = {
     availability: "Available for full-time roles and contract work",
     greeting: "HI, I'M",
     name: "ALI HAMZA",
-    h1: "Ali Hamza, Full Stack Developer",
+    h1: "Ali Hamza, Full Stack Developer in Lahore",
     lead: "Full Stack Developer with 3+ years building web applications, REST APIs, AWS serverless systems, and blockchain integrations for startups and product teams.",
     support:
       "I work with React, Next.js, Node.js, Express, MongoDB, PostgreSQL, and AWS. Based in Lahore, Pakistan, and open to remote full-time and contract roles worldwide.",
