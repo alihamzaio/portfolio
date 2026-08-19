@@ -1,0 +1,21 @@
+name: Keep server awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Hit health endpoint
+        run: |
+          set -e
+          URL="${{ vars.SITE_URL }}"
+          if [ -z "$URL" ]; then
+            URL="https://alihamza-fawn.vercel.app"
+          fi
+          curl -fsS --max-time 30 "$URL/api/health"
+          curl -fsS --max-time 30 "$URL/api/cron/keepalive"

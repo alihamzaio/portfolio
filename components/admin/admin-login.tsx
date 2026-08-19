@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Loader2, Mail, Lock } from "lucide-react"
 import { setAdminSession } from "@/lib/auth-client"
@@ -19,6 +19,16 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
   const [error, setError] = useState("")
   const [devCode, setDevCode] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (step !== "otp") return
+    const ping = () => {
+      void fetch("/api/health", { method: "HEAD", cache: "no-store" }).catch(() => undefined)
+    }
+    ping()
+    const id = window.setInterval(ping, 30_000)
+    return () => window.clearInterval(id)
+  }, [step])
+
   const sendOtp = async () => {
     setError("")
     setDevCode(null)
@@ -32,7 +42,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
       const data = await res.json()
       if (!res.ok) {
         const msg = typeof data.error === "string" ? data.error : "Failed to send OTP"
-        setError(msg)
+        setError(typeof data.hint === "string" ? `${msg} ${data.hint}` : msg)
         return
       }
       if (data.devCode) setDevCode(data.devCode)
