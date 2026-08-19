@@ -32,3 +32,8 @@ next-env.d.ts
 
 # auth OTP & sessions (local only)
 /data/
+
+# editor
+.cursor/
+.cursorindexingignore
+*.code-workspace
