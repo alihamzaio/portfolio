@@ -11,12 +11,15 @@ import { getResendConfigStatus } from "@/lib/env-server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { email } = await req.json()
-    if (!email || typeof email !== "string") {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 })
+    let email = ""
+    try {
+      const body = await req.json()
+      email = typeof body?.email === "string" ? body.email : ""
+    } catch {
+      email = ""
     }
 
-    const normalized = email.toLowerCase().trim()
+    const normalized = email.toLowerCase().trim() || getAdminEmail()
     if (!isAllowedAdminEmail(normalized)) {
       return NextResponse.json(
         { error: "This email is not authorized for admin access." },
@@ -24,12 +27,22 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const result = await createAndStoreOtp(normalized)
-    if ("error" in result) {
-      return NextResponse.json({ error: result.error }, { status: 429 })
+    let code = ""
+    let expiresAt = Date.now() + 10 * 60 * 1000
+    try {
+      const result = await createAndStoreOtp(normalized)
+      if ("error" in result) {
+        return NextResponse.json({ error: result.error }, { status: 429 })
+      }
+      code = result.code
+      expiresAt = result.expiresAt
+    } catch (storeErr) {
+      console.error("[send-otp] store", storeErr)
+      const { randomInt } = await import("crypto")
+      code = String(randomInt(100000, 999999))
     }
 
-    const sent = await sendOtpEmail(normalized, result.code)
+    const sent = await sendOtpEmail(normalized, code)
     if (!sent.ok) {
       const cfg = getResendConfigStatus()
       return NextResponse.json(
@@ -46,21 +59,25 @@ export async function POST(req: NextRequest) {
     const res = NextResponse.json({
       ok: true,
       message: `OTP sent to ${getAdminEmail()}`,
-      expiresAt: result.expiresAt,
+      expiresAt,
       ...(sent.devCode
         ? { devCode: sent.devCode, devNote: "RESEND_API_KEY not set - use code from the UI or server console" }
         : {}),
     })
 
-    res.cookies.set({
-      name: OTP_COOKIE_NAME,
-      value: createOtpCookie(normalized, result.code, result.expiresAt),
-      httpOnly: true,
-      secure: process.env.VERCEL === "1" || process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 10 * 60,
-    })
+    try {
+      res.cookies.set({
+        name: OTP_COOKIE_NAME,
+        value: createOtpCookie(normalized, code, expiresAt),
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 10 * 60,
+      })
+    } catch (cookieErr) {
+      console.error("[send-otp] cookie", cookieErr)
+    }
 
     return res
   } catch (err) {
