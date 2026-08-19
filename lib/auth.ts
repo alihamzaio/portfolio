@@ -1,14 +1,13 @@
-import { randomBytes, randomInt } from "crypto"
+import { createHmac, randomBytes, randomInt, timingSafeEqual } from "crypto"
 import { promises as fs } from "fs"
 import path from "path"
 import { getAdminEmailFromEnv } from "./env-server"
 
-const DATA_DIR = path.join(process.cwd(), "data")
-const STORE_FILE = path.join(DATA_DIR, "auth-store.json")
-
 const OTP_TTL_MS = 10 * 60 * 1000 // 10 minutes
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 const MAX_OTP_PER_HOUR = 5
+const OTP_COOKIE = "admin_otp"
+const AUTH_KV_KEY = "portfolio:auth-store"
 
 interface OtpEntry {
   code: string
@@ -27,19 +26,131 @@ interface AuthStore {
   sessions: Record<string, SessionEntry>
 }
 
-async function ensureStore(): Promise<AuthStore> {
-  await fs.mkdir(DATA_DIR, { recursive: true })
+type GlobalAuth = typeof globalThis & { __portfolioAuthStore?: AuthStore }
+
+function emptyStore(): AuthStore {
+  return { otps: {}, otpSentLog: {}, sessions: {} }
+}
+
+function memoryStore(): AuthStore {
+  const g = globalThis as GlobalAuth
+  if (!g.__portfolioAuthStore) g.__portfolioAuthStore = emptyStore()
+  return g.__portfolioAuthStore
+}
+
+function hasKv(): boolean {
+  return (
+    (!!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN) ||
+    (!!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN)
+  )
+}
+
+function kvUrl(): string {
+  return process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || ""
+}
+
+function kvToken(): string {
+  return process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || ""
+}
+
+function localStorePath(): string {
+  if (process.env.VERCEL) return path.join("/tmp", "auth-store.json")
+  return path.join(process.cwd(), "data", "auth-store.json")
+}
+
+function otpSecret(): string {
+  return process.env.AUTH_SECRET || process.env.RESEND_API_KEY || "dev-otp-secret"
+}
+
+function signOtp(email: string, code: string, expiresAt: number): string {
+  return createHmac("sha256", otpSecret()).update(`${email}:${code}:${expiresAt}`).digest("hex")
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const left = Buffer.from(a)
+  const right = Buffer.from(b)
+  if (left.length !== right.length) return false
+  return timingSafeEqual(left, right)
+}
+
+export const OTP_COOKIE_NAME = OTP_COOKIE
+
+export function createOtpCookie(email: string, code: string, expiresAt: number): string {
+  return `${expiresAt}.${signOtp(email, code, expiresAt)}`
+}
+
+export function verifyOtpCookie(email: string, code: string, cookie: string | undefined): boolean {
+  if (!cookie) return false
+  const [expiresRaw, hmac] = cookie.split(".")
+  const expiresAt = Number(expiresRaw)
+  if (!expiresAt || !hmac || Number.isNaN(expiresAt)) return false
+  if (Date.now() > expiresAt) return false
+  return safeEqual(hmac, signOtp(email.toLowerCase().trim(), code.trim(), expiresAt))
+}
+
+async function kvGetStore(): Promise<AuthStore | null> {
   try {
-    const raw = await fs.readFile(STORE_FILE, "utf8")
-    return JSON.parse(raw) as AuthStore
+    const res = await fetch(`${kvUrl()}/get/${encodeURIComponent(AUTH_KV_KEY)}`, {
+      headers: { Authorization: `Bearer ${kvToken()}` },
+      cache: "no-store",
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { result?: string | null }
+    if (!data.result) return null
+    return JSON.parse(data.result) as AuthStore
   } catch {
-    return { otps: {}, otpSentLog: {}, sessions: {} }
+    return null
   }
 }
 
+async function kvSetStore(store: AuthStore): Promise<void> {
+  await fetch(`${kvUrl()}/set/${encodeURIComponent(AUTH_KV_KEY)}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${kvToken()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(store),
+    cache: "no-store",
+  })
+}
+
+async function ensureStore(): Promise<AuthStore> {
+  const mem = memoryStore()
+  if (hasKv()) {
+    const remote = await kvGetStore()
+    if (remote) {
+      Object.assign(mem, remote)
+      return mem
+    }
+  }
+  try {
+    const raw = await fs.readFile(localStorePath(), "utf8")
+    const parsed = JSON.parse(raw) as AuthStore
+    Object.assign(mem, parsed)
+  } catch {
+    // first run or read-only filesystem
+  }
+  return mem
+}
+
 async function saveStore(store: AuthStore) {
-  await fs.mkdir(DATA_DIR, { recursive: true })
-  await fs.writeFile(STORE_FILE, JSON.stringify(store, null, 2), "utf8")
+  Object.assign(memoryStore(), store)
+  if (hasKv()) {
+    try {
+      await kvSetStore(store)
+      return
+    } catch {
+      // fall through to disk
+    }
+  }
+  try {
+    const file = localStorePath()
+    await fs.mkdir(path.dirname(file), { recursive: true })
+    await fs.writeFile(file, JSON.stringify(store), "utf8")
+  } catch {
+    // On Vercel the app filesystem is read-only except /tmp; memory still holds this instance.
+  }
 }
 
 export function getAdminEmail(): string {
@@ -50,10 +161,18 @@ export function isAllowedAdminEmail(email: string): boolean {
   return email.toLowerCase().trim() === getAdminEmail()
 }
 
-export async function createAndStoreOtp(email: string): Promise<{ code: string; expiresAt: number } | { error: string }> {
+export async function createAndStoreOtp(
+  email: string
+): Promise<{ code: string; expiresAt: number } | { error: string }> {
   const normalized = email.toLowerCase().trim()
-  const store = await ensureStore()
   const now = Date.now()
+  let store: AuthStore
+  try {
+    store = await ensureStore()
+  } catch {
+    store = memoryStore()
+  }
+
   const log = store.otpSentLog[normalized] || []
   const recent = log.filter((t) => now - t < 60 * 60 * 1000)
   if (recent.length >= MAX_OTP_PER_HOUR) {
@@ -70,24 +189,29 @@ export async function createAndStoreOtp(email: string): Promise<{ code: string; 
 
 export async function verifyOtp(email: string, code: string): Promise<boolean> {
   const normalized = email.toLowerCase().trim()
-  const store = await ensureStore()
-  const entry = store.otps[normalized]
-  if (!entry) return false
-  if (Date.now() > entry.expiresAt) {
-    delete store.otps[normalized]
+  const trimmed = code.trim()
+  try {
+    const store = await ensureStore()
+    const entry = store.otps[normalized]
+    if (!entry) return false
+    if (Date.now() > entry.expiresAt) {
+      delete store.otps[normalized]
+      await saveStore(store)
+      return false
+    }
+    entry.attempts += 1
+    if (entry.attempts > 5) {
+      delete store.otps[normalized]
+      await saveStore(store)
+      return false
+    }
+    const ok = entry.code === trimmed
+    if (ok) delete store.otps[normalized]
     await saveStore(store)
+    return ok
+  } catch {
     return false
   }
-  entry.attempts += 1
-  if (entry.attempts > 5) {
-    delete store.otps[normalized]
-    await saveStore(store)
-    return false
-  }
-  const ok = entry.code === code.trim()
-  if (ok) delete store.otps[normalized]
-  await saveStore(store)
-  return ok
 }
 
 export async function createSession(email: string): Promise<{ token: string; expiresAt: number }> {

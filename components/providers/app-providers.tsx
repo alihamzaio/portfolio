@@ -24,6 +24,11 @@ const AmbientScene = dynamic(
   { ssr: false }
 )
 
+const ServerKeepAlive = dynamic(
+  () => import("@/components/effects/server-keepalive").then((m) => m.ServerKeepAlive).catch(() => ({ default: () => null })),
+  { ssr: false }
+)
+
 export function AppProviders({ children }: { children: ReactNode }) {
   const [enableExtras, setEnableExtras] = useState(false)
   const [enableCursor, setEnableCursor] = useState(false)
@@ -60,6 +65,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
       {enableExtras ? <EnhancementRuntime /> : null}
       {enableExtras ? <ScrollProgress /> : null}
       {enableExtras && !prefersReducedMotion() ? <AmbientScene /> : null}
+      <ServerKeepAlive />
       <div className="relative z-10">{children}</div>
     </>
   )

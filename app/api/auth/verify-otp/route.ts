@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSession, isAllowedAdminEmail, verifyOtp } from "@/lib/auth"
+import {
+  OTP_COOKIE_NAME,
+  createSession,
+  isAllowedAdminEmail,
+  verifyOtp,
+  verifyOtpCookie,
+} from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,19 +19,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized email" }, { status: 403 })
     }
 
-    const valid = await verifyOtp(normalized, String(code))
+    const cookieValue = req.cookies.get(OTP_COOKIE_NAME)?.value
+    const valid = verifyOtpCookie(normalized, String(code), cookieValue) || (await verifyOtp(normalized, String(code)))
     if (!valid) {
       return NextResponse.json({ error: "Invalid or expired code" }, { status: 401 })
     }
 
     const session = await createSession(normalized)
-    return NextResponse.json({
+    const res = NextResponse.json({
       ok: true,
       token: session.token,
       expiresAt: session.expiresAt,
       email: normalized,
     })
-  } catch {
+    res.cookies.set({
+      name: OTP_COOKIE_NAME,
+      value: "",
+      httpOnly: true,
+      path: "/",
+      maxAge: 0,
+    })
+    return res
+  } catch (err) {
+    console.error("[verify-otp]", err)
     return NextResponse.json({ error: "Invalid request" }, { status: 400 })
   }
 }
