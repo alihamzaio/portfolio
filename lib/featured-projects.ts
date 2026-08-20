@@ -67,7 +67,7 @@ export const featuredProjects: FeaturedProject[] = [
       { label: "stack", value: "Web3" },
     ],
     techStack: ["Next.js", "Solidity", "Ethereum", "Ethers.js", "TypeScript", "Node.js"],
-    image: "/projects/unilabs.svg",
+    image: "/projects/unilabs.png",
     demo: "https://unliabs-web.cloud.exec9.com/",
   },
   {
@@ -87,7 +87,7 @@ export const featuredProjects: FeaturedProject[] = [
       { label: "manual work reduced", value: "60%" },
     ],
     techStack: ["Next.js", "Node.js", "MongoDB", "Express.js", "REST APIs"],
-    image: "/projects/senzi.svg",
+    image: "/projects/senzi.png",
     demo: "https://senzi.ly/",
   },
 ]
