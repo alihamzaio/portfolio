@@ -77,7 +77,7 @@
       "Framer Motion",
       "Node.js"
     ],
-    "image": "/projects/unilabs.svg",
+    "image": "/projects/unilabs.png",
     "details": "Built UniLabs, a Web3 asset management platform. Next.js frontend with wallet connection, Solidity contracts on Ethereum mainnet, and Ethers.js for contract reads and transactions.",
     "link": "https://unliabs-web.cloud.exec9.com/",
     "featured": true
@@ -95,7 +95,7 @@
       "Chat Features",
       "Node.js"
     ],
-    "image": "/projects/senzi.svg",
+    "image": "/projects/senzi.png",
     "details": "Built Senzi with Next.js, Express, and MongoDB. Admin and user panels for catalog management. Integrations with 1688 and Taobao for product import. Order processing workflows.",
     "link": "https://senzi.ly/",
     "featured": true
@@ -187,7 +187,7 @@
       "Mongoose",
       "Chart.js"
     ],
-    "image": "https://www.exec9.com/_next/image?url=%2Fkypi.png&w=1920&q=75",
+    "image": "/projects/kypi.png",
     "details": "Built KYPI, a campaign performance dashboard for a client managing marketing data manually. Admin can create companies and import campaign data from Google Sheets. React frontend with Chart.js visualizations. Express and MongoDB backend.",
     "link": "https://dashboard.kypi.io/",
     "featured": true
