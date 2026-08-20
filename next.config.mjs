@@ -29,7 +29,8 @@ const nextConfig = {
       { source: "/index.htm", destination: "/", statusCode: 301 },
       { source: "/home.html", destination: "/", statusCode: 301 },
       { source: "/home.php", destination: "/", statusCode: 301 },
-      { source: "/out/linkedin", destination: "/linkedin", statusCode: 301 },
+      { source: "/linkedin", destination: "https://www.linkedin.com/in/alihamza-fullstack-developer", statusCode: 301 },
+      { source: "/out/linkedin", destination: "https://www.linkedin.com/in/alihamza-fullstack-developer", statusCode: 301 },
     ]
   },
   async rewrites() {

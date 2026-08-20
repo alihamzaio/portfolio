@@ -38,11 +38,23 @@ export const defaultSettings: SiteSettings = {
   },
 }
 
+function resolveLinkedin(url: string | undefined): string {
+  const value = (url || "").trim()
+  if (!value || value === "/linkedin" || value.endsWith("/linkedin")) {
+    return siteConfig.social.linkedin
+  }
+  return value
+}
+
 export function mergeSettings(partial: Partial<SiteSettings> | null): SiteSettings {
   if (!partial) return defaultSettings
+  const social = { ...defaultSettings.social, ...partial.social }
   return {
     ...defaultSettings,
     ...partial,
-    social: { ...defaultSettings.social, ...partial.social },
+    social: {
+      ...social,
+      linkedin: resolveLinkedin(social.linkedin),
+    },
   }
 }

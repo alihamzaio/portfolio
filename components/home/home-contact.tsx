@@ -15,7 +15,7 @@ const contactRows = [
   { key: "email", icon: Mail, label: "Email", getValue: () => "Send an email", action: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
   { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone },
   { key: "location", icon: MapPin, label: "Location", getValue: (p: ReturnType<typeof usePublicProfile>) => p.location },
-  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin },
+  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
   { key: "github", icon: Github, label: "GitHub", getValue: (p: ReturnType<typeof usePublicProfile>) => `GitHub · ${p.githubUsername}`, href: (p: ReturnType<typeof usePublicProfile>) => p.social.github, external: true },
 ] as const
 
