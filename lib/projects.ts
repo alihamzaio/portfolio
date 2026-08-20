@@ -48,3 +48,9 @@ export function getShowcaseProjects(limit = 12) {
 export function getProjectSlugs() {
   return projects.map((p) => p.slug).filter(Boolean) as string[]
 }
+
+export function projectOffsiteUrl(project: { link?: string; github?: string }): string | undefined {
+  const link = project.link?.trim()
+  if (link && /^https?:\/\//i.test(link) && link !== "#") return link
+  return project.github
+}

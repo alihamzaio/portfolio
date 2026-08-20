@@ -38,10 +38,10 @@ export const defaultSettings: SiteSettings = {
   },
 }
 
-function resolveLinkedin(url: string | undefined): string {
+function resolveOffsite(url: string | undefined, fallback: string, localPaths: string[]): string {
   const value = (url || "").trim()
-  if (!value || value === "/linkedin" || value.endsWith("/linkedin")) {
-    return siteConfig.social.linkedin
+  if (!value || localPaths.includes(value) || localPaths.some((p) => value.endsWith(p))) {
+    return fallback
   }
   return value
 }
@@ -54,7 +54,8 @@ export function mergeSettings(partial: Partial<SiteSettings> | null): SiteSettin
     ...partial,
     social: {
       ...social,
-      linkedin: resolveLinkedin(social.linkedin),
+      github: resolveOffsite(social.github, siteConfig.social.github, ["/github"]),
+      linkedin: resolveOffsite(social.linkedin, siteConfig.social.linkedin, ["/linkedin"]),
     },
   }
 }

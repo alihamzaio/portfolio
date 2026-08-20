@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { ArrowUpRight } from "lucide-react"
@@ -27,6 +26,18 @@ export function ProjectsBento() {
               isFeatured ? "md:col-span-2 lg:col-span-2 min-h-[280px] sm:min-h-[360px]" : ""
             }`}
           >
+            {(project.demo || project.github) && (
+              <a
+                href={project.demo || project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="external"
+                data-cursor-label={project.demo ? "Open Demo" : "Open Source"}
+                data-cursor-arrow="true"
+                className="absolute inset-0 z-[2]"
+                aria-label={project.demo ? `Open ${project.title} live site` : `Open ${project.title} source`}
+              />
+            )}
             <div className={`relative overflow-hidden ${isFeatured ? "h-48 sm:h-56 md:h-64" : "h-40 sm:h-44"}`}>
               <Image
                 src={project.image}
@@ -63,17 +74,9 @@ export function ProjectsBento() {
                 ))}
               </div>
               {(project.demo || project.github) && (
-                <Link
-                  href={project.demo || project.github!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor="external"
-                  data-cursor-label={project.demo ? "Open Demo" : "Open Source"}
-                  data-cursor-arrow="true"
-                  className="inline-flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-sky-300 transition-colors"
-                >
+                <span className="relative z-[1] pointer-events-none inline-flex items-center gap-1 text-xs font-medium text-cyan-400">
                   {project.demo ? "Open live site" : "View source"} <ArrowUpRight className="h-3.5 w-3.5" />
-                </Link>
+                </span>
               )}
             </div>
           </motion.article>

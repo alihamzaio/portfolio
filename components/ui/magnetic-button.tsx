@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   getLinkKind,
+  isHttpUrl,
   resolveNavHref,
   scrollToSection,
   shouldSmoothScrollHash,
@@ -67,11 +68,12 @@ export function MagneticButton({
     }
 
     if (kind === "external" || kind === "download") {
+      const offsite = isHttpUrl(href)
       return (
         <a
           href={href}
-          target={target ?? (kind === "external" ? "_blank" : undefined)}
-          rel={rel ?? (kind === "external" ? "noopener noreferrer" : undefined)}
+          target={target ?? (offsite ? "_blank" : undefined)}
+          rel={rel ?? (offsite ? "noopener noreferrer" : undefined)}
           data-cursor={mode}
           data-cursor-magnetic
           {...(cursorLabel ? { "data-cursor-label": cursorLabel } : {})}
