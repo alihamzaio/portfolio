@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   getLinkKind,
+  isHttpUrl,
   resolveNavHref,
   scrollToSection,
   shouldSmoothScrollHash,
@@ -40,8 +41,15 @@ export function SmartLink({
   }
 
   if (kind === "external" || kind === "download") {
+    const offsite = isHttpUrl(href)
     return (
-      <a href={href} className={className} target={target} rel={rel} onClick={onClick}>
+      <a
+        href={href}
+        className={className}
+        target={target ?? (offsite ? "_blank" : undefined)}
+        rel={rel ?? (offsite ? "noopener noreferrer" : undefined)}
+        onClick={onClick}
+      >
         {children}
       </a>
     )

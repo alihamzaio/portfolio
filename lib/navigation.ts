@@ -26,6 +26,16 @@ export function getLinkKind(href: string): LinkKind {
   return "internal"
 }
 
+export function isHttpUrl(href: string): boolean {
+  return /^https?:\/\//i.test(href)
+}
+
+/** Open real websites in a new tab. mailto/tel stay in the current window. */
+export function offsiteAnchorProps(href: string): { target?: "_blank"; rel?: string } {
+  if (!isHttpUrl(href)) return {}
+  return { target: "_blank", rel: "noopener noreferrer" }
+}
+
 export function getSectionIdFromHash(href: string): string {
   return href.replace(/^\/#/, "").replace(/^#/, "")
 }

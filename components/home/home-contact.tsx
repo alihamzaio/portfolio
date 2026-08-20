@@ -10,13 +10,14 @@ import { PremiumCard } from "@/components/ui/premium-card"
 import { FloatingField } from "@/components/ui/floating-field"
 import { RippleButton } from "@/components/ui/ripple-button"
 import { copy } from "@/lib/copy"
+import { offsiteAnchorProps } from "@/lib/navigation"
 
 const contactRows = [
-  { key: "email", icon: Mail, label: "Email", getValue: () => "Send an email", action: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
-  { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone },
+  { key: "email", icon: Mail, label: "Email", getValue: () => "Send an email", href: (p: ReturnType<typeof usePublicProfile>) => `mailto:${p.email}` },
+  { key: "phone", icon: Phone, label: "Phone", getValue: (p: ReturnType<typeof usePublicProfile>) => p.phone, href: (p: ReturnType<typeof usePublicProfile>) => `tel:${p.phone.replace(/\s+/g, "")}` },
   { key: "location", icon: MapPin, label: "Location", getValue: (p: ReturnType<typeof usePublicProfile>) => p.location },
-  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin, external: true },
-  { key: "github", icon: Github, label: "GitHub", getValue: (p: ReturnType<typeof usePublicProfile>) => `GitHub · ${p.githubUsername}`, href: (p: ReturnType<typeof usePublicProfile>) => p.social.github, external: true },
+  { key: "linkedin", icon: Linkedin, label: "LinkedIn", getValue: () => "linkedin.com/in/alihamza-fullstack-developer", href: (p: ReturnType<typeof usePublicProfile>) => p.social.linkedin },
+  { key: "github", icon: Github, label: "GitHub", getValue: (p: ReturnType<typeof usePublicProfile>) => `GitHub · ${p.githubUsername}`, href: (p: ReturnType<typeof usePublicProfile>) => p.social.github },
 ] as const
 
 export function HomeContact() {
@@ -58,7 +59,6 @@ export function HomeContact() {
             const Icon = row.icon
             const value = row.getValue(profile)
             const href = "href" in row && row.href ? row.href(profile) : undefined
-            const action = "action" in row && row.action ? row.action(profile) : undefined
             const content = (
               <>
                 <PremiumIcon icon={Icon} size={16} className="mt-0.5" />
@@ -76,24 +76,12 @@ export function HomeContact() {
                 {href ? (
                   <a
                     href={href}
-                    target={"external" in row && row.external ? "_blank" : undefined}
-                    rel={"external" in row && row.external ? "noopener noreferrer" : undefined}
+                    {...offsiteAnchorProps(href)}
                     className="flex gap-3 group"
                     data-cursor="link"
                   >
                     {content}
                   </a>
-                ) : action ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.location.href = action
-                    }}
-                    className="flex gap-3 group text-left w-full"
-                    data-cursor="link"
-                  >
-                    {content}
-                  </button>
                 ) : (
                   <div className="flex gap-3">{content}</div>
                 )}

@@ -6,13 +6,8 @@ import type { MouseEvent } from "react"
 import { ArrowUp, ArrowUpRight } from "lucide-react"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { Logo } from "@/components/brand/logo"
-import { resolveNavHref, scrollToSection, shouldSmoothScrollHash } from "@/lib/navigation"
+import { resolveNavHref, scrollToSection, shouldSmoothScrollHash, offsiteAnchorProps } from "@/lib/navigation"
 import type { NavItem } from "@/lib/site"
-
-function obfuscatedMailto(email: string) {
-  const [user, domain] = email.split("@")
-  return `mailto:${user}@${domain}`
-}
 
 export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] }) {
   const profile = usePublicProfile()
@@ -43,15 +38,12 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
             <p className="text-sm text-neutral-400 leading-relaxed break-words">
               {profile.title} based in {profile.location}. Building MERN, Next.js, AWS serverless, and blockchain products.
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                window.location.href = obfuscatedMailto(profile.email)
-              }}
+            <a
+              href={`mailto:${profile.email}`}
               className="text-sm text-neutral-400 hover:text-white mt-2 inline-block transition-colors text-left"
             >
               Send an email
-            </button>
+            </a>
           </div>
 
           <nav className="flex flex-wrap gap-x-8 gap-y-2" aria-label="Footer">
@@ -74,16 +66,14 @@ export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] })
           <div className="flex flex-col gap-2">
             <a
               href={profile.social.github}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...offsiteAnchorProps(profile.social.github)}
               className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
               GitHub profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
             </a>
             <a
               href={profile.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...offsiteAnchorProps(profile.social.linkedin)}
               className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
             >
               LinkedIn profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />

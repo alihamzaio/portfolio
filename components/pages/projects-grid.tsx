@@ -6,7 +6,8 @@ import { ArrowUpRight } from "lucide-react"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { getShowcaseProjects } from "@/lib/projects"
+import { getShowcaseProjects, projectOffsiteUrl } from "@/lib/projects"
+import { offsiteAnchorProps } from "@/lib/navigation"
 
 export function ProjectsGrid() {
   const projects = getShowcaseProjects(12)
@@ -21,9 +22,14 @@ export function ProjectsGrid() {
       />
 
       <PremiumGrid cols="3">
-        {projects.map((project, i) => (
+        {projects.map((project, i) => {
+          const offsite = projectOffsiteUrl(project)
+          const href = offsite || `/projects/${project.slug}`
+          const CardTag = offsite ? "a" : Link
+          const extra = offsite ? offsiteAnchorProps(offsite) : {}
+          return (
           <PremiumReveal key={project.id} delay={(i % 6) * 0.05}>
-            <Link href={`/projects/${project.slug}`} data-cursor="project">
+            <CardTag href={href} {...extra} data-cursor={offsite ? "external" : "project"}>
               <PremiumCard className="p-0 overflow-hidden group h-full flex flex-col" spotlight>
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <Image
@@ -42,13 +48,14 @@ export function ProjectsGrid() {
                   </h3>
                   <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.description}</p>
                   <span className="inline-flex items-center gap-1 text-xs text-cyan-400">
-                    View project <ArrowUpRight className="h-3.5 w-3.5" />
+                    {offsite ? "Open live site" : "View project"} <ArrowUpRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
               </PremiumCard>
-            </Link>
+            </CardTag>
           </PremiumReveal>
-        ))}
+          )
+        })}
       </PremiumGrid>
     </PremiumPage>
   )

@@ -2,12 +2,13 @@
 
 import type { FormEvent } from "react"
 import { useState } from "react"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
+import { Mail, MapPin, Phone, Github, Linkedin, Send } from "lucide-react"
 import { PremiumIcon, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
 import { RippleButton } from "@/components/ui/ripple-button"
 import { siteConfig } from "@/lib/site"
+import { offsiteAnchorProps } from "@/lib/navigation"
 
 export function ContactContent() {
   const [form, setForm] = useState({ name: "", email: "", message: "" })
@@ -26,8 +27,10 @@ export function ContactContent() {
     href?: string
   }[] = [
     { icon: Mail, label: "Email", value: siteConfig.email, href: siteConfig.social.email },
-    { icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone}` },
+    { icon: Phone, label: "Phone", value: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/\s+/g, "")}` },
     { icon: MapPin, label: "Location", value: siteConfig.location },
+    { icon: Linkedin, label: "LinkedIn", value: "linkedin.com/in/alihamza-fullstack-developer", href: siteConfig.social.linkedin },
+    { icon: Github, label: "GitHub", value: `github.com/${siteConfig.githubUsername}`, href: siteConfig.social.github },
   ]
 
   return (
@@ -46,7 +49,7 @@ export function ContactContent() {
           {rows.map((item) => (
             <PremiumCard key={item.label} className="!p-4 shrink-0" hover={false}>
               {item.href ? (
-                <a href={item.href} className="flex gap-4 group">
+                <a href={item.href} {...offsiteAnchorProps(item.href)} className="flex gap-4 group">
                   <PremiumIcon icon={item.icon} size={20} />
                   <div>
                     <p className="text-xs text-neutral-500 uppercase tracking-wider">{item.label}</p>
