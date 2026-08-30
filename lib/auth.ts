@@ -1,4 +1,4 @@
-import { createHmac, randomBytes, randomInt, timingSafeEqual } from "crypto"
+import { createHmac, randomInt, timingSafeEqual } from "crypto"
 import { promises as fs } from "fs"
 import path from "path"
 import { getAdminEmailFromEnv } from "./env-server"
@@ -58,8 +58,46 @@ function localStorePath(): string {
   return path.join(process.cwd(), "data", "auth-store.json")
 }
 
+function sessionSecret(): string {
+  const secret = process.env.AUTH_SECRET?.trim()
+  if (secret) return secret
+  const resend = process.env.RESEND_API_KEY?.trim()
+  if (resend) return resend
+  return "dev-otp-secret"
+}
+
+function createSignedSessionToken(email: string, expiresAt: number): string {
+  const payload = Buffer.from(JSON.stringify({ email, exp: expiresAt }), "utf8").toString("base64url")
+  const signature = createHmac("sha256", sessionSecret()).update(payload).digest("base64url")
+  return `${payload}.${signature}`
+}
+
+function verifySignedSessionToken(token: string): boolean {
+  const dot = token.indexOf(".")
+  if (dot <= 0) return false
+
+  const payload = token.slice(0, dot)
+  const signature = token.slice(dot + 1)
+  if (!payload || !signature) return false
+
+  const expected = createHmac("sha256", sessionSecret()).update(payload).digest("base64url")
+  if (!safeEqual(signature, expected)) return false
+
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as {
+      email?: string
+      exp?: number
+    }
+    if (!data.email || typeof data.exp !== "number") return false
+    if (Date.now() > data.exp) return false
+    return isAllowedAdminEmail(data.email)
+  } catch {
+    return false
+  }
+}
+
 function otpSecret(): string {
-  return process.env.AUTH_SECRET || process.env.RESEND_API_KEY || "dev-otp-secret"
+  return sessionSecret()
 }
 
 function signOtp(email: string, code: string, expiresAt: number): string {
@@ -216,16 +254,25 @@ export async function verifyOtp(email: string, code: string): Promise<boolean> {
 
 export async function createSession(email: string): Promise<{ token: string; expiresAt: number }> {
   const normalized = email.toLowerCase().trim()
-  const token = randomBytes(32).toString("hex")
   const expiresAt = Date.now() + SESSION_TTL_MS
-  const store = await ensureStore()
-  store.sessions[token] = { email: normalized, expiresAt }
-  await saveStore(store)
+  const token = createSignedSessionToken(normalized, expiresAt)
+
+  try {
+    const store = await ensureStore()
+    store.sessions[token] = { email: normalized, expiresAt }
+    await saveStore(store)
+  } catch {
+    // Signed token works without shared storage (required on Vercel serverless).
+  }
+
   return { token, expiresAt }
 }
 
 export async function verifySession(token: string | null): Promise<boolean> {
   if (!token) return false
+
+  if (verifySignedSessionToken(token)) return true
+
   const store = await ensureStore()
   const session = store.sessions[token]
   if (!session) return false
