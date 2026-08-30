@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import { getExperiences } from "@/lib/content"
 import { setStoreJson } from "@/lib/store"
+import { jsonWithStoreSync } from "@/lib/store-response"
 
 export async function GET(_: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params
@@ -23,8 +24,13 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
 
   const updated = { ...list[idx], ...body, id }
   list[idx] = updated
-  await setStoreJson("experience", list)
-  return NextResponse.json(updated)
+  try {
+    const writeResult = await setStoreJson("experience", list)
+    return jsonWithStoreSync(updated, writeResult)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Save failed"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }
 
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -35,6 +41,11 @@ export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: stri
   const list = await getExperiences()
   const next = list.filter((e) => e.id !== id)
   if (next.length === list.length) return new NextResponse("Not found", { status: 404 })
-  await setStoreJson("experience", next)
-  return NextResponse.json({ ok: true })
+  try {
+    const writeResult = await setStoreJson("experience", next)
+    return jsonWithStoreSync({ ok: true }, writeResult)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Save failed"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }

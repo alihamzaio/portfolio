@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readJsonFile, requireAdminAuth } from '@/lib/admin'
 import { getStoreJson, setStoreJson } from '@/lib/store'
+import { jsonWithStoreSync } from '@/lib/store-response'
 
 const JSON_PATH = 'lib/skill.json'
 
@@ -21,8 +22,13 @@ export async function POST(req: NextRequest) {
     if (skills.find((s) => s.name === name)) return new NextResponse('Conflict', { status: 409 })
     const newSkill = { name, level, ...(image ? { image } : {}) }
     skills.push(newSkill)
-    await setStoreJson('skills', skills)
-    return NextResponse.json(newSkill, { status: 201 })
+    try {
+        const writeResult = await setStoreJson('skills', skills)
+        return jsonWithStoreSync(newSkill, writeResult, { status: 201 })
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Save failed'
+        return NextResponse.json({ error: message }, { status: 500 })
+    }
 }
 
 

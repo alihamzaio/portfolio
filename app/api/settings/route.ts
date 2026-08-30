@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import { getStoreJson, setStoreJson } from "@/lib/store"
+import { jsonWithStoreSync } from "@/lib/store-response"
 import { getSiteSettings } from "@/lib/content"
 import { mergeSettings, type SiteSettings } from "@/lib/settings"
 
@@ -28,6 +29,11 @@ export async function PUT(req: NextRequest) {
       : base.social.email
   }
 
-  await setStoreJson("settings", updated)
-  return NextResponse.json(updated)
+  try {
+    const writeResult = await setStoreJson("settings", updated)
+    return jsonWithStoreSync(updated, writeResult)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Save failed"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }

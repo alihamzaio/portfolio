@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import { getExperiences } from "@/lib/content"
 import { getStoreJson, setStoreJson } from "@/lib/store"
+import { jsonWithStoreSync } from "@/lib/store-response"
 import type { Experience } from "@/lib/types"
 
 function slugify(text: string) {
@@ -37,6 +38,11 @@ export async function POST(req: NextRequest) {
   }
 
   list.unshift(newEntry)
-  await setStoreJson("experience", list)
-  return NextResponse.json(newEntry, { status: 201 })
+  try {
+    const writeResult = await setStoreJson("experience", list)
+    return jsonWithStoreSync(newEntry, writeResult, { status: 201 })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Save failed"
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }
