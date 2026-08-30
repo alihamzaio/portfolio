@@ -62,6 +62,12 @@
   --radius: 0;
   --site-header-height: 5rem;
   --hero-nav-gap: var(--space-5);
+
+  /* Browser / viewport scrollbar */
+  --scrollbar-size: 10px;
+  --scrollbar-track: var(--bg-secondary);
+  --scrollbar-thumb: color-mix(in srgb, var(--accent-primary) 30%, var(--border-subtle));
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--accent-primary) 55%, var(--border-subtle));
 }
 
 @media (min-width: 640px) {
@@ -114,6 +120,32 @@
     scroll-behavior: smooth;
     background: var(--bg-primary);
     overflow-x: clip;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  html::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  html::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-left: 1px solid var(--border-subtle);
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 2px solid var(--scrollbar-track);
+    border-radius: 999px;
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+
+  html::-webkit-scrollbar-corner {
+    background: var(--scrollbar-track);
   }
 
   body {
