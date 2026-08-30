@@ -53,6 +53,22 @@ export async function getBranchSha(token: string, repo: string, branch: string):
   return sha
 }
 
+export async function ensureBranchExists(token: string, repo: string, branch: string, fromSha: string) {
+  const existing = await githubJson(
+    token,
+    `/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`
+  )
+  if (existing.ok) return
+
+  const created = await githubJson(token, `/repos/${repo}/git/refs`, {
+    method: "POST",
+    body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: fromSha }),
+  })
+  if (!created.ok && created.status !== 422) {
+    throw new Error(`Could not create branch ${branch} (${created.status}): ${created.text.slice(0, 200)}`)
+  }
+}
+
 export async function ensureBranchFromSha(token: string, repo: string, branch: string, fromSha: string) {
   const existing = await githubJson<{ object?: { sha?: string } }>(
     token,
@@ -159,12 +175,16 @@ export async function createPullRequest(
   const existing = await findOpenPullRequest(token, repo, headBranch, baseBranch)
   if (existing) return existing
 
-  const result = await githubJson<{ html_url?: string }>(token, `/repos/${repo}/pulls`, {
+  const result = await githubJson<{ html_url?: string; message?: string }>(token, `/repos/${repo}/pulls`, {
     method: "POST",
     body: JSON.stringify({ title, head: headBranch, base: baseBranch, body }),
   })
 
   if (result.data?.html_url) return result.data.html_url
 
-  return `https://github.com/${repo}/compare/${baseBranch}...${headBranch}?expand=1`
+  const hint =
+    result.status === 403
+      ? " Fine-grained token needs Pull requests: Read and write."
+      : ""
+  throw new Error(`Could not open pull request (${result.status}): ${result.text.slice(0, 240)}.${hint}`)
 }

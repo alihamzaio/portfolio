@@ -12,5 +12,8 @@ export function jsonWithStoreSync<T>(body: T, writeResult: StoreWriteResult, ini
     res.headers.set("X-Portfolio-Sync", asciiHeader(writeResult.persisted))
     res.headers.set("X-Portfolio-Sync-Message", asciiHeader(message))
   }
+  if (writeResult.prUrl) {
+    res.headers.set("X-Portfolio-Sync-Url", asciiHeader(writeResult.prUrl))
+  }
   return res
 }

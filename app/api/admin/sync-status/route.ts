@@ -23,7 +23,7 @@ export async function GET() {
       mode === "kv-live"
         ? "Admin saves go live instantly (Redis). GitHub PR opens on schedule when content changed."
         : mode === "github-live"
-          ? "Admin saves update live content on GitHub. One scheduled PR merges changes to main."
+          ? "Admin saves update one GitHub branch and keep a single pull request open."
           : mode === "needs-storage"
             ? "Add Upstash Redis in Vercel Storage, or set GITHUB_TOKEN with repo scope."
             : "Admin saves update local JSON files.",
