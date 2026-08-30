@@ -2341,6 +2341,23 @@ html.lenis-active {
   background: linear-gradient(90deg, transparent, rgba(232, 68, 47, 0.15) 20%, rgba(232, 68, 47, 0.15) 80%, transparent);
 }
 
+.hero-statement {
+  margin-top: -1px;
+}
+
+.hero-scroll-row {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-3);
+}
+
+.hero-viewport-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  pointer-events: none;
+}
+
 .hero-surface {
   background:
     radial-gradient(ellipse 55% 45% at 80% 15%, rgba(255, 255, 255, 0.05), transparent 55%),
@@ -2637,14 +2654,14 @@ html.lenis-active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .hero-scroll-track {
   position: relative;
   display: block;
   width: 1px;
-  height: 3rem;
+  height: 2.25rem;
   overflow: hidden;
   background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent-primary) 45%, transparent) 40%, transparent);
 }
@@ -2671,11 +2688,11 @@ html.lenis-active {
     opacity: 1;
   }
   75% {
-    transform: translateY(2.75rem);
+    transform: translateY(2rem);
     opacity: 1;
   }
   100% {
-    transform: translateY(3rem);
+    transform: translateY(2.25rem);
     opacity: 0;
   }
 }

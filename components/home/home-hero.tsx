@@ -19,7 +19,7 @@ export function HomeHero() {
       id="home"
       aria-label="Introduction"
       data-hero-kinetic
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden hero-surface"
+      className="relative flex min-h-[100dvh] flex-col overflow-hidden hero-surface"
     >
       <HeroSignalField />
 
@@ -30,8 +30,11 @@ export function HomeHero() {
         {new Date().getFullYear()}
       </p>
 
-      <div className="site-grid relative z-10 flex flex-1 flex-col" data-hero-content>
-        <div className="grid flex-1 gap-y-[var(--space-6)] lg:grid-cols-12 lg:gap-x-[var(--space-6)] lg:items-center pt-[calc(var(--site-header-height)+var(--space-4))] pb-[var(--space-4)]">
+      <div className="site-grid relative z-10 w-full pt-[calc(var(--site-header-height)+var(--space-4))]" data-hero-content>
+        <div
+          className="grid gap-y-[var(--space-6)] lg:grid-cols-12 lg:gap-x-[var(--space-6)] lg:items-center"
+          data-hero-grid
+        >
           <div className="lg:col-span-7 min-w-0 flex flex-col justify-center">
             {siteConfig.available && (
               <p
@@ -95,16 +98,19 @@ export function HomeHero() {
             <HeroVisualStage />
           </div>
         </div>
-      </div>
 
-      <div className="site-grid relative z-10 flex items-end justify-center pb-[var(--space-5)]" data-hero-scroll>
-        <div className="hero-scroll-cue" aria-hidden>
-          <span className="type-label">Scroll</span>
-          <span className="hero-scroll-track">
-            <span className="hero-scroll-dot" />
-          </span>
+        <div className="hero-scroll-row" data-hero-scroll>
+          <div className="hero-scroll-cue" aria-hidden>
+            <span className="type-label">Scroll</span>
+            <span className="hero-scroll-track">
+              <span className="hero-scroll-dot" />
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Fills remaining viewport below scroll — keeps cue tight to content on all screen heights */}
+      <div className="hero-viewport-fill" aria-hidden />
     </section>
   )
 }
