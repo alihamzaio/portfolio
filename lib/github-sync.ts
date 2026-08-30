@@ -1,5 +1,4 @@
-const DEFAULT_REPO = "alihamzaio/portfolio"
-const DEFAULT_BRANCH = "main"
+import { githubSyncConfig } from "@/lib/github-sync-config"
 
 export type GitHubSyncResult = {
   committed: boolean
@@ -7,21 +6,13 @@ export type GitHubSyncResult = {
   error?: string
 }
 
-function getGitHubConfig() {
+function getGitHubToken(): string | null {
   const token = process.env.GITHUB_TOKEN?.trim()
-  if (!token) return null
-
-  return {
-    token,
-    repo: (process.env.GITHUB_REPO || DEFAULT_REPO).trim(),
-    branch: (process.env.GITHUB_BRANCH || DEFAULT_BRANCH).trim(),
-    authorName: (process.env.GITHUB_COMMIT_AUTHOR_NAME || "Ali Hamza").trim(),
-    authorEmail: (process.env.GITHUB_COMMIT_AUTHOR_EMAIL || "alihamza.devstack@gmail.com").trim(),
-  }
+  return token || null
 }
 
 export function isGitHubSyncEnabled() {
-  return Boolean(getGitHubConfig())
+  return Boolean(getGitHubToken())
 }
 
 export function shouldSyncToGitHub() {
@@ -61,22 +52,23 @@ export async function syncJsonFileToGitHub(
   content: string,
   commitMessage: string
 ): Promise<GitHubSyncResult> {
-  const config = getGitHubConfig()
-  if (!config) {
-    return { committed: false, error: "GITHUB_TOKEN is not configured" }
+  const token = getGitHubToken()
+  if (!token) {
+    return { committed: false, error: "GITHUB_TOKEN is not configured in Vercel" }
   }
 
+  const { repo, branch, authorName, authorEmail } = githubSyncConfig
   const filePath = relativePath.replace(/\\/g, "/")
   const encoded = Buffer.from(content, "utf8").toString("base64")
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const sha = await getFileSha(config.repo, config.branch, filePath, config.token)
+      const sha = await getFileSha(repo, branch, filePath, token)
 
-      const res = await fetch(`https://api.github.com/repos/${config.repo}/contents/${filePath}`, {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/vnd.github+json",
           "Content-Type": "application/json",
           "X-GitHub-Api-Version": "2022-11-28",
@@ -84,10 +76,10 @@ export async function syncJsonFileToGitHub(
         body: JSON.stringify({
           message: commitMessage,
           content: encoded,
-          branch: config.branch,
+          branch,
           ...(sha ? { sha } : {}),
-          author: { name: config.authorName, email: config.authorEmail },
-          committer: { name: config.authorName, email: config.authorEmail },
+          author: { name: authorName, email: authorEmail },
+          committer: { name: authorName, email: authorEmail },
         }),
         cache: "no-store",
       })
