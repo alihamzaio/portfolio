@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { githubSyncConfig } from "@/lib/github-sync-config"
 import { isGitHubSyncEnabled, shouldSyncToGitHub } from "@/lib/github-sync"
 
 export async function GET() {
@@ -19,6 +20,8 @@ export async function GET() {
     githubConfigured,
     githubActive,
     kvConfigured,
+    githubRepo: githubSyncConfig.repo,
+    githubBranch: githubSyncConfig.branch,
     message:
       mode === "github"
         ? "Admin saves commit to GitHub and trigger Vercel redeploy."
