@@ -1,5 +1,7 @@
 import { readJsonFile } from "./admin"
 import { defaultSettings, mergeSettings, type SiteSettings } from "./settings"
+import "server-only"
+
 import { getStoreJson } from "./store"
 import type { Experience } from "./types"
 import { experiences as staticExperiences } from "./experience"

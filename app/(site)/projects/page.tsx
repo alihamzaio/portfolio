@@ -1,7 +1,7 @@
 import { ProjectsGrid } from "@/components/pages/projects-grid"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { buildPageMetadata } from "@/lib/seo"
-import { getShowcaseProjectsAsync } from "@/lib/projects"
+import { getShowcaseProjectsAsync } from "@/lib/projects-server"
 import { siteConfig } from "@/lib/site"
 
 export const revalidate = 60

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
-import { getProjectBySlugAsync, getProjectSlugs } from "@/lib/projects"
+import { getProjectBySlugAsync } from "@/lib/projects-server"
+import { getProjectSlugs } from "@/lib/projects"
 import { ProjectDetail } from "@/components/pages/project-detail"
 import { ProjectJsonLd } from "@/components/seo/project-json-ld"
 import { buildPageMetadata } from "@/lib/seo"
