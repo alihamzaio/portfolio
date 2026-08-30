@@ -72,31 +72,6 @@ async function githubJson<T>(
   return { ok: res.ok, status: res.status, data, text }
 }
 
-async function getBranchSha(token: string, repo: string, branch: string): Promise<string> {
-  const result = await githubJson<{ object?: { sha?: string } }>(
-    token,
-    `/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`
-  )
-  const sha = result.data?.object?.sha
-  if (!result.ok || !sha) {
-    throw new Error(`Could not read ${branch} (${result.status}): ${result.text.slice(0, 200)}`)
-  }
-  return sha
-}
-
-async function createBranch(token: string, repo: string, branch: string, fromSha: string) {
-  const result = await githubJson(token, `/repos/${repo}/git/refs`, {
-    method: "POST",
-    body: JSON.stringify({
-      ref: `refs/heads/${branch}`,
-      sha: fromSha,
-    }),
-  })
-  if (!result.ok && result.status !== 422) {
-    throw new Error(`Could not create branch ${branch} (${result.status}): ${result.text.slice(0, 200)}`)
-  }
-}
-
 async function getFileSha(
   token: string,
   repo: string,
@@ -177,9 +152,7 @@ export async function syncJsonFileToGitHub(
   const encoded = Buffer.from(content, "utf8").toString("base64")
 
   try {
-    const mainSha = await getBranchSha(token, repo, baseBranch)
-    await createBranch(token, repo, branch, mainSha)
-
+    // Commit directly on the admin branch — GitHub creates it from default when missing.
     const fileSha = await getFileSha(token, repo, branch, filePath)
     const put = await githubJson<{ commit?: { sha?: string } }>(token, `/repos/${repo}/contents/${filePath}`, {
       method: "PUT",
@@ -194,10 +167,14 @@ export async function syncJsonFileToGitHub(
     })
 
     if (!put.ok) {
+      const hint =
+        put.status === 403
+          ? " Give the token Contents: Read and write + Pull requests: Read and write on alihamzaio/portfolio (classic PAT: repo scope)."
+          : ""
       return {
         committed: false,
         branch,
-        error: `GitHub write failed (${put.status}): ${put.text.slice(0, 240)}`,
+        error: `GitHub write failed (${put.status}): ${put.text.slice(0, 240)}.${hint}`,
       }
     }
 
