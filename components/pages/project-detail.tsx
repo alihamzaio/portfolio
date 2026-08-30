@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowUpRight, ExternalLink, Github } from "lucide-react"
 import type { Project } from "@/lib/types"
 import { projectToGallery } from "@/lib/gallery-projects"
 import { MagneticButton } from "@/components/ui/magnetic-button"
+import { PremiumCard } from "@/components/ui/premium-card"
 import { liveSiteCta } from "@/lib/live-site"
 
 interface ProjectDetailProps {
