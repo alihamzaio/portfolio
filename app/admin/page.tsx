@@ -41,12 +41,11 @@ export default function AdminPage() {
 
   const noteSyncResponse = (res: Response) => {
     const message = res.headers.get("X-Portfolio-Sync-Message")
-    const prUrl = res.headers.get("X-Portfolio-Sync-Url")
     if (message) {
       setSyncNotice(message)
       setSyncError(null)
     }
-    setSyncPrUrl(prUrl)
+    setSyncPrUrl(null)
   }
 
   const noteSaveError = async (res: Response) => {

@@ -1,7 +1,10 @@
 import { ProjectsGrid } from "@/components/pages/projects-grid"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { buildPageMetadata } from "@/lib/seo"
+import { getShowcaseProjectsAsync } from "@/lib/projects"
 import { siteConfig } from "@/lib/site"
+
+export const revalidate = 60
 
 export const metadata = buildPageMetadata({
   title: "Projects",
@@ -15,7 +18,8 @@ export const metadata = buildPageMetadata({
   ],
 })
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getShowcaseProjectsAsync()
   return (
     <>
       <PageBreadcrumbJsonLd
@@ -24,7 +28,7 @@ export default function ProjectsPage() {
           { name: "Projects", path: "/projects" },
         ]}
       />
-      <ProjectsGrid />
+      <ProjectsGrid projects={projects} />
     </>
   )
 }

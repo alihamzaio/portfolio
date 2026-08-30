@@ -8,8 +8,5 @@ export function jsonWithStoreSync<T>(body: T, writeResult: StoreWriteResult, ini
     res.headers.set("X-Portfolio-Sync", writeResult.persisted)
     res.headers.set("X-Portfolio-Sync-Message", message)
   }
-  if (writeResult.github?.prUrl) {
-    res.headers.set("X-Portfolio-Sync-Url", writeResult.github.prUrl)
-  }
   return res
 }

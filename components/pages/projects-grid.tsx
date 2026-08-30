@@ -5,10 +5,11 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { getShowcaseProjects } from "@/lib/projects"
+import type { Project } from "@/lib/types"
 
-export function ProjectsGrid() {
-  const projects = getShowcaseProjects()
+type ProjectWithSlug = Project & { slug: string }
+
+export function ProjectsGrid({ projects }: { projects: ProjectWithSlug[] }) {
 
   return (
     <PremiumPage>

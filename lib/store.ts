@@ -1,18 +1,30 @@
 import { promises as fs } from "fs"
 import path from "path"
-import { syncJsonFileToGitHub, shouldSyncToGitHub } from "./github-sync"
+import { readLiveGitHubFile, writeLiveGitHubFile } from "./github-live"
+import { isGitHubSyncEnabled } from "./github-api"
+import {
+  COMMIT_LABELS,
+  STORE_FILE_PATHS,
+  SYNC_DIRTY_KEY,
+  type StoreKey,
+  listStoreKeys,
+} from "./store-config"
 
 type JsonValue = unknown
 
 export type StoreWriteResult = {
-  persisted: "kv" | "file" | "github"
-  github?: { committed: boolean; sha?: string; prUrl?: string; branch?: string; error?: string }
+  persisted: "kv" | "live" | "file"
 }
 
 const hasVercelKV = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN
 const hasUpstash = !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN
 
+export function hasKvStore(): boolean {
+  return hasVercelKV || hasUpstash
+}
+
 const memoryCache = new Map<StoreKey, JsonValue>()
+const dirtyMemory = new Set<StoreKey>()
 
 async function kvGet(key: string): Promise<JsonValue | null> {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL!
@@ -35,33 +47,16 @@ async function kvGet(key: string): Promise<JsonValue | null> {
 async function kvSet(key: string, value: JsonValue): Promise<void> {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL!
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN!
-  const body = JSON.stringify(value)
   await fetch(`${url}/set/${encodeURIComponent(key)}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body,
+    body: JSON.stringify(value),
     cache: "no-store",
   })
 }
 
-type StoreKey = "skills" | "projects" | "settings" | "experience"
-
-const STORE_PATHS: Record<StoreKey, string> = {
-  skills: "lib/skill.json",
-  projects: "lib/projects.json",
-  experience: "lib/experience.json",
-  settings: "lib/settings.json",
-}
-
-const COMMIT_LABELS: Record<StoreKey, string> = {
-  skills: "Update skills from admin panel.",
-  projects: "Update projects from admin panel.",
-  experience: "Update experience from admin panel.",
-  settings: "Update site settings from admin panel.",
-}
-
 function filePathFor(key: StoreKey) {
-  return path.join(process.cwd(), STORE_PATHS[key])
+  return path.join(process.cwd(), STORE_FILE_PATHS[key])
 }
 
 function isServerlessRuntime(): boolean {
@@ -72,18 +67,80 @@ function isServerlessRuntime(): boolean {
   )
 }
 
+async function markDirty(key: StoreKey) {
+  dirtyMemory.add(key)
+  if (!hasKvStore()) return
+  const existing = (await kvGet(SYNC_DIRTY_KEY)) as { keys?: StoreKey[] } | null
+  const keys = new Set<StoreKey>([...(existing?.keys || []), key])
+  await kvSet(SYNC_DIRTY_KEY, { keys: [...keys], at: Date.now() })
+}
+
+export async function getSyncDirtyKeys(): Promise<StoreKey[]> {
+  if (hasKvStore()) {
+    const existing = (await kvGet(SYNC_DIRTY_KEY)) as { keys?: StoreKey[] } | null
+    if (existing?.keys?.length) return existing.keys
+  }
+  if (dirtyMemory.size > 0) return [...dirtyMemory]
+  return listStoreKeys()
+}
+
+export async function clearSyncDirty() {
+  dirtyMemory.clear()
+  if (!hasKvStore()) return
+  await kvSet(SYNC_DIRTY_KEY, { keys: [], at: Date.now() })
+}
+
+export async function getLiveContentForSync(key: StoreKey): Promise<string | null> {
+  const cached = memoryCache.get(key)
+  if (cached !== undefined) return JSON.stringify(cached, null, 2)
+
+  if (hasKvStore()) {
+    const kv = await kvGet(`portfolio:${key}`)
+    if (kv !== null) return JSON.stringify(kv, null, 2)
+  }
+
+  if (isServerlessRuntime() && isGitHubSyncEnabled()) {
+    return await readLiveGitHubFile(STORE_FILE_PATHS[key])
+  }
+
+  try {
+    return await fs.readFile(filePathFor(key), "utf8")
+  } catch {
+    return null
+  }
+}
+
 export async function getStoreJson(key: StoreKey): Promise<JsonValue | null> {
   if (memoryCache.has(key)) {
     return memoryCache.get(key) ?? null
   }
 
-  if (hasVercelKV || hasUpstash) {
-    return await kvGet(`portfolio:${key}`)
+  if (hasKvStore()) {
+    const kv = await kvGet(`portfolio:${key}`)
+    if (kv !== null) {
+      memoryCache.set(key, kv)
+      return kv
+    }
+  }
+
+  if (isServerlessRuntime() && isGitHubSyncEnabled()) {
+    const live = await readLiveGitHubFile(STORE_FILE_PATHS[key])
+    if (live) {
+      try {
+        const parsed = JSON.parse(live) as JsonValue
+        memoryCache.set(key, parsed)
+        return parsed
+      } catch {
+        // fall through
+      }
+    }
   }
 
   try {
     const raw = await fs.readFile(filePathFor(key), "utf8")
-    return JSON.parse(raw)
+    const parsed = JSON.parse(raw) as JsonValue
+    memoryCache.set(key, parsed)
+    return parsed
   } catch {
     return null
   }
@@ -94,22 +151,21 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
   const serialized = JSON.stringify(value, null, 2)
   const onServerless = isServerlessRuntime()
 
-  if (hasVercelKV || hasUpstash) {
+  if (hasKvStore()) {
     await kvSet(`portfolio:${key}`, value)
+    await markDirty(key)
     return { persisted: "kv" }
   }
 
-  if (shouldSyncToGitHub()) {
-    const github = await syncJsonFileToGitHub(STORE_PATHS[key], serialized, COMMIT_LABELS[key])
-    if (!github.committed) {
-      throw new Error(github.error || "Could not save to GitHub")
-    }
-    return { persisted: "github", github }
+  if (onServerless && isGitHubSyncEnabled()) {
+    await writeLiveGitHubFile(STORE_FILE_PATHS[key], serialized, COMMIT_LABELS[key])
+    await markDirty(key)
+    return { persisted: "live" }
   }
 
   if (onServerless) {
     throw new Error(
-      "Live admin save cannot write files on Vercel. Add GITHUB_TOKEN in Vercel env with Contents and Pull requests write access, then redeploy."
+      "Live admin save needs Upstash Redis (Vercel Storage) or GITHUB_TOKEN. Add KV in Vercel → Storage, or set GITHUB_TOKEN with repo scope."
     )
   }
 
@@ -118,16 +174,13 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 }
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
-  if (result.persisted === "github" && result.github?.committed) {
-    return result.github.prUrl
-      ? "Pull request opened. Review and merge it to publish on live."
-      : "Saved on a review branch. Open GitHub and merge the pull request to publish."
+  if (result.persisted === "kv" || result.persisted === "live") {
+    return "Saved live. GitHub sync runs on schedule — merge the PR when it appears to update the repo."
   }
   if (result.persisted === "file") {
     return "Saved locally."
   }
-  if (result.persisted === "kv") {
-    return "Saved to database."
-  }
   return null
 }
+
+export { listStoreKeys, STORE_FILE_PATHS, type StoreKey }

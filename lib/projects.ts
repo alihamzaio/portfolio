@@ -1,6 +1,7 @@
 import projectsData from "./projects.json"
 import type { Project } from "./types"
 import { applyCaseStudyDefaults } from "./project-case-studies"
+import { getStoreJson } from "./store"
 
 export function slugify(text: string): string {
   return text
@@ -14,21 +15,58 @@ function normalizeGithub(url?: string): string | undefined {
   return url
 }
 
-const enriched = (projectsData as Project[]).map((project) => {
-  const title = project.title.trim()
-  const base = {
-    ...project,
-    title,
-    slug: typeof project.slug === "string" && project.slug.length > 0 ? project.slug : slugify(title),
-    github: normalizeGithub(project.github),
-  }
-  return applyCaseStudyDefaults(base) as Project & { slug: string }
-})
+function enrichProjects(raw: Project[]) {
+  return raw.map((project) => {
+    const title = project.title.trim()
+    const base = {
+      ...project,
+      title,
+      slug: typeof project.slug === "string" && project.slug.length > 0 ? project.slug : slugify(title),
+      github: normalizeGithub(project.github),
+    }
+    return applyCaseStudyDefaults(base) as Project & { slug: string }
+  })
+}
 
-/** Public portfolio — excludes early clones / practice demos */
-export const projects = enriched.filter((p) => !p.hidden)
+const enrichedStatic = enrichProjects(projectsData as Project[])
 
-export const allProjects = enriched
+/** Build-time fallback — excludes hidden projects */
+export const projects = enrichedStatic.filter((p) => !p.hidden)
+export const allProjects = enrichedStatic
+
+async function loadProjectsRaw(): Promise<Project[]> {
+  const kv = await getStoreJson("projects")
+  if (Array.isArray(kv) && kv.length > 0) return kv as Project[]
+  return projectsData as Project[]
+}
+
+export async function loadProjects() {
+  const enriched = enrichProjects(await loadProjectsRaw())
+  return enriched.filter((p) => !p.hidden)
+}
+
+export async function loadAllProjects() {
+  return enrichProjects(await loadProjectsRaw())
+}
+
+export async function getProjectBySlugAsync(slug: string) {
+  const list = await loadProjects()
+  return list.find((p) => p.slug === slug)
+}
+
+export async function getProjectSlugsAsync() {
+  const list = await loadProjects()
+  return list.map((p) => p.slug).filter(Boolean) as string[]
+}
+
+export async function getShowcaseProjectsAsync(limit?: number) {
+  const list = await loadProjects()
+  const featured = list.filter((p) => p.featured)
+  const rest = list.filter((p) => !p.featured)
+  const ordered = [...featured, ...rest]
+  if (limit === undefined) return ordered
+  return ordered.slice(0, limit)
+}
 
 export function getProjectBySlug(slug: string) {
   return projects.find((p) => p.slug === slug)
