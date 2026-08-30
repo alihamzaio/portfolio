@@ -18,7 +18,7 @@ export async function GET() {
     kvConfigured,
     githubRepo: githubSyncConfig.repo,
     githubBranch: githubSyncConfig.baseBranch,
-    cronSync: "Daily at 09:00 UTC — one PR for all pending admin changes",
+    cronSync: "Daily at 09:00 UTC - one PR for all pending admin changes",
     message:
       mode === "kv-live"
         ? "Admin saves go live instantly (Redis). GitHub PR opens on schedule when content changed."
