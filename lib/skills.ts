@@ -1,8 +1,9 @@
+import "server-only"
+
 import { getStoreJson } from "./store"
+import skillsData from "./skill.json"
 
 export type Skill = { name: string; level: number; image?: string }
-
-import skillsData from "./skill.json"
 
 export async function getSkills(): Promise<Skill[]> {
   const kv = await getStoreJson("skills")

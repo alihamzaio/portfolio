@@ -31,6 +31,7 @@
     "next": "^16.0.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^2.5.5",
     "three": "^0.172.0"
   },
