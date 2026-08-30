@@ -175,7 +175,7 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
   if (result.persisted === "kv" || result.persisted === "live") {
-    return "Saved live. GitHub sync runs on schedule — merge the PR when it appears to update the repo."
+    return "Saved live. GitHub sync runs daily — merge the PR when it appears to update the repo."
   }
   if (result.persisted === "file") {
     return "Saved locally."
