@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readJsonFile, requireAdminAuth } from '@/lib/admin'
 import { getStoreJson, setStoreJson } from '@/lib/store'
+import { jsonWithStoreSync } from '@/lib/store-response'
 
 const JSON_PATH = 'lib/skill.json'
 
@@ -25,8 +26,13 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ name: strin
     if (idx === -1) return new NextResponse('Not found', { status: 404 })
     const updated = { ...skills[idx], ...(typeof level === 'number' ? { level } : {}), ...(image !== undefined ? { image } : {}), ...(name ? { name } : {}) }
     skills[idx] = updated
-    await setStoreJson('skills', skills)
-    return NextResponse.json(updated)
+    try {
+        const writeResult = await setStoreJson('skills', skills)
+        return jsonWithStoreSync(updated, writeResult)
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Save failed'
+        return NextResponse.json({ error: message }, { status: 500 })
+    }
 }
 
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ name: string }> }) {
@@ -38,8 +44,13 @@ export async function DELETE(req: NextRequest, ctx: { params: Promise<{ name: st
     const decoded = decodeURIComponent(name)
     const next = skills.filter((s) => s.name !== decoded)
     if (next.length === skills.length) return new NextResponse('Not found', { status: 404 })
-    await setStoreJson('skills', next)
-    return NextResponse.json({ ok: true })
+    try {
+        const writeResult = await setStoreJson('skills', next)
+        return jsonWithStoreSync({ ok: true }, writeResult)
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Save failed'
+        return NextResponse.json({ error: message }, { status: 500 })
+    }
 }
 
 

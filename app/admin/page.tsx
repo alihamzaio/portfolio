@@ -34,8 +34,27 @@ export default function AdminPage() {
   const [experienceList, setExperienceList] = useState<Experience[]>([])
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [syncNotice, setSyncNotice] = useState<string | null>(null)
+  const [syncError, setSyncError] = useState<string | null>(null)
+  const [syncMode, setSyncMode] = useState<string | null>(null)
 
   const authHeaders = () => getAuthHeaders()
+
+  const noteSyncResponse = (res: Response) => {
+    const message = res.headers.get("X-Portfolio-Sync-Message")
+    if (message) {
+      setSyncNotice(message)
+      setSyncError(null)
+    }
+  }
+
+  const noteSaveError = async (res: Response) => {
+    if (res.ok) return false
+    const data = await res.json().catch(() => null)
+    setSyncError(typeof data?.error === "string" ? data.error : "Save failed")
+    setSyncNotice(null)
+    return true
+  }
 
   const verifyStoredSession = useCallback(async () => {
     const session = getAdminSession()
@@ -77,6 +96,14 @@ export default function AdminPage() {
     if (authed) loadAll()
   }, [authed])
 
+  useEffect(() => {
+    if (!authed) return
+    fetch("/api/admin/sync-status")
+      .then((r) => r.json())
+      .then((d) => setSyncMode(typeof d?.message === "string" ? d.message : null))
+      .catch(() => setSyncMode(null))
+  }, [authed])
+
   const logout = async () => {
     const session = getAdminSession()
     if (session) {
@@ -112,6 +139,9 @@ export default function AdminPage() {
     if (res.ok) {
       const saved = await res.json()
       setProjects((arr) => arr.map((x, i) => (i === index ? saved : x)))
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
     }
     setSaving(false)
   }
@@ -130,8 +160,13 @@ export default function AdminPage() {
       setProjects((arr) => arr.filter((_, i) => i !== index))
       return
     }
-    await fetch(`/api/projects/${p.id}`, { method: "DELETE", headers: authHeaders() })
-    setProjects((arr) => arr.filter((_, i) => i !== index))
+    const res = await fetch(`/api/projects/${p.id}`, { method: "DELETE", headers: authHeaders() })
+    if (res.ok) {
+      setProjects((arr) => arr.filter((_, i) => i !== index))
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
+    }
   }
 
   const toggleFeatured = async (index: number) => {
@@ -150,6 +185,9 @@ export default function AdminPage() {
     if (res.ok) {
       const saved = await res.json()
       setSkills((arr) => arr.map((x, i) => (i === index ? { ...saved, originalName: saved.name } : x)))
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
     }
   }
 
@@ -174,7 +212,12 @@ export default function AdminPage() {
       },
     }
     const res = await fetch("/api/settings", { method: "PUT", headers: authHeaders(), body: JSON.stringify(payload) })
-    if (res.ok) setSettings(await res.json())
+    if (res.ok) {
+      setSettings(await res.json())
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
+    }
     setSaving(false)
   }
 
@@ -189,6 +232,9 @@ export default function AdminPage() {
     if (res.ok) {
       const saved = await res.json()
       setExperienceList((arr) => arr.map((x, i) => (i === index ? saved : x)))
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
     }
     setSaving(false)
   }
@@ -199,8 +245,13 @@ export default function AdminPage() {
       setExperienceList((arr) => arr.filter((_, i) => i !== index))
       return
     }
-    await fetch(`/api/experience/${exp.id}`, { method: "DELETE", headers: authHeaders() })
-    setExperienceList((arr) => arr.filter((_, i) => i !== index))
+    const res = await fetch(`/api/experience/${exp.id}`, { method: "DELETE", headers: authHeaders() })
+    if (res.ok) {
+      setExperienceList((arr) => arr.filter((_, i) => i !== index))
+      noteSyncResponse(res)
+    } else {
+      await noteSaveError(res)
+    }
   }
 
   const addExperience = () => {
@@ -231,6 +282,25 @@ export default function AdminPage() {
       onLogout={logout}
       stats={{ projects: projects.length, skills: skills.length, resumes: resumeFiles.length, experience: experienceList.length }}
     >
+      {(syncNotice || syncError || syncMode) && (
+        <div className="mb-6 space-y-2">
+          {syncMode && (
+            <p className="text-xs text-[var(--text-muted)] border border-white/[0.06] rounded-lg px-3 py-2 bg-[#111827]/40">
+              {syncMode}
+            </p>
+          )}
+          {syncNotice && (
+            <p className="text-sm text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 rounded-lg px-3 py-2 bg-[var(--accent-primary)]/10">
+              {syncNotice}
+            </p>
+          )}
+          {syncError && (
+            <p className="text-sm text-red-400 border border-red-400/25 rounded-lg px-3 py-2 bg-red-400/10">
+              {syncError}
+            </p>
+          )}
+        </div>
+      )}
       {tab === "overview" && (
         <div className="space-y-6">
           <div>

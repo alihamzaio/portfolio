@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readJsonFile, requireAdminAuth } from '@/lib/admin'
 import { getStoreJson, setStoreJson } from '@/lib/store'
+import { jsonWithStoreSync } from '@/lib/store-response'
 
 const JSON_PATH = 'lib/projects.json'
 
@@ -26,8 +27,13 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
     if (idx === -1) return new NextResponse('Not found', { status: 404 })
     const updated = { ...projects[idx], ...body, id: pid }
     projects[idx] = updated
-    await setStoreJson('projects', projects)
-    return NextResponse.json(updated)
+    try {
+      const writeResult = await setStoreJson('projects', projects)
+      return jsonWithStoreSync(updated, writeResult)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Save failed'
+      return NextResponse.json({ error: message }, { status: 500 })
+    }
 }
 
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -39,8 +45,13 @@ export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: stri
     const pid = Number(id)
     const next = projects.filter((p) => p.id !== pid)
     if (next.length === projects.length) return new NextResponse('Not found', { status: 404 })
-    await setStoreJson('projects', next)
-    return NextResponse.json({ ok: true })
+    try {
+      const writeResult = await setStoreJson('projects', next)
+      return jsonWithStoreSync({ ok: true }, writeResult)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Save failed'
+      return NextResponse.json({ error: message }, { status: 500 })
+    }
 }
 
 
