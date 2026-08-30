@@ -64,6 +64,14 @@ function filePathFor(key: StoreKey) {
   return path.join(process.cwd(), STORE_PATHS[key])
 }
 
+function isServerlessRuntime(): boolean {
+  return (
+    process.env.VERCEL === "1" ||
+    process.cwd().includes("/var/task") ||
+    !!process.env.AWS_LAMBDA_FUNCTION_NAME
+  )
+}
+
 export async function getStoreJson(key: StoreKey): Promise<JsonValue | null> {
   if (memoryCache.has(key)) {
     return memoryCache.get(key) ?? null
@@ -84,6 +92,7 @@ export async function getStoreJson(key: StoreKey): Promise<JsonValue | null> {
 export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<StoreWriteResult> {
   memoryCache.set(key, value)
   const serialized = JSON.stringify(value, null, 2)
+  const onServerless = isServerlessRuntime()
 
   if (hasVercelKV || hasUpstash) {
     await kvSet(`portfolio:${key}`, value)
@@ -98,9 +107,9 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
     return { persisted: "github", github }
   }
 
-  if (process.env.VERCEL === "1") {
+  if (onServerless) {
     throw new Error(
-      "Admin save needs GITHUB_TOKEN on Vercel. Add it in Project Settings → Environment Variables."
+      "Live admin save cannot write files on Vercel. Add GITHUB_TOKEN in Vercel env with Contents and Pull requests write access, then redeploy."
     )
   }
 

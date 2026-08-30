@@ -27,7 +27,19 @@ export function isGitHubSyncEnabled() {
 export function shouldSyncToGitHub() {
   if (!isGitHubSyncEnabled()) return false
   if (process.env.GITHUB_SYNC_ON_LOCAL === "true") return true
-  return process.env.VERCEL === "1"
+  return (
+    process.env.VERCEL === "1" ||
+    process.cwd().includes("/var/task") ||
+    !!process.env.AWS_LAMBDA_FUNCTION_NAME
+  )
+}
+
+function isServerlessRuntime() {
+  return (
+    process.env.VERCEL === "1" ||
+    process.cwd().includes("/var/task") ||
+    !!process.env.AWS_LAMBDA_FUNCTION_NAME
+  )
 }
 
 function adminBranchName(filePath: string) {
