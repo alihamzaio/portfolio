@@ -215,6 +215,10 @@ export default function AdminPage() {
     if (res.ok) {
       setSettings(await res.json())
       noteSyncResponse(res)
+    } else if (res.status === 401) {
+      clearAdminSession()
+      setAuthed(false)
+      setSyncError("Session expired. Please sign in again.")
     } else {
       await noteSaveError(res)
     }

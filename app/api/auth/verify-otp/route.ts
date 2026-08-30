@@ -25,10 +25,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid or expired code" }, { status: 401 })
     }
 
-    const session = await createSession(normalized).catch(async () => {
-      const { randomBytes } = await import("crypto")
-      return { token: randomBytes(32).toString("hex"), expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000 }
-    })
+    const session = await createSession(normalized)
     const res = NextResponse.json({
       ok: true,
       token: session.token,
