@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, StatCard, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
-import { clearAdminSession, getAdminSession, getAuthHeaders } from "@/lib/auth-client"
+import { clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 import type { SiteSettings } from "@/lib/settings"
 import type { Experience } from "@/lib/types"
@@ -37,15 +37,18 @@ export default function AdminPage() {
   const [syncNotice, setSyncNotice] = useState<string | null>(null)
   const [syncError, setSyncError] = useState<string | null>(null)
   const [syncMode, setSyncMode] = useState<string | null>(null)
+  const [syncPrUrl, setSyncPrUrl] = useState<string | null>(null)
 
   const authHeaders = () => getAuthHeaders()
 
   const noteSyncResponse = (res: Response) => {
     const message = res.headers.get("X-Portfolio-Sync-Message")
+    const prUrl = res.headers.get("X-Portfolio-Sync-Url")
     if (message) {
       setSyncNotice(message)
       setSyncError(null)
     }
+    setSyncPrUrl(prUrl)
   }
 
   const noteSaveError = async (res: Response) => {
@@ -53,22 +56,27 @@ export default function AdminPage() {
     const data = await res.json().catch(() => null)
     setSyncError(typeof data?.error === "string" ? data.error : "Save failed")
     setSyncNotice(null)
+    setSyncPrUrl(null)
     return true
   }
 
   const verifyStoredSession = useCallback(async () => {
     const session = getAdminSession()
-    if (!session) {
-      setAuthed(false)
-      setChecking(false)
-      return
-    }
     const res = await fetch("/api/auth/session", {
-      headers: { Authorization: `Bearer ${session.token}` },
+      credentials: "include",
+      cache: "no-store",
+      headers: session ? { Authorization: `Bearer ${session.token}` } : {},
     })
-    const data = await res.json()
-    if (data.valid) setAuthed(true)
-    else clearAdminSession()
+    const data = await res.json().catch(() => ({ valid: false }))
+    if (data.valid) {
+      if (session && data.expiresAt && session.expiresAt !== data.expiresAt) {
+        setAdminSession({ ...session, expiresAt: data.expiresAt, email: data.email || session.email })
+      }
+      setAuthed(true)
+    } else {
+      clearAdminSession()
+      setAuthed(false)
+    }
     setChecking(false)
   }, [])
 
@@ -106,12 +114,11 @@ export default function AdminPage() {
 
   const logout = async () => {
     const session = getAdminSession()
-    if (session) {
-      await fetch("/api/auth/session", {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${session.token}` },
-      })
-    }
+    await fetch("/api/auth/session", {
+      method: "DELETE",
+      credentials: "include",
+      headers: session ? { Authorization: `Bearer ${session.token}` } : {},
+    })
     clearAdminSession()
     setAuthed(false)
   }
@@ -286,7 +293,7 @@ export default function AdminPage() {
       onLogout={logout}
       stats={{ projects: projects.length, skills: skills.length, resumes: resumeFiles.length, experience: experienceList.length }}
     >
-      {(syncNotice || syncError || syncMode) && (
+      {(syncNotice || syncError || syncMode || syncPrUrl) && (
         <div className="mb-6 space-y-2">
           {syncMode && (
             <p className="text-xs text-[var(--text-muted)] border border-white/[0.06] rounded-lg px-3 py-2 bg-[#111827]/40">
@@ -297,6 +304,16 @@ export default function AdminPage() {
             <p className="text-sm text-[var(--accent-primary)] border border-[var(--accent-primary)]/25 rounded-lg px-3 py-2 bg-[var(--accent-primary)]/10">
               {syncNotice}
             </p>
+          )}
+          {syncPrUrl && (
+            <a
+              href={syncPrUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex text-sm text-[var(--text-primary)] underline underline-offset-4"
+            >
+              Open pull request to review and merge
+            </a>
           )}
           {syncError && (
             <p className="text-sm text-red-400 border border-red-400/25 rounded-lg px-3 py-2 bg-red-400/10">

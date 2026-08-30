@@ -24,8 +24,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(req))) return new NextResponse('Unauthorized', { status: 401 })
 
     await ensureDir()
     const formData = await req.formData()
@@ -40,8 +39,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(req))) return new NextResponse('Unauthorized', { status: 401 })
     const { active } = await req.json()
     if (typeof active !== 'string') return new NextResponse('Invalid payload', { status: 400 })
     await ensureDir()
@@ -50,8 +48,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-    const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(req))) return new NextResponse('Unauthorized', { status: 401 })
     const { searchParams } = new URL(req.url)
     const name = searchParams.get('name')
     if (!name) return new NextResponse('Missing name', { status: 400 })

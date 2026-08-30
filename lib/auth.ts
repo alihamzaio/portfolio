@@ -1,10 +1,10 @@
 import { createHmac, randomInt, timingSafeEqual } from "crypto"
 import { promises as fs } from "fs"
 import path from "path"
+import type { NextResponse } from "next/server"
 import { getAdminEmailFromEnv } from "./env-server"
 
-const OTP_TTL_MS = 10 * 60 * 1000 // 10 minutes
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
+const OTP_TTL_MS = 10 * 60 * 1000 // 10 minutes — login code only
 const MAX_OTP_PER_HOUR = 5
 const OTP_COOKIE = "admin_otp"
 const AUTH_KV_KEY = "portfolio:auth-store"
@@ -112,6 +112,50 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 export const OTP_COOKIE_NAME = OTP_COOKIE
+export const SESSION_COOKIE_NAME = "admin_session"
+export const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
+export const SESSION_TTL_DAYS = 7
+
+export function applySessionCookie(res: NextResponse, token: string, expiresAt: number) {
+  res.cookies.set({
+    name: SESSION_COOKIE_NAME,
+    value: token,
+    httpOnly: true,
+    secure: process.env.VERCEL === "1" || process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    expires: new Date(expiresAt),
+  })
+}
+
+export function clearSessionCookie(res: NextResponse) {
+  res.cookies.set({
+    name: SESSION_COOKIE_NAME,
+    value: "",
+    httpOnly: true,
+    secure: process.env.VERCEL === "1" || process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  })
+}
+
+export function readSessionPayload(token: string | null): { email: string; exp: number } | null {
+  if (!token) return null
+  const dot = token.indexOf(".")
+  if (dot <= 0) return null
+  try {
+    const data = JSON.parse(Buffer.from(token.slice(0, dot), "base64url").toString("utf8")) as {
+      email?: string
+      exp?: number
+    }
+    if (!data.email || typeof data.exp !== "number") return null
+    if (Date.now() > data.exp) return null
+    return { email: data.email, exp: data.exp }
+  } catch {
+    return null
+  }
+}
 
 export function createOtpCookie(email: string, code: string, expiresAt: number): string {
   return `${expiresAt}.${signOtp(email, code, expiresAt)}`

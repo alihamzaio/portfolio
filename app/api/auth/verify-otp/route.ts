@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import {
   OTP_COOKIE_NAME,
+  applySessionCookie,
   createSession,
   isAllowedAdminEmail,
   verifyOtp,
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 0,
     })
+    applySessionCookie(res, session.token, session.expiresAt)
     return res
   } catch (err) {
     console.error("[verify-otp]", err)

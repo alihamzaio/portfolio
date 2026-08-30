@@ -1,9 +1,9 @@
 import { siteConfig } from "@/lib/site"
 
-/** Admin → GitHub sync defaults. Only GITHUB_TOKEN is required in Vercel env. */
+/** Admin → GitHub PR defaults. Only GITHUB_TOKEN is required in Vercel env. */
 export const githubSyncConfig = {
   repo: "alihamzaio/portfolio",
-  branch: "main",
+  baseBranch: "main",
   authorName: siteConfig.name,
   authorEmail: "alihamza.devstack@gmail.com",
 } as const

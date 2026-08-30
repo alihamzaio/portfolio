@@ -21,10 +21,10 @@ export async function GET() {
     githubActive,
     kvConfigured,
     githubRepo: githubSyncConfig.repo,
-    githubBranch: githubSyncConfig.branch,
+    githubBranch: githubSyncConfig.baseBranch,
     message:
       mode === "github"
-        ? "Admin saves commit to GitHub and trigger Vercel redeploy."
+        ? "Admin saves open a GitHub pull request. Merge it to publish to live."
         : mode === "kv"
           ? "Admin saves go to KV."
           : mode === "needs-github-token"

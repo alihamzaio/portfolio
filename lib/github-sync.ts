@@ -3,8 +3,17 @@ import { githubSyncConfig } from "@/lib/github-sync-config"
 export type GitHubSyncResult = {
   committed: boolean
   sha?: string
+  prUrl?: string
+  branch?: string
   error?: string
 }
+
+const GH_API = "https://api.github.com"
+const GH_HEADERS = (token: string) => ({
+  Authorization: `Bearer ${token}`,
+  Accept: "application/vnd.github+json",
+  "X-GitHub-Api-Version": "2022-11-28",
+})
 
 function getGitHubToken(): string | null {
   const token = process.env.GITHUB_TOKEN?.trim()
@@ -21,30 +30,123 @@ export function shouldSyncToGitHub() {
   return process.env.VERCEL === "1"
 }
 
-async function getFileSha(
-  repo: string,
-  branch: string,
-  filePath: string,
-  token: string
-): Promise<string | undefined> {
-  const url = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`
-  const res = await fetch(url, {
+function adminBranchName(filePath: string) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "").replace("T", "-").slice(0, 15)
+  const slug = filePath.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase()
+  return `admin/${slug}-${stamp}`
+}
+
+async function githubJson<T>(
+  token: string,
+  path: string,
+  init?: RequestInit
+): Promise<{ ok: boolean; status: number; data: T | null; text: string }> {
+  const res = await fetch(`${GH_API}${path}`, {
+    ...init,
     headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
+      ...GH_HEADERS(token),
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...((init?.headers as Record<string, string>) || {}),
     },
     cache: "no-store",
   })
+  const text = await res.text()
+  let data: T | null = null
+  try {
+    data = text ? (JSON.parse(text) as T) : null
+  } catch {
+    data = null
+  }
+  return { ok: res.ok, status: res.status, data, text }
+}
 
-  if (res.status === 404) return undefined
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "")
-    throw new Error(`GitHub read failed (${res.status}): ${detail.slice(0, 200)}`)
+async function getBranchSha(token: string, repo: string, branch: string): Promise<string> {
+  const result = await githubJson<{ object?: { sha?: string } }>(
+    token,
+    `/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`
+  )
+  const sha = result.data?.object?.sha
+  if (!result.ok || !sha) {
+    throw new Error(`Could not read ${branch} (${result.status}): ${result.text.slice(0, 200)}`)
+  }
+  return sha
+}
+
+async function createBranch(token: string, repo: string, branch: string, fromSha: string) {
+  const result = await githubJson(token, `/repos/${repo}/git/refs`, {
+    method: "POST",
+    body: JSON.stringify({
+      ref: `refs/heads/${branch}`,
+      sha: fromSha,
+    }),
+  })
+  if (!result.ok && result.status !== 422) {
+    throw new Error(`Could not create branch ${branch} (${result.status}): ${result.text.slice(0, 200)}`)
+  }
+}
+
+async function getFileSha(
+  token: string,
+  repo: string,
+  branch: string,
+  filePath: string
+): Promise<string | undefined> {
+  const result = await githubJson<{ sha?: string }>(
+    token,
+    `/repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`
+  )
+  if (result.status === 404) return undefined
+  if (!result.ok) {
+    throw new Error(`GitHub read failed (${result.status}): ${result.text.slice(0, 200)}`)
+  }
+  return result.data?.sha
+}
+
+async function findOpenPullRequest(
+  token: string,
+  repo: string,
+  headBranch: string,
+  baseBranch: string
+): Promise<string | undefined> {
+  const owner = repo.split("/")[0]
+  const result = await githubJson<{ html_url?: string }[]>(
+    token,
+    `/repos/${repo}/pulls?state=open&head=${encodeURIComponent(`${owner}:${headBranch}`)}&base=${encodeURIComponent(baseBranch)}`
+  )
+  return result.data?.[0]?.html_url
+}
+
+async function createPullRequest(
+  token: string,
+  repo: string,
+  headBranch: string,
+  baseBranch: string,
+  title: string,
+  body: string
+): Promise<string> {
+  const existing = await findOpenPullRequest(token, repo, headBranch, baseBranch)
+  if (existing) return existing
+
+  const result = await githubJson<{ html_url?: string }>(token, `/repos/${repo}/pulls`, {
+    method: "POST",
+    body: JSON.stringify({
+      title,
+      head: headBranch,
+      base: baseBranch,
+      body,
+    }),
+  })
+
+  if (result.data?.html_url) return result.data.html_url
+
+  const compareUrl = `https://github.com/${repo}/compare/${baseBranch}...${headBranch}?expand=1`
+  if (!result.ok) {
+    throw new Error(
+      `Commit is on branch ${headBranch}, but the pull request could not be opened (${result.status}). Open: ${compareUrl}. Give the GitHub token Pull requests: Read and write.`
+    )
   }
 
-  const data = (await res.json()) as { sha?: string }
-  return data.sha
+  return compareUrl
 }
 
 export async function syncJsonFileToGitHub(
@@ -57,54 +159,63 @@ export async function syncJsonFileToGitHub(
     return { committed: false, error: "GITHUB_TOKEN is not configured in Vercel" }
   }
 
-  const { repo, branch, authorName, authorEmail } = githubSyncConfig
+  const { repo, baseBranch, authorName, authorEmail } = githubSyncConfig
   const filePath = relativePath.replace(/\\/g, "/")
+  const branch = adminBranchName(filePath)
   const encoded = Buffer.from(content, "utf8").toString("base64")
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const sha = await getFileSha(repo, branch, filePath, token)
+  try {
+    const mainSha = await getBranchSha(token, repo, baseBranch)
+    await createBranch(token, repo, branch, mainSha)
 
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github+json",
-          "Content-Type": "application/json",
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-        body: JSON.stringify({
-          message: commitMessage,
-          content: encoded,
-          branch,
-          ...(sha ? { sha } : {}),
-          author: { name: authorName, email: authorEmail },
-          committer: { name: authorName, email: authorEmail },
-        }),
-        cache: "no-store",
-      })
+    const fileSha = await getFileSha(token, repo, branch, filePath)
+    const put = await githubJson<{ commit?: { sha?: string } }>(token, `/repos/${repo}/contents/${filePath}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        message: commitMessage,
+        content: encoded,
+        branch,
+        ...(fileSha ? { sha: fileSha } : {}),
+        author: { name: authorName, email: authorEmail },
+        committer: { name: authorName, email: authorEmail },
+      }),
+    })
 
-      if (res.status === 409 && attempt < 2) continue
-
-      if (!res.ok) {
-        const detail = await res.text().catch(() => "")
-        return {
-          committed: false,
-          error: `GitHub write failed (${res.status}): ${detail.slice(0, 240)}`,
-        }
-      }
-
-      const data = (await res.json()) as { commit?: { sha?: string } }
-      return { committed: true, sha: data.commit?.sha }
-    } catch (err) {
-      if (attempt === 2) {
-        return {
-          committed: false,
-          error: err instanceof Error ? err.message : "GitHub sync failed",
-        }
+    if (!put.ok) {
+      return {
+        committed: false,
+        branch,
+        error: `GitHub write failed (${put.status}): ${put.text.slice(0, 240)}`,
       }
     }
-  }
 
-  return { committed: false, error: "GitHub sync failed after retries" }
+    const prUrl = await createPullRequest(
+      token,
+      repo,
+      branch,
+      baseBranch,
+      commitMessage.replace(/\.$/, ""),
+      [
+        "Content update from the live admin panel.",
+        "",
+        `- File: \`${filePath}\``,
+        `- Branch: \`${branch}\``,
+        "",
+        "Review and merge this pull request to publish the change on the live site.",
+      ].join("\n")
+    )
+
+    return {
+      committed: true,
+      sha: put.data?.commit?.sha,
+      branch,
+      prUrl,
+    }
+  } catch (err) {
+    return {
+      committed: false,
+      branch,
+      error: err instanceof Error ? err.message : "GitHub sync failed",
+    }
+  }
 }

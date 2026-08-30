@@ -13,8 +13,7 @@ export async function GET(_: NextRequest, ctx: { params: Promise<{ id: string }>
 }
 
 export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
-  const auth = req.headers.get("authorization")?.replace("Bearer ", "") || null
-  if (!(await requireAdminAuth(auth))) return new NextResponse("Unauthorized", { status: 401 })
+  if (!(await requireAdminAuth(req))) return new NextResponse("Unauthorized", { status: 401 })
 
   const { id } = await ctx.params
   const body = await req.json()
@@ -34,8 +33,7 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
 }
 
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
-  const auth = req.headers.get("authorization")?.replace("Bearer ", "") || null
-  if (!(await requireAdminAuth(auth))) return new NextResponse("Unauthorized", { status: 401 })
+  if (!(await requireAdminAuth(req))) return new NextResponse("Unauthorized", { status: 401 })
 
   const { id } = await ctx.params
   const list = await getExperiences()

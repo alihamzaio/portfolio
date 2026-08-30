@@ -1,4 +1,5 @@
 const SESSION_KEY = "admin_session"
+export const SESSION_TTL_DAYS = 7
 
 export interface AdminSession {
   token: string
