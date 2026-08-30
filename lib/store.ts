@@ -6,7 +6,7 @@ type JsonValue = unknown
 
 export type StoreWriteResult = {
   persisted: "kv" | "file" | "github"
-  github?: { committed: boolean; sha?: string; error?: string }
+  github?: { committed: boolean; sha?: string; prUrl?: string; branch?: string; error?: string }
 }
 
 const hasVercelKV = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN
@@ -110,7 +110,9 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
   if (result.persisted === "github" && result.github?.committed) {
-    return "Saved to GitHub. Live site redeploys in about one minute."
+    return result.github.prUrl
+      ? "Pull request opened. Review and merge it to publish on live."
+      : "Saved on a review branch. Open GitHub and merge the pull request to publish."
   }
   if (result.persisted === "file") {
     return "Saved locally."

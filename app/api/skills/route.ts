@@ -12,8 +12,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    const auth = req.headers.get('authorization')?.replace('Bearer ', '') || null
-    if (!(await requireAdminAuth(auth))) return new NextResponse('Unauthorized', { status: 401 })
+    if (!(await requireAdminAuth(req))) return new NextResponse('Unauthorized', { status: 401 })
     const body = await req.json()
     const { name, level, image } = body || {}
     if (!name || typeof level !== 'number') return new NextResponse('Invalid payload', { status: 400 })

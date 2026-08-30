@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Loader2, Mail, Lock } from "lucide-react"
-import { setAdminSession } from "@/lib/auth-client"
+import { SESSION_TTL_DAYS, setAdminSession } from "@/lib/auth-client"
 import { LogoMark } from "@/components/brand/logo"
 import { OTP_ADMIN_EMAIL } from "@/lib/official-email"
 
@@ -36,6 +36,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
     try {
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       })
@@ -60,6 +61,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
     try {
       const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code: otp }),
       })
@@ -162,7 +164,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         )}
 
         <p className="text-[10px] text-[var(--text-muted)] mt-6 text-center">
-          Session saved locally for 7 days
+          Stay signed in for {SESSION_TTL_DAYS} days. OTP is only needed again after logout or when the session expires.
         </p>
       </motion.div>
     </main>
