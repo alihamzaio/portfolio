@@ -5,11 +5,9 @@ import {
   PremiumGrid,
   PremiumIcon,
   PremiumPage,
-  PremiumProgressList,
   PremiumReveal,
 } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { PremiumCard } from "@/components/ui/premium-card"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { siteConfig } from "@/lib/site"
 import { copy } from "@/lib/copy"
@@ -55,8 +53,8 @@ export function AboutContent() {
         description="3+ years building web applications, cloud infrastructure, APIs, and blockchain integrations for startups and product teams."
       />
 
-      <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 mb-12 sm:mb-20">
-        <PremiumReveal direction="left" className="space-y-5 sm:space-y-6 text-neutral-400 text-base sm:text-lg leading-relaxed break-words">
+      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 mb-16 sm:mb-24">
+        <PremiumReveal direction="left" className="space-y-6 text-[var(--text-secondary)] text-base sm:text-lg leading-[1.75] break-words">
           {copy.sections.about.bio.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
@@ -66,21 +64,31 @@ export function AboutContent() {
         </PremiumReveal>
 
         <PremiumReveal direction="right" delay={0.1}>
-          <PremiumCard>
+          <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 sm:p-8">
             <p className="meta-label mb-6">Skills</p>
-            <PremiumProgressList items={skills} columns={1} />
-          </PremiumCard>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="inline-flex items-center gap-2 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-3 py-1.5 text-sm text-[var(--text-secondary)]"
+                >
+                  {skill.name}
+                  <span className="text-xs text-[var(--text-muted)] tabular-nums">{skill.level}%</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </PremiumReveal>
       </div>
 
       <PremiumGrid cols="4">
         {pillars.map((p, i) => (
           <PremiumReveal key={p.title} delay={i * 0.08}>
-            <PremiumCard className="h-full" spotlight>
-              <PremiumIcon icon={p.icon} className="mb-4" size={28} />
-              <h3 className="font-semibold text-white mb-2">{p.title}</h3>
-              <p className="text-sm text-neutral-400 leading-relaxed">{p.desc}</p>
-            </PremiumCard>
+            <div className="h-full rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6">
+              <PremiumIcon icon={p.icon} className="mb-4" size={22} />
+              <h2 className="font-semibold text-[var(--text-primary)] mb-2">{p.title}</h2>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{p.desc}</p>
+            </div>
           </PremiumReveal>
         ))}
       </PremiumGrid>

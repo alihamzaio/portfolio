@@ -1,8 +1,7 @@
 "use client"
 
-import { memo } from "react"
+import { memo, useRef } from "react"
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
 import type { Experience } from "@/lib/types"
 
 function AboutTimelineInner({ experiences }: { experiences: Experience[] }) {
@@ -10,27 +9,27 @@ function AboutTimelineInner({ experiences }: { experiences: Experience[] }) {
   const inView = useInView(ref, { once: true, margin: "-8%" })
 
   return (
-    <div ref={ref} className="relative pl-6 sm:pl-8 min-w-0">
-      <div className="absolute left-[7px] sm:left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-cyan-400/60 via-cyan-500/20 to-transparent" />
-      <div className="space-y-8">
+    <div ref={ref} className="relative pl-7 sm:pl-9 min-w-0">
+      <div className="absolute left-[5px] sm:left-[9px] top-2 bottom-2 w-px bg-[#1c222b]" />
+      <div className="space-y-10">
         {experiences.map((exp, i) => (
           <motion.article
             key={exp.id}
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.55, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <span className="absolute -left-6 sm:-left-8 top-1.5 h-3 w-3 rounded-full border-2 border-cyan-400 bg-[#0a0f1a]" />
-            <p className="meta-label mb-1">
-              {exp.period}
+            <span className="absolute -left-7 sm:-left-9 top-1.5 h-2 w-2 rounded-full border border-[var(--accent-primary)]/80 bg-[var(--bg-primary)]" />
+            <p className="meta-label mb-1.5">{exp.period}</p>
+            <p className="text-[15px] font-semibold text-[var(--text-primary)] break-words">{exp.role}</p>
+            <p className="text-sm text-neutral-500 mb-3 break-words">
+              {exp.company} · {exp.location}
             </p>
-            <p className="text-base font-bold text-white break-words">{exp.role}</p>
-            <p className="text-sm text-neutral-400 mb-2 break-words">{exp.company} · {exp.location}</p>
-            <ul className="space-y-1.5">
+            <ul className="space-y-2.5">
               {exp.achievements.slice(0, 3).map((a) => (
-                <li key={a} className="text-sm text-neutral-400 flex gap-2 break-words">
-                  <span className="text-cyan-400 shrink-0">▸</span>
+                <li key={a} className="text-sm text-neutral-500 flex gap-3 break-words leading-relaxed">
+                  <span className="mt-2.5 h-px w-3 shrink-0 bg-[var(--accent-primary)]/55" />
                   {a}
                 </li>
               ))}

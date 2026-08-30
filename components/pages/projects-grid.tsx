@@ -5,12 +5,10 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { PremiumCard } from "@/components/ui/premium-card"
-import { getShowcaseProjects, projectOffsiteUrl } from "@/lib/projects"
-import { offsiteAnchorProps } from "@/lib/navigation"
+import { getShowcaseProjects } from "@/lib/projects"
 
 export function ProjectsGrid() {
-  const projects = getShowcaseProjects(12)
+  const projects = getShowcaseProjects()
 
   return (
     <PremiumPage>
@@ -18,44 +16,44 @@ export function ProjectsGrid() {
         headingLevel={1}
         label="Projects"
         title="Projects"
-        description="Web applications, APIs, and blockchain systems built for clients in e-commerce, healthcare, fintech, and Web3."
+        description="Web applications, APIs, and blockchain systems built for clients in e-commerce, fintech, and Web3."
       />
 
-      <PremiumGrid cols="3">
-        {projects.map((project, i) => {
-          const offsite = projectOffsiteUrl(project)
-          const href = offsite || `/projects/${project.slug}`
-          const CardTag = offsite ? "a" : Link
-          const extra = offsite ? offsiteAnchorProps(offsite) : {}
-          return (
+      <PremiumGrid cols="3" className="gap-6 lg:gap-8">
+        {projects.map((project, i) => (
           <PremiumReveal key={project.id} delay={(i % 6) * 0.05}>
-            <CardTag href={href} {...extra} data-cursor={offsite ? "external" : "project"}>
-              <PremiumCard className="p-0 overflow-hidden group h-full flex flex-col" spotlight>
+            <Link
+              href={`/projects/${project.slug}`}
+              data-cursor="project"
+              className="block h-full"
+            >
+              <article className="group h-full flex flex-col overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 33vw"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-void)] to-transparent opacity-70" />
                 </div>
-                <div className="p-4 sm:p-6">
-                  <h3 className="font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                <div className="p-5 sm:p-6 flex flex-col flex-1">
+                  <h2 className="font-semibold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">
                     {project.title}
-                  </h3>
-                  <p className="text-sm text-neutral-400 line-clamp-2 mb-4">{project.description}</p>
-                  <span className="inline-flex items-center gap-1 text-xs text-cyan-400">
-                    {offsite ? "Open live site" : "View project"} <ArrowUpRight className="h-3.5 w-3.5" />
+                  </h2>
+                  <p className="text-sm text-[var(--text-secondary)] line-clamp-2 mb-4 leading-relaxed flex-1">
+                    {project.description}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-xs text-[var(--accent-primary)]">
+                    Read case study <ArrowUpRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
-              </PremiumCard>
-            </CardTag>
+              </article>
+            </Link>
           </PremiumReveal>
-          )
-        })}
+        ))}
       </PremiumGrid>
     </PremiumPage>
   )

@@ -29,14 +29,14 @@ export function SectionHeading({
     <header
       data-animate
       className={cn(
-        "mb-10 sm:mb-12 md:mb-16 lg:mb-20",
-        align === "center" && "text-center mx-auto max-w-3xl",
-        align === "left" && "max-w-3xl",
+        "mb-16 sm:mb-20 md:mb-24 lg:mb-28",
+        align === "center" && "text-center mx-auto max-w-2xl",
+        align === "left" && "max-w-2xl",
         className
       )}
     >
       {showLabel && (
-        <p className={cn("section-label mb-3", align === "center" && "mx-auto")}>{label}</p>
+        <p className={cn("section-label mb-4", align === "center" && "mx-auto")}>{label}</p>
       )}
       <TitleTag
         id={sectionId ? `${sectionId}-heading` : undefined}
@@ -46,9 +46,8 @@ export function SectionHeading({
       </TitleTag>
       {description && (
         <p
-          data-animate
           className={cn(
-            "mt-4 text-base sm:text-lg text-neutral-400 leading-relaxed max-w-2xl",
+            "mt-5 sm:mt-6 text-[15px] sm:text-base text-neutral-500 leading-[1.8] max-w-xl",
             align === "center" && "mx-auto"
           )}
         >

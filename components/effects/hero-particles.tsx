@@ -45,7 +45,7 @@ export function HeroParticles() {
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(96, 165, 250, ${p.alpha})`
+        ctx.fillStyle = `rgba(232, 68, 47, ${p.alpha})`
         ctx.fill()
 
         particles.slice(i + 1).forEach((p2) => {
@@ -56,7 +56,7 @@ export function HeroParticles() {
             ctx.beginPath()
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(p2.x, p2.y)
-            ctx.strokeStyle = `rgba(139, 92, 246, ${0.08 * (1 - dist / 120)})`
+            ctx.strokeStyle = `rgba(232, 68, 47, ${0.08 * (1 - dist / 120)})`
             ctx.stroke()
           }
         })

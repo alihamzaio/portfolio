@@ -15,7 +15,7 @@ function Orb() {
   return (
     <mesh ref={mesh}>
       <icosahedronGeometry args={[1.8, 2]} />
-      <meshBasicMaterial color="#3B82F6" wireframe transparent opacity={0.12} />
+      <meshBasicMaterial color="#e8442f" wireframe transparent opacity={0.12} />
     </mesh>
   )
 }

@@ -1,10 +1,10 @@
 "use client"
 
-import { useId } from "react"
 import { cn } from "@/lib/utils"
 
 type BaseProps = {
   label: string
+  id?: string
   className?: string
   value?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
@@ -18,9 +18,15 @@ type TextareaProps = BaseProps & {
   as: "textarea"
 } & Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, keyof BaseProps>
 
+function resolveFieldId(label: string, explicit?: string, name?: string) {
+  if (explicit) return explicit
+  if (name) return `field-${name}`
+  return `field-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`
+}
+
 export function FloatingField(props: InputProps | TextareaProps) {
-  const { label, className, value, onChange, as = "input", ...rest } = props
-  const id = useId()
+  const { label, id: idProp, className, value, onChange, as = "input", ...rest } = props
+  const id = resolveFieldId(label, idProp, "name" in rest ? String(rest.name ?? "") : undefined)
   const filled = String(value ?? "").length > 0
 
   return (

@@ -1,9 +1,7 @@
 "use client"
 
-import { Briefcase, TrendingUp } from "lucide-react"
-import { PremiumIcon, PremiumPage, PremiumReveal } from "@/components/premium"
+import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
-import { PremiumCard } from "@/components/ui/premium-card"
 import { experiences } from "@/lib/experience"
 
 export function ExperienceContent() {
@@ -17,46 +15,39 @@ export function ExperienceContent() {
       />
 
       <div className="relative">
-        <div
-          className="absolute left-[19px] top-0 bottom-0 w-px bg-gradient-to-b from-cyan-400/60 via-cyan-500/20 to-transparent"
-          aria-hidden
-        />
+        <div className="absolute left-0 top-0 bottom-0 w-px bg-[#1a1a1a]" aria-hidden />
 
-        <div className="space-y-10">
+        <div className="space-y-14">
           {experiences.map((exp, i) => (
-            <PremiumReveal key={exp.id} direction="left" delay={i * 0.1} className="relative pl-12 sm:pl-14 min-w-0">
-              <div className="absolute left-0 top-6 flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/30 bg-[#0a0f1a] shadow-[0_0_24px_rgba(59,130,246,0.15)]">
-                <PremiumIcon icon={Briefcase} size={16} />
-              </div>
+            <PremiumReveal key={exp.id} direction="left" delay={i * 0.08} className="relative pl-8 sm:pl-10 min-w-0">
+              <span className="absolute left-[-3.5px] top-2 h-2 w-2 rounded-full bg-[var(--accent-primary)]" />
 
-              <PremiumCard spotlight>
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-4">
-                  <div>
-                    <h3 className="font-semibold text-white text-lg break-words">{exp.role}</h3>
-                    <p className="text-cyan-400 font-medium">{exp.company}</p>
-                  </div>
-                  <div className="text-sm text-neutral-500 sm:text-right">
-                    <p>{exp.period}</p>
-                    <p>{exp.location}</p>
-                  </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mb-4">
+                <div>
+                  <h2 className="font-semibold text-[var(--text-primary)] text-lg break-words">{exp.role}</h2>
+                  <p className="text-[var(--accent-primary)] font-medium mt-1">{exp.company}</p>
                 </div>
-                <p className="text-sm text-neutral-400 mb-5 leading-relaxed">{exp.description}</p>
-                <ul className="space-y-2 mb-5">
-                  {exp.achievements.map((a) => (
-                    <li key={a} className="flex gap-2 text-sm text-neutral-300 break-words">
-                      <TrendingUp className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                      {a}
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.06]">
-                  {exp.technologies.map((t) => (
-                    <span key={t} className="premium-chip text-[10px] font-medium px-2.5 py-1">
-                      {t}
-                    </span>
-                  ))}
+                <div className="text-sm text-[var(--text-muted)] sm:text-right">
+                  <p>{exp.period}</p>
+                  <p>{exp.location}</p>
                 </div>
-              </PremiumCard>
+              </div>
+              <p className="text-sm text-[var(--text-secondary)] mb-5 leading-[1.75]">{exp.description}</p>
+              <ul className="space-y-2.5 mb-5">
+                {exp.achievements.map((a) => (
+                  <li key={a} className="flex gap-3 text-sm text-[var(--text-secondary)] break-words leading-relaxed">
+                    <span className="mt-2 h-px w-3 shrink-0 bg-[var(--accent-primary)]" />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-2">
+                {exp.technologies.map((t) => (
+                  <span key={t} className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-secondary)] px-2.5 py-1 text-[11px] text-[var(--text-secondary)]">
+                    {t}
+                  </span>
+                ))}
+              </div>
             </PremiumReveal>
           ))}
         </div>

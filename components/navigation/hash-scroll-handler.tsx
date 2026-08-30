@@ -2,10 +2,10 @@
 
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { scrollToSection } from "@/lib/navigation"
-import { prefersReducedMotion } from "@/lib/motion-prefs"
+import { getSectionIdFromHash, scrollToSection } from "@/lib/navigation"
+import { scrollToSectionId } from "@/lib/lenis-scroll"
 
-/** Scroll to section after client navigation to /#section */
+/** Scroll to section after client navigation to /#section — always via Lenis when available. */
 export function HashScrollHandler() {
   const pathname = usePathname()
 
@@ -14,12 +14,12 @@ export function HashScrollHandler() {
     const hash = window.location.hash
     if (!hash) return
 
-    const id = hash.replace("#", "")
-    const behavior = prefersReducedMotion() ? "auto" : "smooth"
-    const t = requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior })
-    })
-    return () => cancelAnimationFrame(t)
+    const id = getSectionIdFromHash(hash)
+    if (!id) return
+
+    const run = () => scrollToSectionId(id)
+    const t = window.setTimeout(run, 80)
+    return () => window.clearTimeout(t)
   }, [pathname])
 
   useEffect(() => {

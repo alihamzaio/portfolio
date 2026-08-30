@@ -12,7 +12,7 @@ function HeroParticleFallback() {
       aria-hidden
       style={{
         background:
-          "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(59,130,246,0.08), transparent 70%)",
+          "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(232, 68, 47,0.08), transparent 70%)",
       }}
     />
   )

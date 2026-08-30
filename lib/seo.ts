@@ -87,16 +87,20 @@ export function buildPageMetadata(options: PageSeoOptions): Metadata {
     title: options.absoluteTitle ? { absolute: options.title } : options.title,
     description: options.description,
     keywords,
-    alternates: {
-      canonical,
-      languages: {
-        en: canonical,
-        "x-default": canonical,
-      },
-    },
+    ...(options.noIndex
+      ? {}
+      : {
+          alternates: {
+            canonical,
+            languages: {
+              en: canonical,
+              "x-default": canonical,
+            },
+          },
+        }),
     openGraph: {
       type: options.type ?? "website",
-      url: canonical,
+      url: options.noIndex ? absoluteUrl("/") : canonical,
       title: options.title,
       description: options.description,
       siteName: `${siteConfig.name} - Portfolio`,
@@ -192,6 +196,8 @@ export function buildRootMetadata(): Metadata {
         { url: "/favicon.ico", sizes: "32x32" },
         { url: "/favicon.svg", type: "image/svg+xml" },
         { url: "/icon", type: "image/png", sizes: "32x32" },
+        { url: "/icon1", type: "image/png", sizes: "192x192" },
+        { url: "/icon2", type: "image/png", sizes: "512x512" },
       ],
       shortcut: "/favicon.ico",
       apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],

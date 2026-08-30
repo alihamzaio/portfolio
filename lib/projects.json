@@ -15,7 +15,7 @@
       "Admin Dashboard",
       "Full-Stack Development"
     ],
-    "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761813538/adam_rjkkm9.png",
+    "image": "/projects/adam.png",
     "details": "Built the full Adam Store system: customer storefront with product browsing, cart, and checkout; admin dashboard for inventory, orders, and user management; Node.js and Express backend with MongoDB and REST APIs.",
     "link": "https://adamstore.pk/",
     "github": "https://github.com/Adam-store-Ecomerce/",
@@ -35,9 +35,9 @@
       "Blockchain",
       "CI/CD"
     ],
-    "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761659471/ver_imkwft.png",
+    "image": "/projects/verana.png",
     "details": "Built a distributed blockchain crawler and indexer for Verana Network. Background workers (Bull.js) and Moleculer.js services parse and store blockchain data in PostgreSQL. REST APIs expose indexed data. Docker-based CI/CD for deployment.",
-    "link": "https://github.com/verana-labs/verana-indexer",
+    "link": "https://app.testnet.verana.network/discover",
     "featured": true,
     "github": "https://github.com/verana-labs/verana-indexer"
   },
@@ -175,7 +175,8 @@
   },
   {
     "id": 12,
-    "title": "Kype.io",
+    "title": "KYPI",
+    "slug": "kype-io",
     "description": "Campaign performance tracking dashboard replacing manual marketing data workflows.",
     "tags": [
       "React.js",
@@ -239,7 +240,7 @@
       "App Showcase",
       "Landing Page"
     ],
-    "image": "https://www.exec9.com/_next/image?url=%2Frizzdate-case-study.png&w=1920&q=75",
+    "image": "/projects/rizzdate.png",
     "details": "Built a landing page for RizzDate using Next.js, Tailwind CSS, and Framer Motion. Pages cover voice matching, chat, and video call features. Responsive layout and SEO setup.",
     "link": "https://rizzdate.app/",
     "featured": true
@@ -247,17 +248,17 @@
   {
     "id": 19,
     "title": "EPA Onboarding Portal",
-    "description": "Bilingual onboarding portal for the Dubai government built with HTML, CSS, and JavaScript.",
+    "description": "Bilingual onboarding portal for the Emirates Publishers Association (EPA.org.ae) built with HTML, CSS, and JavaScript.",
     "tags": [
       "HTML",
       "CSS",
       "JavaScript",
       "Bilingual (English/Arabic)",
       "Responsive Design",
-      "Government Portal"
+      "Association Portal"
     ],
     "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761658347/zn_vieqjg.png",
-    "details": "Built a bilingual onboarding website for the Dubai government using HTML, CSS, and vanilla JavaScript. English and Arabic language toggle. Accessible layout following government design standards.",
+    "details": "Built a bilingual onboarding website for the Emirates Publishers Association using HTML, CSS, and vanilla JavaScript. English and Arabic language toggle. Accessible layout following association design standards.",
     "link": "https://www.epa.org.ae/",
     "featured": true
   },
@@ -377,8 +378,8 @@
   },
   {
     "id": 5,
-    "title": "Osteopathe MontrÃ©al",
-    "description": "Service website for an osteopathy clinic in MontrÃ©al.",
+    "title": "Osteopathe Montréal",
+    "description": "Service website for an osteopathy clinic in Montréal.",
     "tags": [
       "React",
       "Bootstrap",
@@ -386,7 +387,7 @@
       "JavaScript"
     ],
     "image": "https://res.cloudinary.com/dfjnm7kyu/image/upload/v1761654501/Osteopathe_Montreal-_Traitment_xkrduh.png",
-    "details": "Built a responsive website for a MontrÃ©al osteopathy clinic with accessible layout and service pages.",
+    "details": "Built a responsive website for a Montréal osteopathy clinic with accessible layout and service pages.",
     "link": "https://osteopathe-montreal.onrender.com/",
     "github": "https://github.com/AliHamza0007/Oesteopathe-Montreal",
     "hidden": true

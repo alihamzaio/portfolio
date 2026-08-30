@@ -44,7 +44,7 @@ export function TypingText({ words, className, speed = 80 }: TypingTextProps) {
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.6, repeat: Infinity }}
-        className="inline-block w-[3px] h-[1em] bg-[#60A5FA] ml-0.5 align-middle"
+        className="inline-block w-[3px] h-[1em] bg-[var(--accent-primary)] ml-0.5 align-middle"
       />
     </span>
   )

@@ -1,4 +1,5 @@
 import { HomeHero } from "@/components/home/home-hero"
+import { HomeHeroStatement } from "@/components/home/home-hero-statement"
 import { HomeClientOffer } from "@/components/home/home-client-offer"
 import { HomeAbout } from "@/components/home/home-about"
 import { HomeSeoProse } from "@/components/home/home-seo-prose"
@@ -8,6 +9,7 @@ import { HomeExperience } from "@/components/home/home-experience"
 import { HomeTestimonials } from "@/components/home/home-testimonials"
 import { CtaBand } from "@/components/home/cta-band"
 import { HomeContact } from "@/components/home/home-contact"
+import { ProjectIntelligenceLazy } from "@/components/intelligence/project-intelligence-lazy"
 import { HomePageJsonLd } from "@/components/seo/home-page-json-ld"
 import { buildPageMetadata, HOME_PAGE_TITLE } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
@@ -24,9 +26,10 @@ export const metadata = buildPageMetadata({
 
 export default function HomePage() {
   return (
-    <div className="pb-24 lg:pb-0">
+    <div>
       <HomePageJsonLd />
       <HomeHero />
+      <HomeHeroStatement />
       <HomeClientOffer />
       <HomeAbout />
       <HomeSeoProse />
@@ -34,6 +37,7 @@ export default function HomePage() {
       <HomeProjects />
       <HomeExperience />
       <HomeTestimonials />
+      <ProjectIntelligenceLazy />
       <CtaBand />
       <HomeContact />
     </div>

@@ -1,4 +1,5 @@
-import { prefersReducedMotion } from "@/lib/motion-prefs"
+import { navItems } from "@/lib/site"
+import { scrollToSectionId } from "@/lib/lenis-scroll"
 
 /** Map homepage section hashes to dedicated routes when navigating from other pages */
 export const SECTION_ROUTES: Record<string, string> = {
@@ -8,6 +9,7 @@ export const SECTION_ROUTES: Record<string, string> = {
   projects: "/projects",
   experience: "/experience",
   contact: "/contact",
+  intelligence: "/",
 }
 
 export type LinkKind = "external" | "hash" | "internal" | "download"
@@ -43,8 +45,20 @@ export function getSectionIdFromHash(href: string): string {
 export function scrollToSection(href: string) {
   const id = getSectionIdFromHash(href)
   if (!id) return
-  const behavior = prefersReducedMotion() ? "auto" : "smooth"
-  document.getElementById(id)?.scrollIntoView({ behavior })
+  scrollToSectionId(id)
+}
+
+/** Log warnings for nav hrefs that don't match a DOM section id on the homepage. */
+export function validateNavSectionIds() {
+  if (typeof window === "undefined" || process.env.NODE_ENV === "production") return
+
+  navItems.forEach((item) => {
+    if (!item.href.startsWith("/#")) return
+    const id = getSectionIdFromHash(item.href)
+    if (!document.getElementById(id)) {
+      console.warn(`[nav] Missing section id="${id}" for nav link "${item.label}" (${item.href})`)
+    }
+  })
 }
 
 /** Resolve nav href: on home use hash anchors; elsewhere use matching page routes */

@@ -18,7 +18,7 @@ function SkillActivityGridInner() {
                 <div
                   key={row}
                   className={`h-2.5 sm:h-2 w-full rounded-sm ${
-                    4 - row < cells ? "bg-cyan-500/80" : "bg-white/[0.06]"
+                    4 - row < cells ? "bg-[var(--accent-primary)]/80" : "bg-white/[0.06]"
                   }`}
                 />
               ))}

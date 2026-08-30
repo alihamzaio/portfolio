@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props) {
     ogImage: project.image
       ? { url: project.image, alt: `${project.title} - ${siteConfig.name}` }
       : undefined,
-    type: "article",
+    type: "website",
   })
 }
 

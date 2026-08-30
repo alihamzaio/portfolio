@@ -2,6 +2,7 @@ import { siteConfig } from "@/lib/site"
 import { absoluteUrl } from "@/lib/seo"
 import { experiences } from "@/lib/experience"
 import { projects } from "@/lib/projects"
+import { copy } from "@/lib/copy"
 import type { Project } from "@/lib/types"
 
 /** Site-wide @graph for Person + WebSite (root layout) */
@@ -30,7 +31,7 @@ export function buildSiteGraph() {
         jobTitle: siteConfig.title,
         description: siteConfig.description,
         url: absoluteUrl(),
-        image: absoluteUrl("/icon.png"),
+        image: absoluteUrl("/icon"),
         email: siteConfig.email,
         telephone: siteConfig.phone,
         address: {
@@ -58,37 +59,19 @@ export function buildSiteGraph() {
         })),
       },
       {
-        "@type": ["LocalBusiness", "ProfessionalService"],
-        "@id": `${absoluteUrl()}/#localbusiness`,
+        "@type": "ProfessionalService",
+        "@id": `${absoluteUrl()}/#service`,
         name: `${siteConfig.name} Full Stack Development`,
         description: siteConfig.description,
         url: absoluteUrl(),
         image: absoluteUrl("/icon"),
         telephone: siteConfig.phone,
         email: siteConfig.email,
-        priceRange: "$$",
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Lahore",
-          addressRegion: "Punjab",
-          addressCountry: "PK",
-        },
-        geo: {
-          "@type": "GeoCoordinates",
-          latitude: 31.5204,
-          longitude: 74.3587,
-        },
         areaServed: [
           { "@type": "City", name: "Lahore" },
           { "@type": "Country", name: "Pakistan" },
           { "@type": "Place", name: "Remote" },
         ],
-        openingHoursSpecification: {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "09:00",
-          closes: "18:00",
-        },
         sameAs: [siteConfig.social.github, siteConfig.social.linkedinProfile],
         founder: { "@id": personId },
       },
@@ -96,7 +79,7 @@ export function buildSiteGraph() {
   }
 }
 
-/** Homepage ProfilePage + work history */
+/** Homepage ProfilePage + work history + FAQ */
 export function buildHomePageGraph() {
   const personId = `${absoluteUrl()}/#person`
 
@@ -141,11 +124,26 @@ export function buildHomePageGraph() {
           name: p.title,
         })),
       },
+      {
+        "@type": "FAQPage",
+        "@id": `${absoluteUrl()}/#faq`,
+        mainEntity: copy.sections.faq.items.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.a,
+          },
+        })),
+      },
     ],
   }
 }
 
 export function buildProjectGraph(project: Project & { slug: string }) {
+  const caseStudyUrl = absoluteUrl(`/projects/${project.slug}`)
+  const liveUrl = project.link && project.link !== "#" ? project.link : undefined
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -158,7 +156,7 @@ export function buildProjectGraph(project: Project & { slug: string }) {
             "@type": "ListItem",
             position: 3,
             name: project.title,
-            item: absoluteUrl(`/projects/${project.slug}`),
+            item: caseStudyUrl,
           },
         ],
       },
@@ -166,7 +164,7 @@ export function buildProjectGraph(project: Project & { slug: string }) {
         "@type": "SoftwareApplication",
         name: project.title,
         description: project.description,
-        url: project.link && project.link !== "#" ? project.link : absoluteUrl(`/projects/${project.slug}`),
+        url: caseStudyUrl,
         image: project.image,
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Web",
@@ -176,6 +174,7 @@ export function buildProjectGraph(project: Project & { slug: string }) {
           url: absoluteUrl(),
         },
         keywords: (project.tags ?? []).join(", "),
+        ...(liveUrl ? { sameAs: [liveUrl] } : {}),
       },
     ],
   }

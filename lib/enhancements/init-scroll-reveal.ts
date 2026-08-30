@@ -1,94 +1,171 @@
+import gsap from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
 
 const ACTIVE_CLASS = "scroll-reveal-active"
-const boundAnimate = new WeakSet<Element>()
 
-function isInViewport(rect: DOMRect) {
-  return rect.top < window.innerHeight && rect.bottom > 0
+let registered = false
+
+function ensurePlugin() {
+  if (registered || typeof window === "undefined") return
+  gsap.registerPlugin(ScrollTrigger)
+  registered = true
 }
 
-function showImmediately(el: HTMLElement) {
-  el.classList.add("is-visible")
-}
-
-function primeInViewElements() {
+function showAll() {
   document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
-    if (isInViewport(el.getBoundingClientRect())) {
-      el.classList.add("is-visible")
-    }
+    el.classList.add("is-visible")
+    gsap.set(el, { clearProps: "opacity,transform,filter" })
+  })
+  document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
+    gsap.set(el, { clearProps: "transform" })
   })
 }
 
+/**
+ * Premium scroll choreography — elements start hidden once GSAP is active.
+ */
 export function initScrollReveal() {
+  ensurePlugin()
   const reduced = prefersReducedMotion()
 
+  document.documentElement.classList.add(ACTIVE_CLASS)
+
   if (reduced) {
-    document.querySelectorAll<HTMLElement>("[data-animate]").forEach(showImmediately)
+    showAll()
     document.documentElement.classList.add("motion-reduce-active")
     return () => {
-      document.documentElement.classList.remove("motion-reduce-active")
+      document.documentElement.classList.remove(ACTIVE_CLASS, "motion-reduce-active")
     }
   }
 
-  const seen = new WeakSet<Element>()
+  document.documentElement.classList.remove("motion-reduce-active")
 
-  const reveal = (el: HTMLElement, delay: number) => {
-    if (seen.has(el)) return
-    seen.add(el)
-    window.setTimeout(() => {
-      if (delay > 0) {
-        el.style.setProperty("--reveal-delay", `${delay}ms`)
-      }
-      el.classList.add("is-visible")
-    }, delay)
-  }
+  const ctx = gsap.context(() => {
+    const ease = "power3.out"
+    const handled = new Set<Element>()
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        const el = entry.target as HTMLElement
-        const staggerParent = el.closest("[data-animate-stagger]")
-        if (staggerParent) {
-          const items = Array.from(staggerParent.querySelectorAll<HTMLElement>("[data-animate]"))
-          items.forEach((item, i) => reveal(item, i * 120))
-        } else {
-          reveal(el, 0)
-        }
-        observer.unobserve(el)
+    const hide = (el: HTMLElement) => {
+      gsap.set(el, { opacity: 0, y: 80, filter: "blur(12px)" })
+    }
+
+    const reveal = (targets: HTMLElement[], opts: { stagger?: number; delay?: number } = {}) => {
+      if (!targets.length) return
+      const { stagger = 0.15, delay = 0 } = opts
+      targets.forEach(hide)
+
+      ScrollTrigger.batch(targets, {
+        start: "top 86%",
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1.2,
+            ease,
+            stagger,
+            delay,
+            overwrite: "auto",
+            onComplete: () => batch.forEach((el) => (el as HTMLElement).classList.add("is-visible")),
+          })
+        },
       })
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
-  )
+    }
 
-  const bind = () => {
-    document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
-      if (boundAnimate.has(el) || el.classList.contains("is-visible")) return
-      boundAnimate.add(el)
-      if (isInViewport(el.getBoundingClientRect())) {
-        el.classList.add("is-visible")
-      }
-      observer.observe(el)
+    document.querySelectorAll<HTMLElement>("[data-animate-stagger]").forEach((group) => {
+      const targets = Array.from(group.querySelectorAll<HTMLElement>("[data-animate]"))
+      targets.forEach((el) => handled.add(el))
+      reveal(targets, { stagger: 0.16, delay: 0.06 })
     })
-  }
 
-  primeInViewElements()
-  document.documentElement.classList.add(ACTIVE_CLASS)
-  bind()
+    document.querySelectorAll<HTMLElement>("[data-animate]").forEach((el) => {
+      if (handled.has(el)) return
+      if (el.classList.contains("is-visible")) return
 
-  let bindFrame = 0
-  const mo = new MutationObserver(() => {
-    cancelAnimationFrame(bindFrame)
-    bindFrame = requestAnimationFrame(() => {
-      bindFrame = requestAnimationFrame(bind)
+      const isTimeline = el.classList.contains("timeline-card-enter")
+      const fromX = isTimeline
+        ? Number.parseFloat(getComputedStyle(el).getPropertyValue("--timeline-from")) || -64
+        : 0
+
+      hide(el)
+      if (fromX) gsap.set(el, { x: fromX })
+
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        x: 0,
+        filter: "blur(0px)",
+        duration: 1.25,
+        ease,
+        scrollTrigger: {
+          trigger: el,
+          start: "top 84%",
+          once: true,
+        },
+        onComplete: () => el.classList.add("is-visible"),
+      })
+    })
+
+    document.querySelectorAll<HTMLElement>("header[data-animate]").forEach((header) => {
+      const label = header.querySelector<HTMLElement>(".section-label")
+      const title = header.querySelector<HTMLElement>(".section-title")
+      const desc = header.querySelector<HTMLElement>("p")
+
+      ;[label, title, desc].forEach((el) => {
+        if (!el) return
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 48, filter: "blur(10px)" },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 1.1,
+            ease,
+            scrollTrigger: { trigger: header, start: "top 82%", once: true },
+          }
+        )
+      })
+    })
+
+    document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
+      const amount = Number.parseFloat(el.dataset.parallax || "0.12") || 0.12
+      gsap.to(el, {
+        y: () => amount * -120,
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      })
+    })
+
+    document.querySelectorAll<HTMLElement>("section.section-pad").forEach((section) => {
+      const glow = section.querySelector<HTMLElement>(".section-glow")
+      if (!glow) return
+      gsap.fromTo(
+        glow,
+        { opacity: 0.2, scale: 0.99 },
+        {
+          opacity: 0.85,
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 92%",
+            end: "top 45%",
+            scrub: true,
+          },
+        }
+      )
     })
   })
-  mo.observe(document.body, { childList: true, subtree: true })
 
   return () => {
-    cancelAnimationFrame(bindFrame)
-    observer.disconnect()
-    mo.disconnect()
+    ctx.revert()
     document.documentElement.classList.remove(ACTIVE_CLASS)
   }
 }

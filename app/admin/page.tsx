@@ -92,7 +92,7 @@ export default function AdminPage() {
   if (checking) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-[#94A3B8]">Checking session…</p>
+        <p className="text-sm text-[var(--text-secondary)]">Checking session…</p>
       </main>
     )
   }
@@ -235,7 +235,7 @@ export default function AdminPage() {
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-semibold mb-1">Dashboard</h1>
-            <p className="text-sm text-[#94A3B8]">Manage your portfolio content in one place.</p>
+            <p className="text-sm text-[var(--text-secondary)]">Manage your portfolio content in one place.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard label="Experience" value={experienceList.length} />
@@ -246,19 +246,19 @@ export default function AdminPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <button type="button" onClick={() => setTab("profile")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
               <p className="font-medium">Edit profile</p>
-              <p className="text-xs text-[#94A3B8] mt-1">Name, hero, contact, links</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-1">Name, hero, contact, links</p>
             </button>
             <button type="button" onClick={addExperience} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
               <p className="font-medium">Add experience</p>
-              <p className="text-xs text-[#94A3B8] mt-1">Company roles & achievements</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-1">Company roles & achievements</p>
             </button>
             <button type="button" onClick={createProject} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
               <p className="font-medium">Add project</p>
-              <p className="text-xs text-[#94A3B8] mt-1">Case studies & demos</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-1">Case studies & demos</p>
             </button>
             <button type="button" onClick={() => setTab("resume")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
               <p className="font-medium">Upload resume</p>
-              <p className="text-xs text-[#94A3B8] mt-1">Active CV PDF</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-1">Active CV PDF</p>
             </button>
           </div>
         </div>
@@ -282,12 +282,12 @@ export default function AdminPage() {
                     onClick={() => toggleFeatured(i)}
                     className={cn(
                       "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border transition-colors",
-                      pr.featured ? "border-[#3B82F6] text-[#3B82F6] bg-[#3B82F6]/10" : "border-white/[0.08] text-[#94A3B8]"
+                      pr.featured ? "border-[var(--accent-primary)] text-[var(--accent-primary)] bg-[var(--accent-primary)]/10" : "border-white/[0.08] text-[var(--text-secondary)]"
                     )}
                   >
                     <Star className={cn("h-3.5 w-3.5", pr.featured && "fill-current")} /> Featured
                   </button>
-                  <button type="button" onClick={() => deleteProject(i)} className="text-[#94A3B8] hover:text-red-400 p-1">
+                  <button type="button" onClick={() => deleteProject(i)} className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)] p-1">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -328,7 +328,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => (sk.originalName ? fetch(`/api/skills/${encodeURIComponent(sk.originalName)}`, { method: "DELETE", headers: authHeaders() }).then(() => setSkills((a) => a.filter((_, j) => j !== i))) : setSkills((a) => a.filter((_, j) => j !== i)))}
-                    className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg"
+                    className="p-2 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 rounded-lg"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -343,25 +343,25 @@ export default function AdminPage() {
         <Panel title="Resume / CV">
           <div className="space-y-4">
             <label className="block">
-              <span className="text-xs text-[#94A3B8] mb-2 block">Upload PDF</span>
+              <span className="text-xs text-[var(--text-secondary)] mb-2 block">Upload PDF</span>
               <input
                 type="file"
                 accept="application/pdf"
-                className="text-sm text-[#94A3B8] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#3B82F6] file:text-white file:text-sm file:font-medium"
+                className="text-sm text-[var(--text-secondary)] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[var(--accent-primary)] file:text-[#111111] file:text-sm file:font-medium"
                 onChange={(e) => {
                   const f = e.target.files?.[0]
                   if (f) uploadResume(f)
                 }}
               />
             </label>
-            {uploading && <p className="text-xs text-[#3B82F6]">Uploading…</p>}
+            {uploading && <p className="text-xs text-[var(--accent-primary)]">Uploading…</p>}
             <div className="space-y-2">
               {resumeFiles.map((name) => (
                 <div key={name} className="flex items-center gap-3 p-3 rounded-lg bg-[#111827] border border-white/[0.06]">
                   <span className="flex-1 text-sm truncate">{name}</span>
-                  {activeResume === name && <span className="text-[10px] text-[#22C55E] uppercase font-medium">Active</span>}
+                  {activeResume === name && <span className="text-[10px] text-[var(--accent-primary)] uppercase font-medium">Active</span>}
                   <button type="button" onClick={async () => { await fetch("/api/resume", { method: "PUT", headers: authHeaders(), body: JSON.stringify({ active: name }) }); setActiveResume(name) }} className="btn-secondary !text-xs !py-1.5">Set active</button>
-                  <button type="button" onClick={async () => { await fetch(`/api/resume?name=${encodeURIComponent(name)}`, { method: "DELETE", headers: authHeaders() }); loadAll() }} className="text-red-400 text-xs">Delete</button>
+                  <button type="button" onClick={async () => { await fetch(`/api/resume?name=${encodeURIComponent(name)}`, { method: "DELETE", headers: authHeaders() }); loadAll() }} className="text-[var(--accent-primary)] text-xs">Delete</button>
                 </div>
               ))}
             </div>
@@ -371,48 +371,48 @@ export default function AdminPage() {
 
       {tab === "profile" && settings && (
         <Panel title="Profile, hero & contact" action={<button type="button" disabled={saving} onClick={saveSettings} className="btn-primary !py-1.5 !px-3 !text-xs">{saving ? "Saving…" : "Save & publish"}</button>}>
-          <p className="text-xs text-[#94A3B8] mb-6">Changes appear on the live site immediately after saving.</p>
+          <p className="text-xs text-[var(--text-secondary)] mb-6">Changes appear on the live site immediately after saving.</p>
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Full name</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Full name</label>
               <input className="input-premium" value={settings.name} onChange={(e) => setSettings({ ...settings, name: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Job title</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Job title</label>
               <input className="input-premium" value={settings.title} onChange={(e) => setSettings({ ...settings, title: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">Hero tagline (under name)</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Hero tagline (under name)</label>
               <input className="input-premium" value={settings.tagline} onChange={(e) => setSettings({ ...settings, tagline: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">Hero headline (main paragraph)</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Hero headline (main paragraph)</label>
               <textarea className="input-premium resize-none" rows={2} value={settings.headline} onChange={(e) => setSettings({ ...settings, headline: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">About summary</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">About summary</label>
               <textarea className="input-premium resize-none" rows={3} value={settings.description} onChange={(e) => setSettings({ ...settings, description: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Contact email</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Contact email</label>
               <input
                 className="input-premium"
                 type="email"
                 value={settings.email}
                 onChange={(e) => setSettings({ ...settings, email: e.target.value })}
               />
-              <p className="text-[10px] text-[#64748B] mt-1">Public contact only. OTP uses alilogics007@gmail.com.</p>
+              <p className="text-[10px] text-[var(--text-muted)] mt-1">Public contact only. OTP uses alilogics007@gmail.com.</p>
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Phone</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Phone</label>
               <input className="input-premium" value={settings.phone} onChange={(e) => setSettings({ ...settings, phone: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">Location</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Location</label>
               <input className="input-premium" value={settings.location} onChange={(e) => setSettings({ ...settings, location: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1 block">GitHub username</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">GitHub username</label>
               <input
                 className="input-premium"
                 value={settings.githubUsername}
@@ -427,15 +427,15 @@ export default function AdminPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">Education</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">Education</label>
               <input className="input-premium" value={settings.education} onChange={(e) => setSettings({ ...settings, education: e.target.value })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">GitHub profile URL</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">GitHub profile URL</label>
               <input className="input-premium" value={settings.social.github} onChange={(e) => setSettings({ ...settings, social: { ...settings.social, github: e.target.value } })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-[#94A3B8] mb-1 block">LinkedIn URL</label>
+              <label className="text-xs text-[var(--text-secondary)] mb-1 block">LinkedIn URL</label>
               <input className="input-premium" value={settings.social.linkedin} onChange={(e) => setSettings({ ...settings, social: { ...settings.social, linkedin: e.target.value } })} />
             </div>
             <div className="flex items-center gap-2 sm:col-span-2">
@@ -459,7 +459,7 @@ export default function AdminPage() {
             {experienceList.map((exp, i) => (
               <div key={exp.id} className="rounded-lg border border-white/[0.08] p-4 space-y-3 bg-[#111827]/50">
                 <div className="flex justify-end">
-                  <button type="button" onClick={() => deleteExperience(i)} className="text-[#94A3B8] hover:text-red-400">
+                  <button type="button" onClick={() => deleteExperience(i)} className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)]">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -471,7 +471,7 @@ export default function AdminPage() {
                 </div>
                 <textarea className="input-premium resize-none" rows={2} value={exp.description} onChange={(e) => updateExp(i, { description: e.target.value })} placeholder="Description" />
                 <div>
-                  <label className="text-xs text-[#94A3B8] mb-1 block">Achievements (one per line)</label>
+                  <label className="text-xs text-[var(--text-secondary)] mb-1 block">Achievements (one per line)</label>
                   <textarea
                     className="input-premium resize-none font-mono text-xs"
                     rows={4}

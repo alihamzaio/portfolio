@@ -51,11 +51,11 @@ function SidebarNav({
       <div className="flex items-center gap-3 mb-10 px-1">
         <div className="relative">
           <LogoMark size={44} instanceId="admin" />
-          <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#22C55E] border-2 border-[#0F172A]" />
+          <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent-primary)] border-2 border-[#0c0c0c]" />
         </div>
         <div>
-          <p className="text-sm font-bold text-[#F8FAFC] tracking-tight">Portfolio CMS</p>
-          <p className="text-[10px] text-[#64748B] uppercase tracking-[0.2em]">SaaS Admin</p>
+          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Portfolio CMS</p>
+          <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">SaaS Admin</p>
         </div>
       </div>
       <nav className="flex-1 space-y-1">
@@ -67,11 +67,11 @@ function SidebarNav({
             className={cn(
               "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-400",
               tab === item.id
-                ? "bg-gradient-to-r from-[#3B82F6]/20 to-[#06B6D4]/10 text-[#F8FAFC] border border-[#3B82F6]/30 shadow-[0_0_32px_rgba(59,130,246,0.12)]"
-                : "text-[#94A3B8] hover:bg-white/[0.04] hover:text-[#F8FAFC] border border-transparent"
+                ? "bg-[var(--accent-primary)]/10 text-[var(--text-primary)] border border-[var(--accent-primary)]/25"
+                : "text-[var(--text-secondary)] hover:bg-white/[0.04] hover:text-[var(--text-primary)] border border-transparent"
             )}
           >
-            <item.icon className={cn("h-4 w-4 shrink-0", tab === item.id && "text-[#3B82F6]")} />
+            <item.icon className={cn("h-4 w-4 shrink-0", tab === item.id && "text-[var(--accent-primary)]")} />
             {item.label}
           </button>
         ))}
@@ -79,7 +79,7 @@ function SidebarNav({
       <button
         type="button"
         onClick={onLogout}
-        className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm text-[#94A3B8] hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/25 transition-all mt-8 w-full"
+        className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 border border-transparent hover:border-[var(--accent-primary)]/25 transition-all mt-8 w-full"
       >
         <LogOut className="h-4 w-4" /> Sign out
       </button>
@@ -98,8 +98,8 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
   ]
 
   return (
-    <div className="flex min-h-screen bg-[#020617]">
-      <aside className="hidden lg:flex w-[272px] flex-col border-r border-white/[0.08] bg-[#0F172A]/90 backdrop-blur-2xl p-6 shrink-0 relative overflow-hidden">
+    <div className="flex min-h-screen bg-[var(--bg-void)]">
+      <aside className="hidden lg:flex w-[272px] flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 shrink-0 relative overflow-hidden">
         <div className="absolute inset-0 mesh-ambient opacity-50 pointer-events-none" />
         <div className="relative flex flex-col flex-1">
           <SidebarNav tab={tab} onTab={onTab} onLogout={onLogout} />
@@ -112,16 +112,16 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2.5 rounded-xl glass-panel text-[#94A3B8] hover:text-[#F8FAFC]"
+              className="lg:hidden p-2.5 rounded-xl glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
             </button>
             <div>
-              <p className="text-sm font-bold text-[#F8FAFC] capitalize tracking-tight">
+              <p className="text-sm font-bold text-[var(--text-primary)] capitalize tracking-tight">
                 {tab === "profile" ? "Profile & Hero" : tab}
               </p>
-              <p className="text-[10px] text-[#64748B] font-mono">Content management</p>
+              <p className="text-[10px] text-[var(--text-muted)] font-mono">Content management</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -130,9 +130,9 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
                 key={s.label}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs"
               >
-                <s.icon className="h-3.5 w-3.5 text-[#3B82F6]" />
-                <span className="text-[#64748B]">{s.label}</span>
-                <span className="text-[#F8FAFC] font-bold tabular-nums">{s.value}</span>
+                <s.icon className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
+                <span className="text-[var(--text-muted)]">{s.label}</span>
+                <span className="text-[var(--text-primary)] font-bold tabular-nums">{s.value}</span>
               </div>
             ))}
           </div>
@@ -161,7 +161,7 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 z-50 bg-[#020617]/85 backdrop-blur-xl"
+            className="lg:hidden fixed inset-0 z-50 bg-[var(--bg-void)]/90 backdrop-blur-xl"
             onClick={() => setSidebarOpen(false)}
           >
             <motion.aside
@@ -169,13 +169,13 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ type: "spring", stiffness: 380, damping: 36 }}
-              className="w-[280px] h-full bg-[#0F172A] border-r border-white/[0.08] p-6 flex flex-col shadow-[24px_0_80px_rgba(0,0,0,0.5)]"
+              className="w-[280px] h-full bg-[var(--bg-secondary)] border-r border-[var(--border-subtle)] p-6 flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setSidebarOpen(false)}
-                className="self-end p-2 rounded-lg text-[#94A3B8] hover:text-[#F8FAFC] mb-2"
+                className="self-end p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-2"
                 aria-label="Close menu"
               >
                 <X className="h-5 w-5" />
@@ -203,13 +203,13 @@ export function StatCard({ label, value, sub }: { label: string; value: string |
       transition={{ duration: 0.35, ease }}
       className="glass-card-interactive rounded-2xl p-6 relative overflow-hidden group"
     >
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[#3B82F6]/10 blur-3xl pointer-events-none group-hover:bg-[#3B82F6]/20 transition-colors duration-500" />
+      <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[var(--accent-primary)]/8 blur-3xl pointer-events-none" />
       <div className="flex items-center gap-2 mb-3">
-        <TrendingUp className="h-3.5 w-3.5 text-[#06B6D4]" />
-        <p className="text-[10px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">{label}</p>
+        <TrendingUp className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
+        <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-[0.2em]">{label}</p>
       </div>
-      <p className="text-3xl font-bold text-[#F8FAFC] tabular-nums tracking-tight">{value}</p>
-      {sub && <p className="text-xs text-[#94A3B8] mt-2 leading-relaxed">{sub}</p>}
+      <p className="text-3xl font-bold text-[var(--text-primary)] tabular-nums tracking-tight">{value}</p>
+      {sub && <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed">{sub}</p>}
     </motion.div>
   )
 }
@@ -226,7 +226,7 @@ export function Panel({
   return (
     <div className="glass-card rounded-2xl overflow-hidden border-white/[0.08]">
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-gradient-to-r from-white/[0.03] to-transparent">
-        <h2 className="text-sm font-bold text-[#F8FAFC] tracking-tight">{title}</h2>
+        <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-tight">{title}</h2>
         {action}
       </div>
       <div className="p-6">{children}</div>

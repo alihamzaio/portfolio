@@ -1,8 +1,6 @@
-/** PNG favicon / apple-icon — clear AH letterforms for Ali Hamza */
+/** PNG favicon — shared brand sigil */
 export function brandIconMarkup(size: number) {
-  const radius = Math.round(size * 0.28)
-  const fontSize = Math.round(size * 0.3)
-
+  const s = size * 0.68
   return (
     <div
       style={{
@@ -11,35 +9,17 @@ export function brandIconMarkup(size: number) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(160deg, #1a2336 0%, #0a0f1a 100%)",
-        borderRadius: radius,
-        border: `${Math.max(1, Math.floor(size / 20))}px solid rgba(59, 130, 246, 0.45)`,
-        position: "relative",
-        fontFamily: "system-ui, -apple-system, Segoe UI, sans-serif",
+        background: "#050507",
+        overflow: "hidden",
+        borderRadius: Math.round(size * 0.18),
       }}
     >
-      <div
-        style={{
-          fontSize,
-          fontWeight: 800,
-          letterSpacing: "-0.12em",
-          color: "#93C5FD",
-          marginTop: size * 0.02,
-        }}
-      >
-        AH
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          top: size * 0.12,
-          right: size * 0.12,
-          width: Math.max(3, size * 0.09),
-          height: Math.max(3, size * 0.09),
-          borderRadius: "50%",
-          background: "#22D3EE",
-        }}
-      />
+      <svg width={s} height={s} viewBox="0 0 48 48" fill="none">
+        <path d="M4 44 L18 6 H24" stroke="#ede9e1" strokeWidth="2.6" strokeLinecap="square" />
+        <path d="M28 6 V44" stroke="#ede9e1" strokeWidth="2.6" strokeLinecap="square" />
+        <path d="M40 6 V44" stroke="#ede9e1" strokeWidth="2.6" strokeLinecap="square" />
+        <path d="M8 30 L42 16" stroke="#e8442f" strokeWidth="3" strokeLinecap="square" />
+      </svg>
     </div>
   )
 }

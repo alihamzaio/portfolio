@@ -45,6 +45,7 @@ export const navItems = [
   { label: "Skills", href: "/#skills", id: "skills" },
   { label: "Work", href: "/#projects", id: "projects" },
   { label: "Experience", href: "/#experience", id: "experience" },
+  { label: "AI", href: "/#intelligence", id: "intelligence" },
   { label: "Contact", href: "/#contact", id: "contact" },
 ] as const
 

@@ -34,7 +34,7 @@ export function SkillIcon({
         className={cn(
           "inline-flex shrink-0 items-center justify-center rounded-[4px]",
           "bg-gradient-to-b from-white/95 to-white/80",
-          "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_14px_rgba(59,130,246,0.35)]",
+          "shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_14px_rgba(232, 68, 47,0.35)]",
           "p-[2px]",
           className
         )}
