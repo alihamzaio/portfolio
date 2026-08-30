@@ -64,8 +64,8 @@ function SkillsRadarInner() {
       })}
       <motion.polygon
         points={polygon}
-        fill="rgba(59,130,246,0.15)"
-        stroke="#06b6d4"
+        fill="rgba(232, 68, 47,0.15)"
+        stroke="var(--accent-primary)"
         strokeWidth="1.5"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={inView ? { opacity: 1, scale: 1 } : {}}

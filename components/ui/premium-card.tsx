@@ -36,7 +36,7 @@ export function PremiumCard({
         "rounded-2xl p-6 transition-[border-color,box-shadow] duration-500 relative overflow-hidden",
         hover && !spotlight && "premium-card-hover",
         spotlight &&
-          "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none before:bg-[radial-gradient(480px_circle_at_var(--sx,50%)_var(--sy,50%),rgba(59,130,246,0.14),transparent_42%)]",
+          "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:pointer-events-none before:bg-[radial-gradient(480px_circle_at_var(--sx,50%)_var(--sy,50%),rgba(232, 68, 47,0.08),transparent_42%)]",
         className
       )}
       {...props}

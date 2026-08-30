@@ -44,7 +44,7 @@ function GlobalParticles({ count = 500 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.028} color={brand.cyan} transparent opacity={0.2} sizeAttenuation />
+      <pointsMaterial size={0.028} color={brand.accent} transparent opacity={0.2} sizeAttenuation />
     </points>
   )
 }

@@ -1,4 +1,4 @@
-import { baselineSecurityHeaders, sourceMapHeaders, staticAssetHeaders } from "./lib/security-headers.mjs"
+import { baselineSecurityHeaders, crossOriginResourceHeaders, sourceMapHeaders, staticAssetHeaders } from "./lib/security-headers.mjs"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -48,7 +48,7 @@ const nextConfig = {
           ...baselineSecurity,
           {
             key: "X-Site-Build",
-            value: "seo-v19",
+            value: "seo-v20",
           },
           {
             key: "Link",
@@ -56,6 +56,26 @@ const nextConfig = {
               "<https://res.cloudinary.com>; rel=preconnect; crossorigin, <https://res.cloudinary.com>; rel=dns-prefetch",
           },
         ],
+      },
+      {
+        source: "/opengraph-image",
+        headers: crossOriginResourceHeaders,
+      },
+      {
+        source: "/og.png",
+        headers: crossOriginResourceHeaders,
+      },
+      {
+        source: "/icon",
+        headers: crossOriginResourceHeaders,
+      },
+      {
+        source: "/apple-icon",
+        headers: crossOriginResourceHeaders,
+      },
+      {
+        source: "/favicon.svg",
+        headers: crossOriginResourceHeaders,
       },
       {
         source: "/_next/static/:path*.map",

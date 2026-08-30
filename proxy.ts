@@ -20,7 +20,7 @@ function buildSecurityHeaders(csp: string) {
     { key: "X-DNS-Prefetch-Control", value: "on" },
     {
       key: "Permissions-Policy",
-      value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      value: "camera=(), microphone=(self), geolocation=(), payment=(), usb=()",
     },
     {
       key: "Strict-Transport-Security",
@@ -47,9 +47,19 @@ export function proxy(request: NextRequest) {
     response.headers.set(header.key, header.value)
   }
 
-  response.headers.set("X-Site-Build", "seo-v19")
-
   const path = request.nextUrl.pathname.toLowerCase()
+  if (
+    path === "/opengraph-image" ||
+    path === "/og.png" ||
+    path === "/icon" ||
+    path === "/apple-icon" ||
+    path === "/favicon.svg"
+  ) {
+    response.headers.set("Cross-Origin-Resource-Policy", "cross-origin")
+  }
+
+  response.headers.set("X-Site-Build", "seo-v20")
+
   if (
     path === "/index.html" ||
     path === "/index.php" ||
@@ -64,7 +74,7 @@ export function proxy(request: NextRequest) {
     for (const header of buildSecurityHeaders(csp)) {
       redirect.headers.set(header.key, header.value)
     }
-    redirect.headers.set("X-Site-Build", "seo-v19")
+    redirect.headers.set("X-Site-Build", "seo-v20")
     return redirect
   }
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 
-const CYAN = "rgba(0, 217, 255, 0.6)"
+const CYAN = "rgba(232, 68, 47, 0.6)"
 const LINK_DIST = 120
 
 export function HeroParticlesCanvas() {
@@ -72,7 +72,7 @@ export function HeroParticlesCanvas() {
           const b = particles[j]
           const d = Math.hypot(a.x - b.x, a.y - b.y)
           if (d < LINK_DIST) {
-            ctx.strokeStyle = `rgba(0, 217, 255, ${0.25 * (1 - d / LINK_DIST)})`
+            ctx.strokeStyle = `rgba(232, 68, 47, ${0.25 * (1 - d / LINK_DIST)})`
             ctx.lineWidth = 1
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)

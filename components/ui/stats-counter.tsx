@@ -60,9 +60,9 @@ export function StatsCounter({ value, label }: { value: string; label: string })
 
   return (
     <div ref={ref} data-animate className="h-full min-w-0">
-      <div className="glass-card rounded-xl px-3 py-4 sm:px-4 sm:py-5 h-full min-h-[92px] flex flex-col items-center justify-center text-center hover:border-[#00D9FF]/30 transition-colors duration-500">
-        <p className="text-xl sm:text-2xl font-bold text-[#F8FAFC] tabular-nums leading-none">{display}</p>
-        <p className="text-xs sm:text-[11px] text-[#C5D0DE] mt-2.5 leading-tight uppercase tracking-wide">
+      <div className="glass-card rounded-xl px-3 py-4 sm:px-4 sm:py-5 h-full min-h-[92px] flex flex-col items-center justify-center text-center hover:border-[var(--accent-primary)]/30 transition-colors duration-500">
+        <p className="text-xl sm:text-2xl font-bold text-[var(--text-primary)] tabular-nums leading-none">{display}</p>
+        <p className="text-xs sm:text-[11px] text-[var(--text-secondary)] mt-2.5 leading-tight uppercase tracking-wide">
           {label}
         </p>
       </div>

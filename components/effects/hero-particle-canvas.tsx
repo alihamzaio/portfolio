@@ -43,7 +43,7 @@ function Particles({ count = 1200 }: { count?: number }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.035} color={brand.sky} transparent opacity={0.5} sizeAttenuation />
+      <pointsMaterial size={0.035} color={brand.accent} transparent opacity={0.5} sizeAttenuation />
     </points>
   )
 }

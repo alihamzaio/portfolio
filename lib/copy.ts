@@ -22,7 +22,7 @@ export const copy = {
         "Three years building production systems for startups and product teams across APIs, cloud infrastructure, modern frontends, and reliable deployments.",
         bio: [
           "Over the last 3+ years, I've worked on web applications, backend services, cloud infrastructure, and blockchain-related projects. My primary stack includes React, Next.js, Node.js, MongoDB, PostgreSQL, and AWS.",
-          "Recent delivery includes a blockchain crawler and indexer, healthcare and e-commerce platforms on AWS serverless, DeFi interfaces with wallet connectivity, and dropshipping systems with supplier API automation.",
+          "Recent delivery includes a blockchain crawler and indexer, e-commerce platforms on AWS serverless, DeFi interfaces with wallet connectivity, and dropshipping systems with supplier API automation.",
           "I focus on clear service boundaries, typed APIs, reliable data models, and deployment pipelines that teams can run without guesswork. That means fewer production defects, faster feature cycles, and documentation that other engineers can pick up quickly.",
           "I work remotely from Lahore and have collaborated with startups, product teams, and international clients. Open to both full-time and contract opportunities focused on shipping maintainable production software.",
         ]
@@ -37,7 +37,7 @@ export const copy = {
       label: "Projects",
       title: "Selected projects",
       description:
-        "Production applications in e-commerce, healthcare, fintech, and blockchain.",
+        "Production applications in e-commerce, fintech, and blockchain.",
     },
     experience: {
       label: "Experience",

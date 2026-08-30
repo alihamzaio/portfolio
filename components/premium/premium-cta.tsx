@@ -1,7 +1,6 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { PremiumPanel } from "@/components/premium/premium-panel"
 import { PremiumSection } from "@/components/premium/premium-section"
 
 interface PremiumCtaProps {
@@ -15,17 +14,17 @@ export function PremiumCta({ label, title, description, children }: PremiumCtaPr
   const showLabel = label.trim().toLowerCase() !== title.trim().toLowerCase()
 
   return (
-    <PremiumSection className="!py-16 sm:!py-24 md:!py-28 lg:!py-32 border-t-0">
-      <PremiumPanel centered>
-        {showLabel && <p className="section-label mb-3">{label}</p>}
-        <p className="section-title mb-4">{title}</p>
-        <p className="text-neutral-400 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto text-balance">
+    <PremiumSection className="!py-24 sm:!py-32 md:!py-40">
+      <div data-animate className="mx-auto max-w-2xl text-center">
+        {showLabel && <p className="section-label mb-4">{label}</p>}
+        <p className="section-title mb-5">{title}</p>
+        <p className="text-body text-base sm:text-[15px] mb-10 sm:mb-12 mx-auto max-w-xl text-balance">
           {description}
         </p>
-        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-md sm:max-w-none mx-auto sm:mx-0">
+        <div className="hero-actions justify-center w-full max-w-md sm:max-w-none mx-auto">
           {children}
         </div>
-      </PremiumPanel>
+      </div>
     </PremiumSection>
   )
 }

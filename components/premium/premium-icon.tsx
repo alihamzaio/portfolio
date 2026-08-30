@@ -10,9 +10,9 @@ interface PremiumIconProps {
 export function PremiumIcon({ icon: Icon, className, size = 20 }: PremiumIconProps) {
   return (
     <Icon
-      className={cn("text-cyan-400 shrink-0", className)}
+      className={cn("text-[var(--accent-primary)] shrink-0", className)}
       size={size}
-      strokeWidth={1.75}
+      strokeWidth={1.6}
       aria-hidden
     />
   )

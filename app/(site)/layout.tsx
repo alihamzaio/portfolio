@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/layout/site-header"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { MobileDock } from "@/components/layout/mobile-dock"
 import { MainContent } from "@/components/layout/main-content"
+import { IntelligenceFloatingLazy } from "@/components/intelligence/intelligence-floating-lazy"
+
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <AppProviders>
@@ -13,7 +15,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         <HashScrollHandler />
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-blue-500 focus:text-white focus:text-sm focus:font-medium"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--accent-primary)] focus:text-[var(--primary-foreground)] focus:text-sm focus:font-medium"
         >
           Skip to main content
         </a>
@@ -21,6 +23,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         <MainContent>{children}</MainContent>
         <SiteFooter />
         <MobileDock />
+        <IntelligenceFloatingLazy />
       </SiteContentProvider>
     </AppProviders>
   )

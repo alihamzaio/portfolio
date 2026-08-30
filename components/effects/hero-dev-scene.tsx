@@ -48,15 +48,15 @@ function DevCore() {
     <group ref={group} scale={0.82} position={[0, 0.05, 0]}>
       <mesh ref={knot}>
         <torusKnotGeometry args={[0.95, 0.24, 128, 16]} />
-        <meshBasicMaterial color={brand.blue} wireframe transparent opacity={0.55} />
+        <meshBasicMaterial color={brand.accent} wireframe transparent opacity={0.55} />
       </mesh>
       <mesh ref={inner}>
         <icosahedronGeometry args={[0.48, 1]} />
-        <meshBasicMaterial color={brand.cyan} wireframe transparent opacity={0.75} />
+        <meshBasicMaterial color={brand.accent} wireframe transparent opacity={0.75} />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.35, 0.01, 8, 64]} />
-        <meshBasicMaterial color={brand.sky} transparent opacity={0.35} />
+        <meshBasicMaterial color={brand.accent} transparent opacity={0.35} />
       </mesh>
     </group>
   )
@@ -82,18 +82,18 @@ function CodeTerminal({ reduceMotion }: { reduceMotion: boolean }) {
   }, [charIdx, line.length, reduceMotion])
 
   return (
-    <div className="rounded-xl border border-cyan-500/20 bg-[#0a0f1a]/85 backdrop-blur-xl p-3.5 shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_32px_rgba(59,130,246,0.12)]">
+    <div className="rounded-xl border border-[var(--accent-primary)]/20 bg-[var(--bg-secondary)]/85 backdrop-blur-xl p-3.5 shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_32px_rgba(232, 68, 47,0.12)]">
       <div className="flex items-center gap-1.5 mb-2.5">
-        <span className="h-2 w-2 rounded-full bg-red-400/80" />
-        <span className="h-2 w-2 rounded-full bg-amber-400/80" />
-        <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
+        <span className="h-2 w-2 rounded-full bg-[var(--accent-primary)]/80" />
+        <span className="h-2 w-2 rounded-full bg-[var(--accent-primary)]/80" />
+        <span className="h-2 w-2 rounded-full bg-[var(--accent-primary)]/80" />
         <span className="ml-2 text-[9px] font-mono text-neutral-500">~/portfolio</span>
       </div>
-      <p className="font-mono text-[11px] leading-relaxed text-cyan-300/90 min-h-[2.75rem]">
-        <span className="text-blue-400/70">$ </span>
+      <p className="font-mono text-[11px] leading-relaxed text-[var(--accent-primary)] min-h-[2.75rem]">
+        <span className="text-[var(--text-muted)]">$ </span>
         {reduceMotion ? CODE_LINES[0] : displayed}
         {!reduceMotion && (
-          <span className="inline-block w-[6px] h-[13px] ml-0.5 bg-cyan-400/80 align-middle animate-pulse" />
+          <span className="inline-block w-[6px] h-[13px] ml-0.5 bg-[var(--accent-primary)]/80 align-middle animate-pulse" />
         )}
       </p>
     </div>
@@ -114,22 +114,21 @@ export function HeroDevScene() {
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, scale: 0.92, y: 16 }}
+      initial={false}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-[min(340px,42vw)] h-[380px] shrink-0"
+      className="relative w-[min(380px,100%)] h-[400px] shrink-0 mx-auto"
       aria-hidden
     >
       <div
         className="absolute -inset-8 rounded-full opacity-60 blur-3xl pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(59,130,246,0.28), transparent 68%)" }}
+        style={{ background: "radial-gradient(circle, rgba(232, 68, 47,0.28), transparent 68%)" }}
       />
 
       <div
-        className={`absolute inset-0 rounded-full border border-dashed border-cyan-400/12 pointer-events-none ${reduceMotion ? "" : "hero-dev-orbit-slow"}`}
+        className={`absolute inset-0 rounded-full border border-dashed border-[var(--accent-primary)]/15 pointer-events-none ${reduceMotion ? "" : "hero-dev-orbit-slow"}`}
       />
       <div
-        className={`absolute inset-6 rounded-full border border-blue-500/10 pointer-events-none ${reduceMotion ? "" : "hero-dev-orbit-reverse"}`}
+        className={`absolute inset-6 rounded-full border border-[var(--border-subtle)] pointer-events-none ${reduceMotion ? "" : "hero-dev-orbit-reverse"}`}
       />
 
       {FLOAT_CHIPS.map((chip, i) => (
@@ -160,10 +159,10 @@ export function HeroDevScene() {
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div
-              className="w-36 h-36 rounded-full border border-cyan-500/30"
+              className="w-36 h-36 rounded-full border border-[var(--accent-primary)]/25"
               style={{
                 background:
-                  "radial-gradient(circle at 40% 35%, rgba(59,130,246,0.2), transparent 60%), radial-gradient(circle, rgba(6,182,212,0.08), transparent 70%)",
+                  "radial-gradient(circle at 40% 35%, rgba(232, 68, 47,0.2), transparent 60%), radial-gradient(circle, rgba(232, 68, 47,0.08), transparent 70%)",
               }}
             />
           </div>
@@ -181,7 +180,7 @@ export function HeroDevScene() {
             initial={reduceMotion ? false : { opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55 + i * 0.08 }}
-            className="text-[9px] font-mono px-2 py-1 rounded-md border border-white/[0.08] bg-white/[0.04] text-cyan-400/80 whitespace-nowrap"
+            className="text-[9px] font-mono px-2 py-1 rounded-md border border-white/[0.08] bg-white/[0.04] text-[var(--accent-primary)] whitespace-nowrap"
           >
             {m.value} {m.label.split(" ")[0]}
           </motion.span>

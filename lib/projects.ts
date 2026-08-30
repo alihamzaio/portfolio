@@ -1,5 +1,6 @@
 import projectsData from "./projects.json"
 import type { Project } from "./types"
+import { applyCaseStudyDefaults } from "./project-case-studies"
 
 export function slugify(text: string): string {
   return text
@@ -15,12 +16,13 @@ function normalizeGithub(url?: string): string | undefined {
 
 const enriched = (projectsData as Project[]).map((project) => {
   const title = project.title.trim()
-  return {
+  const base = {
     ...project,
     title,
-    slug: slugify(title),
+    slug: typeof project.slug === "string" && project.slug.length > 0 ? project.slug : slugify(title),
     github: normalizeGithub(project.github),
   }
+  return applyCaseStudyDefaults(base) as Project & { slug: string }
 })
 
 /** Public portfolio — excludes early clones / practice demos */
@@ -38,11 +40,12 @@ export function getFeaturedProjects(limit = 4) {
   return projects.slice(0, limit)
 }
 
-export function getShowcaseProjects(limit = 12) {
+export function getShowcaseProjects(limit?: number) {
   const featured = projects.filter((p) => p.featured)
-  if (featured.length >= limit) return featured.slice(0, limit)
   const rest = projects.filter((p) => !p.featured)
-  return [...featured, ...rest].slice(0, limit)
+  const ordered = [...featured, ...rest]
+  if (limit === undefined) return ordered
+  return ordered.slice(0, limit)
 }
 
 export function getProjectSlugs() {

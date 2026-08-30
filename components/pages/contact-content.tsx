@@ -53,7 +53,7 @@ export function ContactContent() {
                   <PremiumIcon icon={item.icon} size={20} />
                   <div>
                     <p className="text-xs text-neutral-500 uppercase tracking-wider">{item.label}</p>
-                    <p className="text-sm text-white break-all sm:break-normal group-hover:text-cyan-400 transition-colors mt-1">
+                    <p className="text-sm text-white break-all sm:break-normal group-hover:text-[var(--accent-primary)] transition-colors mt-1">
                       {item.value}
                     </p>
                   </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, type MouseEvent } from "react"
+import { useState, useEffect, type MouseEvent } from "react"
 import { createPortal } from "react-dom"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -29,7 +29,7 @@ const itemVariants = {
   open: (i: number) => ({
     opacity: 1,
     x: 0,
-    transition: { delay: 0.08 + i * 0.05, duration: 0.35, ease },
+    transition: { delay: 0.06 + i * 0.04, duration: 0.32, ease },
   }),
 }
 
@@ -37,7 +37,6 @@ export function SiteHeader() {
   const profile = usePublicProfile()
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
-  const barRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeId, setActiveId] = useState("home")
@@ -50,39 +49,8 @@ export function SiteHeader() {
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {
-    const header = document.querySelector<HTMLElement>("[data-site-header]")
-    let lastY = window.scrollY
-    let hidden = false
-    let ticking = false
-
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        ticking = false
-        const y = window.scrollY
-        setScrolled(y > 12)
-
-        if (!header) return
-        if (y > lastY && y > 80) {
-          if (!hidden) {
-            hidden = true
-            header.style.transform = "translateY(-100%)"
-          }
-        } else if (y < lastY || y <= 80) {
-          if (hidden) {
-            hidden = false
-            header.style.transform = "translateY(0)"
-          }
-        }
-        lastY = y
-      })
-    }
-
-    if (header) {
-      header.style.transition = "transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)"
-    }
-
+    const onScroll = () => setScrolled(window.scrollY > 16)
+    onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
@@ -150,8 +118,8 @@ export function SiteHeader() {
               animate="open"
               exit="closed"
               variants={backdropVariants}
-              transition={{ duration: reduceMotion ? 0 : 0.3, ease }}
-              className="fixed inset-0 z-[200] bg-[#0a0f1a]/80 backdrop-blur-sm lg:hidden"
+              transition={{ duration: reduceMotion ? 0 : 0.28, ease }}
+              className="fixed inset-0 z-[200] bg-[var(--bg-primary)]/90 backdrop-blur-sm lg:hidden"
               onClick={closeMobile}
             />
 
@@ -166,10 +134,10 @@ export function SiteHeader() {
               exit="closed"
               variants={panelVariants}
               transition={motionTransition}
-              className="fixed top-0 right-0 bottom-0 z-[201] flex w-[min(100%,20rem)] flex-col border-l border-white/[0.08] bg-[#0a0f1a]/98 shadow-[-24px_0_64px_rgba(0,0,0,0.55)] backdrop-blur-2xl lg:hidden"
+              className="fixed top-0 right-0 bottom-0 z-[201] flex w-[min(100%,20rem)] flex-col border-l border-[var(--border-subtle)] bg-[var(--bg-primary)] lg:hidden"
               style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
             >
-              <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/[0.06] shrink-0">
+              <div className="flex items-center justify-between gap-3 px-4 py-3.5 border-b border-[var(--border-subtle)] shrink-0">
                 <Link
                   href="/"
                   onClick={() => closeMobile()}
@@ -179,15 +147,14 @@ export function SiteHeader() {
                   <Logo
                     name={profile.name}
                     showName
-                    size={36}
+                    size={38}
                     instanceId="mobile-nav"
-                    className="[&_.logo-name]:flex"
                   />
                 </Link>
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-xl border border-white/[0.1] bg-white/[0.06] text-white transition-colors hover:bg-white/[0.1] hover:border-cyan-500/30"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 border border-[var(--border-subtle)] bg-[var(--bg-secondary)] text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-elevated)]"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -211,8 +178,8 @@ export function SiteHeader() {
                         className={cn(
                           "flex items-center min-h-12 px-4 py-3 rounded-xl text-base font-medium transition-colors",
                           activeId === item.id && isHome
-                            ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/25"
-                            : "text-neutral-300 hover:text-white hover:bg-white/[0.04]"
+                            ? "bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/25"
+                            : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/[0.03]"
                         )}
                       >
                         {item.label}
@@ -227,12 +194,12 @@ export function SiteHeader() {
                   animate="open"
                   exit="closed"
                   variants={itemVariants}
-                  className="mt-4 px-1"
+                  className="mt-5 px-1"
                 >
                   <Link
                     href={resolveNavHref("/#contact", pathname)}
                     onClick={(e) => handleNavClick(e, "/#contact")}
-                    className="btn-primary btn-responsive justify-center w-full"
+                  className="btn-primary btn-responsive justify-center w-full"
                   >
                     Hire me
                     <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
@@ -250,16 +217,15 @@ export function SiteHeader() {
     <>
       <header data-site-header className="fixed top-0 left-0 right-0 z-[100] pointer-events-none">
         <div
-          ref={barRef}
           className={cn(
-            "pointer-events-auto transition-[background,padding,box-shadow,border-radius] duration-300",
+            "pointer-events-auto transition-[background,box-shadow,border-color,padding,margin,border-radius] duration-400 ease-out",
             scrolled || mobileOpen
-              ? "glass-nav mx-3 sm:mx-4 mt-2 rounded-2xl py-3"
-              : "py-5 sm:py-6 bg-transparent"
+              ? "glass-nav mx-3 sm:mx-6 mt-2 rounded-[1rem] py-2.5 sm:py-3"
+              : "py-6 sm:py-7 bg-transparent"
           )}
         >
-          <div className="section-shell !px-4 sm:!px-6">
-            <div className="flex items-center justify-between gap-3 min-w-0">
+          <div className="section-shell !px-4 sm:!px-6 lg:!px-8">
+            <div className="flex items-center justify-between gap-4 min-w-0">
               <Link
                 href="/"
                 className="shrink min-w-0 group"
@@ -270,15 +236,14 @@ export function SiteHeader() {
                 <Logo
                   name={profile.name}
                   showName
-                  size={40}
-                  animated
+                  size={38}
                   instanceId="header"
-                  className="transition-opacity group-hover:opacity-95 [&_.logo-name]:hidden sm:[&_.logo-name]:flex"
+                  className="transition-opacity group-hover:opacity-90"
                 />
               </Link>
 
               <nav
-                className="hidden lg:flex items-center gap-0.5 p-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                className="hidden lg:flex items-center gap-0.5 px-2"
                 aria-label="Main"
               >
                 {navItems.map((item) => {
@@ -290,22 +255,29 @@ export function SiteHeader() {
                       onClick={(e) => handleNavClick(e, item.href)}
                       aria-current={active ? "true" : undefined}
                       className={cn(
-                        "relative px-4 py-2.5 text-[13px] font-medium rounded-xl transition-colors duration-300",
-                        active ? "nav-link-active-cyan" : "text-neutral-400 hover:text-white"
+                        "relative px-4 py-2 text-[13px] font-medium tracking-tight rounded-lg transition-colors duration-250",
+                        active ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                       )}
                     >
-                      <span className="relative">{item.label}</span>
-                      {active && <span className="nav-active-dot" aria-hidden />}
+                      {active && (
+                        <motion.span
+                          layoutId="desktop-nav-active"
+                          className="absolute inset-0 rounded-lg border border-[var(--accent-primary)]/20 bg-[var(--accent-primary)]/[0.07]"
+                          transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }}
+                          aria-hidden
+                        />
+                      )}
+                      <span className="relative z-[1]">{item.label}</span>
                     </Link>
                   )
                 })}
               </nav>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2.5 shrink-0">
                 <Link
                   href={resolveNavHref("/#contact", pathname)}
                   onClick={(e) => handleNavClick(e, "/#contact")}
-                  className="hidden lg:inline-flex items-center gap-1.5 btn-primary text-[13px] !py-2.5 !px-5"
+                  className="hidden lg:inline-flex items-center gap-2 btn-primary !px-5"
                   data-cursor="contact"
                   data-cursor-magnetic
                 >
@@ -315,7 +287,7 @@ export function SiteHeader() {
                 <button
                   type="button"
                   onClick={mobileOpen ? closeMobile : openMobile}
-                  className="lg:hidden inline-flex items-center justify-center min-h-11 min-w-11 rounded-xl border border-white/[0.08] bg-white/[0.04] text-[#F8FAFC] transition-transform active:scale-95"
+                  className="lg:hidden inline-flex items-center justify-center min-h-11 min-w-11 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-primary)] text-[var(--text-primary)] transition-transform active:scale-95"
                   aria-label={mobileOpen ? "Close menu" : "Open menu"}
                   aria-expanded={mobileOpen}
                   aria-controls="mobile-nav-panel"

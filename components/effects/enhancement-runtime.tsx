@@ -3,54 +3,72 @@
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { initScrollReveal } from "@/lib/enhancements/init-scroll-reveal"
-
-function scheduleScrollReveal(onReady: () => void | (() => void)) {
-  let cleanup: void | (() => void)
-  let cancelled = false
-  let frame = 0
-  let idleId = 0
-  let timer = 0
-
-  const run = () => {
-    if (cancelled) return
-    cleanup = onReady()
-  }
-
-  const start = () => {
-    frame = requestAnimationFrame(() => {
-      frame = requestAnimationFrame(() => {
-        if (cancelled) return
-        if (typeof window.requestIdleCallback === "function") {
-          idleId = window.requestIdleCallback(run, { timeout: 800 })
-        } else {
-          timer = window.setTimeout(run, 200)
-        }
-      })
-    })
-  }
-
-  if (document.readyState === "complete") {
-    start()
-  } else {
-    window.addEventListener("load", start, { once: true })
-  }
-
-  return () => {
-    cancelled = true
-    window.removeEventListener("load", start)
-    cancelAnimationFrame(frame)
-    if (idleId) window.cancelIdleCallback(idleId)
-    if (timer) window.clearTimeout(timer)
-    cleanup?.()
-  }
-}
+import { initHeroKinetic } from "@/lib/enhancements/init-hero-kinetic"
+import { initMagneticButtons } from "@/lib/enhancements/init-magnetic"
+import { initLenis } from "@/lib/enhancements/init-lenis"
+import { initSectionMotions } from "@/lib/enhancements/init-section-motions"
+import { validateNavSectionIds } from "@/lib/navigation"
+import {
+  logScrollTriggers,
+  refreshScrollNow,
+  resetScrollPosition,
+  scheduleScrollRefresh,
+  waitForLayoutReady,
+} from "@/lib/enhancements/scroll-bootstrap"
 
 export function EnhancementRuntime() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const scrollCleanup = scheduleScrollReveal(() => initScrollReveal())
-    return () => scrollCleanup()
+    let disposed = false
+    const cleanups: Array<() => void> = []
+
+    const onResize = () => scheduleScrollRefresh(200)
+    window.addEventListener("resize", onResize)
+
+    async function bootstrap() {
+      resetScrollPosition()
+
+      const lenisCleanup = initLenis()
+      if (lenisCleanup) cleanups.push(lenisCleanup)
+
+      await waitForLayoutReady()
+      if (disposed) return
+
+      resetScrollPosition()
+
+      const scrollCleanup = initScrollReveal()
+      if (scrollCleanup) cleanups.push(scrollCleanup)
+
+      const sectionCleanup = initSectionMotions()
+      if (sectionCleanup) cleanups.push(sectionCleanup)
+
+      const magneticCleanup = initMagneticButtons()
+      if (magneticCleanup) cleanups.push(magneticCleanup)
+
+      if (pathname === "/") {
+        validateNavSectionIds()
+
+        const heroCleanup = initHeroKinetic()
+        if (heroCleanup) cleanups.push(heroCleanup)
+
+        requestAnimationFrame(() => {
+          if (disposed) return
+          refreshScrollNow()
+          logScrollTriggers("bootstrap-complete")
+        })
+      } else {
+        refreshScrollNow()
+      }
+    }
+
+    bootstrap()
+
+    return () => {
+      disposed = true
+      window.removeEventListener("resize", onResize)
+      cleanups.forEach((fn) => fn())
+    }
   }, [pathname])
 
   return null

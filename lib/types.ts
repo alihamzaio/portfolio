@@ -3,6 +3,10 @@ export interface Project {
   title: string
   description: string
   details: string
+  /** Client / business problem — case study */
+  problem?: string
+  /** What was built and delivered — case study */
+  solution?: string
   tags: string[]
   image: string
   link: string

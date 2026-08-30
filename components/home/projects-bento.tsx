@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { ArrowUpRight } from "lucide-react"
@@ -12,33 +13,28 @@ export function ProjectsBento() {
   const projects = featuredProjects.slice(0, 4)
 
   return (
-    <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
       {projects.map((project, i) => {
         const isFeatured = i === 0
+        const href = project.caseStudyHref ?? "/projects"
         return (
           <motion.article
             key={project.id}
             data-cursor="project"
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.55, delay: i * 0.1 }}
-            className={`group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0f1a] min-h-[240px] sm:min-h-[280px] transition-colors duration-300 hover:border-cyan-500/25 ${
-              isFeatured ? "md:col-span-2 lg:col-span-2 min-h-[280px] sm:min-h-[360px]" : ""
+            transition={{ duration: 0.5, delay: i * 0.07 }}
+            className={`group relative overflow-hidden rounded-2xl surface-lux ${
+              isFeatured ? "md:col-span-2" : ""
             }`}
           >
-            {(project.demo || project.github) && (
-              <a
-                href={project.demo || project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-cursor="external"
-                data-cursor-label={project.demo ? "Open Demo" : "Open Source"}
-                data-cursor-arrow="true"
-                className="absolute inset-0 z-[2]"
-                aria-label={project.demo ? `Open ${project.title} live site` : `Open ${project.title} source`}
-              />
-            )}
-            <div className={`relative overflow-hidden ${isFeatured ? "h-48 sm:h-56 md:h-64" : "h-40 sm:h-44"}`}>
+            <Link
+              href={href}
+              data-cursor="project"
+              className="absolute inset-0 z-[2]"
+              aria-label={`Read ${project.title} case study`}
+            />
+            <div className={`relative overflow-hidden ${isFeatured ? "h-60 sm:h-72 md:h-[22rem]" : "h-48 sm:h-56"}`}>
               <Image
                 src={project.image}
                 alt={project.title}
@@ -46,38 +42,40 @@ export function ProjectsBento() {
                 fill
                 sizes={
                   isFeatured
-                    ? "(max-width: 768px) 100vw, 66vw"
-                    : "(max-width: 768px) 100vw, 33vw"
+                    ? "(max-width: 768px) 100vw, 100vw"
+                    : "(max-width: 768px) 100vw, 50vw"
                 }
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                className="object-cover transition-transform duration-[850ms] ease-out group-hover:scale-[1.02]"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-void)] via-[var(--bg-void)]/45 to-transparent" />
             </div>
-            <div className="relative p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2 line-clamp-2 break-words">
+            <div className="relative p-7 sm:p-9">
+              <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-3 line-clamp-2 break-words transition-colors duration-300 group-hover:text-[var(--accent-primary)]">
                 {project.title}
-              </h3>
-              <p className="text-sm text-neutral-400 line-clamp-2 mb-3">{project.overview}</p>
-              <ul className="text-xs text-neutral-500 space-y-1 mb-4 list-disc pl-4">
+              </h2>
+              <p className="text-sm text-neutral-500 line-clamp-2 mb-5 leading-[1.75]">{project.overview}</p>
+              <ul className="text-sm text-neutral-500 space-y-2.5 mb-5">
                 {project.architecture.slice(0, 3).map((point) => (
-                  <li key={point} className="line-clamp-2">
-                    {point}
+                  <li key={point} className="flex gap-3 leading-relaxed">
+                    <span className="mt-2.5 h-px w-3 shrink-0 bg-[var(--accent-primary)]/55" />
+                    <span className="line-clamp-2">{point}</span>
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-5">
                 {project.metrics.slice(0, 2).map((m) => (
-                  <span key={m.label} className="premium-chip text-xs px-2 py-1 break-words">
+                  <span
+                    key={m.label}
+                    className="rounded-md border border-[var(--border-subtle)]/80 px-2.5 py-1 text-xs text-neutral-500"
+                  >
                     {m.value} {m.label}
                   </span>
                 ))}
               </div>
-              {(project.demo || project.github) && (
-                <span className="relative z-[1] pointer-events-none inline-flex items-center gap-1 text-xs font-medium text-cyan-400">
-                  {project.demo ? "Open live site" : "View source"} <ArrowUpRight className="h-3.5 w-3.5" />
-                </span>
-              )}
+              <span className="relative z-[1] pointer-events-none inline-flex items-center gap-1 text-sm font-medium text-[var(--accent-primary)]/85">
+                Read case study <ArrowUpRight className="h-3.5 w-3.5" />
+              </span>
             </div>
           </motion.article>
         )

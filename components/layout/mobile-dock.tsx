@@ -38,7 +38,7 @@ export function MobileDock() {
             key={href}
             href={resolveNavHref(href, pathname)}
             onClick={(e) => handleClick(e, href)}
-            className="flex flex-col items-center justify-center min-h-11 min-w-11 text-[#A3B0C2] hover:text-[#3B82F6] transition-colors duration-300"
+            className="flex flex-col items-center justify-center min-h-11 min-w-11 text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors duration-250"
             aria-label={label}
           >
             <Icon className="h-5 w-5" strokeWidth={1.75} />

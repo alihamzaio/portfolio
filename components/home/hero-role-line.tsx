@@ -25,7 +25,7 @@ export function HeroRoleLine() {
 
   return (
     <span
-      className={`text-neutral-300 transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0"}`}
+      className={`type-heading transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0"}`}
       aria-live="polite"
     >
       {HERO_ROLE_LINES[index]}

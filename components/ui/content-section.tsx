@@ -18,12 +18,16 @@ export function ContentSection({
       id={id}
       aria-labelledby={id ? `${id}-heading` : undefined}
       className={cn(
-        "section-pad relative border-t border-white/[0.05]",
+        "section-pad relative",
         variant === "elevated" && "section-elevated",
         variant === "muted" && "section-muted",
         className
       )}
     >
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(70%,28rem)] h-px bg-gradient-to-r from-transparent via-[var(--border-subtle)] to-transparent"
+        aria-hidden
+      />
       <div className="section-shell relative z-[1]">{children}</div>
     </section>
   )

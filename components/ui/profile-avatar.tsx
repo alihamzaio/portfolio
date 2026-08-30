@@ -47,7 +47,7 @@ export function ProfileAvatar({
               "absolute rounded-full opacity-50 blur-xl",
               compact ? "-inset-1.5" : "-inset-3"
             )}
-            style={{ background: "linear-gradient(135deg, #3B82F6, #06B6D4)" }}
+            style={{ background: "linear-gradient(135deg, var(--accent-primary), var(--accent-primary))" }}
             aria-hidden
           />
           <div
@@ -55,17 +55,17 @@ export function ProfileAvatar({
               "absolute rounded-full p-[2px]",
               compact ? "-inset-0.5" : "-inset-1"
             )}
-            style={{ background: "linear-gradient(135deg, #7DD3FC, #3B82F6, #06B6D4)" }}
+            style={{ background: "linear-gradient(135deg, var(--accent-primary), var(--accent-primary))" }}
             aria-hidden
           >
-            <div className="w-full h-full rounded-full bg-[#0a0f1a]" />
+            <div className="w-full h-full rounded-full bg-[var(--bg-secondary)]" />
           </div>
         </>
       )}
       <div
-        className="relative w-full h-full rounded-full overflow-hidden border border-white/10 shadow-[0_0_24px_rgba(59,130,246,0.2)]"
+        className="relative w-full h-full rounded-full overflow-hidden border border-[var(--border-subtle)]"
         style={{
-          background: "linear-gradient(160deg, #1e3a8a 0%, #1e40af 45%, #0c4a6e 100%)",
+          background: "#111111",
         }}
       >
         {hasPhoto ? (

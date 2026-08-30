@@ -16,7 +16,7 @@ export function PremiumSection({ id, children, className, variant = "default" }:
       id={id}
       aria-labelledby={id ? `${id}-heading` : undefined}
       className={cn(
-        "section-pad relative border-t border-white/[0.05] overflow-hidden",
+        "section-pad relative overflow-hidden",
         variant === "elevated" && "section-elevated",
         variant === "muted" && "section-muted",
         className
@@ -24,7 +24,7 @@ export function PremiumSection({ id, children, className, variant = "default" }:
     >
       <div className="section-glow absolute inset-0 pointer-events-none" aria-hidden />
       <div
-        className="section-divider absolute top-0 left-1/2 -translate-x-1/2 w-[min(90%,640px)] h-px"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(85%,36rem)] h-px bg-gradient-to-r from-transparent via-[var(--accent-primary)]/25 to-transparent"
         aria-hidden
       />
       <div className="section-shell relative z-[1]">{children}</div>

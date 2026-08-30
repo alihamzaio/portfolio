@@ -2,99 +2,128 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import type { MouseEvent } from "react"
-import { ArrowUp, ArrowUpRight } from "lucide-react"
+import { ArrowUp, ArrowUpRight, Github, Linkedin } from "lucide-react"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { Logo } from "@/components/brand/logo"
-import { resolveNavHref, scrollToSection, shouldSmoothScrollHash, offsiteAnchorProps } from "@/lib/navigation"
-import type { NavItem } from "@/lib/site"
+import { resolveNavHref, offsiteAnchorProps } from "@/lib/navigation"
+import { scrollToSectionId } from "@/lib/lenis-scroll"
+import { siteConfig } from "@/lib/site"
 
-export function SiteFooterClient({ navItems }: { navItems: readonly NavItem[] }) {
+const footerNav = [
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Experience", href: "/experience" },
+  { label: "Tech stack", href: "/tech-stack" },
+  { label: "Contact", href: "/contact" },
+] as const
+
+export function SiteFooterClient() {
   const profile = usePublicProfile()
   const pathname = usePathname()
   const year = new Date().getFullYear()
-
-  const handleNavClick = (e: MouseEvent, href: string) => {
-    if (shouldSmoothScrollHash(href, pathname)) {
-      e.preventDefault()
-      scrollToSection(href)
-      window.history.pushState(null, "", href)
-    }
-  }
+  const contactHref = resolveNavHref("/#contact", pathname)
 
   const scrollTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToSectionId("home")
   }
 
   return (
-    <footer className="border-t border-white/[0.06] mt-12 sm:mt-16 md:mt-20 bg-[#0a0f1a]/80 backdrop-blur-xl">
-      <div className="section-shell py-12 sm:py-16 md:py-20">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
-          <div className="max-w-sm">
-            <Link href="/" className="inline-block mb-4 group" aria-label="Ali Hamza Portfolio home">
-              <Logo name={profile.name} showName={false} size={40} instanceId="footer" />
+    <footer className="relative border-t border-[var(--border-subtle)] bg-[var(--bg-void)] overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 footer-glow" aria-hidden />
+
+      <div className="site-grid relative z-[1] pt-[var(--space-5)] pb-[max(var(--space-5),calc(5rem+env(safe-area-inset-bottom)))] lg:pb-[var(--space-5)]">
+        <div className="grid gap-10 md:grid-cols-3 lg:gap-[var(--space-7)]">
+          <div className="max-w-md md:col-span-1">
+            <Link href="/" className="inline-flex mb-[var(--space-4)]" aria-label={`${profile.name} — home`}>
+              <Logo name={profile.name} showName size={36} instanceId="footer" />
             </Link>
-            <p className="text-sm font-semibold text-white mb-1">Ali Hamza Portfolio</p>
-            <p className="text-sm text-neutral-400 leading-relaxed break-words">
-              {profile.title} based in {profile.location}. Building MERN, Next.js, AWS serverless, and blockchain products.
-            </p>
-            <a
-              href={`mailto:${profile.email}`}
-              className="text-sm text-neutral-400 hover:text-white mt-2 inline-block transition-colors text-left"
+            <p className="type-body-sm leading-relaxed text-[var(--text-secondary)]">{profile.title}</p>
+            <p className="type-body-sm mt-[var(--space-3)] text-[var(--text-muted)]">{siteConfig.tagline}</p>
+            <Link
+              href={contactHref}
+              className="mt-[var(--space-4)] inline-flex items-center gap-1.5 text-sm text-[var(--accent-primary)] hover:opacity-90 transition-opacity"
             >
-              Send an email
-            </a>
+              Start a project
+              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
           </div>
 
-          <nav className="flex flex-wrap gap-x-8 gap-y-2" aria-label="Footer">
-            {navItems.map((item) => (
-              <Link
-                key={item.id}
-                href={resolveNavHref(item.href, pathname)}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className="text-sm text-neutral-500 hover:text-white transition-colors"
-              >
-                {item.label === "Home"
-                  ? "Back to home"
-                  : item.label === "Work"
-                    ? "View work"
-                    : `${item.label} overview`}
-              </Link>
-            ))}
-          </nav>
+          <div>
+            <p className="type-label mb-[var(--space-4)]">Index</p>
+            <ul className="flex flex-col gap-[var(--space-3)]">
+              {footerNav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          <div className="flex flex-col gap-2">
-            <a
-              href={profile.social.github}
-              {...offsiteAnchorProps(profile.social.github)}
-              className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
-            >
-              GitHub profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
-            </a>
-            <a
-              href={profile.social.linkedin}
-              {...offsiteAnchorProps(profile.social.linkedin)}
-              className="text-sm text-neutral-500 hover:text-cyan-400 flex items-center gap-1.5 transition-colors"
-            >
-              LinkedIn profile <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
-            </a>
+          <div className="md:justify-self-end md:text-right">
+            <p className="type-label mb-[var(--space-4)]">Connect</p>
+            <ul className="flex flex-col gap-[var(--space-3)] md:items-end">
+              <li>
+                <a
+                  href={profile.social.github}
+                  {...offsiteAnchorProps(profile.social.github)}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <Github className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                  GitHub
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={profile.social.linkedin}
+                  {...offsiteAnchorProps(profile.social.linkedin)}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <Linkedin className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                  LinkedIn
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={siteConfig.resumeUrl}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                >
+                  Resume PDF
+                </a>
+              </li>
+            </ul>
+
+            {siteConfig.available && (
+              <p className="mt-[var(--space-5)] inline-flex items-center gap-2 type-label !text-[var(--accent-primary)]">
+                <span className="hero-avail-dot scale-75" aria-hidden />
+                Open to new work
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
-          <div className="text-center sm:text-left">
-            <p suppressHydrationWarning>© {year} {profile.name}</p>
-            <p className="text-neutral-500 mt-1">Made by Ali Hamza</p>
-            <Link href="/privacy" className="text-neutral-500 hover:text-white mt-2 inline-block transition-colors">
-              Privacy policy
+        <div className="mt-[var(--space-7)] pt-[var(--space-5)] border-t border-[var(--border-subtle)] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-2 text-xs text-[var(--text-muted)]">
+            <p suppressHydrationWarning>
+              © {year} {profile.name}
+            </p>
+            <Link href="/privacy" className="hover:text-[var(--text-secondary)] transition-colors">
+              Privacy
             </Link>
           </div>
           <button
             type="button"
             onClick={scrollTop}
-            className="inline-flex items-center justify-center gap-1.5 min-h-11 px-2 text-neutral-500 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 min-h-11 px-2 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors uppercase tracking-[0.14em]"
           >
-            Back to top <ArrowUp className="h-3.5 w-3.5" />
+            Back to top
+            <ArrowUp className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>

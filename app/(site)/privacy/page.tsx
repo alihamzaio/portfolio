@@ -10,7 +10,7 @@ export const metadata = buildPageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <main className="section-shell py-16 sm:py-24 max-w-3xl">
+    <div className="section-shell py-16 sm:py-24 max-w-3xl">
       <h1 className="text-3xl font-bold text-white mb-6">Privacy Policy</h1>
       <div className="space-y-5 text-neutral-400 leading-relaxed">
         <p>
@@ -31,13 +31,13 @@ export default function PrivacyPage() {
         </p>
         <p>
           For privacy questions, contact me through the{" "}
-          <Link href="/contact" className="text-cyan-400 hover:text-sky-300 underline">
+          <Link href="/contact" className="text-[var(--accent-primary)] hover:text-[var(--accent-primary)] underline underline-offset-4">
             contact page
           </Link>
           .
         </p>
         <p className="text-sm text-neutral-500">Last updated: July 2026</p>
       </div>
-    </main>
+    </div>
   )
 }

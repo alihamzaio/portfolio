@@ -8,6 +8,8 @@ export interface FeaturedProject {
   image: string
   github?: string
   demo?: string
+  /** Case study path when the project exists in projects.json */
+  caseStudyHref?: string
 }
 
 export const featuredProjects: FeaturedProject[] = [
@@ -28,27 +30,31 @@ export const featuredProjects: FeaturedProject[] = [
       { label: "client channels", value: "3" },
     ],
     techStack: ["Node.js", "Express.js", "Moleculer.js", "BullMQ", "PostgreSQL", "Redis", "Docker", "Jest"],
-    image: "https://res.cloudinary.com/dfjnm7kyu/image/upload/w_800,q_auto,f_auto/v1761659471/ver_imkwft.png",
+    image: "/projects/verana.png",
+    demo: "https://app.testnet.verana.network/discover",
     github: "https://github.com/verana-labs/verana-indexer",
+    caseStudyHref: "/projects/verana-blockchain-crawler-indexing-system",
   },
   {
-    id: "healops",
-    title: "HealOps: Healthcare & E-Commerce AWS Platform",
+    id: "adam",
+    title: "Adam Store: Multi-Vendor E-Commerce",
     overview:
-      "Five warehouse and vendor tenants needed isolated inventory flows on a shared AWS stack. Built Terraform-provisioned serverless architecture with Lambda, DynamoDB, RDS, and Snowflake analytics. Multi-tenant platform across four business domains with 12+ managed AWS resources.",
+      "A multi-vendor marketplace needing catalog, checkout, and order flows on a modern stack. Built production e-commerce with reliable APIs and storefront performance for shoppers and vendors.",
     architecture: [
-      "12+ AWS resources provisioned with Terraform",
-      "Lambda serverless services with DynamoDB and RDS",
-      "Snowflake analytics integrated with AWS data pipelines",
-      "Tenant isolation across healthcare and e-commerce domains",
+      "Next.js storefront and vendor-facing flows",
+      "Node.js APIs for catalog and orders",
+      "MongoDB-backed product and order data",
+      "Image and catalog performance for retail traffic",
     ],
     metrics: [
-      { label: "tenants served", value: "5+" },
-      { label: "AWS resources", value: "12+" },
-      { label: "business domains", value: "4" },
+      { label: "stack", value: "MERN / Next" },
+      { label: "focus", value: "Commerce" },
+      { label: "delivery", value: "Production" },
     ],
-    techStack: ["AWS Lambda", "DynamoDB", "RDS", "Terraform", "Snowflake", "Node.js", "Serverless"],
-    image: "https://res.cloudinary.com/dfjnm7kyu/image/upload/w_800,q_auto,f_auto/v1761657172/Dashboard_wtnmjb.png",
+    techStack: ["Next.js", "Node.js", "MongoDB", "Express.js"],
+    image: "/projects/adam.png",
+    demo: "https://adamstore.pk",
+    caseStudyHref: "/projects/adam-store-full-e-commerce-platform",
   },
   {
     id: "unilabs",
@@ -69,6 +75,7 @@ export const featuredProjects: FeaturedProject[] = [
     techStack: ["Next.js", "Solidity", "Ethereum", "Ethers.js", "TypeScript", "Node.js"],
     image: "/projects/unilabs.png",
     demo: "https://unliabs-web.cloud.exec9.com/",
+    caseStudyHref: "/projects/unilabs-defi-asset-management",
   },
   {
     id: "senzi",
@@ -89,5 +96,6 @@ export const featuredProjects: FeaturedProject[] = [
     techStack: ["Next.js", "Node.js", "MongoDB", "Express.js", "REST APIs"],
     image: "/projects/senzi.png",
     demo: "https://senzi.ly/",
+    caseStudyHref: "/projects/senzi",
   },
 ]
