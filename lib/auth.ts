@@ -117,6 +117,7 @@ export const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
 export const SESSION_TTL_DAYS = 7
 
 export function applySessionCookie(res: NextResponse, token: string, expiresAt: number) {
+  const maxAge = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000))
   res.cookies.set({
     name: SESSION_COOKIE_NAME,
     value: token,
@@ -124,6 +125,7 @@ export function applySessionCookie(res: NextResponse, token: string, expiresAt: 
     secure: process.env.VERCEL === "1" || process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    maxAge,
     expires: new Date(expiresAt),
   })
 }

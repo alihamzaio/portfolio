@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
   const payload = readSessionPayload(token)
   const res = NextResponse.json({
     valid: true,
+    token,
     email: payload?.email || null,
     expiresAt: payload?.exp || null,
   })

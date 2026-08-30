@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, StatCard, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
-import { clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
+import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 import type { SiteSettings } from "@/lib/settings"
 import type { Experience } from "@/lib/types"
@@ -39,8 +39,6 @@ export default function AdminPage() {
   const [syncMode, setSyncMode] = useState<string | null>(null)
   const [syncPrUrl, setSyncPrUrl] = useState<string | null>(null)
 
-  const authHeaders = () => getAuthHeaders()
-
   const noteSyncResponse = (res: Response) => {
     const message = res.headers.get("X-Portfolio-Sync-Message")
     const prUrl = res.headers.get("X-Portfolio-Sync-Url")
@@ -61,23 +59,58 @@ export default function AdminPage() {
   }
 
   const verifyStoredSession = useCallback(async () => {
-    const session = getAdminSession()
-    const res = await fetch("/api/auth/session", {
-      credentials: "include",
-      cache: "no-store",
-      headers: session ? { Authorization: `Bearer ${session.token}` } : {},
-    })
-    const data = await res.json().catch(() => ({ valid: false }))
-    if (data.valid) {
-      if (session && data.expiresAt && session.expiresAt !== data.expiresAt) {
-        setAdminSession({ ...session, expiresAt: data.expiresAt, email: data.email || session.email })
+    const cached = getAdminSession()
+    try {
+      const res = await fetch("/api/auth/session", {
+        credentials: "include",
+        cache: "no-store",
+        headers: cached?.token ? { Authorization: `Bearer ${cached.token}` } : {},
+      })
+
+      if (!res.ok) {
+        if (cached && Date.now() < cached.expiresAt) {
+          setAuthed(true)
+        } else {
+          clearAdminSession()
+          setAuthed(false)
+        }
+        return
       }
-      setAuthed(true)
-    } else {
+
+      const data = (await res.json()) as {
+        valid?: boolean
+        token?: string
+        expiresAt?: number
+        email?: string
+      }
+
+      if (data.valid && data.token && data.expiresAt && data.email) {
+        setAdminSession({
+          token: data.token,
+          expiresAt: data.expiresAt,
+          email: data.email,
+        })
+        setAuthed(true)
+        return
+      }
+
+      if (data.valid && cached && Date.now() < cached.expiresAt) {
+        setAuthed(true)
+        return
+      }
+
       clearAdminSession()
       setAuthed(false)
+    } catch {
+      if (cached && Date.now() < cached.expiresAt) {
+        setAuthed(true)
+      } else {
+        clearAdminSession()
+        setAuthed(false)
+      }
+    } finally {
+      setChecking(false)
     }
-    setChecking(false)
   }, [])
 
   useEffect(() => {
@@ -138,9 +171,9 @@ export default function AdminPage() {
   const saveProject = async (p: Project, index: number) => {
     setSaving(true)
     const isNew = p.id > 1_000_000_000_000
-    const res = await fetch(isNew ? "/api/projects" : `/api/projects/${p.id}`, {
+    const res = await adminFetch(isNew ? "/api/projects" : `/api/projects/${p.id}`, {
       method: isNew ? "POST" : "PUT",
-      headers: authHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(p),
     })
     if (res.ok) {
@@ -167,7 +200,7 @@ export default function AdminPage() {
       setProjects((arr) => arr.filter((_, i) => i !== index))
       return
     }
-    const res = await fetch(`/api/projects/${p.id}`, { method: "DELETE", headers: authHeaders() })
+    const res = await adminFetch(`/api/projects/${p.id}`, { method: "DELETE", headers: getAuthHeaders() })
     if (res.ok) {
       setProjects((arr) => arr.filter((_, i) => i !== index))
       noteSyncResponse(res)
@@ -184,9 +217,9 @@ export default function AdminPage() {
 
   const saveSkill = async (sk: Skill, index: number) => {
     const isNew = !sk.originalName
-    const res = await fetch(isNew ? "/api/skills" : `/api/skills/${encodeURIComponent(sk.originalName!)}`, {
+    const res = await adminFetch(isNew ? "/api/skills" : `/api/skills/${encodeURIComponent(sk.originalName!)}`, {
       method: isNew ? "POST" : "PUT",
-      headers: authHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify({ name: sk.name, level: sk.level, image: sk.image }),
     })
     if (res.ok) {
@@ -202,7 +235,7 @@ export default function AdminPage() {
     setUploading(true)
     const fd = new FormData()
     fd.append("file", file)
-    await fetch("/api/resume", { method: "POST", headers: authHeaders(), body: fd })
+    await adminFetch("/api/resume", { method: "POST", headers: getAuthHeaders(), body: fd })
     const d = await fetch("/api/resume").then((r) => r.json())
     setResumeFiles(d.files || [])
     setUploading(false)
@@ -218,7 +251,7 @@ export default function AdminPage() {
         email: settings.email.startsWith("mailto:") ? settings.social.email : `mailto:${settings.email}`,
       },
     }
-    const res = await fetch("/api/settings", { method: "PUT", headers: authHeaders(), body: JSON.stringify(payload) })
+    const res = await adminFetch("/api/settings", { method: "PUT", headers: getAuthHeaders(), body: JSON.stringify(payload) })
     if (res.ok) {
       setSettings(await res.json())
       noteSyncResponse(res)
@@ -235,9 +268,9 @@ export default function AdminPage() {
   const saveExperience = async (exp: Experience, index: number) => {
     setSaving(true)
     const isNew = exp.id.startsWith("new-")
-    const res = await fetch(isNew ? "/api/experience" : `/api/experience/${exp.id}`, {
+    const res = await adminFetch(isNew ? "/api/experience" : `/api/experience/${exp.id}`, {
       method: isNew ? "POST" : "PUT",
-      headers: authHeaders(),
+      headers: getAuthHeaders(),
       body: JSON.stringify(exp),
     })
     if (res.ok) {
@@ -256,7 +289,7 @@ export default function AdminPage() {
       setExperienceList((arr) => arr.filter((_, i) => i !== index))
       return
     }
-    const res = await fetch(`/api/experience/${exp.id}`, { method: "DELETE", headers: authHeaders() })
+    const res = await adminFetch(`/api/experience/${exp.id}`, { method: "DELETE", headers: getAuthHeaders() })
     if (res.ok) {
       setExperienceList((arr) => arr.filter((_, i) => i !== index))
       noteSyncResponse(res)
@@ -418,7 +451,7 @@ export default function AdminPage() {
                   <button type="button" onClick={() => saveSkill(sk, i)} className="btn-primary flex-1 !text-xs">Save</button>
                   <button
                     type="button"
-                    onClick={() => (sk.originalName ? fetch(`/api/skills/${encodeURIComponent(sk.originalName)}`, { method: "DELETE", headers: authHeaders() }).then(() => setSkills((a) => a.filter((_, j) => j !== i))) : setSkills((a) => a.filter((_, j) => j !== i)))}
+                    onClick={() => (sk.originalName ? adminFetch(`/api/skills/${encodeURIComponent(sk.originalName)}`, { method: "DELETE", headers: getAuthHeaders() }).then(() => setSkills((a) => a.filter((_, j) => j !== i))) : setSkills((a) => a.filter((_, j) => j !== i)))}
                     className="p-2 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 rounded-lg"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -451,8 +484,8 @@ export default function AdminPage() {
                 <div key={name} className="flex items-center gap-3 p-3 rounded-lg bg-[#111827] border border-white/[0.06]">
                   <span className="flex-1 text-sm truncate">{name}</span>
                   {activeResume === name && <span className="text-[10px] text-[var(--accent-primary)] uppercase font-medium">Active</span>}
-                  <button type="button" onClick={async () => { await fetch("/api/resume", { method: "PUT", headers: authHeaders(), body: JSON.stringify({ active: name }) }); setActiveResume(name) }} className="btn-secondary !text-xs !py-1.5">Set active</button>
-                  <button type="button" onClick={async () => { await fetch(`/api/resume?name=${encodeURIComponent(name)}`, { method: "DELETE", headers: authHeaders() }); loadAll() }} className="text-[var(--accent-primary)] text-xs">Delete</button>
+                  <button type="button" onClick={async () => { await adminFetch("/api/resume", { method: "PUT", headers: getAuthHeaders(), body: JSON.stringify({ active: name }) }); setActiveResume(name) }} className="btn-secondary !text-xs !py-1.5">Set active</button>
+                  <button type="button" onClick={async () => { await adminFetch(`/api/resume?name=${encodeURIComponent(name)}`, { method: "DELETE", headers: getAuthHeaders() }); loadAll() }} className="text-[var(--accent-primary)] text-xs">Delete</button>
                 </div>
               ))}
             </div>

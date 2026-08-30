@@ -34,9 +34,21 @@ export function clearAdminSession() {
 
 export function getAuthHeaders(): Record<string, string> {
   const session = getAdminSession()
-  if (!session) return {}
-  return {
-    Authorization: `Bearer ${session.token}`,
-    "Content-Type": "application/json",
+  const headers: Record<string, string> = { "Content-Type": "application/json" }
+  if (session?.token) headers.Authorization = `Bearer ${session.token}`
+  return headers
+}
+
+export function adminFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+  const session = getAdminSession()
+  const headers = new Headers(init.headers)
+  if (session?.token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${session.token}`)
   }
+  return fetch(input, {
+    ...init,
+    credentials: "include",
+    cache: init.cache ?? "no-store",
+    headers,
+  })
 }
