@@ -98,5 +98,10 @@
     "name": "Git & GitHub",
     "level": 94,
     "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+  },
+  {
+    "name": "New Skill",
+    "level": 80,
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
   }
 ]
