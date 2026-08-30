@@ -16,6 +16,7 @@ type JsonValue = unknown
 
 export type StoreWriteResult = {
   persisted: "kv" | "live" | "file"
+  prUrl?: string
 }
 
 const hasVercelKV = !!process.env.KV_REST_API_URL && !!process.env.KV_REST_API_TOKEN
@@ -160,9 +161,9 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
   }
 
   if (onServerless && isGitHubSyncEnabled()) {
-    await writeLiveGitHubFile(STORE_FILE_PATHS[key], serialized, COMMIT_LABELS[key])
+    const github = await writeLiveGitHubFile(STORE_FILE_PATHS[key], serialized, COMMIT_LABELS[key])
     await markDirty(key)
-    return { persisted: "live" }
+    return { persisted: "live", prUrl: github.prUrl }
   }
 
   if (onServerless) {
@@ -176,8 +177,13 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 }
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
-  if (result.persisted === "kv" || result.persisted === "live") {
-    return "Saved live. GitHub sync runs daily; merge the PR when it appears to update the repo."
+  if (result.persisted === "kv") {
+    return "Saved live. Use Sync to GitHub now, or wait for the daily job to open one PR."
+  }
+  if (result.persisted === "live") {
+    return result.prUrl
+      ? "Saved live. One pull request is open; later saves update the same PR."
+      : "Saved live on GitHub."
   }
   if (result.persisted === "file") {
     return "Saved locally."
