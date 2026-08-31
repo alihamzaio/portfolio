@@ -1,18 +1,18 @@
-﻿{
- "name": "Ali Hamza",
- "title": "Full Stack Developer",
- "tagline": "MERN · AWS Serverless · Blockchain",
- "headline": "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
- "description": "Ali Hamza is a Full Stack Developer in Lahore building MERN, Next.js, AWS serverless, REST APIs, and blockchain apps for startups and product teams worldwide.",
- "email": "hamzasarwer9@gmail.com",
- "phone": "+92 309 7300913",
- "location": "Lahore, Pakistan",
- "education": "B.S. Computer Science, University of Education (2019-2023)",
- "available": true,
- "githubUsername": "alihamzaio",
- "social": {
- "github": "https://github.com/alihamzaio",
- "linkedin": "https://www.linkedin.com/in/alihamza-fullstack-developer",
- "email": "mailto:hamzasarwer9@gmail.com"
- }
+{
+  "name": "Ali Hamza",
+  "title": "Full Stack Developer",
+  "tagline": "MERN · AWS Serverless · Blockchain",
+  "headline": "Web applications, cloud infrastructure, REST APIs, and blockchain integrations in production.",
+  "description": "Ali Hamza is a Full Stack Developer in Lahore building MERN, Next.js, AWS serverless, REST APIs, and blockchain apps for startups and product teams worldwide.",
+  "email": "hamzasarwer9@gmail.com",
+  "phone": "+92 309 7300913",
+  "location": "Lahore, Pakistan",
+  "education": "B.S. Computer Science, University of Education (2019-2023)",
+  "available": true,
+  "githubUsername": "alihamzaio",
+  "social": {
+    "github": "https://github.com/alihamzaio",
+    "linkedin": "https://www.linkedin.com/in/alihamza-fullstack-developer",
+    "email": "mailto:hamzasarwer9@gmail.com"
+  }
 }
