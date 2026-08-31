@@ -1,20 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
+import { isCronAuthorized } from "@/lib/cron-auth"
 import { runBatchGitHubSync } from "@/lib/github-batch-sync"
 
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
 
-function authorized(req: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET
-  if (!secret) return process.env.NODE_ENV !== "production"
-  const header = req.headers.get("authorization")
-  const bearer = header?.startsWith("Bearer ") ? header.slice(7) : ""
-  const query = req.nextUrl.searchParams.get("secret")
-  return bearer === secret || query === secret
-}
-
 export async function GET(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!isCronAuthorized(req)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 })
   }
 

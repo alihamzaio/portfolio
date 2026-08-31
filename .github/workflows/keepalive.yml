@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Hit health endpoint
+      - name: Hit public health endpoint
         run: |
           set -e
           URL="${{ vars.SITE_URL }}"
@@ -18,4 +18,4 @@ jobs:
             URL="https://alihamza-fawn.vercel.app"
           fi
           curl -fsS --max-time 30 "$URL/api/health"
-          curl -fsS --max-time 30 "$URL/api/cron/keepalive"
+          # /api/cron/keepalive requires CRON_SECRET (Vercel cron only). Health is enough to warm the app.
