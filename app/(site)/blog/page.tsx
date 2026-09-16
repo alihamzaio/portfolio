@@ -5,9 +5,16 @@ import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
   title: "Blog",
-  description: `Technical writing by ${siteConfig.name} on MERN, AWS serverless, Next.js, REST APIs, and blockchain — plus lessons from ${siteConfig.brand.channel}.`,
+  description: `In-depth technical articles by ${siteConfig.name} on Next.js, MERN, AWS serverless, and production engineering — written for developers and hiring teams.`,
   path: "/blog",
   type: "website",
+  keywords: [
+    "Ali Hamza blog",
+    "Next.js tutorials",
+    "full stack developer articles",
+    "MERN stack guide",
+    "AWS serverless",
+  ],
 })
 
 export default async function BlogPage() {

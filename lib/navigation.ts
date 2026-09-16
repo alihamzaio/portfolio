@@ -8,6 +8,7 @@ export const SECTION_ROUTES: Record<string, string> = {
   skills: "/tech-stack",
   projects: "/projects",
   experience: "/experience",
+  blog: "/blog",
   contact: "/contact",
   intelligence: "/",
 }
