@@ -6,22 +6,34 @@ import {
   mergePullRequest,
   putFileContent,
 } from "@/lib/github-api"
-import { blogFilePath, estimateReadTime, slugifyTitle, type BlogPost } from "@/lib/blog"
+import {
+  blogFilePath,
+  estimateReadTime,
+  slugifyTitle,
+  type BlogPost,
+  type BlogReference,
+} from "@/lib/blog"
 import { githubSyncConfig } from "@/lib/github-sync-config"
 
 export type BlogIngestInput = {
   title: string
   excerpt?: string
+  metaDescription?: string
   body: string
   category?: string
   slug?: string
   date?: string
   featured?: boolean
+  author?: string
   source?: string
+  coverImage?: string
+  coverImageAlt?: string
+  tags?: string[]
+  keywords?: string[]
+  references?: BlogReference[]
   youtubeUrl?: string
   youtubeId?: string
   readTime?: string
-  /** If true, merge PR immediately after create */
   autoMerge?: boolean
 }
 
@@ -33,15 +45,24 @@ function normalizePost(input: BlogIngestInput): BlogPost {
   const slug = (input.slug || slugifyTitle(title)).replace(/[^a-z0-9-]/gi, "").toLowerCase()
   if (!slug) throw new Error("slug is invalid")
 
+  const excerpt = (input.excerpt || body.replace(/\s+/g, " ").slice(0, 200)).trim()
+
   return {
     slug,
     title,
-    excerpt: (input.excerpt || body.replace(/\s+/g, " ").slice(0, 180)).trim(),
+    excerpt,
+    metaDescription: input.metaDescription?.trim() || excerpt.slice(0, 160),
     date: input.date || new Date().toISOString().slice(0, 10),
     readTime: input.readTime || estimateReadTime(body),
-    category: input.category || "DevBuildDaily",
+    category: input.category || "Full Stack",
     featured: Boolean(input.featured),
+    author: input.author || "Ali Hamza",
     source: input.source || "DevBuildDaily",
+    coverImage: input.coverImage,
+    coverImageAlt: input.coverImageAlt,
+    tags: input.tags,
+    keywords: input.keywords,
+    references: input.references,
     youtubeUrl: input.youtubeUrl,
     youtubeId: input.youtubeId,
     body,
@@ -60,14 +81,7 @@ export async function createBlogPullRequest(input: BlogIngestInput) {
 
   const mainSha = await getBranchSha(token, repo, baseBranch)
   await ensureBranchFromSha(token, repo, branch, mainSha)
-  await putFileContent(
-    token,
-    repo,
-    branch,
-    filePath,
-    content,
-    `blog: add ${post.slug}`
-  )
+  await putFileContent(token, repo, branch, filePath, content, `blog: add ${post.slug}`)
 
   const pr = await createPullRequestDetailed(
     token,
@@ -79,9 +93,8 @@ export async function createBlogPullRequest(input: BlogIngestInput) {
       `Auto blog post from **${post.source || "DevBuildDaily"}**.`,
       "",
       `- Slug: \`${post.slug}\``,
+      `- Category: ${post.category}`,
       post.youtubeUrl ? `- YouTube: ${post.youtubeUrl}` : "",
-      "",
-      "Created by `/api/blog/pr`. Merge via `/api/blog/merge` or GitHub UI.",
     ]
       .filter(Boolean)
       .join("\n")

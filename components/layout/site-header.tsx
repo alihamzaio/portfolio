@@ -247,7 +247,9 @@ export function SiteHeader() {
                 aria-label="Main"
               >
                 {navItems.map((item) => {
-                  const active = isHome && activeId === item.id
+                  const active =
+                    (isHome && activeId === item.id) ||
+                    (item.href.startsWith("/") && !item.href.startsWith("/#") && pathname.startsWith(item.href))
                   return (
                     <Link
                       key={item.id}

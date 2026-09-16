@@ -1,19 +1,31 @@
 import { promises as fs } from "fs"
 import path from "path"
 
+export type BlogReference = {
+  title: string
+  url: string
+}
+
 export type BlogPost = {
   slug: string
   title: string
   excerpt: string
+  /** SEO meta description (150–160 chars ideal) */
+  metaDescription?: string
   date: string
   readTime: string
   category: string
   featured?: boolean
-  /** Channel brand — different from portfolio personal brand is OK */
+  author?: string
   source?: string
+  coverImage?: string
+  coverImageAlt?: string
+  tags?: string[]
+  keywords?: string[]
   youtubeUrl?: string
   youtubeId?: string
-  /** Markdown-ish plain text (paragraphs separated by blank lines; ## headings allowed) */
+  references?: BlogReference[]
+  /** Markdown: ## headings, lists, [links](url), ![alt](url), > quotes, ```code``` */
   body: string
 }
 
@@ -72,7 +84,7 @@ export function blogFilePath(slug: string): string {
 export function estimateReadTime(body: string): string {
   const words = body.trim().split(/\s+/).filter(Boolean).length
   const mins = Math.max(1, Math.round(words / 200))
-  return `${mins} min`
+  return `${mins} min read`
 }
 
 export function slugifyTitle(title: string): string {
@@ -81,4 +93,13 @@ export function slugifyTitle(title: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 80)
+}
+
+export function postSeoDescription(post: BlogPost): string {
+  return (post.metaDescription || post.excerpt).trim()
+}
+
+export function postKeywords(post: BlogPost): string[] {
+  const base = post.keywords?.length ? post.keywords : post.tags || []
+  return [...new Set([...base, post.category, "Ali Hamza", "Full Stack Developer"])]
 }

@@ -1,11 +1,13 @@
 import Link from "next/link"
+import Image from "next/image"
 import { notFound } from "next/navigation"
-import { Clock } from "lucide-react"
-import { BlogBody } from "@/components/pages/blog-body"
+import { Clock, Tag } from "lucide-react"
+import { BlogBody, BlogReferences, blogSourceLabel } from "@/components/pages/blog-body"
+import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { AmberGlassCta } from "@/components/ui/amber-glass-cta"
-import { getAllBlogPosts, getPostBySlug } from "@/lib/blog"
+import { getAllBlogPosts, getPostBySlug, postKeywords, postSeoDescription } from "@/lib/blog"
 import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
 
@@ -22,9 +24,11 @@ export async function generateMetadata({ params }: Props) {
   if (!post) return {}
   return buildPageMetadata({
     title: post.title,
-    description: post.excerpt,
+    description: postSeoDescription(post),
     path: `/blog/${post.slug}`,
     type: "article",
+    keywords: postKeywords(post),
+    ogImage: post.coverImage,
   })
 }
 
@@ -32,6 +36,8 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) notFound()
+
+  const author = blogSourceLabel(post)
 
   return (
     <>
@@ -42,49 +48,80 @@ export default async function BlogPostPage({ params }: Props) {
           { name: post.title, path: `/blog/${post.slug}` },
         ]}
       />
+      <BlogArticleJsonLd post={post} />
       <PremiumPage>
         <PremiumReveal>
           <article className="mx-auto max-w-3xl">
-            <p className="meta-label mb-3">{post.category}</p>
-            <h1 className="text-3xl md:text-4xl font-semibold text-white tracking-tight mb-4">
-              {post.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500 mb-8">
-              <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" /> {post.readTime}
-              </span>
-              <span>{post.date}</span>
-              {post.source && <span>via {post.source}</span>}
-            </div>
+            <header className="mb-10">
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <span className="meta-label">{post.category}</span>
+                {post.tags?.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider text-neutral-500"
+                  >
+                    <Tag className="h-3 w-3" aria-hidden />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h1 className="text-3xl md:text-[2.35rem] font-semibold text-white tracking-tight leading-tight mb-5">
+                {post.title}
+              </h1>
+              <p className="text-lg text-neutral-400 leading-relaxed mb-6">{post.excerpt}</p>
+              <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500">
+                <span className="flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5" /> {post.readTime}
+                </span>
+                <time dateTime={post.date}>{post.date}</time>
+                <span>By {author}</span>
+              </div>
+            </header>
+
+            {post.coverImage && (
+              <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                <Image
+                  src={post.coverImage}
+                  alt={post.coverImageAlt || post.title}
+                  width={1200}
+                  height={630}
+                  className="w-full h-auto object-cover max-h-[420px]"
+                  priority
+                  unoptimized={post.coverImage.startsWith("http")}
+                />
+              </figure>
+            )}
 
             <BlogBody body={post.body} />
 
             {post.youtubeUrl && (
-              <p className="mt-8 text-sm text-neutral-400">
-                Watch on YouTube:{" "}
+              <div className="mt-10 p-5 rounded-xl border border-white/10 bg-white/[0.03]">
+                <p className="text-sm text-neutral-400 mb-2">Watch the companion video on DevBuildDaily</p>
                 <a
                   href={post.youtubeUrl}
-                  className="text-amber-200/90 underline underline-offset-2"
+                  className="text-amber-200/90 underline underline-offset-2 font-medium"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {post.youtubeUrl}
                 </a>
-              </p>
+              </div>
             )}
+
+            <BlogReferences references={post.references} />
 
             <div className="mt-12 pt-8 border-t border-white/[0.08] space-y-4">
               <p className="text-neutral-400 text-sm leading-relaxed">
-                Written by {siteConfig.name}. Channel content also lives on{" "}
-                {siteConfig.brand.channel} — this site is for SEO and client work.
+                {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
+                Technical tutorials also appear on {siteConfig.brand.channel}.
               </p>
               <div className="flex flex-wrap gap-3">
-                <AmberGlassCta href="/contact">Hire me</AmberGlassCta>
+                <AmberGlassCta href="/contact">Hire me for your project</AmberGlassCta>
                 <Link
                   href="/blog"
                   className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors"
                 >
-                  ← All posts
+                  ← All articles
                 </Link>
               </div>
             </div>
