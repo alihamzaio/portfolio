@@ -1,0 +1,10 @@
+{
+  "slug": "nextjs-performance-playbook",
+  "title": "Next.js Performance Patterns for Client Dashboards",
+  "excerpt": "Steps for Core Web Vitals, server component boundaries, image strategy, and animation budgets on data-heavy React applications.",
+  "date": "2025-02-04",
+  "readTime": "6 min",
+  "category": "Frontend",
+  "source": "Ali Hamza",
+  "body": "## Start with the server boundary\n\nPush data fetching to Server Components. Keep client components small and interactive-only.\n\n## Images and fonts\n\nUse next/image with real sizes. Subset fonts. Avoid layout shift on dashboards.\n\n## Animation budget\n\nAnimate opacity and transform. Skip layout thrash on large tables."
+}

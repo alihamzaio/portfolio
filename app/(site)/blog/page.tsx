@@ -5,13 +5,12 @@ import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
   title: "Blog",
-  description: `Technical writing by ${siteConfig.name} on MERN stack development, AWS serverless architecture, Next.js performance, REST APIs, and blockchain indexing.`,
+  description: `Technical writing by ${siteConfig.name} on MERN, AWS serverless, Next.js, REST APIs, and blockchain — plus lessons from ${siteConfig.brand.channel}.`,
   path: "/blog",
   type: "website",
-  noIndex: true,
 })
 
-export default function BlogPage() {
+export default async function BlogPage() {
   return (
     <>
       <PageBreadcrumbJsonLd
