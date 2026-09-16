@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ArrowUp, ArrowUpRight, Github, Linkedin } from "lucide-react"
+import { ArrowUp, ArrowUpRight, Github, Instagram, Linkedin, Youtube } from "lucide-react"
 import { usePublicProfile } from "@/components/providers/site-content-provider"
 import { Logo } from "@/components/brand/logo"
 import { resolveNavHref, offsiteAnchorProps } from "@/lib/navigation"
@@ -14,6 +14,7 @@ const footerNav = [
   { label: "Projects", href: "/projects" },
   { label: "Experience", href: "/experience" },
   { label: "Tech stack", href: "/tech-stack" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ] as const
 
@@ -86,6 +87,41 @@ export function SiteFooterClient() {
                 >
                   <Linkedin className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
                   LinkedIn
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={profile.social.youtube}
+                  {...offsiteAnchorProps(profile.social.youtube)}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <Youtube className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                  YouTube
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={profile.social.tiktok}
+                  {...offsiteAnchorProps(profile.social.tiktok)}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <svg className="h-4 w-4 shrink-0 opacity-70" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.8a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.75a8.19 8.19 0 0 0 4.76 1.52V6.84a4.84 4.84 0 0 1-1-.15Z" />
+                  </svg>
+                  TikTok
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={profile.social.instagram}
+                  {...offsiteAnchorProps(profile.social.instagram)}
+                  className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                >
+                  <Instagram className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                  Instagram
                   <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
                 </a>
               </li>

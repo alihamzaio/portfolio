@@ -164,6 +164,24 @@ export async function findOpenPullRequest(
   return result.data?.[0]?.html_url
 }
 
+export async function findOpenPullRequestMeta(
+  token: string,
+  repo: string,
+  headBranch: string,
+  baseBranch: string
+): Promise<{ url: string; number: number } | null> {
+  const owner = repo.split("/")[0]
+  const result = await githubJson<{ html_url?: string; number?: number }[]>(
+    token,
+    `/repos/${repo}/pulls?state=open&head=${encodeURIComponent(`${owner}:${headBranch}`)}&base=${encodeURIComponent(baseBranch)}`
+  )
+  const first = result.data?.[0]
+  if (first?.html_url && first.number) {
+    return { url: first.html_url, number: first.number }
+  }
+  return null
+}
+
 export async function createPullRequest(
   token: string,
   repo: string,
@@ -172,19 +190,65 @@ export async function createPullRequest(
   title: string,
   body: string
 ): Promise<string> {
-  const existing = await findOpenPullRequest(token, repo, headBranch, baseBranch)
+  const created = await createPullRequestDetailed(token, repo, headBranch, baseBranch, title, body)
+  return created.url
+}
+
+export async function createPullRequestDetailed(
+  token: string,
+  repo: string,
+  headBranch: string,
+  baseBranch: string,
+  title: string,
+  body: string
+): Promise<{ url: string; number: number }> {
+  const existing = await findOpenPullRequestMeta(token, repo, headBranch, baseBranch)
   if (existing) return existing
 
-  const result = await githubJson<{ html_url?: string; message?: string }>(token, `/repos/${repo}/pulls`, {
-    method: "POST",
-    body: JSON.stringify({ title, head: headBranch, base: baseBranch, body }),
-  })
+  const result = await githubJson<{ html_url?: string; number?: number; message?: string }>(
+    token,
+    `/repos/${repo}/pulls`,
+    {
+      method: "POST",
+      body: JSON.stringify({ title, head: headBranch, base: baseBranch, body }),
+    }
+  )
 
-  if (result.data?.html_url) return result.data.html_url
+  if (result.data?.html_url && result.data.number) {
+    return { url: result.data.html_url, number: result.data.number }
+  }
 
   const hint =
     result.status === 403
       ? " Fine-grained token needs Pull requests: Read and write."
       : ""
   throw new Error(`Could not open pull request (${result.status}): ${result.text.slice(0, 240)}.${hint}`)
+}
+
+/** Merge a pull request into the base branch (squash keeps history tidy). */
+export async function mergePullRequest(
+  token: string,
+  repo: string,
+  pullNumber: number,
+  commitTitle?: string
+): Promise<{ merged: boolean; sha?: string; message: string }> {
+  const result = await githubJson<{ merged?: boolean; sha?: string; message?: string }>(
+    token,
+    `/repos/${repo}/pulls/${pullNumber}/merge`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        merge_method: "squash",
+        ...(commitTitle ? { commit_title: commitTitle } : {}),
+      }),
+    }
+  )
+  if (!result.ok) {
+    throw new Error(`Could not merge PR #${pullNumber} (${result.status}): ${result.text.slice(0, 240)}`)
+  }
+  return {
+    merged: Boolean(result.data?.merged),
+    sha: result.data?.sha,
+    message: result.data?.message || "merged",
+  }
 }
