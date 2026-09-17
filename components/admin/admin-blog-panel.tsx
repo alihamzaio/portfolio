@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from "react"
 import { ExternalLink, Loader2, Plus, Trash2 } from "lucide-react"
 import { Panel } from "@/components/admin/admin-shell"
 import { AdminBlogPreview, BLOG_MARKDOWN_HINT } from "@/components/admin/admin-blog-preview"
+import { AdminBlogCoverField } from "@/components/admin/admin-blog-cover-field"
 import { adminFetch, getAuthHeaders } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
+import { DEFAULT_BLOG_COVER, isDefaultBlogCover } from "@/lib/blog-cover"
 import type { BlogPost, BlogStatus } from "@/lib/blog"
 
 /** Client-safe list row shape (mirrors server BlogPostAdmin). */
@@ -44,8 +46,8 @@ const emptyForm = (): FormState => ({
   category: "Full Stack",
   featured: false,
   author: "Ali Hamza",
-  coverImage: "",
-  coverImageAlt: "",
+  coverImage: DEFAULT_BLOG_COVER,
+  coverImageAlt: "Ali Hamza — Full Stack Developer",
   tags: "",
   keywords: "",
   youtubeUrl: "",
@@ -64,8 +66,8 @@ function postToForm(p: BlogListItem): FormState {
     category: p.category,
     featured: Boolean(p.featured),
     author: p.author || "Ali Hamza",
-    coverImage: p.coverImage || "",
-    coverImageAlt: p.coverImageAlt || "",
+    coverImage: p.coverImage || DEFAULT_BLOG_COVER,
+    coverImageAlt: p.coverImageAlt || "Ali Hamza — Full Stack Developer",
     tags: (p.tags || []).join(", "),
     keywords: (p.keywords || []).join(", "),
     youtubeUrl: p.youtubeUrl || "",
@@ -155,8 +157,10 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
           category: form.category || undefined,
           featured: form.featured,
           author: form.author || undefined,
-          coverImage: form.coverImage || undefined,
-          coverImageAlt: form.coverImageAlt || undefined,
+          coverImage: form.coverImage?.trim() || DEFAULT_BLOG_COVER,
+          coverImageAlt:
+            form.coverImageAlt?.trim() ||
+            (isDefaultBlogCover(form.coverImage) ? "Ali Hamza — Full Stack Developer" : undefined),
           tags: splitCsv(form.tags),
           keywords: splitCsv(form.keywords),
           youtubeUrl: form.youtubeUrl || undefined,
@@ -431,42 +435,13 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
                     maxLength={180}
                   />
                 </label>
-                <label className="block sm:col-span-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Cover image URL</span>
-                  <input
-                    className={fieldClass}
-                    value={form.coverImage}
-                    onChange={(e) => patch({ coverImage: e.target.value })}
-                    placeholder="https://… or /blog/covers/my-image.jpg"
-                  />
-                  <div className="mt-2 flex flex-wrap items-center gap-3">
-                    <label className="btn-secondary !text-xs !py-2 !px-3 cursor-pointer inline-flex items-center gap-1.5">
-                      {uploadingCover ? "Uploading…" : "Upload cover"}
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,image/gif"
-                        className="hidden"
-                        disabled={uploadingCover}
-                        onChange={(e) => {
-                          const f = e.target.files?.[0]
-                          if (f) void uploadCover(f)
-                          e.target.value = ""
-                        }}
-                      />
-                    </label>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      JPG/PNG/WebP under 4.5 MB → saved to /blog/covers via PR
-                    </span>
-                  </div>
-                  {form.coverImage && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={form.coverImage}
-                      alt=""
-                      className="mt-3 h-28 w-full max-w-md object-cover rounded-xl border border-white/[0.08]"
-                    />
-                  )}
-                </label>
+                <AdminBlogCoverField
+                  coverImage={form.coverImage}
+                  onCoverChange={(url) => patch({ coverImage: url })}
+                  onUpload={uploadCover}
+                  uploading={uploadingCover}
+                  fieldClass={fieldClass}
+                />
                 <label className="block sm:col-span-2">
                   <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Cover alt text</span>
                   <input className={fieldClass} value={form.coverImageAlt} onChange={(e) => patch({ coverImageAlt: e.target.value })} />

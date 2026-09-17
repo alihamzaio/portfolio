@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none" role="img" aria-label="Ali Hamza blog cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#121212"/>
+      <stop offset="0.55" stop-color="#1a1512"/>
+      <stop offset="1" stop-color="#0c0c0c"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="900" y1="80" x2="1100" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e8442f" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#e8442f" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="980" cy="160" r="220" fill="url(#glow)"/>
+  <rect x="0" y="0" width="8" height="630" fill="#e8442f"/>
+  <!-- Mark -->
+  <g transform="translate(72 210) scale(2.4)">
+    <path d="M4 44 L18 6 H24" stroke="#ede9e1" stroke-width="2.6" stroke-linecap="square"/>
+    <path d="M28 6 V44" stroke="#ede9e1" stroke-width="2.6" stroke-linecap="square"/>
+    <path d="M40 6 V44" stroke="#ede9e1" stroke-width="2.6" stroke-linecap="square"/>
+    <path d="M8 30 L42 16" stroke="#e8442f" stroke-width="3" stroke-linecap="square"/>
+  </g>
+  <text x="220" y="280" fill="#ede9e1" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700">Ali Hamza</text>
+  <text x="220" y="340" fill="#e8442f" font-family="system-ui, sans-serif" font-size="28" font-weight="600" letter-spacing="0.22em">FULL STACK DEVELOPER</text>
+  <text x="220" y="400" fill="#9a9590" font-family="system-ui, sans-serif" font-size="22">Notes from shipping real projects</text>
+</svg>
