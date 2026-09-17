@@ -127,14 +127,26 @@ export async function putFileContent(
   content: string,
   message: string
 ): Promise<void> {
+  const encoded = Buffer.from(content, "utf8").toString("base64")
+  await putBase64FileContent(token, repo, branch, filePath, encoded, message)
+}
+
+/** Upload binary assets (images) — contentBase64 must already be base64. */
+export async function putBase64FileContent(
+  token: string,
+  repo: string,
+  branch: string,
+  filePath: string,
+  contentBase64: string,
+  message: string
+): Promise<void> {
   const { authorName, authorEmail } = githubSyncConfig
   const fileSha = await getFileSha(token, repo, branch, filePath)
-  const encoded = Buffer.from(content, "utf8").toString("base64")
   const result = await githubJson(token, `/repos/${repo}/contents/${filePath}`, {
     method: "PUT",
     body: JSON.stringify({
       message,
-      content: encoded,
+      content: contentBase64,
       branch,
       ...(fileSha ? { sha: fileSha } : {}),
       author: { name: authorName, email: authorEmail },

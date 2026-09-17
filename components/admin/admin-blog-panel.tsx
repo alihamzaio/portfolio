@@ -97,6 +97,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [showEditor, setShowEditor] = useState(false)
   const [editorTab, setEditorTab] = useState<EditorTab>("write")
+  const [uploadingCover, setUploadingCover] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -212,6 +213,34 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
       onError("Delete failed")
     } finally {
       setDeleting(null)
+    }
+  }
+
+  const uploadCover = async (file: File) => {
+    setUploadingCover(true)
+    try {
+      const body = new FormData()
+      body.append("file", file)
+      body.append("name", form.slug || form.title || file.name)
+      const auth = getAuthHeaders()
+      // Browser must set multipart boundary — do not force JSON content-type
+      const { "Content-Type": _drop, ...headers } = auth
+      const res = await adminFetch("/api/admin/blog/cover", {
+        method: "POST",
+        headers,
+        body,
+      })
+      const data = await res.json()
+      if (!res.ok || data.ok === false) {
+        onError(typeof data.error === "string" ? data.error : "Cover upload failed")
+        return
+      }
+      patch({ coverImage: data.path })
+      onNotice(`Cover uploaded to ${data.path} (PR merged). Site will show it after deploy.`, data.prUrl || null)
+    } catch {
+      onError("Cover upload failed")
+    } finally {
+      setUploadingCover(false)
     }
   }
 
@@ -410,6 +439,33 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
                     onChange={(e) => patch({ coverImage: e.target.value })}
                     placeholder="https://… or /blog/covers/my-image.jpg"
                   />
+                  <div className="mt-2 flex flex-wrap items-center gap-3">
+                    <label className="btn-secondary !text-xs !py-2 !px-3 cursor-pointer inline-flex items-center gap-1.5">
+                      {uploadingCover ? "Uploading…" : "Upload cover"}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        className="hidden"
+                        disabled={uploadingCover}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0]
+                          if (f) void uploadCover(f)
+                          e.target.value = ""
+                        }}
+                      />
+                    </label>
+                    <span className="text-[11px] text-[var(--text-muted)]">
+                      JPG/PNG/WebP under 4.5 MB → saved to /blog/covers via PR
+                    </span>
+                  </div>
+                  {form.coverImage && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={form.coverImage}
+                      alt=""
+                      className="mt-3 h-28 w-full max-w-md object-cover rounded-xl border border-white/[0.08]"
+                    />
+                  )}
                 </label>
                 <label className="block sm:col-span-2">
                   <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Cover alt text</span>

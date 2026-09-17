@@ -5,6 +5,7 @@ import {
   getBranchSha,
   getGitHubToken,
   mergePullRequest,
+  putBase64FileContent,
   putFileContent,
 } from "@/lib/github-api"
 import {
@@ -241,4 +242,60 @@ export async function mergeBlogPullRequest(prNumber: number, commitTitle?: strin
   const { repo } = githubSyncConfig
   const result = await mergePullRequest(token, repo, prNumber, commitTitle)
   return { ok: true as const, prNumber, ...result }
+}
+
+/**
+ * Upload a cover image into public/blog/covers/ via PR (+ optional merge).
+ * Returns the public path e.g. /blog/covers/my-slug.jpg
+ */
+export async function uploadBlogCoverViaPr(opts: {
+  fileName: string
+  contentBase64: string
+  autoMerge?: boolean
+}) {
+  const token = getGitHubToken()
+  if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
+
+  const safeName = opts.fileName
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)
+  if (!safeName || !/\.(jpe?g|png|webp|gif)$/i.test(safeName)) {
+    throw new Error("Cover must be a .jpg, .png, .webp, or .gif file")
+  }
+
+  const { repo, baseBranch } = githubSyncConfig
+  const branch = `blog/cover-${Date.now().toString(36)}`.slice(0, 100)
+  const filePath = `public/blog/covers/${safeName}`
+  const publicPath = `/blog/covers/${safeName}`
+
+  const mainSha = await getBranchSha(token, repo, baseBranch)
+  await ensureBranchFromSha(token, repo, branch, mainSha)
+  await putBase64FileContent(
+    token,
+    repo,
+    branch,
+    filePath,
+    opts.contentBase64,
+    `blog: cover ${safeName}`
+  )
+
+  const { pr, merge } = await openBlogPr({
+    branch,
+    title: `Blog cover: ${safeName}`,
+    body: [`Upload cover image \`${filePath}\`.`, "", `- Public path: \`${publicPath}\``].join("\n"),
+    autoMerge: opts.autoMerge !== false,
+    mergeTitle: `blog: cover ${safeName}`,
+  })
+
+  return {
+    ok: true as const,
+    path: publicPath,
+    filePath,
+    branch,
+    prUrl: pr.url,
+    prNumber: pr.number,
+    merge,
+  }
 }

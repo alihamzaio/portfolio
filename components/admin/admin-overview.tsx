@@ -137,6 +137,14 @@ export function AdminOverview({
             >
               Live blog <ExternalLink className="h-3 w-3" />
             </a>
+            <a
+              href="https://github.com/alihamzaio/yt-auto-studio/actions"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-secondary !text-xs !py-2 !px-3 inline-flex items-center gap-1.5"
+            >
+              DevBuildDaily Actions <ExternalLink className="h-3 w-3" />
+            </a>
           </div>
         )}
       </div>
