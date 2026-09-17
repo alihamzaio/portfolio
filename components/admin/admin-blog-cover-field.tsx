@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { DEFAULT_BLOG_COVER, isDefaultBlogCover } from "@/lib/blog-cover"
+import { coversForCategory, isLibraryCoverUrl } from "@/lib/blog-cover-library"
 
-export type CoverMode = "default" | "url" | "upload"
+export type CoverMode = "default" | "library" | "url" | "upload"
 
 type Props = {
   coverImage: string
-  onCoverChange: (url: string) => void
+  coverImageAlt?: string
+  category?: string
+  onCoverChange: (url: string, alt?: string) => void
   onUpload: (file: File) => Promise<void>
   uploading: boolean
   fieldClass: string
@@ -30,6 +33,8 @@ function looksLikeRiskyHotlink(url: string): boolean {
 
 export function AdminBlogCoverField({
   coverImage,
+  coverImageAlt,
+  category,
   onCoverChange,
   onUpload,
   uploading,
@@ -37,9 +42,11 @@ export function AdminBlogCoverField({
 }: Props) {
   const initialMode: CoverMode = !coverImage || isDefaultBlogCover(coverImage)
     ? "default"
-    : coverImage.startsWith("http")
-      ? "url"
-      : "upload"
+    : isLibraryCoverUrl(coverImage)
+      ? "library"
+      : coverImage.startsWith("http")
+        ? "url"
+        : "upload"
 
   const [mode, setMode] = useState<CoverMode>(initialMode)
   const [localPreview, setLocalPreview] = useState<string | null>(null)
@@ -47,6 +54,7 @@ export function AdminBlogCoverField({
     coverImage.startsWith("http") ? coverImage : ""
   )
   const [previewFailed, setPreviewFailed] = useState(false)
+  const library = coversForCategory(category)
 
   useEffect(() => {
     return () => {
@@ -76,7 +84,7 @@ export function AdminBlogCoverField({
         URL.revokeObjectURL(localPreview)
         setLocalPreview(null)
       }
-      onCoverChange(DEFAULT_BLOG_COVER)
+      onCoverChange(DEFAULT_BLOG_COVER, "Ali Hamza — Full Stack Developer")
     }
   }
 
@@ -94,10 +102,11 @@ export function AdminBlogCoverField({
         Cover image
       </span>
 
-      <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5 bg-white/[0.02]">
+      <div className="inline-flex flex-wrap rounded-lg border border-white/[0.08] p-0.5 bg-white/[0.02]">
         {(
           [
             { id: "default", label: "Brand default" },
+            { id: "library", label: "Library" },
             { id: "url", label: "Live URL" },
             { id: "upload", label: "Upload" },
           ] as const
@@ -124,6 +133,49 @@ export function AdminBlogCoverField({
         </p>
       )}
 
+      {mode === "library" && (
+        <div className="space-y-2">
+          <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+            Copyright-free Pexels picks{category ? ` for “${category}”` : ""}. Same library DevBuildDaily
+            uses for auto-blog.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
+            {library.map((item) => {
+              const selected = coverImage === item.url
+              return (
+                <button
+                  key={item.url}
+                  type="button"
+                  onClick={() => {
+                    if (localPreview) {
+                      URL.revokeObjectURL(localPreview)
+                      setLocalPreview(null)
+                    }
+                    setPreviewFailed(false)
+                    onCoverChange(item.url, item.alt)
+                  }}
+                  className={cn(
+                    "relative aspect-video rounded-lg overflow-hidden border text-left",
+                    selected ? "border-[var(--accent-primary)] ring-1 ring-[var(--accent-primary)]/40" : "border-white/[0.08]"
+                  )}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.url}
+                    alt={item.alt}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                  <span className="absolute bottom-1 left-1 text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-black/65 text-white/85">
+                    {item.category}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       {mode === "url" && (
         <div className="space-y-2">
           <input
@@ -133,7 +185,7 @@ export function AdminBlogCoverField({
               const v = e.target.value
               setUrlDraft(v)
               setPreviewFailed(false)
-              onCoverChange(v.trim() || DEFAULT_BLOG_COVER)
+              onCoverChange(v.trim() || DEFAULT_BLOG_COVER, coverImageAlt)
               if (localPreview) {
                 URL.revokeObjectURL(localPreview)
                 setLocalPreview(null)
@@ -148,8 +200,8 @@ export function AdminBlogCoverField({
           </p>
           {riskyUrl && (
             <p className="text-[11px] text-red-300/90 leading-relaxed">
-              This looks like a Google thumbnail URL. Prefer a direct Pexels/Unsplash image link
-              or use Upload instead.
+              This looks like a Google thumbnail URL. Prefer Library, a direct Pexels/Unsplash
+              link, or Upload instead.
             </p>
           )}
         </div>
@@ -209,11 +261,13 @@ export function AdminBlogCoverField({
             ? "Fallback (image failed)"
             : mode === "default"
               ? "Brand default"
-              : mode === "url"
-                ? "Live URL"
-                : localPreview
-                  ? "Local preview"
-                  : "Uploaded"}
+              : mode === "library"
+                ? "Library"
+                : mode === "url"
+                  ? "Live URL"
+                  : localPreview
+                    ? "Local preview"
+                    : "Uploaded"}
         </span>
       </div>
     </div>

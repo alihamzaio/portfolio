@@ -437,7 +437,14 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
                 </label>
                 <AdminBlogCoverField
                   coverImage={form.coverImage}
-                  onCoverChange={(url) => patch({ coverImage: url })}
+                  coverImageAlt={form.coverImageAlt}
+                  category={form.category}
+                  onCoverChange={(url, alt) =>
+                    patch({
+                      coverImage: url,
+                      ...(alt ? { coverImageAlt: alt } : {}),
+                    })
+                  }
                   onUpload={uploadCover}
                   uploading={uploadingCover}
                   fieldClass={fieldClass}
