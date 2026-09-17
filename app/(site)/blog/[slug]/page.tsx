@@ -6,7 +6,7 @@ import { BlogCoverImage } from "@/components/pages/blog-cover-image"
 import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
-import { AmberGlassCta } from "@/components/ui/amber-glass-cta"
+import { HireCtaBlock } from "@/components/home/hire-cta-block"
 import { getAllBlogPosts, getPostBySlug, postKeywords, postSeoDescription } from "@/lib/blog"
 import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
@@ -104,20 +104,22 @@ export default async function BlogPostPage({ params }: Props) {
 
             <BlogReferences references={post.references} />
 
-            <div className="mt-12 pt-8 border-t border-white/[0.08] space-y-4">
+            <div className="mt-12 pt-8 border-t border-white/[0.08] space-y-6">
               <p className="text-neutral-400 text-sm leading-relaxed">
                 {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
                 Technical tutorials also appear on {siteConfig.brand.channel}.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <AmberGlassCta href="/contact">Hire me for your project</AmberGlassCta>
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors"
-                >
-                  ← All articles
-                </Link>
-              </div>
+              <HireCtaBlock
+                variant="compact"
+                title="Want this built for your product?"
+                description="Hire me for production Next.js, MERN, and AWS work — or grab the free launch checklist and ship the next release with fewer surprises."
+              />
+              <Link
+                href="/blog"
+                className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                ← All articles
+              </Link>
             </div>
           </article>
         </PremiumReveal>

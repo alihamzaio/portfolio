@@ -3,7 +3,7 @@ import { Clock } from "lucide-react"
 import { PremiumGrid, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { AmberGlassCta } from "@/components/ui/amber-glass-cta"
+import { HireCtaBlock } from "@/components/home/hire-cta-block"
 import { BlogCoverImage } from "@/components/pages/blog-cover-image"
 import { getAllBlogPosts } from "@/lib/blog"
 import { siteConfig } from "@/lib/site"
@@ -28,7 +28,7 @@ export async function BlogContent() {
         <PremiumReveal>
           <PremiumCard className="p-10 text-center max-w-xl mx-auto">
             <p className="text-neutral-400 mb-6">New articles are on the way. Check back soon.</p>
-            <AmberGlassCta href="/contact">Work with me</AmberGlassCta>
+            <HireCtaBlock variant="compact" />
           </PremiumCard>
         </PremiumReveal>
       )}
@@ -97,24 +97,7 @@ export async function BlogContent() {
 
       {posts.length > 0 && (
         <PremiumReveal className="mt-14">
-          <div className="max-w-2xl mx-auto text-center rounded-2xl border border-white/[0.08] bg-white/[0.02] px-8 py-10">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-3 tracking-tight">
-              Need a full-stack developer for your next build?
-            </h2>
-            <p className="text-neutral-400 text-sm leading-relaxed mb-6 max-w-lg mx-auto">
-              I ship production Next.js, MERN, and AWS serverless work — from MVP to polish.
-              Prefer a short call over a long thread.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <AmberGlassCta href="/contact">Hire me for your project</AmberGlassCta>
-              <Link
-                href="/projects"
-                className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors"
-              >
-                See selected work →
-              </Link>
-            </div>
-          </div>
+          <HireCtaBlock className="max-w-2xl mx-auto" />
         </PremiumReveal>
       )}
     </PremiumPage>
