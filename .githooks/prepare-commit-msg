@@ -1,0 +1,21 @@
+#!/bin/sh
+# Strip Cursor / AI agent attribution trailers from commit messages.
+# Enable once per clone: git config core.hooksPath .githooks
+
+MSG_FILE=$1
+[ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ] || exit 0
+
+TMP="${MSG_FILE}.strip.$$"
+grep -v -E \
+  -e '^[[:space:]]*Co-authored-by:[[:space:]]*Cursor[[:space:]]*<' \
+  -e '^[[:space:]]*Made-with:[[:space:]]*Cursor' \
+  -e '^[[:space:]]*Made with Cursor' \
+  "$MSG_FILE" > "$TMP" || true
+
+# Keep file even if grep matched nothing useful
+if [ -s "$TMP" ] || [ ! -s "$MSG_FILE" ]; then
+  # Drop trailing blank lines
+  sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$TMP" > "$MSG_FILE" 2>/dev/null || mv "$TMP" "$MSG_FILE"
+fi
+rm -f "$TMP"
+exit 0
