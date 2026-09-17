@@ -58,14 +58,15 @@ export function AdminBlogCoverField({
     setPreviewFailed(false)
   }, [coverImage, localPreview, mode])
 
-  // Keep mode in sync when parent loads a different post
+  // Keep mode in sync only when switching posts (slug-driven), not on every cover keystroke
   useEffect(() => {
     if (!coverImage || isDefaultBlogCover(coverImage)) setMode("default")
     else if (coverImage.startsWith("http")) {
       setMode("url")
       setUrlDraft(coverImage)
     } else setMode("upload")
-  }, [coverImage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: init from cover when editor opens
+  }, [])
 
   const selectMode = (next: CoverMode) => {
     setMode(next)
