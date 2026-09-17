@@ -16,6 +16,7 @@ import {
   type BlogReference,
   type BlogStatus,
 } from "@/lib/blog"
+import { DEFAULT_BLOG_COVER } from "@/lib/blog-cover"
 import { githubSyncConfig } from "@/lib/github-sync-config"
 
 export type BlogIngestInput = {
@@ -64,8 +65,8 @@ function normalizePost(input: BlogIngestInput): BlogPost {
     featured: Boolean(input.featured),
     author: input.author || "Ali Hamza",
     source: input.source || "DevBuildDaily",
-    coverImage: input.coverImage,
-    coverImageAlt: input.coverImageAlt,
+    coverImage: input.coverImage?.trim() || DEFAULT_BLOG_COVER,
+    coverImageAlt: input.coverImageAlt || "Ali Hamza — Full Stack Developer",
     tags: input.tags,
     keywords: input.keywords,
     references: input.references,

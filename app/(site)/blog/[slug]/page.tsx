@@ -78,15 +78,13 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
             </header>
 
-            {post.coverImage && (
-              <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative h-56 md:h-72 bg-neutral-900">
-                <BlogCoverImage
-                  src={post.coverImage}
-                  alt={post.coverImageAlt || post.title}
-                  priority
-                />
-              </figure>
-            )}
+            <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative h-56 md:h-72 bg-neutral-900">
+              <BlogCoverImage
+                src={post.coverImage}
+                alt={post.coverImageAlt || post.title}
+                priority
+              />
+            </figure>
 
             <BlogBody body={post.body} />
 

@@ -3,6 +3,7 @@
 import { Clock, Tag } from "lucide-react"
 import { BlogBody, BlogReferences, blogSourceLabel } from "@/components/pages/blog-body"
 import { BlogCoverImage } from "@/components/pages/blog-cover-image"
+import { resolveBlogCover } from "@/lib/blog-cover"
 import type { BlogPost } from "@/lib/blog"
 
 function estimateReadTime(body: string): string {
@@ -39,8 +40,8 @@ export function AdminBlogPreview(form: PreviewInput) {
     readTime: estimateReadTime(form.body || "word"),
     category: form.category || "Full Stack",
     author: form.author || "Ali Hamza",
-    coverImage: form.coverImage || undefined,
-    coverImageAlt: form.coverImageAlt || undefined,
+    coverImage: resolveBlogCover(form.coverImage),
+    coverImageAlt: form.coverImageAlt || "Ali Hamza — Full Stack Developer",
     tags: tags.length ? tags : undefined,
     youtubeUrl: form.youtubeUrl || undefined,
     body: form.body.trim() || "_Start writing in the Write tab. Preview uses the same renderer as the live blog._",
@@ -79,11 +80,9 @@ export function AdminBlogPreview(form: PreviewInput) {
         </div>
       </header>
 
-      {post.coverImage && (
-        <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative h-56 md:h-72 bg-neutral-900">
-          <BlogCoverImage src={post.coverImage} alt={post.coverImageAlt || post.title} />
-        </figure>
-      )}
+      <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative h-56 md:h-72 bg-neutral-900">
+        <BlogCoverImage src={post.coverImage} alt={post.coverImageAlt || post.title} />
+      </figure>
 
       <BlogBody body={post.body} />
 
@@ -120,5 +119,5 @@ code block
 \`\`\`
 ![Alt text](https://image-url.jpg)
 
-Cover image: use the Cover image URL field (or /blog/covers/….jpg under public).
-Remote images (Pexels, etc.) work when the URL is https.`
+Cover image: Brand default, copyright-free live URL (Pexels/Unsplash), or upload to /blog/covers.
+Remote images must be copyright-free. If none set, the Ali Hamza brand placeholder is used.`
