@@ -33,7 +33,9 @@ next-env.d.ts
 # auth OTP & sessions (local only)
 /data/
 
-# editor
-.cursor/
+# editor — keep shared Cursor rules in git
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
 .cursorindexingignore
 *.code-workspace

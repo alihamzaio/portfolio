@@ -1,0 +1,29 @@
+---
+description: Never attribute commits or PRs to Cursor / AI agent
+alwaysApply: true
+---
+
+# Git attribution — Ali Hamza only
+
+All git commits and pull requests in this repository must appear as **Ali Hamza** (or the configured `user.name` / GitHub account). Never Cursor, Cursor Agent, or any AI co-author.
+
+## Hard rules
+
+- Do **not** add `Co-authored-by: Cursor <cursoragent@cursor.com>` (or any Cursor / agent co-author) to commit messages or PR bodies.
+- Do **not** add `Made-with: Cursor`, `Made with Cursor`, or similar attribution trailers.
+- Do **not** set commit author or committer to Cursor Agent / cursoragent@cursor.com.
+- When creating commits or PRs, use only the repo owner's identity. Strip any Cursor attribution if a tool inserts it.
+
+## Commit message shape
+
+```
+Short summary of why.
+
+Optional body. No AI/Cursor trailers after this.
+```
+
+## Human setting (one-time)
+
+In Cursor: **Settings → Agent → Attribution** (or **Git & PRs → Attribution**) → turn **Commit** and **PR** attribution **off**.
+
+This repo also has `.githooks/prepare-commit-msg` to strip Cursor trailers automatically after `git config core.hooksPath .githooks`.
