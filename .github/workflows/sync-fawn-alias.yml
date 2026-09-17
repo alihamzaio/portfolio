@@ -1,0 +1,40 @@
+name: Sync fawn production alias
+
+# Keep https://alihamza-fawn.vercel.app on the latest Production deployment.
+# vercel.app aliases do not auto-follow new production deploys.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync-alias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Wait for Vercel production
+        run: sleep 120
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Point alihamza-fawn.vercel.app at latest production
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VERCEL_TOKEN:-}" ]; then
+            echo "Missing VERCEL_TOKEN — skip"
+            exit 0
+          fi
+          OUT=$(vercel ls alihamza --prod --token "$VERCEL_TOKEN" --scope alilogics007s-projects 2>&1 || true)
+          echo "$OUT" | head -40
+          DEPLOY=$(echo "$OUT" | grep -oE 'https://alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app' | head -1)
+          if [ -z "$DEPLOY" ]; then
+            echo "Could not find production deployment URL"
+            exit 1
+          fi
+          echo "Using $DEPLOY"
+          vercel alias set "$DEPLOY" alihamza-fawn.vercel.app --token "$VERCEL_TOKEN" --scope alilogics007s-projects
+          curl -fsSIL "https://alihamza-fawn.vercel.app/blog" | head -15
