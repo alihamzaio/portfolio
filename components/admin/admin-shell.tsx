@@ -150,18 +150,16 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
 
         <main className="flex-1 p-6 sm:p-10 lg:p-12 overflow-auto relative">
           <div className="absolute inset-0 grid-fine opacity-20 pointer-events-none" />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={tab}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, ease: easeCinematic }}
-              className="relative"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          {/* Keyed panel without mode="wait" — wait kept stale overview content after tab changes */}
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: easeCinematic }}
+            className="relative"
+          >
+            {children}
+          </motion.div>
         </main>
       </div>
 
