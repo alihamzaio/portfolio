@@ -1,8 +1,8 @@
 import Link from "next/link"
-import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Clock, Tag } from "lucide-react"
 import { BlogBody, BlogReferences, blogSourceLabel } from "@/components/pages/blog-body"
+import { BlogCoverImage } from "@/components/pages/blog-cover-image"
 import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
@@ -79,15 +79,11 @@ export default async function BlogPostPage({ params }: Props) {
             </header>
 
             {post.coverImage && (
-              <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <Image
+              <figure className="mb-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative h-56 md:h-72 bg-neutral-900">
+                <BlogCoverImage
                   src={post.coverImage}
                   alt={post.coverImageAlt || post.title}
-                  width={1200}
-                  height={630}
-                  className="w-full h-auto object-cover max-h-[420px]"
                   priority
-                  unoptimized={post.coverImage.startsWith("http")}
                 />
               </figure>
             )}

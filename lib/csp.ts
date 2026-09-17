@@ -36,7 +36,7 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     `script-src ${scriptSrc.join(" ")}`,
     "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://res.cloudinary.com https://www.exec9.com https://cdn.jsdelivr.net https://ghchart.rshah.org https://www.google-analytics.com https://www.googletagmanager.com",
+    "img-src 'self' data: blob: https://res.cloudinary.com https://www.exec9.com https://cdn.jsdelivr.net https://cdn.simpleicons.org https://ghchart.rshah.org https://images.pexels.com https://images.unsplash.com https://i.ytimg.com https://img.youtube.com https://www.google-analytics.com https://www.googletagmanager.com",
     "font-src 'self' data:",
     `connect-src ${connectSrc.join(" ")}`,
     "frame-ancestors 'none'",
