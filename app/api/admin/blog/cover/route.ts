@@ -7,6 +7,14 @@ export const runtime = "nodejs"
 
 const MAX_BYTES = 4.5 * 1024 * 1024 // stay under typical serverless body limits
 
+function extFromTypeOrName(type: string, name: string): string {
+  const t = type.toLowerCase()
+  if (t === "image/png" || name.endsWith(".png")) return "png"
+  if (t === "image/webp" || name.endsWith(".webp")) return "webp"
+  if (t === "image/gif" || name.endsWith(".gif")) return "gif"
+  return "jpg"
+}
+
 /**
  * POST /api/admin/blog/cover
  * multipart form: file (image), optional name/slug
@@ -24,34 +32,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Expected multipart form data" }, { status: 400 })
   }
 
-  const file = form.get("file")
-  if (!(file instanceof File)) {
+  const raw = form.get("file")
+  // On Vercel/Node, uploads may be File or Blob — do not require instanceof File
+  if (!raw || typeof raw === "string") {
     return NextResponse.json({ error: "file is required" }, { status: 400 })
   }
-  if (file.size > MAX_BYTES) {
+
+  const blob = raw as Blob
+  if (blob.size > MAX_BYTES) {
     return NextResponse.json({ error: "Image must be under 4.5 MB" }, { status: 400 })
   }
 
-  const type = (file.type || "").toLowerCase()
-  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"]
-  if (type && !allowed.includes(type)) {
+  const type = (blob.type || "").toLowerCase()
+  const originalName = "name" in raw && typeof (raw as File).name === "string" ? (raw as File).name : "cover.jpg"
+  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", ""]
+  if (type && !allowed.includes(type) && !/\.(jpe?g|png|webp|gif)$/i.test(originalName)) {
     return NextResponse.json({ error: "Only JPG, PNG, WebP, or GIF allowed" }, { status: 400 })
   }
 
-  const ext =
-    type === "image/png"
-      ? "png"
-      : type === "image/webp"
-        ? "webp"
-        : type === "image/gif"
-          ? "gif"
-          : "jpg"
-
-  const hint = String(form.get("name") || form.get("slug") || file.name.replace(/\.[^.]+$/, "") || "cover")
+  const ext = extFromTypeOrName(type, originalName)
+  const hint = String(form.get("name") || form.get("slug") || originalName.replace(/\.[^.]+$/, "") || "cover")
   const base = slugifyTitle(hint) || `cover-${Date.now().toString(36)}`
   const fileName = `${base}.${ext}`
 
-  const buf = Buffer.from(await file.arrayBuffer())
+  const buf = Buffer.from(await blob.arrayBuffer())
+  if (buf.length < 32) {
+    return NextResponse.json({ error: "File looks empty" }, { status: 400 })
+  }
   const contentBase64 = buf.toString("base64")
 
   try {
