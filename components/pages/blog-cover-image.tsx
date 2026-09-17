@@ -29,6 +29,7 @@ export function BlogCoverImage({ src, alt, className, priority, sizes }: Props) 
       className={cn("object-cover", className)}
       priority={priority}
       unoptimized={isRemote || show.endsWith(".svg")}
+      referrerPolicy="no-referrer"
       onError={() => {
         if (show !== DEFAULT_BLOG_COVER) setFailed(true)
       }}

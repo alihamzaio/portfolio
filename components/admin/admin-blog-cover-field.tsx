@@ -14,6 +14,20 @@ type Props = {
   fieldClass: string
 }
 
+function looksLikeRiskyHotlink(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase()
+    return (
+      host.includes("gstatic.com") ||
+      host.includes("google.com") ||
+      host.includes("googleusercontent.com") ||
+      host.includes("pinimg.com")
+    )
+  } catch {
+    return false
+  }
+}
+
 export function AdminBlogCoverField({
   coverImage,
   onCoverChange,
@@ -44,6 +58,15 @@ export function AdminBlogCoverField({
     setPreviewFailed(false)
   }, [coverImage, localPreview, mode])
 
+  // Keep mode in sync when parent loads a different post
+  useEffect(() => {
+    if (!coverImage || isDefaultBlogCover(coverImage)) setMode("default")
+    else if (coverImage.startsWith("http")) {
+      setMode("url")
+      setUrlDraft(coverImage)
+    } else setMode("upload")
+  }, [coverImage])
+
   const selectMode = (next: CoverMode) => {
     setMode(next)
     setPreviewFailed(false)
@@ -62,6 +85,7 @@ export function AdminBlogCoverField({
       : localPreview || (coverImage && !isDefaultBlogCover(coverImage) ? coverImage : DEFAULT_BLOG_COVER)
 
   const showBroken = previewFailed && mode !== "default"
+  const riskyUrl = mode === "url" && urlDraft.trim().startsWith("http") && looksLikeRiskyHotlink(urlDraft.trim())
 
   return (
     <div className="sm:col-span-2 space-y-3">
@@ -107,18 +131,26 @@ export function AdminBlogCoverField({
             onChange={(e) => {
               const v = e.target.value
               setUrlDraft(v)
+              setPreviewFailed(false)
               onCoverChange(v.trim() || DEFAULT_BLOG_COVER)
               if (localPreview) {
                 URL.revokeObjectURL(localPreview)
                 setLocalPreview(null)
               }
             }}
-            placeholder="https://images.pexels.com/…"
+            placeholder="https://images.pexels.com/photos/…/….jpeg"
           />
           <p className="text-[11px] text-amber-200/80 leading-relaxed">
-            Use copyright-free images only (your own, Pexels, Unsplash, etc.). Do not paste
-            random copyrighted photos.
+            Paste a direct image link (ends in .jpg / .png / .webp), copyright-free only —
+            Pexels, Unsplash, or your own CDN. Google Images thumbnails often break; open the
+            photo → right‑click → Copy image address.
           </p>
+          {riskyUrl && (
+            <p className="text-[11px] text-red-300/90 leading-relaxed">
+              This looks like a Google thumbnail URL. Prefer a direct Pexels/Unsplash image link
+              or use Upload instead.
+            </p>
+          )}
         </div>
       )}
 
@@ -155,18 +187,32 @@ export function AdminBlogCoverField({
       <div className="relative h-36 w-full max-w-md overflow-hidden rounded-xl border border-white/[0.08] bg-neutral-950">
         {showBroken ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={DEFAULT_BLOG_COVER} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img
+            src={DEFAULT_BLOG_COVER}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+          />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={previewSrc}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
+            referrerPolicy="no-referrer"
             onError={() => setPreviewFailed(true)}
           />
         )}
         <span className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-black/60 text-white/80">
-          {mode === "default" ? "Brand default" : mode === "url" ? "Live URL" : localPreview ? "Local preview" : "Uploaded"}
+          {showBroken
+            ? "Fallback (image failed)"
+            : mode === "default"
+              ? "Brand default"
+              : mode === "url"
+                ? "Live URL"
+                : localPreview
+                  ? "Local preview"
+                  : "Uploaded"}
         </span>
       </div>
     </div>
