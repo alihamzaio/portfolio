@@ -1,5 +1,6 @@
 import {
   createPullRequestDetailed,
+  deleteFileContent,
   ensureBranchFromSha,
   getBranchSha,
   getGitHubToken,
@@ -12,6 +13,7 @@ import {
   slugifyTitle,
   type BlogPost,
   type BlogReference,
+  type BlogStatus,
 } from "@/lib/blog"
 import { githubSyncConfig } from "@/lib/github-sync-config"
 
@@ -34,6 +36,8 @@ export type BlogIngestInput = {
   youtubeUrl?: string
   youtubeId?: string
   readTime?: string
+  /** draft | published — default published for automation */
+  status?: BlogStatus
   autoMerge?: boolean
 }
 
@@ -46,6 +50,7 @@ function normalizePost(input: BlogIngestInput): BlogPost {
   if (!slug) throw new Error("slug is invalid")
 
   const excerpt = (input.excerpt || body.replace(/\s+/g, " ").slice(0, 200)).trim()
+  const status: BlogStatus = input.status === "draft" ? "draft" : "published"
 
   return {
     slug,
@@ -65,55 +70,168 @@ function normalizePost(input: BlogIngestInput): BlogPost {
     references: input.references,
     youtubeUrl: input.youtubeUrl,
     youtubeId: input.youtubeId,
+    status,
     body,
   }
 }
 
+async function openBlogPr(opts: {
+  branch: string
+  title: string
+  body: string
+  autoMerge?: boolean
+  mergeTitle?: string
+}) {
+  const token = getGitHubToken()
+  if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
+  const { repo, baseBranch } = githubSyncConfig
+
+  const pr = await createPullRequestDetailed(
+    token,
+    repo,
+    opts.branch,
+    baseBranch,
+    opts.title,
+    opts.body
+  )
+
+  let merge: { merged: boolean; sha?: string; message: string } | null = null
+  if (opts.autoMerge) {
+    merge = await mergePullRequest(token, repo, pr.number, opts.mergeTitle)
+  }
+
+  return { token, repo, pr, merge }
+}
+
+/**
+ * Create or update a blog JSON via PR (+ optional merge).
+ * Drafts land in content/blog/drafts/; published in content/blog/.
+ * Publishing removes a matching draft file in the same PR when present.
+ */
 export async function createBlogPullRequest(input: BlogIngestInput) {
   const token = getGitHubToken()
   if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
 
   const post = normalizePost(input)
   const { repo, baseBranch } = githubSyncConfig
-  const branch = `blog/auto-${post.slug}`.slice(0, 100)
-  const filePath = blogFilePath(post.slug)
+  const status = post.status || "published"
+  const branch = `blog/${status}-${post.slug}-${Date.now().toString(36)}`.slice(0, 100)
+  const filePath = blogFilePath(post.slug, status)
   const content = `${JSON.stringify(post, null, 2)}\n`
 
   const mainSha = await getBranchSha(token, repo, baseBranch)
   await ensureBranchFromSha(token, repo, branch, mainSha)
-  await putFileContent(token, repo, branch, filePath, content, `blog: add ${post.slug}`)
-
-  const pr = await createPullRequestDetailed(
+  await putFileContent(
     token,
     repo,
     branch,
-    baseBranch,
-    `Blog: ${post.title}`,
-    [
-      `Auto blog post from **${post.source || "DevBuildDaily"}**.`,
+    filePath,
+    content,
+    status === "draft" ? `blog: draft ${post.slug}` : `blog: publish ${post.slug}`
+  )
+
+  // When publishing, drop draft copy if it exists
+  if (status === "published") {
+    const draftPath = blogFilePath(post.slug, "draft")
+    await deleteFileContent(token, repo, branch, draftPath, `blog: remove draft ${post.slug}`).catch(
+      () => false
+    )
+  }
+
+  const { pr, merge } = await openBlogPr({
+    branch,
+    title: status === "draft" ? `Blog draft: ${post.title}` : `Blog: ${post.title}`,
+    body: [
+      status === "draft"
+        ? `Draft blog post from **${post.source || "admin"}**.`
+        : `Blog post from **${post.source || "DevBuildDaily"}**.`,
       "",
       `- Slug: \`${post.slug}\``,
+      `- Status: ${status}`,
       `- Category: ${post.category}`,
+      `- Path: \`${filePath}\``,
       post.youtubeUrl ? `- YouTube: ${post.youtubeUrl}` : "",
     ]
       .filter(Boolean)
-      .join("\n")
-  )
-
-  let merge: { merged: boolean; sha?: string; message: string } | null = null
-  if (input.autoMerge) {
-    merge = await mergePullRequest(token, repo, pr.number, `blog: ${post.slug}`)
-  }
+      .join("\n"),
+    autoMerge: input.autoMerge,
+    mergeTitle: `blog: ${post.slug}`,
+  })
 
   return {
     ok: true as const,
     slug: post.slug,
     path: filePath,
+    status,
     branch,
     prUrl: pr.url,
     prNumber: pr.number,
     merge,
-    postUrl: `/blog/${post.slug}`,
+    postUrl: status === "published" ? `/blog/${post.slug}` : null,
+  }
+}
+
+/** Delete draft and/or published blog JSON via PR (+ optional merge). */
+export async function deleteBlogPullRequest(slug: string, autoMerge = true) {
+  const token = getGitHubToken()
+  if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
+
+  const safe = slug.replace(/[^a-z0-9-]/gi, "").toLowerCase()
+  if (!safe) throw new Error("slug is invalid")
+
+  const { repo, baseBranch } = githubSyncConfig
+  const branch = `blog/delete-${safe}-${Date.now().toString(36)}`.slice(0, 100)
+  const publishedPath = blogFilePath(safe, "published")
+  const draftPath = blogFilePath(safe, "draft")
+
+  const mainSha = await getBranchSha(token, repo, baseBranch)
+  await ensureBranchFromSha(token, repo, branch, mainSha)
+
+  const removedPublished = await deleteFileContent(
+    token,
+    repo,
+    branch,
+    publishedPath,
+    `blog: delete ${safe}`
+  )
+  const removedDraft = await deleteFileContent(
+    token,
+    repo,
+    branch,
+    draftPath,
+    `blog: delete draft ${safe}`
+  )
+
+  if (!removedPublished && !removedDraft) {
+    throw new Error(`No blog file found for slug "${safe}"`)
+  }
+
+  const { pr, merge } = await openBlogPr({
+    branch,
+    title: `Blog delete: ${safe}`,
+    body: [
+      `Delete blog post \`${safe}\`.`,
+      "",
+      removedPublished ? `- Removed \`${publishedPath}\`` : "",
+      removedDraft ? `- Removed \`${draftPath}\`` : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    autoMerge,
+    mergeTitle: `blog: delete ${safe}`,
+  })
+
+  return {
+    ok: true as const,
+    slug: safe,
+    removed: {
+      published: removedPublished,
+      draft: removedDraft,
+    },
+    branch,
+    prUrl: pr.url,
+    prNumber: pr.number,
+    merge,
   }
 }
 

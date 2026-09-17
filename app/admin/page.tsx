@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, StatCard, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
+import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 import type { SiteSettings } from "@/lib/settings"
@@ -423,12 +424,31 @@ export default function AdminPage() {
               <p className="font-medium">Add project</p>
               <p className="text-xs text-[var(--text-secondary)] mt-1">Case studies & demos</p>
             </button>
+            <button type="button" onClick={() => setTab("blog")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
+              <p className="font-medium">Manage blog</p>
+              <p className="text-xs text-[var(--text-secondary)] mt-1">Draft, publish, delete posts</p>
+            </button>
             <button type="button" onClick={() => setTab("resume")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
               <p className="font-medium">Upload resume</p>
               <p className="text-xs text-[var(--text-secondary)] mt-1">Active CV PDF</p>
             </button>
           </div>
         </div>
+      )}
+
+      {tab === "blog" && (
+        <AdminBlogPanel
+          onNotice={(message, prUrl) => {
+            setSyncNotice(message)
+            setSyncError(null)
+            setSyncPrUrl(prUrl || null)
+          }}
+          onError={(message) => {
+            setSyncError(message)
+            setSyncNotice(null)
+            setSyncPrUrl(null)
+          }}
+        />
       )}
 
       {tab === "projects" && (

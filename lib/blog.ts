@@ -6,11 +6,12 @@ export type BlogReference = {
   url: string
 }
 
+export type BlogStatus = "draft" | "published"
+
 export type BlogPost = {
   slug: string
   title: string
   excerpt: string
-  /** SEO meta description (150–160 chars ideal) */
   metaDescription?: string
   date: string
   readTime: string
@@ -25,11 +26,19 @@ export type BlogPost = {
   youtubeUrl?: string
   youtubeId?: string
   references?: BlogReference[]
-  /** Markdown: ## headings, lists, [links](url), ![alt](url), > quotes, ```code``` */
+  /** draft = not on public /blog; published = live */
+  status?: BlogStatus
   body: string
 }
 
+/** Admin list row includes where the file lives */
+export type BlogPostAdmin = BlogPost & {
+  status: BlogStatus
+  path: string
+}
+
 const BLOG_DIR = path.join(process.cwd(), "content", "blog")
+const DRAFTS_DIR = path.join(BLOG_DIR, "drafts")
 
 function isPost(value: unknown): value is BlogPost {
   if (!value || typeof value !== "object") return false
@@ -43,20 +52,55 @@ function isPost(value: unknown): value is BlogPost {
   )
 }
 
-export async function getAllBlogPosts(): Promise<BlogPost[]> {
+async function readPostsFromDir(
+  dir: string,
+  status: BlogStatus
+): Promise<BlogPostAdmin[]> {
   try {
-    const names = await fs.readdir(BLOG_DIR)
-    const posts: BlogPost[] = []
+    const names = await fs.readdir(dir)
+    const posts: BlogPostAdmin[] = []
     for (const name of names) {
       if (!name.endsWith(".json")) continue
-      const raw = await fs.readFile(path.join(BLOG_DIR, name), "utf8")
+      const filePath = path.join(dir, name)
+      const raw = await fs.readFile(filePath, "utf8")
       const parsed = JSON.parse(raw) as unknown
-      if (isPost(parsed)) posts.push(parsed)
+      if (!isPost(parsed)) continue
+      posts.push({
+        ...parsed,
+        status: parsed.status || status,
+        path:
+          status === "draft"
+            ? `content/blog/drafts/${parsed.slug}.json`
+            : `content/blog/${parsed.slug}.json`,
+      })
     }
-    return posts.sort((a, b) => b.date.localeCompare(a.date))
+    return posts
   } catch {
     return []
   }
+}
+
+/** Public site: published posts only (top-level content/blog/*.json). */
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const posts = await readPostsFromDir(BLOG_DIR, "published")
+  return posts
+    .filter((p) => p.status !== "draft")
+    .sort((a, b) => b.date.localeCompare(a.date))
+}
+
+/** Admin: drafts + published. */
+export async function getAllBlogPostsAdmin(): Promise<BlogPostAdmin[]> {
+  const [published, drafts] = await Promise.all([
+    readPostsFromDir(BLOG_DIR, "published"),
+    readPostsFromDir(DRAFTS_DIR, "draft"),
+  ])
+  const bySlug = new Map<string, BlogPostAdmin>()
+  for (const p of published) bySlug.set(p.slug, { ...p, status: "published" })
+  for (const p of drafts) {
+    // Draft overrides if both somehow exist
+    bySlug.set(p.slug, { ...p, status: "draft" })
+  }
+  return [...bySlug.values()].sort((a, b) => b.date.localeCompare(a.date))
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
@@ -76,8 +120,9 @@ export async function getBlogSlugs(): Promise<string[]> {
   return posts.map((p) => p.slug)
 }
 
-export function blogFilePath(slug: string): string {
+export function blogFilePath(slug: string, status: BlogStatus = "published"): string {
   const safe = slug.replace(/[^a-z0-9-]/gi, "").toLowerCase()
+  if (status === "draft") return `content/blog/drafts/${safe}.json`
   return `content/blog/${safe}.json`
 }
 

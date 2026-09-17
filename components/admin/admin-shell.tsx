@@ -13,12 +13,13 @@ import {
   Menu,
   X,
   TrendingUp,
+  Newspaper,
 } from "lucide-react"
 import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
 import { ease, easeCinematic } from "@/lib/motion"
 
-export type AdminTab = "overview" | "profile" | "experience" | "projects" | "skills" | "resume"
+export type AdminTab = "overview" | "profile" | "experience" | "projects" | "skills" | "blog" | "resume"
 
 const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -26,6 +27,7 @@ const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "experience", label: "Experience", icon: Building2 },
   { id: "projects", label: "Projects", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Sparkles },
+  { id: "blog", label: "Blog", icon: Newspaper },
   { id: "resume", label: "Resume", icon: FileText },
 ]
 

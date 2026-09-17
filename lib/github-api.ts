@@ -150,6 +150,33 @@ export async function putFileContent(
   }
 }
 
+export async function deleteFileContent(
+  token: string,
+  repo: string,
+  branch: string,
+  filePath: string,
+  message: string
+): Promise<boolean> {
+  const { authorName, authorEmail } = githubSyncConfig
+  const fileSha = await getFileSha(token, repo, branch, filePath)
+  if (!fileSha) return false
+  const result = await githubJson(token, `/repos/${repo}/contents/${filePath}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      message,
+      branch,
+      sha: fileSha,
+      author: { name: authorName, email: authorEmail },
+      committer: { name: authorName, email: authorEmail },
+    }),
+  })
+  if (!result.ok) {
+    throw new Error(`GitHub delete failed (${result.status}): ${result.text.slice(0, 240)}`)
+  }
+  return true
+}
+
+
 export async function findOpenPullRequest(
   token: string,
   repo: string,
