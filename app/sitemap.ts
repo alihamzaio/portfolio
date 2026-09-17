@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next"
 import { absoluteUrl } from "@/lib/seo"
 import { getBlogSlugs } from "@/lib/blog"
 import { getProjectSlugs } from "@/lib/projects"
+import { LEAD_MAGNETS } from "@/lib/lead-magnet"
 
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"] }[] = [
   { path: "", priority: 1, changeFrequency: "weekly" },
@@ -10,6 +11,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/experience", priority: 0.85, changeFrequency: "monthly" },
   { path: "/tech-stack", priority: 0.8, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.85, changeFrequency: "weekly" },
+  { path: "/resources", priority: 0.8, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.85, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
 ]
@@ -38,5 +40,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticEntries, ...projectEntries, ...blogEntries]
+  const resourceEntries = LEAD_MAGNETS.map((m) => ({
+    url: absoluteUrl(`/resources/${m.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }))
+
+  return [...staticEntries, ...projectEntries, ...blogEntries, ...resourceEntries]
 }

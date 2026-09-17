@@ -36,6 +36,7 @@ export function GET() {
 - Experience: ${absoluteUrl("/experience")}
 - Tech stack: ${absoluteUrl("/tech-stack")}
 - Contact: ${absoluteUrl("/contact")}
+- Free resources: ${absoluteUrl("/resources")}
 - Privacy: ${absoluteUrl("/privacy")}
 - Sitemap: ${absoluteUrl("/sitemap.xml")}
 
@@ -50,6 +51,7 @@ export function GET() {
 ## Optional
 
 - Resume: ${absoluteUrl(siteConfig.resumeUrl)}
+- Next.js launch checklist: ${absoluteUrl("/resources/nextjs-vercel-launch-checklist")}
 `
 
   return new NextResponse(body, {

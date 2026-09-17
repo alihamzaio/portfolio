@@ -64,10 +64,10 @@ export const copy = {
     },
     cta: {
       label: "Next step",
-      title: "Interested in working together?",
+      title: "Ready to hire a full-stack developer?",
       description:
-        "Available for full-time roles and contract work: web applications, REST APIs, AWS infrastructure, and blockchain integrations.",
-      button: "Contact",
+        "Available for full-time and contract work. Start with the free Next.js launch checklist, or contact me with your timeline and stack.",
+      button: "Hire me",
     },
     approach: {
       label: "Process",
