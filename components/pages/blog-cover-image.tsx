@@ -19,6 +19,9 @@ export function BlogCoverImage({ src, alt, className, priority, sizes }: Props) 
   const [failed, setFailed] = useState(false)
   const show = failed ? DEFAULT_BLOG_COVER : resolved
   const isRemote = show.startsWith("http")
+  const isKnownCdn =
+    isRemote &&
+    /res\.cloudinary\.com|images\.pexels\.com|images\.unsplash\.com/i.test(show)
 
   return (
     <Image
@@ -28,7 +31,8 @@ export function BlogCoverImage({ src, alt, className, priority, sizes }: Props) 
       sizes={sizes || "(max-width: 768px) 100vw, 800px"}
       className={cn("object-cover", className)}
       priority={priority}
-      unoptimized={isRemote || show.endsWith(".svg")}
+      // Optimize known CDNs via next/image; keep unknown remotes + SVG unoptimized
+      unoptimized={!isKnownCdn && (isRemote || show.endsWith(".svg"))}
       referrerPolicy="no-referrer"
       onError={() => {
         if (show !== DEFAULT_BLOG_COVER) setFailed(true)
