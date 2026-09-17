@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { Plus, Star, Trash2 } from "lucide-react"
-import { AdminShell, Panel, StatCard, type AdminTab } from "@/components/admin/admin-shell"
+import { AdminShell, Panel, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
 import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
+import { AdminOverview } from "@/components/admin/admin-overview"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 import type { SiteSettings } from "@/lib/settings"
@@ -40,6 +41,8 @@ export default function AdminPage() {
   const [syncMode, setSyncMode] = useState<string | null>(null)
   const [syncPrUrl, setSyncPrUrl] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
+  const [blogPublished, setBlogPublished] = useState(0)
+  const [blogDrafts, setBlogDrafts] = useState(0)
 
   const noteSyncResponse = (res: Response) => {
     const message = res.headers.get("X-Portfolio-Sync-Message")
@@ -137,6 +140,19 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (authed) loadAll()
+  }, [authed])
+
+  useEffect(() => {
+    if (!authed) return
+    adminFetch("/api/admin/overview", { headers: getAuthHeaders() })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.counts) {
+          setBlogPublished(Number(d.counts.blogPublished) || 0)
+          setBlogDrafts(Number(d.counts.blogDrafts) || 0)
+        }
+      })
+      .catch(() => {})
   }, [authed])
 
   useEffect(() => {
@@ -353,7 +369,14 @@ export default function AdminPage() {
       tab={tab}
       onTab={setTab}
       onLogout={logout}
-      stats={{ projects: projects.length, skills: skills.length, resumes: resumeFiles.length, experience: experienceList.length }}
+      stats={{
+        projects: projects.length,
+        skills: skills.length,
+        resumes: resumeFiles.length,
+        experience: experienceList.length,
+        blogPublished,
+        blogDrafts,
+      }}
     >
       {(syncNotice || syncError || syncMode || syncPrUrl) && (
         <div className="mb-6 space-y-2">
@@ -400,40 +423,21 @@ export default function AdminPage() {
         </div>
       )}
       {tab === "overview" && (
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-2xl font-semibold mb-1">Dashboard</h1>
-            <p className="text-sm text-[var(--text-secondary)]">Manage your portfolio content in one place.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard label="Experience" value={experienceList.length} />
-            <StatCard label="Projects" value={projects.length} sub={`${projects.filter((p) => p.featured).length} featured`} />
-            <StatCard label="Skills" value={skills.length} />
-            <StatCard label="Resumes" value={resumeFiles.length} sub={activeResume || "None active"} />
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button type="button" onClick={() => setTab("profile")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
-              <p className="font-medium">Edit profile</p>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">Name, hero, contact, links</p>
-            </button>
-            <button type="button" onClick={addExperience} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
-              <p className="font-medium">Add experience</p>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">Company roles & achievements</p>
-            </button>
-            <button type="button" onClick={createProject} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
-              <p className="font-medium">Add project</p>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">Case studies & demos</p>
-            </button>
-            <button type="button" onClick={() => setTab("blog")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
-              <p className="font-medium">Manage blog</p>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">Draft, publish, delete posts</p>
-            </button>
-            <button type="button" onClick={() => setTab("resume")} className="glass-card rounded-xl p-5 text-left hover:border-white/[0.12] transition-colors">
-              <p className="font-medium">Upload resume</p>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">Active CV PDF</p>
-            </button>
-          </div>
-        </div>
+        <AdminOverview
+          onTab={setTab}
+          onAddExperience={addExperience}
+          onAddProject={createProject}
+          onPublishGitHub={publishToGitHub}
+          publishing={publishing}
+          localCounts={{
+            experience: experienceList.length,
+            projects: projects.length,
+            featuredProjects: projects.filter((p) => p.featured).length,
+            skills: skills.length,
+            resumes: resumeFiles.length,
+            activeResume,
+          }}
+        />
       )}
 
       {tab === "blog" && (
@@ -442,6 +446,15 @@ export default function AdminPage() {
             setSyncNotice(message)
             setSyncError(null)
             setSyncPrUrl(prUrl || null)
+            adminFetch("/api/admin/overview", { headers: getAuthHeaders() })
+              .then((r) => r.json())
+              .then((d) => {
+                if (d?.counts) {
+                  setBlogPublished(Number(d.counts.blogPublished) || 0)
+                  setBlogDrafts(Number(d.counts.blogDrafts) || 0)
+                }
+              })
+              .catch(() => {})
           }}
           onError={(message) => {
             setSyncError(message)

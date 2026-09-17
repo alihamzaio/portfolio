@@ -36,7 +36,14 @@ interface AdminShellProps {
   tab: AdminTab
   onTab: (t: AdminTab) => void
   onLogout: () => void
-  stats: { projects: number; skills: number; resumes: number; experience: number }
+  stats: {
+    projects: number
+    skills: number
+    resumes: number
+    experience: number
+    blogPublished?: number
+    blogDrafts?: number
+  }
 }
 
 function SidebarNav({
@@ -96,6 +103,7 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
     { label: "Roles", value: stats.experience, icon: Building2 },
     { label: "Projects", value: stats.projects, icon: Briefcase },
     { label: "Skills", value: stats.skills, icon: Sparkles },
+    { label: "Blog", value: stats.blogPublished ?? 0, icon: Newspaper },
     { label: "Resumes", value: stats.resumes, icon: FileText },
   ]
 
