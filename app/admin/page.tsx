@@ -9,6 +9,7 @@ import { AdminAffiliatesPanel } from "@/components/admin/admin-affiliates-panel"
 import { AdminProductsPanel } from "@/components/admin/admin-products-panel"
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel"
 import { AdminOrdersPanel } from "@/components/admin/admin-orders-panel"
+import { AdminAutomationsPanel } from "@/components/admin/admin-automations-panel"
 import { AdminOverview } from "@/components/admin/admin-overview"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
@@ -510,6 +511,25 @@ export default function AdminPage() {
 
       {tab === "orders" && (
         <AdminOrdersPanel
+          onNotice={(message) => {
+            setSyncNotice(message)
+            setSyncError(null)
+            setSyncPrUrl(null)
+          }}
+          onError={(message) => {
+            if (message) {
+              setSyncError(message)
+              setSyncNotice(null)
+              setSyncPrUrl(null)
+            } else {
+              setSyncError(null)
+            }
+          }}
+        />
+      )}
+
+      {tab === "automations" && (
+        <AdminAutomationsPanel
           onNotice={(message) => {
             setSyncNotice(message)
             setSyncError(null)
