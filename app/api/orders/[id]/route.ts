@@ -4,10 +4,18 @@ import { getOrderById, upsertOrder } from "@/lib/orders-store"
 import { getProductsConfig } from "@/lib/products-store"
 import { sendOrderPaidDownload } from "@/lib/email"
 import type { OrderStatus } from "@/lib/orders"
+import { siteConfig } from "@/lib/site"
 
 export const runtime = "nodejs"
 
 type Params = { params: Promise<{ id: string }> }
+
+function resolveDownloadUrl(productSlug: string, explicit?: string): string {
+  const fromBodyOrProduct = String(explicit || "").trim()
+  if (fromBodyOrProduct) return fromBodyOrProduct
+  const base = siteConfig.url.replace(/\/$/, "")
+  return `${base}/downloads/${productSlug}.zip`
+}
 
 /** Admin: update order status (paid / rejected) and optionally email download. */
 export async function PATCH(req: NextRequest, { params }: Params) {
@@ -37,7 +45,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "status must be paid, rejected, or proof_submitted" }, { status: 400 })
   }
 
-  const adminNote = body.adminNote !== undefined ? String(body.adminNote || "").trim().slice(0, 500) : existing.adminNote
+  const adminNote =
+    body.adminNote !== undefined ? String(body.adminNote || "").trim().slice(0, 500) : existing.adminNote
   const sendDownload = body.sendDownload === true
   const now = new Date().toISOString()
 
@@ -47,21 +56,20 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (status === "paid" && sendDownload) {
     const products = await getProductsConfig()
     const product = products.products.find((p) => p.slug === existing.productSlug)
-    const downloadUrl = String(body.downloadUrl || product?.downloadUrl || "").trim()
-    if (!downloadUrl) {
-      return NextResponse.json(
-        {
-          error:
-            "Add a download URL on the product (Admin → Products) or pass downloadUrl when marking paid.",
-        },
-        { status: 400 }
-      )
-    }
+    const downloadUrl = resolveDownloadUrl(
+      existing.productSlug,
+      String(body.downloadUrl || product?.downloadUrl || "")
+    )
+    const productUrl = `${siteConfig.url.replace(/\/$/, "")}/products/${existing.productSlug}`
+    const gumroadUrl = product?.buyUrl?.trim() || ""
+
     const mailed = await sendOrderPaidDownload({
       to: existing.buyerEmail,
       buyerName: existing.buyerName,
       productName: existing.productName,
       downloadUrl,
+      productUrl,
+      gumroadUrl: gumroadUrl || undefined,
     })
     if (!mailed.ok) {
       emailError = mailed.error

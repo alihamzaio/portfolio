@@ -93,8 +93,8 @@ export function AdminOrdersPanel({ onNotice, onError }: Props) {
       }
     >
       <p className="text-sm text-[var(--text-muted)] mb-6 max-w-2xl">
-        Direct purchases only (not Gumroad). Review payment proof, then mark paid to email the product
-        download URL from Admin → Products.
+        Direct purchases only (not Gumroad). Review payment proof, then mark paid to email the zip +
+        product page link automatically (no Drive needed).
         {storage ? (
           <span className="block mt-2 text-xs text-neutral-500">Storage: {storage}</span>
         ) : null}

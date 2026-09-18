@@ -220,23 +220,52 @@ export async function sendOrderPaidDownload(input: {
   buyerName: string
   productName: string
   downloadUrl: string
+  productUrl?: string
+  gumroadUrl?: string
 }): Promise<{ ok: boolean; error?: string }> {
   const subject = `Your download: ${input.productName}`
+  const productUrl = input.productUrl?.trim() || ""
+  const gumroadUrl = input.gumroadUrl?.trim() || ""
   const text = [
     `Hi ${input.buyerName},`,
     ``,
-    `Payment confirmed. Here is your download for ${input.productName}:`,
+    `Payment confirmed. Here is everything for ${input.productName}:`,
+    ``,
+    `Download zip:`,
     input.downloadUrl,
+    productUrl ? `` : null,
+    productUrl ? `Product page:` : null,
+    productUrl || null,
+    gumroadUrl ? `` : null,
+    gumroadUrl ? `Gumroad (card checkout):` : null,
+    gumroadUrl || null,
     ``,
     `Thanks,`,
     `Ali Hamza`,
-  ].join("\n")
+  ]
+    .filter((line) => line !== null)
+    .join("\n")
 
   const html = `
     <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
       <p>Hi ${escapeHtml(input.buyerName)},</p>
-      <p>Payment confirmed. Here is your download for <strong>${escapeHtml(input.productName)}</strong>:</p>
-      <p><a href="${escapeHtml(input.downloadUrl)}">${escapeHtml(input.downloadUrl)}</a></p>
+      <p>Payment confirmed. Here is everything for <strong>${escapeHtml(input.productName)}</strong>:</p>
+      <p style="margin: 20px 0;">
+        <a href="${escapeHtml(input.downloadUrl)}" style="display:inline-block;background:#111;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none;font-size:14px;">
+          Download zip
+        </a>
+      </p>
+      <p style="font-size:13px;color:#475569;">Or open this link:<br/><a href="${escapeHtml(input.downloadUrl)}">${escapeHtml(input.downloadUrl)}</a></p>
+      ${
+        productUrl
+          ? `<p style="font-size:13px;color:#475569;margin-top:16px;">Product page:<br/><a href="${escapeHtml(productUrl)}">${escapeHtml(productUrl)}</a></p>`
+          : ""
+      }
+      ${
+        gumroadUrl
+          ? `<p style="font-size:13px;color:#475569;margin-top:12px;">Gumroad (card checkout):<br/><a href="${escapeHtml(gumroadUrl)}">${escapeHtml(gumroadUrl)}</a></p>`
+          : ""
+      }
       <p style="margin-top:24px;color:#64748b;font-size:13px;">Thanks,<br/>Ali Hamza</p>
     </div>
   `
