@@ -1,69 +1,93 @@
-/** Soft tool recommend / affiliate links for blog footers. Replace urls with affiliate links when ready. */
+/** Affiliate / recommend links — managed in Admin → Affiliates (content/affiliates.json). */
 
 export type AffiliateTool = {
   id: string
   name: string
   blurb: string
   url: string
-  /** True only when url is a tracked affiliate / partner link */
+  /** True only when url is your tracked affiliate / partner link */
   affiliate: boolean
   enabled: boolean
   tags: string[]
 }
 
-export const AFFILIATE_DISCLOSURE =
+export type AffiliatesConfig = {
+  disclosure: string
+  tools: AffiliateTool[]
+}
+
+export const DEFAULT_AFFILIATE_DISCLOSURE =
   "Some links may earn a commission at no extra cost to you. I only list tools I use in real work."
 
-export const AFFILIATE_TOOLS: AffiliateTool[] = [
-  {
-    id: "vercel",
-    name: "Vercel",
-    blurb: "Deploy Next.js apps",
-    url: "https://vercel.com",
-    affiliate: false,
-    enabled: true,
-    tags: ["nextjs", "deploy", "hosting", "frontend"],
-  },
-  {
-    id: "hostinger",
-    name: "Hostinger",
-    blurb: "Affordable web hosting",
-    url: "https://www.hostinger.com",
-    affiliate: false,
-    enabled: true,
-    tags: ["hosting", "domain", "wordpress"],
-  },
-  {
-    id: "cursor",
-    name: "Cursor",
-    blurb: "AI coding editor",
-    url: "https://cursor.com",
-    affiliate: false,
-    enabled: true,
-    tags: ["ai", "coding", "cursor", "freelancing"],
-  },
-  {
-    id: "railway",
-    name: "Railway",
-    blurb: "Simple app hosting",
-    url: "https://railway.app",
-    affiliate: false,
-    enabled: true,
-    tags: ["hosting", "backend", "api", "node"],
-  },
-  {
-    id: "notion",
-    name: "Notion",
-    blurb: "Docs and AI workspace",
-    url: "https://www.notion.so",
-    affiliate: false,
-    enabled: true,
-    tags: ["productivity", "ai", "notes", "freelancing"],
-  },
-]
+export const EMPTY_AFFILIATES: AffiliatesConfig = {
+  disclosure: DEFAULT_AFFILIATE_DISCLOSURE,
+  tools: [],
+}
 
-export function toolsForTopic(topic: string, limit = 3): AffiliateTool[] {
-  const enabled = AFFILIATE_TOOLS.filter((t) => t.enabled)
+function slugId(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48)
+}
+
+export function normalizeAffiliateTool(
+  raw: Partial<AffiliateTool> & { name?: string; url?: string },
+  fallbackId?: string
+): AffiliateTool | null {
+  const name = String(raw.name || "").trim()
+  const url = String(raw.url || "").trim()
+  if (!name || !url) return null
+  try {
+    const u = new URL(url)
+    if (u.protocol !== "http:" && u.protocol !== "https:") return null
+  } catch {
+    return null
+  }
+  const id = String(raw.id || fallbackId || slugId(name) || `tool-${Date.now()}`).trim()
+  const tags = Array.isArray(raw.tags)
+    ? raw.tags.map((t) => String(t).trim().toLowerCase()).filter(Boolean)
+    : String((raw as { tagsCsv?: string }).tagsCsv || "")
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean)
+
+  return {
+    id,
+    name,
+    blurb: String(raw.blurb || "").trim(),
+    url,
+    affiliate: Boolean(raw.affiliate),
+    enabled: raw.enabled !== false,
+    tags,
+  }
+}
+
+export function normalizeAffiliatesConfig(raw: unknown): AffiliatesConfig {
+  const data = (raw && typeof raw === "object" ? raw : {}) as Partial<AffiliatesConfig>
+  const tools: AffiliateTool[] = []
+  const seen = new Set<string>()
+  for (const item of Array.isArray(data.tools) ? data.tools : []) {
+    const t = normalizeAffiliateTool(item as AffiliateTool)
+    if (!t || seen.has(t.id)) continue
+    seen.add(t.id)
+    tools.push(t)
+  }
+  return {
+    disclosure: String(data.disclosure || DEFAULT_AFFILIATE_DISCLOSURE).trim() || DEFAULT_AFFILIATE_DISCLOSURE,
+    tools,
+  }
+}
+
+/** Public site: only show links you marked as affiliate + enabled. */
+export function publicAffiliateTools(tools: AffiliateTool[]): AffiliateTool[] {
+  return tools.filter((t) => t.enabled && t.affiliate && t.url.startsWith("http"))
+}
+
+export function toolsForTopic(tools: AffiliateTool[], topic: string, limit = 3): AffiliateTool[] {
+  const enabled = publicAffiliateTools(tools)
+  if (!enabled.length) return []
   const text = (topic || "").toLowerCase()
   const scored = enabled
     .map((t) => ({
@@ -88,8 +112,4 @@ export function toolsForTopic(topic: string, limit = 3): AffiliateTool[] {
     if (picked.length >= limit) break
   }
   return picked
-}
-
-export function anyAffiliateActive(tools: AffiliateTool[] = AFFILIATE_TOOLS): boolean {
-  return tools.some((t) => t.enabled && t.affiliate)
 }

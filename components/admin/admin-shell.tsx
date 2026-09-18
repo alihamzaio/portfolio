@@ -19,7 +19,15 @@ import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
 import { ease, easeCinematic } from "@/lib/motion"
 
-export type AdminTab = "overview" | "profile" | "experience" | "projects" | "skills" | "blog" | "resume"
+export type AdminTab =
+  | "overview"
+  | "profile"
+  | "experience"
+  | "projects"
+  | "skills"
+  | "blog"
+  | "affiliates"
+  | "resume"
 
 const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -28,6 +36,7 @@ const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "projects", label: "Projects", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "blog", label: "Blog", icon: Newspaper },
+  { id: "affiliates", label: "Affiliates", icon: TrendingUp },
   { id: "resume", label: "Resume", icon: FileText },
 ]
 
