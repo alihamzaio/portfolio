@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 
 /**
- * Filled sample of one Kickoff Forge template — marketing preview only.
+ * Filled sample of one Kickoff Forge template. Marketing preview only.
  * Buyers get the blank pack on Gumroad.
  */
 export function KickoffForgeDemo() {
@@ -9,7 +9,7 @@ export function KickoffForgeDemo() {
     <section className="mt-14" aria-labelledby="kickoff-demo-heading">
       <p className="meta-label mb-3">Sample preview</p>
       <h2 id="kickoff-demo-heading" className="text-lg font-semibold text-white tracking-tight">
-        Discovery call — filled example
+        Discovery call: filled example
       </h2>
       <p className="mt-2 text-sm text-neutral-500 max-w-2xl leading-relaxed">
         This is what a completed sheet looks like. The pack you buy is blank templates you reuse per
@@ -52,10 +52,10 @@ export function KickoffForgeDemo() {
 
           <DemoBlock title="Constraints">
             <ul className="space-y-1 text-neutral-300">
-              <li>Budget band: $1.5k–$2.5k MVP</li>
-              <li>Deadline: soft — before Ramadan rush</li>
+              <li>Budget band: $1.5k-$2.5k MVP</li>
+              <li>Deadline: soft, before Ramadan rush</li>
               <li>Who approves: clinic owner (Dr. Sara)</li>
-              <li>Stack: no preference — keep it simple</li>
+              <li>Stack: no preference; keep it simple</li>
               <li>Brand assets: logo yes, photos partial</li>
             </ul>
           </DemoBlock>
