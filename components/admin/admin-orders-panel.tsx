@@ -16,14 +16,16 @@ export function AdminOrdersPanel({ onNotice, onError }: Props) {
   const [loading, setLoading] = useState(true)
   const [orders, setOrders] = useState<ProductOrder[]>([])
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [storage, setStorage] = useState<string>("")
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
       const res = await adminFetch("/api/orders", { headers: getAuthHeaders() })
       if (!res.ok) throw new Error("Failed to load orders")
-      const data = (await res.json()) as { orders: ProductOrder[] }
+      const data = (await res.json()) as { orders: ProductOrder[]; storage?: string }
       setOrders(data.orders || [])
+      setStorage(data.storage || "")
     } catch (e) {
       onError(e instanceof Error ? e.message : "Load failed")
     } finally {
@@ -93,6 +95,9 @@ export function AdminOrdersPanel({ onNotice, onError }: Props) {
       <p className="text-sm text-[var(--text-muted)] mb-6 max-w-2xl">
         Direct purchases only (not Gumroad). Review payment proof, then mark paid to email the product
         download URL from Admin → Products.
+        {storage ? (
+          <span className="block mt-2 text-xs text-neutral-500">Storage: {storage}</span>
+        ) : null}
       </p>
 
       {orders.length === 0 ? (

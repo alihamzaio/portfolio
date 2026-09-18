@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import { OTP_ADMIN_EMAIL } from "@/lib/official-email"
 import { createOrderId } from "@/lib/orders"
-import { getOrdersConfig, upsertOrder } from "@/lib/orders-store"
+import { getOrdersConfig, ordersStorageMode, upsertOrder } from "@/lib/orders-store"
 import { getPaymentSettings } from "@/lib/payment-settings-store"
 import { getProductsConfig } from "@/lib/products-store"
 import { productAllowsDirect, publicProducts } from "@/lib/products"
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   const config = await getOrdersConfig()
-  return NextResponse.json(config)
+  return NextResponse.json({ ...config, storage: ordersStorageMode() })
 }
 
 /**
@@ -89,7 +89,12 @@ export async function POST(req: NextRequest) {
     adminNote: "",
   }
 
-  await upsertOrder(order)
+  try {
+    await upsertOrder(order)
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Could not save order"
+    return NextResponse.json({ error: message }, { status: 503 })
+  }
 
   const methodsText = settings.methods
     .map((m) => `${m.label}\n${m.details}`)
