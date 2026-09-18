@@ -1,0 +1,30 @@
+---
+description: Never use em dashes or AI-sounding punctuation in copy or chat
+alwaysApply: true
+---
+
+# No em dashes / plain writing
+
+## Hard rules
+
+- Do **not** use the em dash character (`—`, U+2014) in user-facing copy, commits, docs, product text, UI strings, or chat replies.
+- Prefer a normal hyphen (`-`), a colon (`:`), a comma, or a new sentence.
+- Avoid en dashes (`–`) in marketing/UI copy; use `-` for ranges (e.g. `$1.5k-$2.5k`, `15-25%`).
+- Keep prose plain and direct. No padded “AI blog” tone.
+
+## Examples
+
+```text
+Bad:  Discovery call — filled example
+Good: Discovery call: filled example
+
+Bad:  soft — before Ramadan
+Good: soft, before Ramadan
+
+Bad:  01 — Discovery call
+Good: 01 - Discovery call
+```
+
+## Scope
+
+Applies to portfolio site copy, digital product templates, admin UI strings, README/docs you edit, commit messages, and assistant replies in this repo.
