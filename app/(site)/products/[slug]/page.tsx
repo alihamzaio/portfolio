@@ -120,8 +120,6 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
-
             {showDirect ? (
               <DirectBuyPanel
                 productSlug={product.slug}
@@ -129,6 +127,8 @@ export default async function ProductDetailPage({ params }: Props) {
                 priceLabel={product.priceLabel}
               />
             ) : null}
+
+            {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
 
             <div className="mt-14">
               <HireCtaBlock

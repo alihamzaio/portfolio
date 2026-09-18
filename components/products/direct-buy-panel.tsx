@@ -194,6 +194,8 @@ export function DirectBuyPanel({ productSlug, productName, priceLabel }: Props) 
                 <button
                   key={m.id}
                   type="button"
+                  aria-label={m.label}
+                  aria-pressed={selected}
                   onClick={() => setMethodId(m.id)}
                   className={cn(
                     "text-left rounded-xl border px-4 py-4 transition-colors",
