@@ -18,8 +18,8 @@ export default function ProductsPage() {
       <SectionHeading
         headingLevel={1}
         label="Products"
-        title="Ship faster with a ready baseline"
-        description="Small paid kits from real freelance delivery. Hire me when you want the full build done with you."
+        title="Freelance kits that sell your process"
+        description="Kickoff Forge helps you lock scope before code. Hire me when you want the full build done with you."
         align="center"
         className="mx-auto"
       />
@@ -50,7 +50,7 @@ export default function ProductsPage() {
                     </a>
                   ) : (
                     <span className="inline-flex items-center text-sm text-neutral-500">
-                      Checkout link coming soon
+                      Gumroad checkout coming soon
                     </span>
                   )}
                 </div>

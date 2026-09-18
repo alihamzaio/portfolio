@@ -1,7 +1,7 @@
 /**
  * Digital products sold via Gumroad (or similar).
  * Set buyUrl to your live Gumroad product URL when ready.
- * Leave buyUrl empty to show "Coming soon" + contact fallback.
+ * Leave buyUrl empty to show Coming soon + contact fallback.
  */
 
 export type DigitalProduct = {
@@ -14,32 +14,34 @@ export type DigitalProduct = {
   buyUrl: string
   includes: string[]
   idealFor: string[]
-  /** Path inside repo for the deliverable (for you when zipping for Gumroad) */
+  /** Path inside repo for the deliverable (zip this for Gumroad) */
   starterPath: string
 }
 
+/** Featured / public products only. Older kits can stay in digital-products/ without listing. */
 export const DIGITAL_PRODUCTS: DigitalProduct[] = [
   {
-    slug: "nextjs-ship-starter",
-    name: "Next.js Ship Starter",
-    tagline: "A clean App Router kit to ship a client site without starting from zero.",
+    slug: "kickoff-forge",
+    name: "Kickoff Forge",
+    tagline: "Turn a vague client chat into a clear build plan before you write code.",
     description:
-      "TypeScript Next.js starter with SEO helpers, a contact section, env checklist, and Vercel-ready defaults. Built from the same patterns I use on freelance launches.",
-    priceLabel: "$29",
+      "A six-template freelance kickoff pack: discovery call notes, scope one-pager, estimate bands, tech decisions, week-one plan, and handoff checklist. Fill the blanks, send to the client, then ship.",
+    priceLabel: "$19",
     buyUrl: "",
     includes: [
-      "Next.js App Router + TypeScript",
-      "SEO metadata helper and sitemap stub",
-      "Home + contact layout ready to brand",
-      ".env.example and Vercel deploy notes",
-      "Production launch checklist (markdown)",
+      "Discovery call worksheet",
+      "Scope one-pager for written sign-off",
+      "Estimate sheet with lean / standard / protected bands",
+      "Tech decision sheet",
+      "Week-one delivery plan + demo agenda",
+      "Launch handoff checklist",
     ],
     idealFor: [
-      "Freelancers kicking off a client MVP",
-      "Developers who want a sane Next.js baseline",
-      "Anyone tired of deleting demo boilerplate",
+      "Freelancers who lose time to unclear scopes",
+      "Developers starting client MVPs",
+      "Anyone who wants a repeatable kickoff ritual",
     ],
-    starterPath: "digital-products/nextjs-ship-starter",
+    starterPath: "digital-products/kickoff-forge",
   },
 ]
 
@@ -47,6 +49,13 @@ export function getProduct(slug: string): DigitalProduct | undefined {
   return DIGITAL_PRODUCTS.find((p) => p.slug === slug)
 }
 
+export function getProductSlugs(): string[] {
+  return DIGITAL_PRODUCTS.map((p) => p.slug)
+}
+
 export function productIsOnSale(product: DigitalProduct): boolean {
   return Boolean(product.buyUrl?.trim())
 }
+
+/** Primary product used in CTAs and Shorts links */
+export const PRIMARY_PRODUCT = DIGITAL_PRODUCTS[0]

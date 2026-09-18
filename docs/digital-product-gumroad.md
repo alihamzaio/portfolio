@@ -1,35 +1,32 @@
-# How to sell Next.js Ship Starter
+# Sell Kickoff Forge on Gumroad
 
-## 1. Zip the starter
+## 1. Zip (already scripted)
 
-From the portfolio repo root:
+From portfolio root:
 
 ```powershell
-Compress-Archive -Path "digital-products\nextjs-ship-starter\*" -DestinationPath "nextjs-ship-starter.zip" -Force
+Compress-Archive -Path "digital-products\kickoff-forge\*" -DestinationPath "kickoff-forge.zip" -Force
 ```
 
-Do not include `node_modules` or `.next` (they are gitignored).
+Or use the committed `public/downloads/kickoff-forge.zip` after running the zip step in CI/local.
 
-## 2. Create a Gumroad product
+## 2. Gumroad
 
-1. https://gumroad.com → New product  
-2. Type: digital download  
-3. Upload `nextjs-ship-starter.zip`  
-4. Price: match `lib/products.ts` (`$29` or your price)  
-5. Publish and copy the product URL  
+1. New product → digital download  
+2. Upload `kickoff-forge.zip`  
+3. Price: **$19** (or your choice)  
+4. Publish → copy product URL  
 
-## 3. Wire the portfolio
+## 3. Wire checkout
 
-In `lib/products.ts`, set:
+In `lib/products.ts`:
 
 ```ts
-buyUrl: "https://yourname.gumroad.com/l/nextjs-ship-starter"
+buyUrl: "https://yourname.gumroad.com/l/kickoff-forge"
 ```
 
-Redeploy. The product page Buy button goes live.
+Redeploy. Buy button unlocks on `/products/kickoff-forge`.
 
-## 4. Promote
+## Why this product
 
-- Link from Shorts / Long descriptions  
-- Mention at the end of related blog posts  
-- Pin the product URL in YouTube channel About (optional)
+Not another code starter. It sells the **process** freelancers skip: discovery → scope → estimate → week one → handoff.
