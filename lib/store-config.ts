@@ -1,4 +1,11 @@
-export type StoreKey = "skills" | "projects" | "settings" | "experience" | "affiliates" | "products"
+export type StoreKey =
+  | "skills"
+  | "projects"
+  | "settings"
+  | "experience"
+  | "affiliates"
+  | "products"
+  | "paymentSettings"
 
 export const STORE_FILE_PATHS: Record<StoreKey, string> = {
   skills: "lib/skill.json",
@@ -7,6 +14,7 @@ export const STORE_FILE_PATHS: Record<StoreKey, string> = {
   settings: "lib/settings.json",
   affiliates: "content/affiliates.json",
   products: "content/products.json",
+  paymentSettings: "content/payment-settings.json",
 }
 
 export const COMMIT_LABELS: Record<StoreKey, string> = {
@@ -16,10 +24,11 @@ export const COMMIT_LABELS: Record<StoreKey, string> = {
   settings: "Update site settings from admin panel.",
   affiliates: "Update affiliate links from admin panel.",
   products: "Update digital products from admin panel.",
+  paymentSettings: "Update direct payment settings from admin panel.",
 }
 
 export const SYNC_DIRTY_KEY = "portfolio:sync-dirty"
 
 export function listStoreKeys(): StoreKey[] {
-  return ["skills", "projects", "settings", "experience", "affiliates", "products"]
+  return ["skills", "projects", "settings", "experience", "affiliates", "products", "paymentSettings"]
 }

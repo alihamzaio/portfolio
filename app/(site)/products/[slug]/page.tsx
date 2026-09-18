@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { AmberGlassCta } from "@/components/ui/amber-glass-cta"
 import { HireCtaBlock } from "@/components/home/hire-cta-block"
-import { productIsOnSale, publicProducts } from "@/lib/products"
+import { productAllowsDirect, productAllowsGumroad, productIsOnSale, publicProducts } from "@/lib/products"
 import { getProductsConfig } from "@/lib/products-store"
 import { KickoffForgeDemo } from "@/components/products/kickoff-forge-demo"
+import { DirectBuyPanel } from "@/components/products/direct-buy-panel"
 import { buildPageMetadata } from "@/lib/seo"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 
@@ -34,6 +35,8 @@ export default async function ProductDetailPage({ params }: Props) {
   const product = publicProducts(config.products).find((p) => p.slug === slug)
   if (!product) notFound()
   const onSale = productIsOnSale(product)
+  const showGumroad = productAllowsGumroad(product)
+  const showDirect = productAllowsDirect(product)
 
   return (
     <>
@@ -58,7 +61,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <p className="mt-4 text-neutral-500 text-sm leading-relaxed max-w-2xl">{product.description}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              {onSale ? (
+              {showGumroad ? (
                 <a
                   href={product.buyUrl}
                   target="_blank"
@@ -67,9 +70,15 @@ export default async function ProductDetailPage({ params }: Props) {
                 >
                   Buy on Gumroad
                 </a>
-              ) : (
+              ) : null}
+              {showDirect ? (
+                <a href="#pay-direct" className="btn-secondary btn-responsive inline-flex">
+                  Pay me directly
+                </a>
+              ) : null}
+              {!onSale ? (
                 <AmberGlassCta href="/contact">Ask about early access</AmberGlassCta>
-              )}
+              ) : null}
               <Link href="/contact" className="btn-secondary btn-responsive inline-flex">
                 Hire me instead
               </Link>
@@ -77,7 +86,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {!onSale && (
               <p className="mt-4 text-xs text-neutral-600">
-                Gumroad checkout is not linked yet. Use contact if you want the zip early, or wait for the public buy
+                Checkout is not linked yet. Use contact if you want the zip early, or wait for a public buy
                 link.
               </p>
             )}
@@ -112,6 +121,16 @@ export default async function ProductDetailPage({ params }: Props) {
             </div>
 
             {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
+
+            {showDirect ? (
+              <div id="pay-direct">
+                <DirectBuyPanel
+                  productSlug={product.slug}
+                  productName={product.name}
+                  priceLabel={product.priceLabel}
+                />
+              </div>
+            ) : null}
 
             <div className="mt-14">
               <HireCtaBlock

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useRef, useState, type ReactNode } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Briefcase,
@@ -15,6 +15,8 @@ import {
   TrendingUp,
   Newspaper,
   Package,
+  CreditCard,
+  ShoppingBag,
 } from "lucide-react"
 import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
@@ -28,6 +30,8 @@ export type AdminTab =
   | "skills"
   | "blog"
   | "products"
+  | "payments"
+  | "orders"
   | "affiliates"
   | "resume"
 
@@ -39,9 +43,25 @@ const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "blog", label: "Blog", icon: Newspaper },
   { id: "products", label: "Products", icon: Package },
+  { id: "payments", label: "Payments", icon: CreditCard },
+  { id: "orders", label: "Orders", icon: ShoppingBag },
   { id: "affiliates", label: "Affiliates", icon: TrendingUp },
   { id: "resume", label: "Resume", icon: FileText },
 ]
+
+const tabTitle: Record<AdminTab, string> = {
+  overview: "Overview",
+  profile: "Profile & Hero",
+  experience: "Experience",
+  projects: "Projects",
+  skills: "Skills",
+  blog: "Blog",
+  products: "Products",
+  payments: "Payments",
+  orders: "Orders",
+  affiliates: "Affiliates",
+  resume: "Resume",
+}
 
 interface AdminShellProps {
   children: ReactNode
@@ -68,8 +88,8 @@ function SidebarNav({
   onLogout: () => void
 }) {
   return (
-    <>
-      <div className="flex items-center gap-3 mb-10 px-1">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex items-center gap-3 shrink-0 px-1 pb-6">
         <div className="relative">
           <LogoMark size={44} instanceId="admin" />
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent-primary)] border-2 border-[#0c0c0c]" />
@@ -79,11 +99,13 @@ function SidebarNav({
           <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">SaaS Admin</p>
         </div>
       </div>
-      <nav className="flex-1 space-y-1">
+
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pr-1">
         {nav.map((item) => (
           <button
             key={item.id}
             type="button"
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => onTab(item.id)}
             className={cn(
               "w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all duration-400",
@@ -97,19 +119,26 @@ function SidebarNav({
           </button>
         ))}
       </nav>
+
       <button
         type="button"
         onClick={onLogout}
-        className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 border border-transparent hover:border-[var(--accent-primary)]/25 transition-all mt-8 w-full"
+        className="mt-4 flex w-full shrink-0 items-center gap-2.5 rounded-xl border border-transparent px-3.5 py-3 text-sm text-[var(--text-secondary)] transition-all hover:border-[var(--accent-primary)]/25 hover:bg-[var(--accent-primary)]/10 hover:text-[var(--accent-primary)]"
       >
         <LogOut className="h-4 w-4" /> Sign out
       </button>
-    </>
+    </div>
   )
 }
 
 export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+
+  const selectTab = (next: AdminTab) => {
+    onTab(next)
+    mainRef.current?.scrollTo({ top: 0 })
+  }
 
   const statItems = [
     { label: "Roles", value: stats.experience, icon: Building2 },
@@ -120,49 +149,46 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
   ]
 
   return (
-    <div className="flex min-h-screen bg-[var(--bg-void)]">
-      <aside className="hidden lg:flex w-[272px] flex-col border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 shrink-0 relative overflow-hidden">
-        <div className="absolute inset-0 mesh-ambient opacity-50 pointer-events-none" />
-        <div className="relative flex flex-col flex-1">
-          <SidebarNav tab={tab} onTab={onTab} onLogout={onLogout} />
+    <div className="flex h-dvh max-h-dvh overflow-hidden bg-[var(--bg-void)]">
+      <aside className="relative hidden h-full w-[272px] shrink-0 flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] lg:flex">
+        <div className="pointer-events-none absolute inset-0 mesh-ambient opacity-50" />
+        <div className="relative flex h-full min-h-0 flex-col p-6">
+          <SidebarNav tab={tab} onTab={selectTab} onLogout={onLogout} />
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-20 glass-nav px-6 sm:px-10 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/[0.06]">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <header className="z-20 flex shrink-0 flex-col gap-4 border-b border-white/[0.06] glass-nav px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-10">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2.5 rounded-xl glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              className="rounded-xl p-2.5 glass-panel text-[var(--text-secondary)] hover:text-[var(--text-primary)] lg:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
             </button>
             <div>
-              <p className="text-sm font-bold text-[var(--text-primary)] capitalize tracking-tight">
-                {tab === "profile" ? "Profile & Hero" : tab}
-              </p>
-              <p className="text-[10px] text-[var(--text-muted)] font-mono">Content management</p>
+              <p className="text-sm font-bold tracking-tight text-[var(--text-primary)]">{tabTitle[tab]}</p>
+              <p className="font-mono text-[10px] text-[var(--text-muted)]">Content management</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
             {statItems.map((s) => (
               <div
                 key={s.label}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs"
+                className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-1.5 text-xs"
               >
                 <s.icon className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
                 <span className="text-[var(--text-muted)]">{s.label}</span>
-                <span className="text-[var(--text-primary)] font-bold tabular-nums">{s.value}</span>
+                <span className="font-bold tabular-nums text-[var(--text-primary)]">{s.value}</span>
               </div>
             ))}
           </div>
         </header>
 
-        <main className="flex-1 p-6 sm:p-10 lg:p-12 overflow-auto relative">
-          <div className="absolute inset-0 grid-fine opacity-20 pointer-events-none" />
-          {/* Keyed panel without mode="wait" — wait kept stale overview content after tab changes */}
+        <main ref={mainRef} className="relative min-h-0 flex-1 overflow-y-auto p-6 sm:p-10 lg:p-12">
+          <div className="pointer-events-none absolute inset-0 grid-fine opacity-20" />
           <motion.div
             key={tab}
             initial={{ opacity: 0, y: 12 }}
@@ -181,7 +207,7 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="lg:hidden fixed inset-0 z-50 bg-[var(--bg-void)]/90 backdrop-blur-xl"
+            className="fixed inset-0 z-50 bg-[var(--bg-void)]/90 backdrop-blur-xl lg:hidden"
             onClick={() => setSidebarOpen(false)}
           >
             <motion.aside
@@ -189,25 +215,27 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ type: "spring", stiffness: 380, damping: 36 }}
-              className="w-[280px] h-full bg-[var(--bg-secondary)] border-r border-[var(--border-subtle)] p-6 flex flex-col"
+              className="flex h-full w-[280px] flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setSidebarOpen(false)}
-                className="self-end p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-2"
+                className="mb-2 self-end rounded-lg p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 aria-label="Close menu"
               >
                 <X className="h-5 w-5" />
               </button>
-              <SidebarNav
-                tab={tab}
-                onTab={(t) => {
-                  onTab(t)
-                  setSidebarOpen(false)
-                }}
-                onLogout={onLogout}
-              />
+              <div className="min-h-0 flex-1">
+                <SidebarNav
+                  tab={tab}
+                  onTab={(t) => {
+                    selectTab(t)
+                    setSidebarOpen(false)
+                  }}
+                  onLogout={onLogout}
+                />
+              </div>
             </motion.aside>
           </motion.div>
         )}

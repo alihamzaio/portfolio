@@ -5,7 +5,7 @@ import { Loader2, Plus, Trash2 } from "lucide-react"
 import { Panel } from "@/components/admin/admin-shell"
 import { adminFetch } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
-import type { DigitalProduct, ProductsConfig } from "@/lib/products"
+import type { DigitalProduct, ProductCheckout, ProductsConfig } from "@/lib/products"
 
 type Props = {
   onNotice: (msg: string, prUrl?: string | null) => void
@@ -34,6 +34,8 @@ function emptyRow(): Row {
     description: "",
     priceLabel: "$19",
     buyUrl: "",
+    checkout: "both",
+    downloadUrl: "",
     includes: [],
     idealFor: [],
     starterPath: "",
@@ -88,6 +90,8 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
         description: r.description,
         priceLabel: r.priceLabel,
         buyUrl: r.buyUrl,
+        checkout: r.checkout,
+        downloadUrl: r.downloadUrl,
         starterPath: r.starterPath,
         enabled: r.enabled,
         includes: csvList(r.includesCsv),
@@ -146,9 +150,9 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
       }
     >
       <p className="text-sm text-[var(--text-muted)] mb-6 max-w-2xl">
-        Add Gumroad (or other) checkout links here. Set <code className="text-xs">buyUrl</code> to unlock
-        Buy on Gumroad. Leave it empty for Coming soon. Zip files still live under{" "}
-        <code className="text-xs">digital-products/</code>.
+        Add product details here. Use Buy URL for Gumroad. Set checkout to direct or both to sell via your
+        bank / JazzCash details (Admin → Payments). Set download URL for emails after you mark an order
+        paid. Zip sources still live under <code className="text-xs">digital-products/</code>.
       </p>
 
       <div className="space-y-6">
@@ -204,6 +208,26 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
                 value={row.buyUrl}
                 onChange={(v) => patchRow(index, { buyUrl: v })}
                 placeholder="https://….gumroad.com/l/…"
+              />
+              <label className="block text-xs text-[var(--text-muted)] space-y-1">
+                Checkout
+                <select
+                  value={row.checkout}
+                  onChange={(e) =>
+                    patchRow(index, { checkout: e.target.value as ProductCheckout })
+                  }
+                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)]"
+                >
+                  <option value="gumroad">Gumroad only</option>
+                  <option value="direct">Direct only (your bank)</option>
+                  <option value="both">Gumroad + direct</option>
+                </select>
+              </label>
+              <Field
+                label="Download URL (after paid)"
+                value={row.downloadUrl}
+                onChange={(v) => patchRow(index, { downloadUrl: v })}
+                placeholder="https://…/file.zip"
               />
             </div>
 

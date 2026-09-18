@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "headline": "Pay me directly",
+  "instructions": "Transfer the product price using one of the methods below. Then submit your name, email, and transaction ID on the product page so I can confirm and send your download.",
+  "methods": [
+    {
+      "id": "bank-alfalah",
+      "label": "Bank Alfalah (BAHL)",
+      "details": "Account title: Ali Hamza\nAdd your IBAN / account number here in Admin → Payments."
+    },
+    {
+      "id": "jazzcash",
+      "label": "JazzCash",
+      "details": "Add your JazzCash number in Admin → Payments."
+    }
+  ],
+  "footerNote": "Orders are confirmed manually. You get the download by email after payment is verified.",
+  "notifyEmail": ""
+}

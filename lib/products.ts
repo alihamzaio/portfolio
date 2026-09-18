@@ -3,6 +3,9 @@
  * Managed in Admin → Products (content/products.json).
  */
 
+/** How buyers pay: Gumroad link, direct (your bank details + proof), or both. */
+export type ProductCheckout = "gumroad" | "direct" | "both"
+
 export type DigitalProduct = {
   slug: string
   name: string
@@ -11,6 +14,15 @@ export type DigitalProduct = {
   priceLabel: string
   /** Gumroad (or other) checkout URL. Empty = not for sale yet. */
   buyUrl: string
+  /**
+   * Checkout mode. Default: gumroad if buyUrl set, else direct if enabled later.
+   * - gumroad: Buy on Gumroad only
+   * - direct: pay you (bank / JazzCash) + proof in admin
+   * - both: show Gumroad and direct
+   */
+  checkout: ProductCheckout
+  /** Sent by email after you mark an order paid (direct sales). */
+  downloadUrl: string
   includes: string[]
   idealFor: string[]
   /** Path inside repo for the deliverable (zip this for Gumroad) */
@@ -63,6 +75,26 @@ export function normalizeProduct(
     }
   }
 
+  const checkoutRaw = String((raw as { checkout?: string }).checkout || "")
+    .trim()
+    .toLowerCase()
+  let checkout: ProductCheckout =
+    checkoutRaw === "direct" || checkoutRaw === "both" || checkoutRaw === "gumroad"
+      ? checkoutRaw
+      : buyUrl
+        ? "gumroad"
+        : "direct"
+
+  const downloadUrl = String((raw as { downloadUrl?: string }).downloadUrl || "").trim()
+  if (downloadUrl) {
+    try {
+      const u = new URL(downloadUrl)
+      if (u.protocol !== "http:" && u.protocol !== "https:") return null
+    } catch {
+      return null
+    }
+  }
+
   return {
     slug,
     name,
@@ -70,6 +102,8 @@ export function normalizeProduct(
     description: String(raw.description || "").trim(),
     priceLabel: String(raw.priceLabel || "").trim() || "$0",
     buyUrl,
+    checkout,
+    downloadUrl,
     includes: asStringList(raw.includes),
     idealFor: asStringList(raw.idealFor),
     starterPath: String(raw.starterPath || "").trim(),
@@ -95,7 +129,16 @@ export function publicProducts(products: DigitalProduct[]): DigitalProduct[] {
 }
 
 export function productIsOnSale(product: DigitalProduct): boolean {
-  return Boolean(product.buyUrl?.trim())
+  return productAllowsGumroad(product) || productAllowsDirect(product)
+}
+
+export function productAllowsGumroad(product: DigitalProduct): boolean {
+  if (!product.buyUrl?.trim()) return false
+  return product.checkout === "gumroad" || product.checkout === "both"
+}
+
+export function productAllowsDirect(product: DigitalProduct): boolean {
+  return product.checkout === "direct" || product.checkout === "both"
 }
 
 /** Sync helpers used by pages that still import from this module. Prefer products-store on server. */

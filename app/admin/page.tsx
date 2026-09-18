@@ -7,6 +7,8 @@ import { AdminLogin } from "@/components/admin/admin-login"
 import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
 import { AdminAffiliatesPanel } from "@/components/admin/admin-affiliates-panel"
 import { AdminProductsPanel } from "@/components/admin/admin-products-panel"
+import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel"
+import { AdminOrdersPanel } from "@/components/admin/admin-orders-panel"
 import { AdminOverview } from "@/components/admin/admin-overview"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
@@ -483,6 +485,45 @@ export default function AdminPage() {
             }
           }}
           noteSyncResponse={noteSyncResponse}
+        />
+      )}
+
+      {tab === "payments" && (
+        <AdminPaymentsPanel
+          onNotice={(message, prUrl) => {
+            setSyncNotice(message)
+            setSyncError(null)
+            setSyncPrUrl(prUrl || null)
+          }}
+          onError={(message) => {
+            if (message) {
+              setSyncError(message)
+              setSyncNotice(null)
+              setSyncPrUrl(null)
+            } else {
+              setSyncError(null)
+            }
+          }}
+          noteSyncResponse={noteSyncResponse}
+        />
+      )}
+
+      {tab === "orders" && (
+        <AdminOrdersPanel
+          onNotice={(message) => {
+            setSyncNotice(message)
+            setSyncError(null)
+            setSyncPrUrl(null)
+          }}
+          onError={(message) => {
+            if (message) {
+              setSyncError(message)
+              setSyncNotice(null)
+              setSyncPrUrl(null)
+            } else {
+              setSyncError(null)
+            }
+          }}
         />
       )}
 

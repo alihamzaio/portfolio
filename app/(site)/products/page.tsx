@@ -2,7 +2,7 @@ import Link from "next/link"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { productIsOnSale, publicProducts } from "@/lib/products"
+import { productAllowsGumroad, productIsOnSale, publicProducts } from "@/lib/products"
 import { getProductsConfig } from "@/lib/products-store"
 import { buildPageMetadata } from "@/lib/seo"
 
@@ -43,7 +43,7 @@ export default async function ProductsPage() {
                   <Link href={`/products/${product.slug}`} className="btn-primary btn-responsive inline-flex">
                     View details
                   </Link>
-                  {onSale ? (
+                  {productAllowsGumroad(product) ? (
                     <a
                       href={product.buyUrl}
                       target="_blank"
@@ -52,11 +52,20 @@ export default async function ProductsPage() {
                     >
                       Buy on Gumroad
                     </a>
-                  ) : (
+                  ) : null}
+                  {onSale && !productAllowsGumroad(product) ? (
+                    <Link
+                      href={`/products/${product.slug}#pay-direct`}
+                      className="btn-secondary btn-responsive inline-flex"
+                    >
+                      Pay directly
+                    </Link>
+                  ) : null}
+                  {!onSale ? (
                     <span className="inline-flex items-center text-sm text-neutral-500">
-                      Gumroad checkout coming soon
+                      Checkout coming soon
                     </span>
-                  )}
+                  ) : null}
                 </div>
               </PremiumCard>
             </PremiumReveal>

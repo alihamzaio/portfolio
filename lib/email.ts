@@ -89,3 +89,194 @@ export async function sendOtpEmail(
 
   return { ok: true }
 }
+
+async function sendResendEmail(input: {
+  to: string | string[]
+  subject: string
+  text: string
+  html: string
+}): Promise<{ ok: boolean; error?: string }> {
+  const apiKey = getResendApiKey()
+  const fromRaw = getResendFromEmail()
+  const from = fromRaw.includes("<") ? fromRaw : `Ali Hamza <${fromRaw}>`
+  if (!apiKey) {
+    if (process.env.NODE_ENV === "development") {
+      console.info(`[DEV EMAIL] to=${JSON.stringify(input.to)} subject=${input.subject}`)
+      console.info(input.text)
+      return { ok: true }
+    }
+    return {
+      ok: false,
+      error: "RESEND_API_KEY is missing. Add it in Vercel env to send order emails.",
+    }
+  }
+
+  const to = Array.isArray(input.to) ? input.to : [input.to]
+  const res = await postResend(
+    { from, to, subject: input.subject, text: input.text, html: input.html },
+    apiKey
+  )
+  if (!res.ok) {
+    const errText = await res.text()
+    console.error("[order-email] Resend error", res.status, errText)
+    return { ok: false, error: parseResendError(errText) }
+  }
+  return { ok: true }
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+}
+
+export async function sendOrderProofToAdmin(input: {
+  to: string
+  orderId: string
+  productName: string
+  priceLabel: string
+  buyerName: string
+  buyerEmail: string
+  buyerPhone: string
+  paymentMethodLabel: string
+  transactionRef: string
+  proofNote: string
+  adminUrl: string
+}): Promise<{ ok: boolean; error?: string }> {
+  const subject = `New direct order: ${input.productName} (${input.priceLabel})`
+  const text = [
+    `Order ${input.orderId}`,
+    `Product: ${input.productName} (${input.priceLabel})`,
+    `Buyer: ${input.buyerName} <${input.buyerEmail}>`,
+    input.buyerPhone ? `Phone: ${input.buyerPhone}` : null,
+    input.paymentMethodLabel ? `Method: ${input.paymentMethodLabel}` : null,
+    `Transaction / proof: ${input.transactionRef}`,
+    input.proofNote ? `Note: ${input.proofNote}` : null,
+    `Admin: ${input.adminUrl}`,
+  ]
+    .filter(Boolean)
+    .join("\n")
+
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
+      <p style="color:#64748b;font-size:13px;">Direct product order</p>
+      <h1 style="font-size:20px;color:#0f172a;">${escapeHtml(input.productName)}</h1>
+      <p><strong>${escapeHtml(input.priceLabel)}</strong> · ${escapeHtml(input.orderId)}</p>
+      <ul style="color:#334155;font-size:14px;line-height:1.6;">
+        <li>Buyer: ${escapeHtml(input.buyerName)} &lt;${escapeHtml(input.buyerEmail)}&gt;</li>
+        ${input.buyerPhone ? `<li>Phone: ${escapeHtml(input.buyerPhone)}</li>` : ""}
+        ${input.paymentMethodLabel ? `<li>Method: ${escapeHtml(input.paymentMethodLabel)}</li>` : ""}
+        <li>Transaction / proof: ${escapeHtml(input.transactionRef)}</li>
+        ${input.proofNote ? `<li>Note: ${escapeHtml(input.proofNote)}</li>` : ""}
+      </ul>
+      <p><a href="${escapeHtml(input.adminUrl)}">Open admin → Orders</a></p>
+    </div>
+  `
+  return sendResendEmail({ to: input.to, subject, text, html })
+}
+
+export async function sendOrderReceivedToBuyer(input: {
+  to: string
+  buyerName: string
+  productName: string
+  priceLabel: string
+  paymentHeadline: string
+  paymentInstructions: string
+  methodsText: string
+  footerNote: string
+}): Promise<{ ok: boolean; error?: string }> {
+  const subject = `Payment received for review: ${input.productName}`
+  const text = [
+    `Hi ${input.buyerName},`,
+    ``,
+    `Thanks. I received your payment proof for ${input.productName} (${input.priceLabel}).`,
+    `I will verify and email your download when confirmed.`,
+    ``,
+    input.paymentHeadline,
+    input.paymentInstructions,
+    input.methodsText,
+    input.footerNote,
+  ].join("\n")
+
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
+      <p>Hi ${escapeHtml(input.buyerName)},</p>
+      <p>Thanks. I received your payment proof for <strong>${escapeHtml(input.productName)}</strong> (${escapeHtml(input.priceLabel)}).</p>
+      <p>I will verify and email your download when confirmed.</p>
+      <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
+      <p style="font-size:13px;color:#64748b;">${escapeHtml(input.paymentHeadline)}</p>
+      <p style="font-size:13px;color:#475569;white-space:pre-wrap;">${escapeHtml(input.paymentInstructions)}</p>
+      <pre style="font-size:12px;background:#f8fafc;padding:12px;border-radius:8px;white-space:pre-wrap;">${escapeHtml(input.methodsText)}</pre>
+      ${input.footerNote ? `<p style="font-size:12px;color:#94a3b8;">${escapeHtml(input.footerNote)}</p>` : ""}
+    </div>
+  `
+  return sendResendEmail({ to: input.to, subject, text, html })
+}
+
+export async function sendOrderPaidDownload(input: {
+  to: string
+  buyerName: string
+  productName: string
+  downloadUrl: string
+}): Promise<{ ok: boolean; error?: string }> {
+  const subject = `Your download: ${input.productName}`
+  const text = [
+    `Hi ${input.buyerName},`,
+    ``,
+    `Payment confirmed. Here is your download for ${input.productName}:`,
+    input.downloadUrl,
+    ``,
+    `Thanks,`,
+    `Ali Hamza`,
+  ].join("\n")
+
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
+      <p>Hi ${escapeHtml(input.buyerName)},</p>
+      <p>Payment confirmed. Here is your download for <strong>${escapeHtml(input.productName)}</strong>:</p>
+      <p><a href="${escapeHtml(input.downloadUrl)}">${escapeHtml(input.downloadUrl)}</a></p>
+      <p style="margin-top:24px;color:#64748b;font-size:13px;">Thanks,<br/>Ali Hamza</p>
+    </div>
+  `
+  return sendResendEmail({ to: input.to, subject, text, html })
+}
+
+export async function sendPaymentDetailsEmail(input: {
+  to: string
+  buyerName: string
+  productName: string
+  priceLabel: string
+  paymentHeadline: string
+  paymentInstructions: string
+  methodsText: string
+  footerNote: string
+  productUrl: string
+}): Promise<{ ok: boolean; error?: string }> {
+  const subject = `How to pay for ${input.productName}`
+  const text = [
+    `Hi ${input.buyerName || "there"},`,
+    ``,
+    `To buy ${input.productName} (${input.priceLabel}), use the payment details below, then submit proof on the product page:`,
+    input.productUrl,
+    ``,
+    input.paymentHeadline,
+    input.paymentInstructions,
+    input.methodsText,
+    input.footerNote,
+  ].join("\n")
+
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px;">
+      <p>Hi ${escapeHtml(input.buyerName || "there")},</p>
+      <p>To buy <strong>${escapeHtml(input.productName)}</strong> (${escapeHtml(input.priceLabel)}), use the details below, then submit your transaction ID on the product page.</p>
+      <p><a href="${escapeHtml(input.productUrl)}">${escapeHtml(input.productUrl)}</a></p>
+      <h2 style="font-size:16px;">${escapeHtml(input.paymentHeadline)}</h2>
+      <p style="white-space:pre-wrap;font-size:14px;color:#475569;">${escapeHtml(input.paymentInstructions)}</p>
+      <pre style="font-size:12px;background:#f8fafc;padding:12px;border-radius:8px;white-space:pre-wrap;">${escapeHtml(input.methodsText)}</pre>
+      ${input.footerNote ? `<p style="font-size:12px;color:#94a3b8;">${escapeHtml(input.footerNote)}</p>` : ""}
+    </div>
+  `
+  return sendResendEmail({ to: input.to, subject, text, html })
+}
