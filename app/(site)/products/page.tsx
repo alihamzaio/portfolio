@@ -2,7 +2,8 @@ import Link from "next/link"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { DIGITAL_PRODUCTS, productIsOnSale } from "@/lib/products"
+import { productIsOnSale, publicProducts } from "@/lib/products"
+import { getProductsConfig } from "@/lib/products-store"
 import { buildPageMetadata } from "@/lib/seo"
 
 export const metadata = buildPageMetadata({
@@ -12,7 +13,10 @@ export const metadata = buildPageMetadata({
   path: "/products",
 })
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const config = await getProductsConfig()
+  const products = publicProducts(config.products)
+
   return (
     <PremiumPage>
       <SectionHeading
@@ -25,7 +29,7 @@ export default function ProductsPage() {
       />
 
       <div className="mx-auto max-w-3xl space-y-6">
-        {DIGITAL_PRODUCTS.map((product) => {
+        {products.map((product) => {
           const onSale = productIsOnSale(product)
           return (
             <PremiumReveal key={product.slug}>

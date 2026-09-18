@@ -3,20 +3,23 @@ import { notFound } from "next/navigation"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { AmberGlassCta } from "@/components/ui/amber-glass-cta"
 import { HireCtaBlock } from "@/components/home/hire-cta-block"
-import { DIGITAL_PRODUCTS, getProduct, productIsOnSale } from "@/lib/products"
+import { productIsOnSale, publicProducts } from "@/lib/products"
+import { getProductsConfig } from "@/lib/products-store"
+import { KickoffForgeDemo } from "@/components/products/kickoff-forge-demo"
 import { buildPageMetadata } from "@/lib/seo"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
-import { KickoffForgeDemo } from "@/components/products/kickoff-forge-demo"
 
 type Props = { params: Promise<{ slug: string }> }
 
-export function generateStaticParams() {
-  return DIGITAL_PRODUCTS.map((p) => ({ slug: p.slug }))
+export async function generateStaticParams() {
+  const config = await getProductsConfig()
+  return publicProducts(config.products).map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params
-  const product = getProduct(slug)
+  const config = await getProductsConfig()
+  const product = publicProducts(config.products).find((p) => p.slug === slug)
   if (!product) return {}
   return buildPageMetadata({
     title: product.name,
@@ -27,7 +30,8 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params
-  const product = getProduct(slug)
+  const config = await getProductsConfig()
+  const product = publicProducts(config.products).find((p) => p.slug === slug)
   if (!product) notFound()
   const onSale = productIsOnSale(product)
 
@@ -73,7 +77,8 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {!onSale && (
               <p className="mt-4 text-xs text-neutral-600">
-                Gumroad checkout is not linked yet. Use contact if you want the zip early, or wait for the public buy link.
+                Gumroad checkout is not linked yet. Use contact if you want the zip early, or wait for the public buy
+                link.
               </p>
             )}
 

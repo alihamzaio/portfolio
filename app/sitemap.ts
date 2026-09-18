@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { absoluteUrl } from "@/lib/seo"
-import { getProductSlugs } from "@/lib/products"
+import { publicProducts } from "@/lib/products"
+import { getProductsConfig } from "@/lib/products-store"
 import { getBlogSlugs } from "@/lib/blog"
 import { getProjectSlugs } from "@/lib/projects"
 
@@ -40,8 +41,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  const productEntries = getProductSlugs().map((slug) => ({
-    url: absoluteUrl(`/products/${slug}`),
+  const productsConfig = await getProductsConfig()
+  const productEntries = publicProducts(productsConfig.products).map((p) => ({
+    url: absoluteUrl(`/products/${p.slug}`),
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.75,
