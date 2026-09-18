@@ -7,6 +7,7 @@ import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { HireCtaBlock } from "@/components/home/hire-cta-block"
+import { BlogToolsLinks } from "@/components/pages/blog-tools-links"
 import { getAllBlogPosts, getPostBySlug, postKeywords, postSeoDescription } from "@/lib/blog"
 import { buildPageMetadata } from "@/lib/seo"
 import { siteConfig } from "@/lib/site"
@@ -109,6 +110,7 @@ export default async function BlogPostPage({ params }: Props) {
                 {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
                 Technical tutorials also appear on {siteConfig.brand.channel}.
               </p>
+              <BlogToolsLinks topic={post.title} category={post.category} />
               <HireCtaBlock
                 variant="compact"
                 title="Want this built for your product?"
