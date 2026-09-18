@@ -1,7 +1,7 @@
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import {
   createPullRequest,
-  ensureBranchExists,
+  ensureBranchFromSha,
   getBranchSha,
   getFileContent,
   getGitHubToken,
@@ -33,7 +33,8 @@ export async function writeLiveGitHubFile(
   const { repo, baseBranch } = githubSyncConfig
   const filePath = relativePath.replace(/\\/g, "/")
   const mainSha = await getBranchSha(token, repo, baseBranch)
-  await ensureBranchExists(token, repo, LIVE_CONTENT_BRANCH, mainSha)
+  // Always align content/live to main tip so orphan/unrelated branches cannot break PRs.
+  await ensureBranchFromSha(token, repo, LIVE_CONTENT_BRANCH, mainSha)
   await putFileContent(token, repo, LIVE_CONTENT_BRANCH, filePath, content, message)
 
   const prUrl = await createPullRequest(
