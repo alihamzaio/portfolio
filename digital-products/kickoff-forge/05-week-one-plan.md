@@ -1,4 +1,4 @@
-# 05 — Week one plan
+# 05 - Week one plan
 
 Project: ________________  
 Week of: ________________

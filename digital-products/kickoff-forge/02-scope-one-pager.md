@@ -1,4 +1,4 @@
-# 02 — Scope one-pager
+# 02 - Scope one-pager
 
 Project: ________________  
 Client: ________________  
