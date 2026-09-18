@@ -5,6 +5,7 @@ import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
 import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
+import { AdminAffiliatesPanel } from "@/components/admin/admin-affiliates-panel"
 import { AdminOverview } from "@/components/admin/admin-overview"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
@@ -461,6 +462,26 @@ export default function AdminPage() {
             setSyncNotice(null)
             setSyncPrUrl(null)
           }}
+        />
+      )}
+
+      {tab === "affiliates" && (
+        <AdminAffiliatesPanel
+          onNotice={(message, prUrl) => {
+            setSyncNotice(message)
+            setSyncError(null)
+            setSyncPrUrl(prUrl || null)
+          }}
+          onError={(message) => {
+            if (message) {
+              setSyncError(message)
+              setSyncNotice(null)
+              setSyncPrUrl(null)
+            } else {
+              setSyncError(null)
+            }
+          }}
+          noteSyncResponse={noteSyncResponse}
         />
       )}
 
