@@ -15,6 +15,7 @@ const footerNav = [
   { label: "Experience", href: "/experience" },
   { label: "Tech stack", href: "/tech-stack" },
   { label: "Blog", href: "/blog" },
+  { label: "Products", href: "/products" },
   { label: "Contact", href: "/contact" },
 ] as const
 

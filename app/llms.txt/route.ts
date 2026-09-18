@@ -35,6 +35,7 @@ export function GET() {
 - Projects: ${absoluteUrl("/projects")}
 - Experience: ${absoluteUrl("/experience")}
 - Tech stack: ${absoluteUrl("/tech-stack")}
+- Products: ${absoluteUrl("/products")}
 - Contact: ${absoluteUrl("/contact")}
 - Privacy: ${absoluteUrl("/privacy")}
 - Sitemap: ${absoluteUrl("/sitemap.xml")}

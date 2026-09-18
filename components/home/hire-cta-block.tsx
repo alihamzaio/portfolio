@@ -50,10 +50,16 @@ export function HireCtaBlock({
       >
         <AmberGlassCta href="/contact">Hire me for your project</AmberGlassCta>
         <Link
-          href="/projects"
+          href="/products/nextjs-ship-starter"
           className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors self-center"
         >
-          See selected work →
+          Next.js starter →
+        </Link>
+        <Link
+          href="/projects"
+          className="inline-flex items-center text-sm text-neutral-500 hover:text-white transition-colors self-center"
+        >
+          Work
         </Link>
       </div>
     </div>
