@@ -38,6 +38,13 @@ export function HomeClientOffer() {
           <SmartLink href="/#contact" className="text-[var(--accent-primary)] hover:underline underline-offset-4">
             Send your requirements
           </SmartLink>
+          . Prefer a DIY kickoff pack?{" "}
+          <SmartLink
+            href="/products/kickoff-forge"
+            className="text-[var(--accent-primary)] hover:underline underline-offset-4"
+          >
+            Kickoff Forge ($19)
+          </SmartLink>
           .
         </p>
       </div>
