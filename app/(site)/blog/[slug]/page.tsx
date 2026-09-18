@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
               <HireCtaBlock
                 variant="compact"
                 title="Want this built for your product?"
-                description="Hire me for production Next.js, MERN, and AWS work — or grab the free launch checklist and ship the next release with fewer surprises."
+                description="Hire me for production Next.js, MERN, and AWS work. Prefer a short call over a long thread."
               />
               <Link
                 href="/blog"

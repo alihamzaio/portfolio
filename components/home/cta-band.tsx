@@ -1,13 +1,10 @@
 "use client"
 
-import { ArrowRight, Download } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { MagneticButton } from "@/components/ui/magnetic-button"
-import { PRIMARY_LEAD_MAGNET } from "@/lib/lead-magnet"
 import { copy } from "@/lib/copy"
 
 export function CtaBand() {
-  const magnet = PRIMARY_LEAD_MAGNET
-
   return (
     <section
       aria-label="Call to action"
@@ -28,9 +25,8 @@ export function CtaBand() {
           <MagneticButton href="/contact" variant="primary" className="btn-responsive">
             {copy.sections.cta.button} <ArrowRight className="h-4 w-4" />
           </MagneticButton>
-          <MagneticButton href={`/resources/${magnet.slug}`} variant="secondary" className="btn-responsive">
-            <Download className="h-4 w-4" />
-            Free checklist
+          <MagneticButton href="/api/resume/download" variant="secondary" className="btn-responsive">
+            Download resume
           </MagneticButton>
         </div>
       </div>
