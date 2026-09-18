@@ -1,7 +1,6 @@
 /**
  * Digital products sold via Gumroad (or similar).
- * Set buyUrl to your live Gumroad product URL when ready.
- * Leave buyUrl empty to show Coming soon + contact fallback.
+ * Managed in Admin → Products (content/products.json).
  */
 
 export type DigitalProduct = {
@@ -16,46 +15,97 @@ export type DigitalProduct = {
   idealFor: string[]
   /** Path inside repo for the deliverable (zip this for Gumroad) */
   starterPath: string
+  /** When false, hidden from public /products list */
+  enabled: boolean
 }
 
-/** Featured / public products only. Older kits can stay in digital-products/ without listing. */
-export const DIGITAL_PRODUCTS: DigitalProduct[] = [
-  {
-    slug: "kickoff-forge",
-    name: "Kickoff Forge",
-    tagline: "Turn a vague client chat into a clear build plan before you write code.",
-    description:
-      "A six-template freelance kickoff pack: discovery call notes, scope one-pager, estimate bands, tech decisions, week-one plan, and handoff checklist. Fill the blanks, send to the client, then ship.",
-    priceLabel: "$19",
-    buyUrl: "https://logicwave7.gumroad.com/l/kickoff-forge",
-    includes: [
-      "Discovery call worksheet",
-      "Scope one-pager for written sign-off",
-      "Estimate sheet with lean / standard / protected bands",
-      "Tech decision sheet",
-      "Week-one delivery plan + demo agenda",
-      "Launch handoff checklist",
-    ],
-    idealFor: [
-      "Freelancers who lose time to unclear scopes",
-      "Developers starting client MVPs",
-      "Anyone who wants a repeatable kickoff ritual",
-    ],
-    starterPath: "digital-products/kickoff-forge",
-  },
-]
-
-export function getProduct(slug: string): DigitalProduct | undefined {
-  return DIGITAL_PRODUCTS.find((p) => p.slug === slug)
+export type ProductsConfig = {
+  products: DigitalProduct[]
 }
 
-export function getProductSlugs(): string[] {
-  return DIGITAL_PRODUCTS.map((p) => p.slug)
+export const EMPTY_PRODUCTS: ProductsConfig = {
+  products: [],
+}
+
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 64)
+}
+
+function asStringList(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  return raw.map((x) => String(x).trim()).filter(Boolean)
+}
+
+export function normalizeProduct(
+  raw: Partial<DigitalProduct> & { name?: string },
+  fallbackSlug?: string
+): DigitalProduct | null {
+  const name = String(raw.name || "").trim()
+  if (!name) return null
+  const slug = String(raw.slug || fallbackSlug || slugify(name) || `product-${Date.now()}`)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-|-$/g, "")
+  if (!slug) return null
+
+  const buyUrl = String(raw.buyUrl || "").trim()
+  if (buyUrl) {
+    try {
+      const u = new URL(buyUrl)
+      if (u.protocol !== "http:" && u.protocol !== "https:") return null
+    } catch {
+      return null
+    }
+  }
+
+  return {
+    slug,
+    name,
+    tagline: String(raw.tagline || "").trim(),
+    description: String(raw.description || "").trim(),
+    priceLabel: String(raw.priceLabel || "").trim() || "$0",
+    buyUrl,
+    includes: asStringList(raw.includes),
+    idealFor: asStringList(raw.idealFor),
+    starterPath: String(raw.starterPath || "").trim(),
+    enabled: raw.enabled !== false,
+  }
+}
+
+export function normalizeProductsConfig(raw: unknown): ProductsConfig {
+  const data = (raw && typeof raw === "object" ? raw : {}) as Partial<ProductsConfig>
+  const products: DigitalProduct[] = []
+  const seen = new Set<string>()
+  for (const item of Array.isArray(data.products) ? data.products : []) {
+    const p = normalizeProduct(item as DigitalProduct)
+    if (!p || seen.has(p.slug)) continue
+    seen.add(p.slug)
+    products.push(p)
+  }
+  return { products }
+}
+
+export function publicProducts(products: DigitalProduct[]): DigitalProduct[] {
+  return products.filter((p) => p.enabled)
 }
 
 export function productIsOnSale(product: DigitalProduct): boolean {
   return Boolean(product.buyUrl?.trim())
 }
 
-/** Primary product used in CTAs and Shorts links */
-export const PRIMARY_PRODUCT = DIGITAL_PRODUCTS[0]
+/** Sync helpers used by pages that still import from this module. Prefer products-store on server. */
+export function getProductFromList(
+  products: DigitalProduct[],
+  slug: string
+): DigitalProduct | undefined {
+  return products.find((p) => p.slug === slug)
+}
+
+export function getProductSlugsFromList(products: DigitalProduct[]): string[] {
+  return products.map((p) => p.slug)
+}

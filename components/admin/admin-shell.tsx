@@ -14,6 +14,7 @@ import {
   X,
   TrendingUp,
   Newspaper,
+  Package,
 } from "lucide-react"
 import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
@@ -26,6 +27,7 @@ export type AdminTab =
   | "projects"
   | "skills"
   | "blog"
+  | "products"
   | "affiliates"
   | "resume"
 
@@ -36,6 +38,7 @@ const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "projects", label: "Projects", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "blog", label: "Blog", icon: Newspaper },
+  { id: "products", label: "Products", icon: Package },
   { id: "affiliates", label: "Affiliates", icon: TrendingUp },
   { id: "resume", label: "Resume", icon: FileText },
 ]
