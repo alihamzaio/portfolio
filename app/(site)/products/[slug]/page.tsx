@@ -6,6 +6,7 @@ import { HireCtaBlock } from "@/components/home/hire-cta-block"
 import { DIGITAL_PRODUCTS, getProduct, productIsOnSale } from "@/lib/products"
 import { buildPageMetadata } from "@/lib/seo"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
+import { KickoffForgeDemo } from "@/components/products/kickoff-forge-demo"
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -105,11 +106,13 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             </div>
 
+            {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
+
             <div className="mt-14">
               <HireCtaBlock
                 variant="compact"
                 title="Need this customized for a client?"
-                description="Buy the starter for a baseline, or hire me to brand, extend, and ship production."
+                description="Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
               />
             </div>
 

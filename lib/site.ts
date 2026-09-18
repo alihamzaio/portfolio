@@ -53,6 +53,7 @@ export const navItems = [
   { label: "Work", href: "/#projects", id: "projects" },
   { label: "Experience", href: "/#experience", id: "experience" },
   { label: "Blog", href: "/blog", id: "blog" },
+  { label: "Products", href: "/products", id: "products" },
   { label: "AI", href: "/#intelligence", id: "intelligence" },
   { label: "Contact", href: "/#contact", id: "contact" },
 ] as const
