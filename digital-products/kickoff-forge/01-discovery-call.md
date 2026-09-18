@@ -1,4 +1,4 @@
-# 01 — Discovery call
+# 01 - Discovery call
 
 Client: ________________  
 Date: ________________  

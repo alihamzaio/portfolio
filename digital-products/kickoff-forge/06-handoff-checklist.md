@@ -1,4 +1,4 @@
-# 06 — Handoff checklist
+# 06 - Handoff checklist
 
 Project: ________________  
 Launch date: ________________

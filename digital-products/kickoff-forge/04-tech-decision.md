@@ -1,4 +1,4 @@
-# 04 — Tech decision
+# 04 - Tech decision
 
 Project: ________________
 

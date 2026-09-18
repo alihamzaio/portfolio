@@ -1,4 +1,4 @@
-# 03 — Estimate sheet
+# 03 - Estimate sheet
 
 Project: ________________
 
@@ -12,7 +12,7 @@ Project: ________________
 | Auth | | | |
 | Integrations | | | |
 | Deploy / SEO | | | |
-| Buffer (15–25%) | | | |
+| Buffer (15-25%) | | | |
 | **Total** | | | |
 
 ## Price bands
