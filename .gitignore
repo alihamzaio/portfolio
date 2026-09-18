@@ -33,6 +33,10 @@ next-env.d.ts
 # auth OTP & sessions (local only)
 /data/
 
+# digital product starter (own install if developed locally)
+/digital-products/**/node_modules/
+/digital-products/**/.next/
+
 # editor — keep shared Cursor rules in git
 .cursor/*
 !.cursor/rules/
