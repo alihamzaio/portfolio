@@ -27,7 +27,7 @@ export const DIGITAL_PRODUCTS: DigitalProduct[] = [
     description:
       "A six-template freelance kickoff pack: discovery call notes, scope one-pager, estimate bands, tech decisions, week-one plan, and handoff checklist. Fill the blanks, send to the client, then ship.",
     priceLabel: "$19",
-    buyUrl: "",
+    buyUrl: "https://logicwave7.gumroad.com/l/kickoff-forge",
     includes: [
       "Discovery call worksheet",
       "Scope one-pager for written sign-off",
