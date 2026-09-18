@@ -8,7 +8,7 @@ import { buildPageMetadata } from "@/lib/seo"
 export const metadata = buildPageMetadata({
   title: "Products",
   description:
-    "Digital products by Ali Hamza: Next.js starters and kits for freelancers who want to ship faster.",
+    "Digital products by Ali Hamza: Kickoff Forge freelance client kickoff templates to lock scope before code.",
   path: "/products",
 })
 

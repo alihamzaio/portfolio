@@ -22,10 +22,15 @@ Or use the committed `public/downloads/kickoff-forge.zip` after running the zip 
 In `lib/products.ts`:
 
 ```ts
-buyUrl: "https://yourname.gumroad.com/l/kickoff-forge"
+buyUrl: "https://logicwave7.gumroad.com/l/kickoff-forge"
 ```
 
 Redeploy. Buy button unlocks on `/products/kickoff-forge`.
+
+## Live links
+
+- Gumroad: https://logicwave7.gumroad.com/l/kickoff-forge  
+- Portfolio page: `/products/kickoff-forge` (Buy on Gumroad CTA)
 
 ## Why this product
 
