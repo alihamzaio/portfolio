@@ -73,7 +73,7 @@ export default async function ProductDetailPage({ params }: Props) {
               ) : null}
               {showDirect ? (
                 <a href="#pay-direct" className="btn-secondary btn-responsive inline-flex">
-                  Pay me directly
+                  Pay directly in 3 steps
                 </a>
               ) : null}
               {!onSale ? (
@@ -123,13 +123,11 @@ export default async function ProductDetailPage({ params }: Props) {
             {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
 
             {showDirect ? (
-              <div id="pay-direct">
-                <DirectBuyPanel
-                  productSlug={product.slug}
-                  productName={product.name}
-                  priceLabel={product.priceLabel}
-                />
-              </div>
+              <DirectBuyPanel
+                productSlug={product.slug}
+                productName={product.name}
+                priceLabel={product.priceLabel}
+              />
             ) : null}
 
             <div className="mt-14">
