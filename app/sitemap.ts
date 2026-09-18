@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 import { absoluteUrl } from "@/lib/seo"
+import { getProductSlugs } from "@/lib/products"
 import { getBlogSlugs } from "@/lib/blog"
 import { getProjectSlugs } from "@/lib/projects"
 
@@ -11,7 +12,6 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/tech-stack", priority: 0.8, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.85, changeFrequency: "weekly" },
   { path: "/products", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/products/nextjs-ship-starter", priority: 0.75, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.85, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
 ]
@@ -40,5 +40,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticEntries, ...projectEntries, ...blogEntries]
+  const productEntries = getProductSlugs().map((slug) => ({
+    url: absoluteUrl(`/products/${slug}`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }))
+
+  return [...staticEntries, ...projectEntries, ...blogEntries, ...productEntries]
 }
