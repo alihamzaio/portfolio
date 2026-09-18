@@ -1,7 +1,7 @@
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import {
   createPullRequest,
-  ensureBranchFromSha,
+  ensureBranchExists,
   getBranchSha,
   getFileContent,
   getGitHubToken,
