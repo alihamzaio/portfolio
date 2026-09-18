@@ -1,0 +1,39 @@
+{
+  "slug": "stop-writing-cold-emails-by-hand-use-this",
+  "title": "Stop writing cold emails by hand. Use this.",
+  "excerpt": "A practical take on Stop writing cold emails manually from a DevBuildDaily Short.",
+  "metaDescription": "How I handle Stop writing cold emails manually: a short freelance workflow you can copy today.",
+  "date": "2026-09-18",
+  "readTime": "1 min",
+  "category": "AI Tools",
+  "featured": false,
+  "author": "Ali Hamza",
+  "source": "DevBuildDaily",
+  "body": "# Stop writing cold emails by hand. Use this.\n\nI recorded a short on this because freelancers keep asking me about it: **Stop writing cold emails manually**.\n\n## The problem\n\nYou are wasting three hours a day writing emails that no one reads. Stop it. Here is the fix. Do not ask ChatGPT to 'write a cold email.' That gives you generic trash. Instead, give it the context. Paste the prospect's recent LinkedIn post. Tell it your specific service. Ask for a three-line hook that references their pain. Watch the difference. The bad prompt gives you 'I hope this finds you well.' The good prompt gives you a line that actually makes them stop scrolling. You save two hours a day and your reply rate goes up because it sounds human, not robotic. Follow for daily AI money and ti\n\n## What I do instead\n\nWrite the follow-up once, save it as a reusable prompt, and send it the same day the invoice is late.\n\nKeep the tone polite and specific: amount, due date, and next step.\n\n## Copy this prompt\n\n```text\nYou are my billing assistant. Invoice topic: Stop writing cold emails manually.\nWrite a short, firm, polite follow-up email asking for payment.\nInclude the amount if known, the due date, and one clear next step.\n```\n\n## Work with me\n\nIf you want this shipped on a real product, [hire me](/contact) for Next.js, MERN, and AWS work, or browse [selected projects](/projects).\n\n## Watch the short version\n\nI also covered this in a DevBuildDaily Short: [watch on YouTube](https://www.youtube.com/watch?v=yaZXE-3YLn0).",
+  "youtubeUrl": "https://www.youtube.com/watch?v=yaZXE-3YLn0",
+  "youtubeId": "yaZXE-3YLn0",
+  "coverImage": "https://images.pexels.com/photos/6368847/pexels-photo-6368847.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "coverImageAlt": "Desk setup related to Stop writing cold emails manually",
+  "tags": [
+    "AI",
+    "freelance",
+    "ChatGPT",
+    "productivity"
+  ],
+  "keywords": [
+    "stop writing cold emails manually",
+    "chatgpt prompt",
+    "freelance tips",
+    "invoice follow up"
+  ],
+  "references": [
+    {
+      "title": "OpenAI Prompt engineering",
+      "url": "https://platform.openai.com/docs/guides/prompt-engineering"
+    },
+    {
+      "title": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/"
+    }
+  ]
+}
