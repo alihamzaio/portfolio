@@ -5,9 +5,11 @@ import {
   Briefcase,
   Building2,
   CheckCircle2,
+  CreditCard,
   ExternalLink,
   FileText,
   Newspaper,
+  Package,
   Sparkles,
   AlertTriangle,
   User,
@@ -288,6 +290,8 @@ export function AdminOverview({
             { label: "Add project", sub: "Case studies & demos", tab: "projects" as const, icon: Briefcase, onClick: onAddProject },
             { label: "Manage skills", sub: "Stack & levels", tab: "skills" as const, icon: Sparkles, onClick: () => onTab("skills") },
             { label: "Manage blog", sub: "Draft, preview, publish", tab: "blog" as const, icon: Newspaper, onClick: () => onTab("blog") },
+            { label: "Products", sub: "Listings, Gumroad, download URL", tab: "products" as const, icon: Package, onClick: () => onTab("products") },
+            { label: "Payment details", sub: "Bank / JazzCash for direct pay", tab: "payments" as const, icon: CreditCard, onClick: () => onTab("payments") },
             { label: "Upload resume", sub: "Active CV PDF", tab: "resume" as const, icon: FileText, onClick: () => onTab("resume") },
           ].map((a) => (
             <button
