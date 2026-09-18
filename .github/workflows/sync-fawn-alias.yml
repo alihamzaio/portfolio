@@ -25,11 +25,15 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${VERCEL_TOKEN:-}" ]; then
-            echo "Missing VERCEL_TOKEN — skip"
-            exit 0
+            echo "Missing VERCEL_TOKEN secret. Create a token at vercel.com/account/tokens and set repo secret VERCEL_TOKEN."
+            exit 1
           fi
           OUT=$(vercel ls alihamza --prod --token "$VERCEL_TOKEN" --scope alilogics007s-projects 2>&1 || true)
           echo "$OUT" | head -40
+          if echo "$OUT" | grep -qiE 'token.*(rejected|invalid)|unauthorized|not authorized'; then
+            echo "VERCEL_TOKEN was rejected. Rotate the token in Vercel, then update GitHub secret VERCEL_TOKEN."
+            exit 1
+          fi
           DEPLOY=$(echo "$OUT" | grep -oE 'https://alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app' | head -1)
           if [ -z "$DEPLOY" ]; then
             echo "Could not find production deployment URL"
@@ -37,4 +41,5 @@ jobs:
           fi
           echo "Using $DEPLOY"
           vercel alias set "$DEPLOY" alihamza-fawn.vercel.app --token "$VERCEL_TOKEN" --scope alilogics007s-projects
-          curl -fsSIL "https://alihamza-fawn.vercel.app/blog" | head -15
+          curl -fsSIL "https://alihamza-fawn.vercel.app/products" | head -15
+          curl -fsSIL "https://alihamza-fawn.vercel.app/products/kickoff-forge" | head -15
