@@ -42,13 +42,14 @@ type Props = {
 const PRIMARY_CHANNELS = ["youtube", "blog", "tiktok", "threads", "facebook", "instagram"] as const
 
 const CHANNEL_HELP: Record<string, string> = {
-  youtube: "Public Short on the DevBuildDaily channel",
-  blog: "Portfolio blog post (fallback article OK if Groq fails)",
-  tiktok: "TikTok Studio upload (must be Everyone, not Only me)",
-  threads: "Threads Playwright post. Empty profile = Post stayed disabled / drafts",
-  facebook: "Facebook Page reel via Meta Graph API",
-  instagram: "Instagram Reel via Meta Graph API",
-  threads_api: "Optional Meta Threads Graph API (skipped unless META_THREADS_TOKEN is set)",
+  youtube: "Public Short via YouTube API on GitHub Actions (laptop off)",
+  blog: "Portfolio blog via GitHub PR on Actions",
+  tiktok: "TikTok Studio headless on Actions (session secret). Must be Everyone.",
+  threads:
+    "Threads on Actions: Graph API if META_THREADS_TOKEN is set, else CI Playwright (not your laptop)",
+  facebook: "Facebook Page reel via Meta Graph API on Actions",
+  instagram: "Instagram Reel via Meta Graph API on Actions (needs public video URL host)",
+  threads_api: "Optional. Skipped until you add META_THREADS_TOKEN once (setup_threads_api.py)",
 }
 
 function verifyUrlFor(channel: string, run: UploadRunRow | null): string {
@@ -136,7 +137,11 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
   const channels = lastRun?.channels || {}
   const channelEntries = [
     ...PRIMARY_CHANNELS.map((name) => [name, channels[name] || "unknown"] as const),
-    ...Object.entries(channels).filter(([name]) => !PRIMARY_CHANNELS.includes(name as (typeof PRIMARY_CHANNELS)[number])),
+    ...Object.entries(channels).filter(
+      ([name]) =>
+        name !== "threads_api" &&
+        !PRIMARY_CHANNELS.includes(name as (typeof PRIMARY_CHANNELS)[number])
+    ),
   ]
   const selectedError =
     selectedChannel && lastRun?.errors?.find((e) => e.channel === selectedChannel)?.error
@@ -156,7 +161,8 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
         }
       >
         <p className="text-sm text-[var(--text-muted)] mb-4 max-w-2xl">
-          Click a channel for details and a verify link. Use re-run if a day failed. Repo:{" "}
+          Daily Shorts run on <strong>GitHub Actions</strong> (laptop can be off). Local Cursor browser is only for
+          checking links, not for uploading. Click a channel for details. Repo:{" "}
           <a
             href={`https://github.com/${repo}`}
             target="_blank"
