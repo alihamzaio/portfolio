@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { ExternalLink, Loader2, Play, RefreshCw } from "lucide-react"
+import { ChevronDown, ExternalLink, Loader2, Play, RefreshCw } from "lucide-react"
 import { Panel } from "@/components/admin/admin-shell"
 import { adminFetch, getAuthHeaders } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
@@ -17,6 +17,9 @@ type UploadRunRow = {
   overall?: string
   channels?: Record<string, ChannelStatus>
   errors?: Array<{ channel: string; error: string }>
+  note?: string
+  verify?: Record<string, string>
+  links?: Record<string, string>
 }
 
 type WorkflowRun = {
@@ -36,6 +39,36 @@ type Props = {
   onError: (msg: string) => void
 }
 
+const PRIMARY_CHANNELS = ["youtube", "blog", "tiktok", "threads", "facebook", "instagram"] as const
+
+const CHANNEL_HELP: Record<string, string> = {
+  youtube: "Public Short on the DevBuildDaily channel",
+  blog: "Portfolio blog post (fallback article OK if Groq fails)",
+  tiktok: "TikTok Studio upload (must be Everyone, not Only me)",
+  threads: "Threads Playwright post. Empty profile = Post stayed disabled / drafts",
+  facebook: "Facebook Page reel via Meta Graph API",
+  instagram: "Instagram Reel via Meta Graph API",
+  threads_api: "Optional Meta Threads Graph API (skipped unless META_THREADS_TOKEN is set)",
+}
+
+function verifyUrlFor(channel: string, run: UploadRunRow | null): string {
+  const fromRun = run?.verify?.[channel] || run?.links?.[channel]
+  if (fromRun) return fromRun
+  if (channel === "youtube" && run?.youtube_id) {
+    return `https://www.youtube.com/watch?v=${run.youtube_id}`
+  }
+  const defaults: Record<string, string> = {
+    youtube: "https://www.youtube.com/@DevBuildDaily",
+    blog: "https://alihamza-fawn.vercel.app/blog",
+    tiktok: "https://www.tiktok.com/@devbuild.daily",
+    threads: "https://www.threads.com/@devbuild.daily",
+    facebook: "https://www.facebook.com/devbuild.daily",
+    instagram: "https://www.instagram.com/devbuild.daily",
+    threads_api: "https://developers.facebook.com/docs/threads",
+  }
+  return defaults[channel] || "#"
+}
+
 export function AdminAutomationsPanel({ onNotice, onError }: Props) {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState<string | null>(null)
@@ -44,6 +77,8 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
   const [history, setHistory] = useState<UploadRunRow[]>([])
   const [runs, setRuns] = useState<WorkflowRun[]>([])
   const [platforms, setPlatforms] = useState<PlatformLink[]>([])
+  const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
+  const [expandedAt, setExpandedAt] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -68,14 +103,14 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
     void load()
   }, [load])
 
-  const dispatch = async (workflow: string) => {
-    setBusy(workflow)
+  const dispatch = async (workflow: string, extra?: { topic?: string }) => {
+    setBusy(workflow + (extra?.topic || ""))
     onError("")
     try {
       const res = await adminFetch("/api/admin/automations/dispatch", {
         method: "POST",
         headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
-        body: JSON.stringify({ workflow }),
+        body: JSON.stringify({ workflow, topic: extra?.topic || undefined }),
       })
       const data = await res.json().catch(() => null)
       if (!res.ok) throw new Error(typeof data?.error === "string" ? data.error : "Dispatch failed")
@@ -99,6 +134,12 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
   }
 
   const channels = lastRun?.channels || {}
+  const channelEntries = [
+    ...PRIMARY_CHANNELS.map((name) => [name, channels[name] || "unknown"] as const),
+    ...Object.entries(channels).filter(([name]) => !PRIMARY_CHANNELS.includes(name as (typeof PRIMARY_CHANNELS)[number])),
+  ]
+  const selectedError =
+    selectedChannel && lastRun?.errors?.find((e) => e.channel === selectedChannel)?.error
 
   return (
     <div className="space-y-6">
@@ -115,8 +156,7 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
         }
       >
         <p className="text-sm text-[var(--text-muted)] mb-4 max-w-2xl">
-          Track daily Short / weekly Long uploads across YouTube, Facebook, Instagram, TikTok, Threads, and
-          blog. If a day fails, use the manual run buttons below. Repo:{" "}
+          Click a channel for details and a verify link. Use re-run if a day failed. Repo:{" "}
           <a
             href={`https://github.com/${repo}`}
             target="_blank"
@@ -132,6 +172,13 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
             label="Run Daily Short now"
             busy={busy === "daily_short"}
             onClick={() => void dispatch("daily_short")}
+          />
+          <RunButton
+            label="Re-run last topic"
+            busy={busy === "daily_short" + (lastRun?.topic || "")}
+            onClick={() => void dispatch("daily_short", { topic: lastRun?.topic || undefined })}
+            secondary
+            disabled={!lastRun?.topic}
           />
           <RunButton
             label="Run Weekly Long now"
@@ -152,7 +199,7 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
             <div>
               <p className="text-sm font-medium text-[var(--text-primary)]">Last pipeline run</p>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                {lastRun?.at ? new Date(lastRun.at).toLocaleString() : "No status file yet (runs after next upload)"}
+                {lastRun?.at ? new Date(lastRun.at).toLocaleString() : "No status file yet"}
                 {lastRun?.kind ? ` · ${lastRun.kind}` : ""}
               </p>
             </div>
@@ -161,93 +208,195 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
           {lastRun?.title ? (
             <p className="text-sm text-[var(--text-secondary)] mb-3">{lastRun.title}</p>
           ) : null}
+
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {Object.entries(channels).map(([name, status]) => (
-              <div
+            {channelEntries.map(([name, status]) => (
+              <button
                 key={name}
-                className="flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] px-3 py-2 text-xs"
+                type="button"
+                onClick={() => setSelectedChannel((cur) => (cur === name ? null : name))}
+                className={cn(
+                  "flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-xs text-left transition-colors",
+                  selectedChannel === name
+                    ? "border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/5"
+                    : "border-white/[0.06] hover:border-white/15"
+                )}
               >
                 <span className="capitalize text-[var(--text-secondary)]">{name.replace(/_/g, " ")}</span>
                 <StatusPill status={status} small />
-              </div>
+              </button>
             ))}
           </div>
-          {lastRun?.errors?.length ? (
-            <ul className="mt-3 space-y-1 text-xs text-red-400">
-              {lastRun.errors.map((e) => (
-                <li key={`${e.channel}-${e.error.slice(0, 24)}`}>
-                  {e.channel}: {e.error || "error"}
-                </li>
-              ))}
-            </ul>
+
+          {selectedChannel ? (
+            <div className="mt-4 rounded-lg border border-white/[0.08] bg-black/20 p-3 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm font-medium text-[var(--text-primary)] capitalize">
+                  {selectedChannel.replace(/_/g, " ")} details
+                </p>
+                <StatusPill status={channels[selectedChannel] || "unknown"} small />
+              </div>
+              <p className="text-xs text-[var(--text-muted)]">
+                {CHANNEL_HELP[selectedChannel] || "Channel status from the last pipeline write."}
+              </p>
+              {selectedError ? (
+                <p className="text-xs text-red-400 whitespace-pre-wrap">{selectedError}</p>
+              ) : (
+                <p className="text-xs text-[var(--text-secondary)]">
+                  {channels[selectedChannel] === "ok"
+                    ? "No error recorded for this channel."
+                    : channels[selectedChannel] === "skipped"
+                      ? "Skipped on purpose (optional / not configured)."
+                      : "No detail string stored."}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2 pt-1">
+                <a
+                  href={verifyUrlFor(selectedChannel, lastRun)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-2.5 py-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                >
+                  Open / verify <ExternalLink className="h-3 w-3" />
+                </a>
+                {selectedChannel === "threads" || channels[selectedChannel] === "error" ? (
+                  <RunButton
+                    label="Re-run Daily Short (fix)"
+                    busy={!!busy?.startsWith("daily_short")}
+                    onClick={() => void dispatch("daily_short")}
+                    secondary
+                  />
+                ) : null}
+              </div>
+            </div>
+          ) : (
+            <p className="mt-3 text-xs text-[var(--text-muted)]">Click any channel pill for error text and verify link.</p>
+          )}
+
+          {lastRun?.note ? (
+            <p className="mt-3 text-xs text-[var(--text-muted)]">{lastRun.note}</p>
           ) : null}
         </div>
 
         <h3 className="text-sm font-medium text-[var(--text-primary)] mb-2">Recent days</h3>
         {history.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)] mb-6">History fills after the next successful pipeline write.</p>
+          <p className="text-sm text-[var(--text-muted)] mb-6">History fills after pipeline writes.</p>
         ) : (
-          <div className="overflow-x-auto mb-6">
-            <table className="w-full text-left text-xs">
-              <thead className="text-[var(--text-muted)]">
-                <tr className="border-b border-white/[0.06]">
-                  <th className="py-2 pr-3 font-medium">When</th>
-                  <th className="py-2 pr-3 font-medium">Kind</th>
-                  <th className="py-2 pr-3 font-medium">Overall</th>
-                  <th className="py-2 pr-3 font-medium">Title</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.slice(0, 14).map((row, i) => (
-                  <tr key={`${row.at}-${i}`} className="border-b border-white/[0.04]">
-                    <td className="py-2 pr-3 text-[var(--text-secondary)] whitespace-nowrap">
+          <div className="mb-6 space-y-2">
+            {history.slice(0, 14).map((row, i) => {
+              const key = `${row.at}-${i}`
+              const open = expandedAt === key
+              return (
+                <div key={key} className="rounded-lg border border-white/[0.06] overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedAt(open ? null : key)}
+                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-xs hover:bg-white/[0.02]"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0 text-[var(--text-muted)] transition-transform",
+                        open && "rotate-180"
+                      )}
+                    />
+                    <span className="text-[var(--text-secondary)] whitespace-nowrap w-[140px] shrink-0">
                       {row.at ? new Date(row.at).toLocaleString() : "-"}
-                    </td>
-                    <td className="py-2 pr-3 capitalize">{row.kind || "-"}</td>
-                    <td className="py-2 pr-3">
-                      <StatusPill status={row.overall || "unknown"} small />
-                    </td>
-                    <td className="py-2 pr-3 text-[var(--text-muted)] truncate max-w-[240px]">
-                      {row.title || row.topic || "-"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </span>
+                    <span className="capitalize w-14 shrink-0">{row.kind || "-"}</span>
+                    <StatusPill status={row.overall || "unknown"} small />
+                    <span className="text-[var(--text-muted)] truncate flex-1">{row.title || row.topic || "-"}</span>
+                  </button>
+                  {open ? (
+                    <div className="border-t border-white/[0.06] px-3 py-3 space-y-3 bg-black/10">
+                      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {Object.entries(row.channels || {}).map(([name, status]) => (
+                          <div
+                            key={name}
+                            className="flex items-center justify-between gap-2 rounded-md border border-white/[0.05] px-2.5 py-1.5 text-[11px]"
+                          >
+                            <span className="capitalize text-[var(--text-secondary)]">{name.replace(/_/g, " ")}</span>
+                            <StatusPill status={status} small />
+                          </div>
+                        ))}
+                      </div>
+                      {row.errors?.length ? (
+                        <ul className="space-y-1 text-xs text-red-400">
+                          {row.errors.map((e) => (
+                            <li key={`${e.channel}-${e.error.slice(0, 24)}`}>
+                              {e.channel}: {e.error || "error"}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                      <div className="flex flex-wrap gap-2">
+                        {row.youtube_id ? (
+                          <a
+                            href={`https://www.youtube.com/watch?v=${row.youtube_id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-xs text-[var(--accent-primary)] hover:underline"
+                          >
+                            YouTube <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : null}
+                        <a
+                          href={verifyUrlFor("threads", row)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                        >
+                          Threads profile <ExternalLink className="h-3 w-3" />
+                        </a>
+                        <RunButton
+                          label="Re-run this topic"
+                          busy={busy === "daily_short" + (row.topic || "")}
+                          onClick={() => void dispatch("daily_short", { topic: row.topic || undefined })}
+                          secondary
+                          disabled={!row.topic}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )
+            })}
           </div>
         )}
 
         <h3 className="text-sm font-medium text-[var(--text-primary)] mb-2">GitHub Actions</h3>
         <ul className="space-y-2 mb-2">
-          {runs.map((r) => (
-            <li
-              key={r.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/[0.06] px-3 py-2 text-xs"
-            >
-              <div className="min-w-0">
-                <p className="text-[var(--text-primary)] truncate">{r.name}</p>
-                <p className="text-[var(--text-muted)]">{new Date(r.created_at).toLocaleString()}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <StatusPill status={r.conclusion || r.status} small />
-                <a
-                  href={r.html_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[var(--text-muted)] hover:text-[var(--accent-primary)]"
-                >
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </div>
-            </li>
-          ))}
+          {runs.length === 0 ? (
+            <li className="text-sm text-[var(--text-muted)]">No recent Actions (check GITHUB_TOKEN on the server).</li>
+          ) : (
+            runs.map((r) => (
+              <li
+                key={r.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/[0.06] px-3 py-2 text-xs"
+              >
+                <div className="min-w-0">
+                  <p className="text-[var(--text-primary)] truncate">{r.name}</p>
+                  <p className="text-[var(--text-muted)]">{new Date(r.created_at).toLocaleString()}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StatusPill status={r.conclusion || r.status} small />
+                  <a
+                    href={r.html_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[var(--text-muted)] hover:text-[var(--accent-primary)]"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
       </Panel>
 
       <Panel title="Platform bookmarks">
         <p className="text-sm text-[var(--text-muted)] mb-4">
-          Open these in order and pin/bookmark in your browser (Ctrl+D). Names are numbered so they sort
-          together.
+          Open these and pin in your browser (Ctrl+D). Names are numbered so they sort together.
         </p>
         <ul className="space-y-2">
           {platforms.map((p) => (
@@ -274,16 +423,18 @@ function RunButton({
   onClick,
   busy,
   secondary,
+  disabled,
 }: {
   label: string
   onClick: () => void
   busy?: boolean
   secondary?: boolean
+  disabled?: boolean
 }) {
   return (
     <button
       type="button"
-      disabled={busy}
+      disabled={busy || disabled}
       onClick={onClick}
       className={cn(
         "inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium disabled:opacity-50",
