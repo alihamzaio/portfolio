@@ -36,7 +36,7 @@ export const PLATFORM_LINKS = [
   { id: "youtube-studio", label: "02 - YouTube Studio", url: "https://studio.youtube.com/" },
   { id: "tiktok", label: "03 - TikTok devbuild.daily", url: "https://www.tiktok.com/@devbuild.daily" },
   { id: "instagram", label: "04 - Instagram devbuild.daily", url: "https://www.instagram.com/devbuild.daily" },
-  { id: "facebook", label: "05 - Facebook DevBuildDaily", url: "https://www.facebook.com/1307166245817929" },
+  { id: "facebook", label: "05 - Facebook DevBuildDaily", url: "https://www.facebook.com/profile.php?id=61594539563892" },
   { id: "threads", label: "06 - Threads @devbuild.daily", url: "https://www.threads.com/@devbuild.daily" },
   { id: "blog", label: "07 - Portfolio Blog", url: "https://alihamza-fawn.vercel.app/blog" },
   {

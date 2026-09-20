@@ -63,7 +63,7 @@ function verifyUrlFor(channel: string, run: UploadRunRow | null): string {
     blog: "https://alihamza-fawn.vercel.app/blog",
     tiktok: "https://www.tiktok.com/@devbuild.daily",
     threads: "https://www.threads.com/@devbuild.daily",
-    facebook: "https://www.facebook.com/devbuild.daily",
+    facebook: "https://www.facebook.com/profile.php?id=61594539563892",
     instagram: "https://www.instagram.com/devbuild.daily",
     threads_api: "https://developers.facebook.com/docs/threads",
   }
