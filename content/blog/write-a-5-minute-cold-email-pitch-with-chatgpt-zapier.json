@@ -1,0 +1,37 @@
+{
+  "slug": "write-a-5-minute-cold-email-pitch-with-chatgpt-zapier",
+  "title": "Write a 5-Minute Cold Email Pitch with ChatGPT & Zapier",
+  "excerpt": "Learn how to write a cold email in under five minutes using ChatGPT, then automate sending and tracking with Zapier. A step\u2011by\u2011step guide that saves you time and boosts outreach efficiency.",
+  "metaDescription": "Discover a quick workflow that uses ChatGPT to draft a personalized cold email in seconds, then Zapier to send it automatically and track opens with Mailtr",
+  "date": "2026-09-20",
+  "readTime": "2 min",
+  "category": "Marketing",
+  "featured": false,
+  "author": "Ali Hamza",
+  "source": "DevBuildDaily",
+  "body": "Are you still spending 30 minutes drafting a cold email every time you pitch a new client? Imagine slashing that to just 5 minutes. In this quick guide, I\u2019ll walk you through a proven workflow that combines ChatGPT\u2019s creative power with Zapier\u2019s automation to write, send, and track a killer cold email in under five minutes.\n\nStep 1 - Craft the Email with ChatGPT\n\nOpen ChatGPT and start a new conversation. Paste the following prompt:\n\n> \u201cWrite a concise, personalized cold email for a [industry] prospect named [Name] who works at [Company]. The email should highlight a pain point, propose a quick 15\u2011minute call, and close with a friendly sign\u2011off. Keep it under 120 words.\u201d\n\nFeel free to tweak the placeholders to match your target. Once ChatGPT returns the draft, copy the text. The AI will give you a polished, ready\u2011to\u2011send email that feels personal and professional.\n\nStep 2 - Keep Formatting in Gmail\n\nPaste the email into a new Gmail draft. To preserve line breaks and formatting, use \u201cPaste without formatting\u201d (Ctrl+Shift+V on Windows or Cmd+Shift+V on Mac). Add a compelling subject line such as \u201cQuick win for [Company] in 15 minutes\u201d. Hit \u201cSave draft\u201d and you\u2019re ready to send.\n\nStep 3 - Automate with Zapier\n\n1. **Trigger** - Create a new Google Sheet with columns: Recipient Email, Subject, Body. Whenever you paste a new row, Zapier will fire.\n2. **Action 1** - Gmail: Use the \u201cSend Email\u201d action. Map the sheet columns to the email fields. This sends the email automatically.\n3. **Action 2** - Mailtrack: Add a \u201cTrack Email\u201d action to log open rates. Mailtrack\u2019s webhook will record whether the recipient opens the email.\n\nYou can also add a delay step if you want to send emails in batches, or a filter to skip rows where the email address is blank.\n\nStep 4 - Review and Iterate\n\nAfter the first batch, check the Mailtrack logs to see open rates. If a particular subject line or opener isn\u2019t performing, tweak the prompt in ChatGPT and update the sheet. Because the workflow is automated, you can iterate quickly without re\u2011entering data manually.\n\nWhy This Works - **Speed**: ChatGPT writes a high\u2011quality email in seconds, eliminating the 30\u2011minute drafting loop. - **Consistency**: The template ensures every email follows a proven structure - pain point, solution, CTA, sign\u2011off. - **Automation**: Zapier handles sending and tracking, freeing you to focus on follow\u2011ups and strategy.\n\nReady to try it? Grab a coffee, open ChatGPT, and start drafting. With this setup, you\u2019ll spend less than 5 minutes on each new outreach and more time closing deals.\n\nIf you found this workflow useful, hit follow for daily AI time\u2011saver tips and share your results in the comments!\n\n## Watch the short version\n\nI also covered this in a DevBuildDaily Short: [watch on YouTube](https://www.youtube.com/watch?v=bRumJqeoIFo).\n\n\n## Work with me\n\nIf you want this shipped on a real product, [hire me](/contact) for Next.js, MERN, and AWS work, or browse [selected projects](/projects).",
+  "youtubeUrl": "https://www.youtube.com/watch?v=bRumJqeoIFo",
+  "youtubeId": "bRumJqeoIFo",
+  "coverImage": "https://images.pexels.com/photos/19387235/pexels-photo-19387235.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "coverImageAlt": "Illustration of ChatGPT and Zapier icons connected to a laptop screen showing an email draft",
+  "tags": [
+    "Cold Email",
+    "ChatGPT",
+    "Zapier",
+    "Automation",
+    "Email Outreach",
+    "Productivity",
+    "AI Tools"
+  ],
+  "keywords": [
+    "cold email automation",
+    "ChatGPT email template",
+    "Zapier email workflow",
+    "Mailtrack tracking",
+    "AI time saver",
+    "email outreach tips"
+  ],
+  "references": [
+    "https://www.youtube.com/watch?v=bRumJqeoIFo"
+  ]
+}
