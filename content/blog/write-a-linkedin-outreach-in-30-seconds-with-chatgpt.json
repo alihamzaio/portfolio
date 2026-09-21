@@ -1,0 +1,39 @@
+{
+  "slug": "write-a-linkedin-outreach-in-30-seconds-with-chatgpt",
+  "title": "Write a LinkedIn Outreach in 30 Seconds with ChatGPT",
+  "excerpt": "A practical take on LinkedIn Outreach Prompt from a DevBuildDaily Short.",
+  "metaDescription": "How I handle LinkedIn Outreach Prompt: a short freelance workflow you can copy today.",
+  "date": "2026-09-21",
+  "readTime": "1 min",
+  "category": "AI Tools",
+  "featured": false,
+  "author": "Ali Hamza",
+  "source": "DevBuildDaily",
+  "body": "# Write a LinkedIn Outreach in 30 Seconds with ChatGPT\n\nI recorded a short on this because freelancers keep asking me about it: **LinkedIn Outreach Prompt**.\n\n## The problem\n\nYou\u2019re spending 10 minutes drafting LinkedIn outreach? Let\u2019s cut that to 30 seconds. First, I\u2019ll show you the weak way. I type a generic prompt and get a bland reply. Then I\u2019ll show the good prompt that\u2019s copy\u2011paste ready, and the AI gives me a polished, personalized message in seconds. Follow for daily AI money and time-saver tips.\n\n## What I do instead\n\nWrite the follow-up once, save it as a reusable prompt, and send it the same day the invoice is late.\n\nKeep the tone polite and specific: amount, due date, and next step.\n\n## Copy this prompt\n\n```text\nYou are my billing assistant. Invoice topic: LinkedIn Outreach Prompt.\nWrite a short, firm, polite follow-up email asking for payment.\nInclude the amount if known, the due date, and one clear next step.\n```\n\n## Work with me\n\nIf you want this shipped on a real product, [hire me](/contact) for Next.js, MERN, and AWS work, or browse [selected projects](/projects).\n\n## Watch the short version\n\nI also covered this in a DevBuildDaily Short: [watch on YouTube](https://www.youtube.com/watch?v=AxxGn91T9lU).",
+  "youtubeUrl": "https://www.youtube.com/watch?v=AxxGn91T9lU",
+  "youtubeId": "AxxGn91T9lU",
+  "coverImage": "https://images.pexels.com/photos/20716646/pexels-photo-20716646.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "coverImageAlt": "Desk setup related to LinkedIn Outreach Prompt",
+  "tags": [
+    "AI",
+    "freelance",
+    "ChatGPT",
+    "productivity"
+  ],
+  "keywords": [
+    "linkedin outreach prompt",
+    "chatgpt prompt",
+    "freelance tips",
+    "invoice follow up"
+  ],
+  "references": [
+    {
+      "title": "OpenAI Prompt engineering",
+      "url": "https://platform.openai.com/docs/guides/prompt-engineering"
+    },
+    {
+      "title": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/"
+    }
+  ]
+}
