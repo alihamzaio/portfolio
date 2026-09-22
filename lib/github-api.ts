@@ -3,7 +3,13 @@ import { githubSyncConfig } from "@/lib/github-sync-config"
 const GH_API = "https://api.github.com"
 
 export function getGitHubToken(): string | null {
-  const token = process.env.GITHUB_TOKEN?.trim()
+  // Prefer dedicated admin PAT. Fallbacks cover common Vercel naming.
+  const token =
+    process.env.GITHUB_TOKEN?.trim() ||
+    process.env.GH_PAT?.trim() ||
+    process.env.GITHUB_PAT?.trim() ||
+    process.env.PORTFOLIO_GITHUB_TOKEN?.trim() ||
+    ""
   return token || null
 }
 
