@@ -1,6 +1,6 @@
 name: Sync fawn production alias
 
-# Keep https://alihamza-fawn.vercel.app on the latest Production deployment.
+# Keep https://alihamza-fawn.vercel.app on the latest Ready Production deployment.
 # vercel.app aliases do not auto-follow new production deploys.
 
 on:
@@ -11,15 +11,12 @@ on:
 jobs:
   sync-alias:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Wait for Vercel production
-        run: sleep 120
-
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      - name: Point alihamza-fawn.vercel.app at latest production
+      - name: Point alihamza-fawn.vercel.app at latest Ready production
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
@@ -28,18 +25,51 @@ jobs:
             echo "Missing VERCEL_TOKEN secret. Create a token at vercel.com/account/tokens and set repo secret VERCEL_TOKEN."
             exit 1
           fi
-          OUT=$(vercel ls alihamza --prod --token "$VERCEL_TOKEN" --scope alilogics007s-projects 2>&1 || true)
-          echo "$OUT" | head -40
-          if echo "$OUT" | grep -qiE 'token.*(rejected|invalid)|unauthorized|not authorized'; then
-            echo "VERCEL_TOKEN was rejected. Rotate the token in Vercel, then update GitHub secret VERCEL_TOKEN."
-            exit 1
-          fi
-          DEPLOY=$(echo "$OUT" | grep -oE 'https://alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app' | head -1)
+
+          SCOPE="alilogics007s-projects"
+          PROJECT="alihamza"
+          ALIAS="alihamza-fawn.vercel.app"
+          DEPLOY=""
+
+          # Wait for a Ready production deploy (skip Error / Building / Canceled).
+          for attempt in $(seq 1 24); do
+            OUT=$(vercel ls "$PROJECT" --prod --token "$VERCEL_TOKEN" --scope "$SCOPE" 2>&1 || true)
+            if echo "$OUT" | grep -qiE 'token.*(rejected|invalid)|unauthorized|not authorized'; then
+              echo "VERCEL_TOKEN was rejected. Rotate the token in Vercel, then update GitHub secret VERCEL_TOKEN."
+              echo "$OUT" | head -20
+              exit 1
+            fi
+            if [ "$attempt" -eq 1 ] || [ $((attempt % 4)) -eq 0 ]; then
+              echo "--- attempt $attempt ---"
+              echo "$OUT" | head -25
+            fi
+
+            # Prefer the newest Ready row (Age column then URL).
+            DEPLOY=$(echo "$OUT" | awk '
+              /● Ready/ {
+                for (i = 1; i <= NF; i++) {
+                  if ($i ~ /^https:\/\/alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app$/) {
+                    print $i
+                    exit
+                  }
+                }
+              }
+            ')
+
+            if [ -n "$DEPLOY" ]; then
+              echo "Found Ready deployment: $DEPLOY"
+              break
+            fi
+            echo "No Ready production deploy yet; sleeping 15s..."
+            sleep 15
+          done
+
           if [ -z "$DEPLOY" ]; then
-            echo "Could not find production deployment URL"
+            echo "Timed out waiting for a Ready production deployment."
             exit 1
           fi
-          echo "Using $DEPLOY"
-          vercel alias set "$DEPLOY" alihamza-fawn.vercel.app --token "$VERCEL_TOKEN" --scope alilogics007s-projects
-          curl -fsSIL "https://alihamza-fawn.vercel.app/products" | head -15
-          curl -fsSIL "https://alihamza-fawn.vercel.app/products/kickoff-forge" | head -15
+
+          echo "Aliasing $ALIAS -> $DEPLOY"
+          vercel alias set "$DEPLOY" "$ALIAS" --token "$VERCEL_TOKEN" --scope "$SCOPE"
+          curl -fsSIL "https://$ALIAS/products" | head -15
+          curl -fsSIL "https://$ALIAS/products/kickoff-forge" | head -15

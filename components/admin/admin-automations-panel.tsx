@@ -372,7 +372,10 @@ export function AdminAutomationsPanel({ onNotice, onError }: Props) {
         <h3 className="text-sm font-medium text-[var(--text-primary)] mb-2">GitHub Actions</h3>
         <ul className="space-y-2 mb-2">
           {runs.length === 0 ? (
-            <li className="text-sm text-[var(--text-muted)]">No recent Actions (check GITHUB_TOKEN on the server).</li>
+            <li className="text-sm text-[var(--text-muted)]">
+              No recent Actions yet. Set <code className="text-[var(--text-primary)]">GITHUB_TOKEN</code>{" "}
+              (repo scope) on Vercel Production, then refresh. Manual run buttons still work after that.
+            </li>
           ) : (
             runs.map((r) => (
               <li
