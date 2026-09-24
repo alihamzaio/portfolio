@@ -216,8 +216,16 @@ Return ONE JSON object only. No markdown fences. No commentary.
 Required keys: topic (string), title (string), excerpt (string), metaDescription (string), category (string), tags (string array), keywords (string array), body (markdown string).
 Goal: ranking + shares + earning trust (digital products, freelancing, Kickoff Forge).
 NOT a tech-stack tutorial blog unless the viral angle truly needs it.
-Rules: high-intent 2025-2026 search topics; human voice; no fluff; no em dashes; light CTA only when natural.
-Body: 1000-1500 words, H2/H3, short paragraphs, one FAQ, scannable lists.`
+
+Voice (critical):
+- Sound like a real person who ships work, not a content farm.
+- Prefer first-person or direct "you" voice. Short paragraphs. Specific examples.
+- Ban: "In today's digital landscape", "roadmap", "leverage", "unlock", "delve", "game-changer", "comprehensive guide", em dashes.
+- Ban markdown pipe tables (| col |). Use short bullet lists or bold labels instead.
+- Avoid fake precision (exact conversion rates you cannot prove). Be honest when numbers are estimates.
+- Light CTA only when natural (freelance systems / Kickoff Forge). Never hard-sell.
+
+Body: 900-1400 words, H2/H3, scannable lists, one short FAQ. Write for Google + humans.`
 
   const user = opts.forcedTopic
     ? `Write a full SEO post about this topic (retry after a failed job): ${opts.forcedTopic}
