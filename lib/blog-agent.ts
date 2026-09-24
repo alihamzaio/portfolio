@@ -9,6 +9,7 @@ import {
   type BlogAgentRun,
   type BlogAgentState,
 } from "@/lib/blog-agent-types"
+import { pickAgentBlogCover } from "@/lib/blog-cover"
 
 export type { BlogAgentRun, BlogAgentRunStatus, BlogAgentState } from "@/lib/blog-agent-types"
 
@@ -275,6 +276,9 @@ export async function runBlogAgent(opts?: {
     run.title = generated.title
     const slug = slugifyTitle(generated.title)
 
+    const { pickAgentBlogCover } = await import("@/lib/blog-cover")
+    const cover = pickAgentBlogCover(slug)
+
     const published = await createBlogPullRequest({
       title: generated.title,
       excerpt: generated.excerpt,
@@ -284,6 +288,8 @@ export async function runBlogAgent(opts?: {
       slug,
       tags: generated.tags,
       keywords: generated.keywords,
+      coverImage: cover.url,
+      coverImageAlt: cover.alt,
       source: "Blog Agent",
       status: "published",
       autoMerge: true,

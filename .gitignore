@@ -37,9 +37,15 @@ next-env.d.ts
 /digital-products/**/node_modules/
 /digital-products/**/.next/
 
-# editor — keep shared Cursor rules in git
+# editor - keep shared Cursor rules in git
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
 .cursorindexingignore
 *.code-workspace
+
+# local ops / channel tooling (not portfolio)
+.playwright-mcp/
+scripts/*bookmarks*
+scripts/APPLY-BehindThePrice*
+scripts/FIX-BOOKMARKS*

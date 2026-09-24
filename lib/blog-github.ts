@@ -66,7 +66,7 @@ function normalizePost(input: BlogIngestInput): BlogPost {
     author: input.author || "Ali Hamza",
     source: input.source || "Ali Hamza Blog Agent",
     coverImage: input.coverImage?.trim() || DEFAULT_BLOG_COVER,
-    coverImageAlt: input.coverImageAlt || "Ali Hamza — Full Stack Developer",
+    coverImageAlt: input.coverImageAlt || "Ali Hamza - Full Stack Developer",
     tags: input.tags,
     keywords: input.keywords,
     references: input.references,
