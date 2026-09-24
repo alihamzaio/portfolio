@@ -1,0 +1,24 @@
+{
+  "slug": "tetst",
+  "title": "testblog1",
+  "excerpt": "test",
+  "metaDescription": "test",
+  "date": "2026-09-24",
+  "readTime": "1 min read",
+  "category": "Full Stack",
+  "featured": true,
+  "author": "Ali Hamza",
+  "source": "admin",
+  "coverImage": "/blog/covers/default.svg",
+  "coverImageAlt": "Ali Hamza — Full Stack Developer",
+  "tags": [
+    "test"
+  ],
+  "keywords": [
+    "test"
+  ],
+  "youtubeUrl": "teat",
+  "youtubeId": "test",
+  "status": "draft",
+  "body": "hi jsbdhsbdihalskhabhktestsvhdkaka"
+}
