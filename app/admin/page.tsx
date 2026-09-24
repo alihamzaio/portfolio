@@ -1,10 +1,10 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
-import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
 import { AdminBlogAgentPanel } from "@/components/admin/admin-blog-agent-panel"
 import { AdminProductsPanel } from "@/components/admin/admin-products-panel"
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel"
@@ -29,6 +29,22 @@ type Project = {
 }
 
 export default function AdminPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center">
+          <p className="text-sm text-[var(--text-secondary)]">Loading admin…</p>
+        </main>
+      }
+    >
+      <AdminPageInner />
+    </Suspense>
+  )
+}
+
+function AdminPageInner() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [authed, setAuthed] = useState(false)
   const [checking, setChecking] = useState(true)
   const [tab, setTab] = useState<AdminTab>("overview")
@@ -46,6 +62,43 @@ export default function AdminPage() {
   const [syncPrUrl, setSyncPrUrl] = useState<string | null>(null)
   const [blogPublished, setBlogPublished] = useState(0)
   const [blogDrafts, setBlogDrafts] = useState(0)
+
+  useEffect(() => {
+    const raw = searchParams.get("tab")
+    if (!raw) {
+      setTab("overview")
+      return
+    }
+    if (raw === "blog") {
+      router.replace("/admin/blog")
+      return
+    }
+    const allowed: AdminTab[] = [
+      "overview",
+      "profile",
+      "experience",
+      "projects",
+      "skills",
+      "blogAgent",
+      "products",
+      "payments",
+      "orders",
+      "resume",
+    ]
+    if (allowed.includes(raw as AdminTab)) setTab(raw as AdminTab)
+  }, [searchParams, router])
+
+  const goTab = useCallback(
+    (next: AdminTab) => {
+      if (next === "blog") {
+        router.push("/admin/blog")
+        return
+      }
+      setTab(next)
+      router.replace(next === "overview" ? "/admin" : `/admin?tab=${next}`)
+    },
+    [router]
+  )
 
   const noteSyncResponse = (res: Response) => {
     const message = res.headers.get("X-Portfolio-Sync-Message")
@@ -213,6 +266,7 @@ export default function AdminPage() {
       { id: Date.now(), title: "New Project", description: "", tags: [], featured: false },
     ])
     setTab("projects")
+    router.replace("/admin?tab=projects")
   }
 
   const deleteProject = async (index: number) => {
@@ -334,6 +388,7 @@ export default function AdminPage() {
       ...list,
     ])
     setTab("experience")
+    router.replace("/admin?tab=experience")
   }
 
   const updateExp = (index: number, patch: Partial<Experience>) => {
@@ -343,7 +398,7 @@ export default function AdminPage() {
   return (
     <AdminShell
       tab={tab}
-      onTab={setTab}
+      onTab={goTab}
       onLogout={logout}
       stats={{
         projects: projects.length,
@@ -390,7 +445,7 @@ export default function AdminPage() {
       )}
       {tab === "overview" && (
         <AdminOverview
-          onTab={setTab}
+          onTab={goTab}
           onAddExperience={addExperience}
           onAddProject={createProject}
           localCounts={{
@@ -400,30 +455,6 @@ export default function AdminPage() {
             skills: skills.length,
             resumes: resumeFiles.length,
             activeResume,
-          }}
-        />
-      )}
-
-      {tab === "blog" && (
-        <AdminBlogPanel
-          onNotice={(message, prUrl) => {
-            setSyncNotice(message)
-            setSyncError(null)
-            setSyncPrUrl(prUrl || null)
-            adminFetch("/api/admin/overview", { headers: getAuthHeaders() })
-              .then((r) => r.json())
-              .then((d) => {
-                if (d?.counts) {
-                  setBlogPublished(Number(d.counts.blogPublished) || 0)
-                  setBlogDrafts(Number(d.counts.blogDrafts) || 0)
-                }
-              })
-              .catch(() => {})
-          }}
-          onError={(message) => {
-            setSyncError(message)
-            setSyncNotice(null)
-            setSyncPrUrl(null)
           }}
         />
       )}

@@ -1,0 +1,428 @@
+"use client"
+
+import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, Loader2 } from "lucide-react"
+import { Panel } from "@/components/admin/admin-shell"
+import { AdminBlogPreview, BLOG_MARKDOWN_HINT } from "@/components/admin/admin-blog-preview"
+import { AdminBlogCoverField } from "@/components/admin/admin-blog-cover-field"
+import { adminFetch, getAuthHeaders } from "@/lib/auth-client"
+import { cn } from "@/lib/utils"
+import { DEFAULT_BLOG_COVER, isDefaultBlogCover } from "@/lib/blog-cover"
+import type { BlogPost, BlogStatus } from "@/lib/blog"
+
+type BlogListItem = BlogPost & {
+  status: BlogStatus
+  path: string
+}
+
+type FormState = {
+  slug: string
+  title: string
+  excerpt: string
+  metaDescription: string
+  date: string
+  category: string
+  featured: boolean
+  author: string
+  coverImage: string
+  coverImageAlt: string
+  tags: string
+  keywords: string
+  youtubeUrl: string
+  youtubeId: string
+  body: string
+  status: BlogStatus
+}
+
+type EditorTab = "write" | "preview"
+
+const emptyForm = (): FormState => ({
+  slug: "",
+  title: "",
+  excerpt: "",
+  metaDescription: "",
+  date: new Date().toISOString().slice(0, 10),
+  category: "Full Stack",
+  featured: false,
+  author: "Ali Hamza",
+  coverImage: DEFAULT_BLOG_COVER,
+  coverImageAlt: "Ali Hamza - Full Stack Developer",
+  tags: "",
+  keywords: "",
+  youtubeUrl: "",
+  youtubeId: "",
+  body: "",
+  status: "draft",
+})
+
+function postToForm(p: BlogListItem): FormState {
+  return {
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    metaDescription: p.metaDescription || "",
+    date: p.date,
+    category: p.category,
+    featured: Boolean(p.featured),
+    author: p.author || "Ali Hamza",
+    coverImage: p.coverImage || DEFAULT_BLOG_COVER,
+    coverImageAlt: p.coverImageAlt || "Ali Hamza - Full Stack Developer",
+    tags: (p.tags || []).join(", "),
+    keywords: (p.keywords || []).join(", "),
+    youtubeUrl: p.youtubeUrl || "",
+    youtubeId: p.youtubeId || "",
+    body: p.body,
+    status: p.status,
+  }
+}
+
+function splitCsv(value: string): string[] | undefined {
+  const parts = value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+  return parts.length ? parts : undefined
+}
+
+type Props = {
+  mode: "new" | "edit"
+  slug?: string
+  onNotice: (message: string, prUrl?: string | null) => void
+  onError: (message: string) => void
+}
+
+export function AdminBlogEditor({ mode, slug, onNotice, onError }: Props) {
+  const router = useRouter()
+  const [form, setForm] = useState<FormState>(emptyForm)
+  const [loading, setLoading] = useState(mode === "edit")
+  const [saving, setSaving] = useState(false)
+  const [editorTab, setEditorTab] = useState<EditorTab>("write")
+  const [uploadingCover, setUploadingCover] = useState(false)
+
+  const loadPost = useCallback(async () => {
+    if (mode !== "edit" || !slug) return
+    setLoading(true)
+    try {
+      const res = await adminFetch("/api/admin/blog", { headers: getAuthHeaders() })
+      const data = await res.json()
+      if (!res.ok) {
+        onError(typeof data.error === "string" ? data.error : "Failed to load post")
+        return
+      }
+      const posts = Array.isArray(data.posts) ? (data.posts as BlogListItem[]) : []
+      const found = posts.find((p) => p.slug === slug)
+      if (!found) {
+        onError(`Post “${slug}” was not found.`)
+        router.replace("/admin/blog")
+        return
+      }
+      setForm(postToForm(found))
+    } catch {
+      onError("Failed to load blog post")
+    } finally {
+      setLoading(false)
+    }
+  }, [mode, slug, onError, router])
+
+  useEffect(() => {
+    void loadPost()
+  }, [loadPost])
+
+  const patch = (partial: Partial<FormState>) => setForm((f) => ({ ...f, ...partial }))
+
+  const save = async (status: BlogStatus) => {
+    if (!form.title.trim() || !form.body.trim()) {
+      onError("Title and body are required")
+      return
+    }
+    setSaving(true)
+    try {
+      const res = await adminFetch("/api/admin/blog", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          slug: form.slug || undefined,
+          title: form.title,
+          excerpt: form.excerpt || undefined,
+          metaDescription: form.metaDescription || undefined,
+          date: form.date || undefined,
+          category: form.category || undefined,
+          featured: form.featured,
+          author: form.author || undefined,
+          coverImage: form.coverImage?.trim() || DEFAULT_BLOG_COVER,
+          coverImageAlt:
+            form.coverImageAlt?.trim() ||
+            (isDefaultBlogCover(form.coverImage) ? "Ali Hamza - Full Stack Developer" : undefined),
+          tags: splitCsv(form.tags),
+          keywords: splitCsv(form.keywords),
+          youtubeUrl: form.youtubeUrl || undefined,
+          youtubeId: form.youtubeId || undefined,
+          body: form.body,
+          status,
+          source: "admin",
+          autoMerge: true,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.ok === false) {
+        onError(typeof data.error === "string" ? data.error : "Save failed")
+        return
+      }
+      const merged = data.merge?.merged
+      onNotice(
+        merged
+          ? `${status === "draft" ? "Draft" : "Published"} “${data.slug}” on main. ${
+              status === "draft"
+                ? "Hidden on the public blog until you publish."
+                : "Deploy will pick it up shortly."
+            }`
+          : `${status === "draft" ? "Draft" : "Publish"} saved for “${data.slug}”.`,
+        data.prUrl || null
+      )
+      router.push("/admin/blog")
+    } catch {
+      onError("Save failed. Check GITHUB_TOKEN on Vercel.")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const uploadCover = async (file: File) => {
+    setUploadingCover(true)
+    try {
+      const body = new FormData()
+      body.append("file", file)
+      body.append("name", form.slug || form.title || file.name)
+      const auth = getAuthHeaders()
+      const { "Content-Type": _drop, ...headers } = auth
+      const res = await adminFetch("/api/admin/blog/cover", {
+        method: "POST",
+        headers,
+        body,
+      })
+      const data = await res.json()
+      if (!res.ok || data.ok === false) {
+        onError(typeof data.error === "string" ? data.error : "Cover upload failed")
+        return
+      }
+      patch({ coverImage: data.path })
+      onNotice(`Cover uploaded to ${data.path}. Site will show it after deploy.`, data.prUrl || null)
+    } catch {
+      onError("Cover upload failed")
+    } finally {
+      setUploadingCover(false)
+    }
+  }
+
+  const fieldClass =
+    "w-full rounded-xl bg-white/[0.03] border border-white/[0.08] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)]/40"
+
+  if (loading) {
+    return (
+      <p className="text-sm text-[var(--text-secondary)] flex items-center gap-2">
+        <Loader2 className="h-4 w-4 animate-spin" /> Loading post…
+      </p>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <button
+        type="button"
+        onClick={() => router.push("/admin/blog")}
+        className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to blog list
+      </button>
+
+      <Panel
+        title={mode === "edit" ? `Edit: ${slug}` : "New blog post"}
+        action={
+          <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5 bg-white/[0.02]">
+            <button
+              type="button"
+              onClick={() => setEditorTab("write")}
+              className={cn(
+                "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                editorTab === "write"
+                  ? "bg-[var(--accent-primary)]/15 text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              )}
+            >
+              Write
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditorTab("preview")}
+              className={cn(
+                "px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
+                editorTab === "preview"
+                  ? "bg-[var(--accent-primary)]/15 text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              )}
+            >
+              Preview
+            </button>
+          </div>
+        }
+      >
+        <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
+          Saves commit straight to main. Drafts stay off the public blog until you publish.
+        </p>
+
+        {editorTab === "write" ? (
+          <>
+            <details className="mb-5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+              <summary className="text-xs font-medium text-[var(--text-secondary)] cursor-pointer select-none">
+                Markdown & images cheat sheet (what the site supports)
+              </summary>
+              <pre className="mt-3 text-[11px] leading-relaxed text-[var(--text-muted)] whitespace-pre-wrap font-mono overflow-x-auto">
+                {BLOG_MARKDOWN_HINT}
+              </pre>
+            </details>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Title</span>
+                <input className={fieldClass} value={form.title} onChange={(e) => patch({ title: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Slug (optional)</span>
+                <input
+                  className={fieldClass}
+                  value={form.slug}
+                  onChange={(e) => patch({ slug: e.target.value })}
+                  placeholder="auto-from-title"
+                  disabled={mode === "edit"}
+                />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Date</span>
+                <input type="date" className={fieldClass} value={form.date} onChange={(e) => patch({ date: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Category</span>
+                <input className={fieldClass} value={form.category} onChange={(e) => patch({ category: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Author</span>
+                <input className={fieldClass} value={form.author} onChange={(e) => patch({ author: e.target.value })} />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Excerpt</span>
+                <textarea
+                  className={cn(fieldClass, "min-h-[72px] resize-y")}
+                  value={form.excerpt}
+                  onChange={(e) => patch({ excerpt: e.target.value })}
+                />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Meta description</span>
+                <textarea
+                  className={cn(fieldClass, "min-h-[56px] resize-y")}
+                  value={form.metaDescription}
+                  onChange={(e) => patch({ metaDescription: e.target.value })}
+                  maxLength={180}
+                />
+              </label>
+              <AdminBlogCoverField
+                coverImage={form.coverImage}
+                coverImageAlt={form.coverImageAlt}
+                category={form.category}
+                onCoverChange={(url, alt) =>
+                  patch({
+                    coverImage: url,
+                    ...(alt ? { coverImageAlt: alt } : {}),
+                  })
+                }
+                onUpload={uploadCover}
+                uploading={uploadingCover}
+                fieldClass={fieldClass}
+              />
+              <label className="block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Cover alt text</span>
+                <input className={fieldClass} value={form.coverImageAlt} onChange={(e) => patch({ coverImageAlt: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Tags (comma)</span>
+                <input className={fieldClass} value={form.tags} onChange={(e) => patch({ tags: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Keywords (comma)</span>
+                <input className={fieldClass} value={form.keywords} onChange={(e) => patch({ keywords: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">YouTube URL</span>
+                <input className={fieldClass} value={form.youtubeUrl} onChange={(e) => patch({ youtubeUrl: e.target.value })} />
+              </label>
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">YouTube ID</span>
+                <input className={fieldClass} value={form.youtubeId} onChange={(e) => patch({ youtubeId: e.target.value })} />
+              </label>
+              <label className="flex items-center gap-2 sm:col-span-2 pt-1">
+                <input
+                  type="checkbox"
+                  checked={form.featured}
+                  onChange={(e) => patch({ featured: e.target.checked })}
+                  className="rounded border-white/20"
+                />
+                <span className="text-sm text-[var(--text-secondary)]">Featured on blog index</span>
+              </label>
+              <label className="block sm:col-span-2">
+                <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-1.5 block">Body (markdown)</span>
+                <textarea
+                  className={cn(fieldClass, "min-h-[320px] resize-y font-mono text-[13px] leading-relaxed")}
+                  value={form.body}
+                  onChange={(e) => patch({ body: e.target.value })}
+                  placeholder={"## Intro\n\nYour article…\n\n![Caption](https://…)\n"}
+                />
+              </label>
+            </div>
+          </>
+        ) : (
+          <AdminBlogPreview
+            title={form.title}
+            excerpt={form.excerpt}
+            date={form.date}
+            category={form.category}
+            author={form.author}
+            coverImage={form.coverImage}
+            coverImageAlt={form.coverImageAlt}
+            tags={form.tags}
+            youtubeUrl={form.youtubeUrl}
+            body={form.body}
+          />
+        )}
+
+        <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-white/[0.06]">
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => save("draft")}
+            className="btn-secondary !text-sm disabled:opacity-50"
+          >
+            {saving ? "Saving…" : "Save draft"}
+          </button>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => save("published")}
+            className="btn-primary !text-sm disabled:opacity-50"
+          >
+            {saving ? "Publishing…" : "Publish to main"}
+          </button>
+          {editorTab === "write" && (
+            <button
+              type="button"
+              onClick={() => setEditorTab("preview")}
+              className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] ml-auto"
+            >
+              Check Preview first →
+            </button>
+          )}
+        </div>
+      </Panel>
+    </div>
+  )
+}

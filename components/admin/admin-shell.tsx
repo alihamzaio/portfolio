@@ -67,6 +67,8 @@ const tabTitle: Record<AdminTab, string> = {
 interface AdminShellProps {
   children: ReactNode
   tab: AdminTab
+  /** Optional header title override (e.g. New blog post) */
+  pageTitle?: string
   onTab: (t: AdminTab) => void
   onLogout: () => void
   stats: {
@@ -132,7 +134,7 @@ function SidebarNav({
   )
 }
 
-export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShellProps) {
+export function AdminShell({ children, tab, pageTitle, onTab, onLogout, stats }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
 
@@ -140,6 +142,8 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
     onTab(next)
     mainRef.current?.scrollTo({ top: 0 })
   }
+
+  const headerTitle = pageTitle || tabTitle[tab]
 
   const statItems = [
     { label: "Roles", value: stats.experience, icon: Building2 },
@@ -170,7 +174,7 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
               <Menu className="h-5 w-5" />
             </button>
             <div>
-              <p className="text-sm font-bold tracking-tight text-[var(--text-primary)]">{tabTitle[tab]}</p>
+              <p className="text-sm font-bold tracking-tight text-[var(--text-primary)]">{headerTitle}</p>
               <p className="font-mono text-[10px] text-[var(--text-muted)]">Content management</p>
             </div>
           </div>
@@ -191,7 +195,7 @@ export function AdminShell({ children, tab, onTab, onLogout, stats }: AdminShell
         <main ref={mainRef} className="relative min-h-0 flex-1 overflow-y-auto p-6 sm:p-10 lg:p-12">
           <div className="pointer-events-none absolute inset-0 grid-fine opacity-20" />
           <motion.div
-            key={tab}
+            key={pageTitle || tab}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: easeCinematic }}
