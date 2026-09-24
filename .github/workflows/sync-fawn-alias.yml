@@ -1,24 +1,63 @@
 name: Sync fawn production alias
 
-# Keep https://alihamza-fawn.vercel.app on the latest Ready Production deployment.
-# vercel.app aliases do not auto-follow new production deploys.
+# Keep https://alihamza-fawn.vercel.app on the Production deploy for THIS commit.
+# Plain `vercel alias` pins a deployment; it does not auto-follow the next Ready build.
+# The old job grabbed the newest Ready URL too early (still the previous Production),
+# so fawn stayed stale until a later manual sync.
 
 on:
   push:
     branches: [main]
+  # When Vercel finishes a Production deploy (GitHub ↔ Vercel integration).
+  deployment_status:
   workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: "Optional git SHA to wait for (default: latest main HEAD)"
+        required: false
+        type: string
+
+concurrency:
+  group: sync-fawn-alias
+  cancel-in-progress: false
 
 jobs:
   sync-alias:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    # Skip failed / inactive deployment_status events.
+    if: >
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       (github.event.deployment.environment == 'Production' ||
+        github.event.deployment.environment == 'production'))
     steps:
+      - name: Resolve target commit
+        id: target
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "deployment_status" ]; then
+            SHA="${{ github.event.deployment.sha }}"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.commit_sha }}" ]; then
+            SHA="${{ inputs.commit_sha }}"
+          else
+            SHA="${{ github.sha }}"
+          fi
+          SHA=$(echo "$SHA" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+          if [ -z "$SHA" ] || [ ${#SHA} -lt 7 ]; then
+            echo "Could not resolve a commit SHA to wait for."
+            exit 1
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Waiting for Production deploy of $SHA"
+
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      - name: Point alihamza-fawn.vercel.app at latest Ready production
+      - name: Point alihamza-fawn.vercel.app at this commit's Production deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
         run: |
           set -euo pipefail
           if [ -z "${VERCEL_TOKEN:-}" ]; then
@@ -29,47 +68,122 @@ jobs:
           SCOPE="alilogics007s-projects"
           PROJECT="alihamza"
           ALIAS="alihamza-fawn.vercel.app"
-          DEPLOY=""
+          API="https://api.vercel.com"
+          DEPLOY_URL=""
+          DEPLOY_ID=""
 
-          # Wait for a Ready production deploy (skip Error / Building / Canceled).
-          for attempt in $(seq 1 24); do
-            OUT=$(vercel ls "$PROJECT" --prod --token "$VERCEL_TOKEN" --scope "$SCOPE" 2>&1 || true)
-            if echo "$OUT" | grep -qiE 'token.*(rejected|invalid)|unauthorized|not authorized'; then
-              echo "VERCEL_TOKEN was rejected. Rotate the token in Vercel, then update GitHub secret VERCEL_TOKEN."
-              echo "$OUT" | head -20
-              exit 1
-            fi
-            if [ "$attempt" -eq 1 ] || [ $((attempt % 4)) -eq 0 ]; then
-              echo "--- attempt $attempt ---"
-              echo "$OUT" | head -25
+          # Resolve team id (needed for REST filters).
+          TEAM_JSON=$(curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "$API/v2/teams?slug=$SCOPE" || true)
+          TEAM_ID=$(echo "$TEAM_JSON" | node -e '
+            let s=""; process.stdin.on("data",d=>s+=d); process.stdin.on("end",()=>{
+              try {
+                const j=JSON.parse(s);
+                const t=(j.teams||[]).find(x=>x.slug==="alilogics007s-projects") || (j.teams||[])[0];
+                process.stdout.write(t && t.id ? t.id : "");
+              } catch { process.stdout.write(""); }
+            });
+          ')
+          TEAM_QS=""
+          if [ -n "$TEAM_ID" ]; then
+            TEAM_QS="&teamId=$TEAM_ID"
+            echo "Using teamId=$TEAM_ID"
+          else
+            echo "Warning: could not resolve teamId; continuing with slug only."
+          fi
+
+          echo "Polling Vercel for READY production deploy matching $TARGET_SHA ..."
+          for attempt in $(seq 1 40); do
+            # Prefer REST: filter by git SHA so we never alias the previous Ready build.
+            QS="projectId=$PROJECT&target=production&state=READY&sha=$TARGET_SHA&limit=5"
+            if [ -n "$TEAM_ID" ]; then
+              QS="$QS&teamId=$TEAM_ID"
+            else
+              QS="$QS&slug=$SCOPE"
             fi
 
-            # Prefer the newest Ready row (Age column then URL).
-            DEPLOY=$(echo "$OUT" | awk '
-              /● Ready/ {
-                for (i = 1; i <= NF; i++) {
-                  if ($i ~ /^https:\/\/alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app$/) {
-                    print $i
-                    exit
+            RESP=$(curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "$API/v6/deployments?$QS" || echo '{}')
+
+            PARSE=$(echo "$RESP" | TARGET_SHA="$TARGET_SHA" node -e '
+              let s=""; process.stdin.on("data",d=>s+=d); process.stdin.on("end",()=>{
+                try {
+                  const j=JSON.parse(s);
+                  const want=(process.env.TARGET_SHA||"").toLowerCase();
+                  const list=j.deployments||[];
+                  for (const d of list) {
+                    const meta=d.meta||{};
+                    const sha=(meta.githubCommitSha||meta.gitCommitSha||d.gitSource&&d.gitSource.sha||"").toLowerCase();
+                    const ready=(d.state==="READY"||d.readyState==="READY");
+                    const url=d.url ? "https://"+d.url.replace(/^https?:\/\//,"") : "";
+                    if (ready && sha && (sha===want || sha.startsWith(want) || want.startsWith(sha)) && url) {
+                      process.stdout.write(JSON.stringify({url, uid:d.uid||d.id||""}));
+                      return;
+                    }
                   }
-                }
-              }
+                  // Fallback: first READY production in payload whose sha matches when API ignores sha=
+                  for (const d of list) {
+                    const meta=d.meta||{};
+                    const sha=(meta.githubCommitSha||"").toLowerCase();
+                    const ready=(d.state==="READY"||d.readyState==="READY");
+                    const url=d.url ? "https://"+d.url.replace(/^https?:\/\//,"") : "";
+                    if (ready && sha===want && url) {
+                      process.stdout.write(JSON.stringify({url, uid:d.uid||d.id||""}));
+                      return;
+                    }
+                  }
+                  process.stdout.write("");
+                } catch { process.stdout.write(""); }
+              });
             ')
 
-            if [ -n "$DEPLOY" ]; then
-              echo "Found Ready deployment: $DEPLOY"
+            if [ -n "$PARSE" ]; then
+              DEPLOY_URL=$(echo "$PARSE" | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{try{console.log(JSON.parse(s).url||"")}catch{}}')
+              DEPLOY_ID=$(echo "$PARSE" | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{try{console.log(JSON.parse(s).uid||"")}catch{}}')
+            fi
+
+            # CLI fallback filtered by commit meta (same race-proof idea).
+            if [ -z "$DEPLOY_URL" ]; then
+              OUT=$(vercel ls "$PROJECT" --prod --token "$VERCEL_TOKEN" --scope "$SCOPE" \
+                -m "githubCommitSha=$TARGET_SHA" 2>&1 || true)
+              if echo "$OUT" | grep -qiE 'token.*(rejected|invalid)|unauthorized|not authorized'; then
+                echo "VERCEL_TOKEN was rejected. Rotate the token in Vercel, then update GitHub secret VERCEL_TOKEN."
+                echo "$OUT" | head -20
+                exit 1
+              fi
+              DEPLOY_URL=$(echo "$OUT" | awk '
+                /● Ready/ {
+                  for (i = 1; i <= NF; i++) {
+                    if ($i ~ /^https:\/\/alihamza-[a-z0-9]+-alilogics007s-projects\.vercel\.app$/) {
+                      print $i
+                      exit
+                    }
+                  }
+                }
+              ')
+            fi
+
+            if [ -n "$DEPLOY_URL" ]; then
+              echo "Found READY deploy for $TARGET_SHA: $DEPLOY_URL"
               break
             fi
-            echo "No Ready production deploy yet; sleeping 15s..."
+
+            if [ "$attempt" -eq 1 ] || [ $((attempt % 5)) -eq 0 ]; then
+              echo "--- attempt $attempt: deploy for $TARGET_SHA not READY yet ---"
+            fi
             sleep 15
           done
 
-          if [ -z "$DEPLOY" ]; then
-            echo "Timed out waiting for a Ready production deployment."
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "Timed out waiting for READY production deployment of $TARGET_SHA."
+            echo "Check Vercel Production for that commit, then re-run this workflow."
             exit 1
           fi
 
-          echo "Aliasing $ALIAS -> $DEPLOY"
-          vercel alias set "$DEPLOY" "$ALIAS" --token "$VERCEL_TOKEN" --scope "$SCOPE"
-          curl -fsSIL "https://$ALIAS/products" | head -15
-          curl -fsSIL "https://$ALIAS/products/kickoff-forge" | head -15
+          echo "Aliasing $ALIAS -> $DEPLOY_URL"
+          vercel alias set "$DEPLOY_URL" "$ALIAS" --token "$VERCEL_TOKEN" --scope "$SCOPE"
+
+          echo "Verifying alias..."
+          sleep 2
+          curl -fsSIL "https://$ALIAS/admin/blog" | head -20
+          echo "Done. fawn now tracks $TARGET_SHA ($DEPLOY_URL)."
