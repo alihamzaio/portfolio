@@ -7,7 +7,6 @@ import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { HireCtaBlock } from "@/components/home/hire-cta-block"
-import { BlogToolsLinks } from "@/components/pages/blog-tools-links"
 import { getAllBlogPosts, getPostBySlug, postKeywords, postSeoDescription } from "@/lib/blog"
 import { buildPageMetadata } from "@/lib/seo"
 
@@ -108,7 +107,6 @@ export default async function BlogPostPage({ params }: Props) {
               <p className="text-neutral-400 text-sm leading-relaxed">
                 {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
               </p>
-              <BlogToolsLinks topic={post.title} category={post.category} />
               <HireCtaBlock
                 variant="compact"
                 title="Want this built for your product?"
