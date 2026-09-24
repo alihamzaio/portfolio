@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
-import { getOrderById, upsertOrder } from "@/lib/orders-store"
+import { deleteOrder, getOrderById, upsertOrder } from "@/lib/orders-store"
 import { getProductsConfig } from "@/lib/products-store"
 import { sendOrderPaidDownload } from "@/lib/email"
 import type { OrderStatus } from "@/lib/orders"
@@ -15,6 +15,20 @@ function resolveDownloadUrl(productSlug: string, explicit?: string): string {
   if (fromBodyOrProduct) return fromBodyOrProduct
   const base = siteConfig.url.replace(/\/$/, "")
   return `${base}/downloads/${productSlug}.zip`
+}
+
+/** Admin: permanently delete an order (e.g. demo / test rows). */
+export async function DELETE(req: NextRequest, { params }: Params) {
+  if (!(await requireAdminAuth(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+  const { id } = await params
+  try {
+    const config = await deleteOrder(id)
+    return NextResponse.json({ ok: true, orders: config.orders })
+  } catch {
+    return NextResponse.json({ error: "Order not found" }, { status: 404 })
+  }
 }
 
 /** Admin: update order status (paid / rejected) and optionally email download. */

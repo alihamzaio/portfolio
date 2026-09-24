@@ -142,3 +142,12 @@ export async function getOrderById(id: string): Promise<ProductOrder | null> {
   const config = await getOrdersConfig()
   return config.orders.find((o) => o.id === id) || null
 }
+
+export async function deleteOrder(id: string): Promise<OrdersConfig> {
+  const current = await getOrdersConfig()
+  const next = current.orders.filter((o) => o.id !== id)
+  if (next.length === current.orders.length) {
+    throw new Error("Order not found")
+  }
+  return saveOrdersConfig({ orders: next })
+}

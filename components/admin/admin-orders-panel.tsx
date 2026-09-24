@@ -69,6 +69,28 @@ export function AdminOrdersPanel({ onNotice, onError }: Props) {
     }
   }
 
+  const remove = async (id: string) => {
+    if (!window.confirm("Delete this order permanently?")) return
+    setBusyId(id)
+    onError("")
+    try {
+      const res = await adminFetch(`/api/orders/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      })
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(typeof data?.error === "string" ? data.error : "Delete failed")
+      }
+      setOrders((prev) => prev.filter((o) => o.id !== id))
+      onNotice("Order deleted.")
+    } catch (e) {
+      onError(e instanceof Error ? e.message : "Delete failed")
+    } finally {
+      setBusyId(null)
+    }
+  }
+
   if (loading) {
     return (
       <Panel title="Orders">
@@ -186,6 +208,14 @@ export function AdminOrdersPanel({ onNotice, onError }: Props) {
                   className="rounded-lg px-3 py-1.5 text-xs text-red-400 border border-red-400/20"
                 >
                   Reject
+                </button>
+                <button
+                  type="button"
+                  disabled={busyId === order.id}
+                  onClick={() => void remove(order.id)}
+                  className="rounded-lg px-3 py-1.5 text-xs text-[var(--text-muted)] border border-white/10 hover:border-red-400/40 hover:text-red-400"
+                >
+                  Delete
                 </button>
               </div>
             </div>
