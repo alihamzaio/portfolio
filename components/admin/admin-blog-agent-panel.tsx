@@ -18,6 +18,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
   const [groqConfigured, setGroqConfigured] = useState(false)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
+  const [runStatus, setRunStatus] = useState<string | null>(null)
   const [pillarsText, setPillarsText] = useState("")
 
   const load = useCallback(async () => {
@@ -44,6 +45,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
   const saveSettings = async () => {
     if (!state) return
     setBusy(true)
+    setRunStatus("Saving settings…")
     onError(null)
     try {
       const pillars = pillarsText
@@ -68,11 +70,17 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
       onError(e instanceof Error ? e.message : "Save failed")
     } finally {
       setBusy(false)
+      setRunStatus(null)
     }
   }
 
   const runNow = async (opts?: { force?: boolean; retryId?: string }) => {
     setBusy(true)
+    setRunStatus(
+      opts?.retryId
+        ? "Retrying failed job… writing draft (can take 30-90s)"
+        : "Writing blog draft… picking a working model (can take 30-90s)"
+    )
     onError(null)
     try {
       const res = await adminFetch("/api/admin/blog-agent", {
@@ -99,6 +107,30 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
       onError(e instanceof Error ? e.message : "Run failed")
     } finally {
       setBusy(false)
+      setRunStatus(null)
+    }
+  }
+
+  const clearFailed = async () => {
+    if (!window.confirm("Clear all failed run logs from history?")) return
+    setBusy(true)
+    setRunStatus("Clearing failed logs…")
+    onError(null)
+    try {
+      const res = await adminFetch("/api/admin/blog-agent", {
+        method: "PATCH",
+        headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ clearFailedRuns: true }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Clear failed")
+      setState(data.state)
+      onNotice("Failed logs cleared")
+    } catch (e) {
+      onError(e instanceof Error ? e.message : "Clear failed")
+    } finally {
+      setBusy(false)
+      setRunStatus(null)
     }
   }
 
@@ -116,6 +148,8 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
       : s === "error"
         ? "text-red-400"
         : "text-[var(--text-muted)]"
+
+  const failedCount = state?.runs?.filter((r) => r.status === "error").length || 0
 
   return (
     <div className="space-y-6">
@@ -162,7 +196,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                     type="button"
                     onClick={() => toggleDay(day)}
                     className={cn(
-                      "px-2.5 py-1.5 rounded-lg text-xs border",
+                      "px-2.5 py-1.5 rounded-lg text-xs border cursor-pointer",
                       state.publishWeekdaysUtc.includes(day)
                         ? "border-[var(--accent-primary)] text-[var(--accent-primary)] bg-[var(--accent-primary)]/10"
                         : "border-white/10 text-[var(--text-secondary)]"
@@ -199,30 +233,54 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
               />
             </label>
 
+            {runStatus ? (
+              <div
+                className="flex items-center gap-3 rounded-lg border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 px-3 py-2.5 text-sm text-[var(--text-primary)]"
+                role="status"
+                aria-live="polite"
+              >
+                <span
+                  className="inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[var(--accent-primary)] border-t-transparent"
+                  aria-hidden
+                />
+                <span>{runStatus}</span>
+              </div>
+            ) : null}
+
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => void saveSettings()}
-                className="btn-primary !text-xs !py-2 !px-3"
+                className="btn-primary !text-xs !py-2 !px-3 disabled:opacity-50 disabled:cursor-wait"
               >
-                Save settings
+                {busy && runStatus?.startsWith("Saving") ? "Saving…" : "Save settings"}
               </button>
               <button
                 type="button"
                 disabled={busy || !groqConfigured}
                 onClick={() => void runNow({ force: true })}
-                className="btn-secondary !text-xs !py-2 !px-3"
+                className="btn-secondary !text-xs !py-2 !px-3 disabled:opacity-50 disabled:cursor-wait"
               >
-                Run now (force)
+                {busy && runStatus?.includes("Writing")
+                  ? "Running…"
+                  : "Run now (force)"}
               </button>
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => void load()}
-                className="btn-secondary !text-xs !py-2 !px-3"
+                className="btn-secondary !text-xs !py-2 !px-3 disabled:opacity-50"
               >
                 Refresh history
+              </button>
+              <button
+                type="button"
+                disabled={busy || failedCount === 0}
+                onClick={() => void clearFailed()}
+                className="btn-secondary !text-xs !py-2 !px-3 disabled:opacity-50 border-red-400/30 text-red-400 hover:border-red-400/50"
+              >
+                Clear failed logs{failedCount ? ` (${failedCount})` : ""}
               </button>
             </div>
           </div>
@@ -294,7 +352,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                         <button
                           type="button"
                           disabled={busy}
-                          className="text-xs underline text-[var(--accent-primary)]"
+                          className="text-xs underline text-[var(--accent-primary)] cursor-pointer disabled:cursor-wait"
                           onClick={() => void runNow({ retryId: run.id })}
                         >
                           Retry
