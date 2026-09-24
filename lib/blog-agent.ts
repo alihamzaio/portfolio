@@ -211,7 +211,7 @@ async function generatePost(opts: {
   const used = opts.existingTitles.slice(0, 40).join("\n- ")
   const pillars = opts.pillars.join("; ")
 
-  const system = `You write blog posts as Ali Hamza for alihamza-fawn.vercel.app.
+  const system = `You write blog posts as Ali Hamza for alihamza-alilogics007s-projects.vercel.app.
 Return ONE JSON object only. No markdown fences. No commentary outside JSON.
 Keys: topic, title, excerpt, metaDescription, category, tags (string[]), keywords (string[]), body (markdown string).
 
