@@ -15,5 +15,15 @@
     "Hot internet debates explained simply (searchable, shareable)",
     "Practical how-to guides for beginners with high click intent"
   ],
-  "runs": []
+  "runs": [
+    {
+      "id": "run_mufu4pzq_msdlhy",
+      "at": "2026-09-24T17:58:01.620Z",
+      "status": "error",
+      "attempts": 1,
+      "weekdayUtc": 4,
+      "error": "The model `llama-3.3-70b-versatile` does not exist or you do not have access to it.",
+      "reason": "Publish failed"
+    }
+  ]
 }
