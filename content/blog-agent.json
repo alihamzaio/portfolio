@@ -1,6 +1,10 @@
 {
   "enabled": true,
-  "publishWeekdaysUtc": [1, 3, 5],
+  "publishWeekdaysUtc": [
+    1,
+    3,
+    5
+  ],
   "maxRetries": 3,
   "pillars": [
     "Viral money and side-hustle trends people search this week",
@@ -12,6 +16,19 @@
     "Practical how-to guides for beginners with high click intent"
   ],
   "runs": [
+    {
+      "id": "run_mufvrvs1_iwxlnj",
+      "at": "2026-09-24T18:44:01.787Z",
+      "status": "ok",
+      "attempts": 1,
+      "weekdayUtc": 4,
+      "topic": "Side hustle comparison: Print‑on‑Demand vs Digital Downloads in 2025",
+      "title": "Print‑on‑Demand vs Digital Downloads: Which side hustle makes more money in 2025?",
+      "slug": "print-on-demand-vs-digital-downloads-which-side-hustle-makes-more-money-in-2025",
+      "prUrl": "https://github.com/alihamzaio/portfolio/pull/26",
+      "postUrl": "/blog/print-on-demand-vs-digital-downloads-which-side-hustle-makes-more-money-in-2025",
+      "reason": "Published on schedule"
+    },
     {
       "id": "run_mufv9m9n_b9iqpo",
       "at": "2026-09-24T18:29:49.688Z",
