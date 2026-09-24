@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import {
+  clearBlogAgentAllRuns,
+  clearBlogAgentFailedRuns,
   getBlogAgentState,
   runBlogAgent,
   saveBlogAgentState,
@@ -8,7 +10,7 @@ import {
 } from "@/lib/blog-agent"
 
 export const dynamic = "force-dynamic"
-export const maxDuration = 60
+export const maxDuration = 300
 
 export async function GET(req: NextRequest) {
   if (!(await requireAdminAuth(req))) {
@@ -26,8 +28,20 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const body = (await req.json().catch(() => null)) as Partial<BlogAgentState> | null
+  const body = (await req.json().catch(() => null)) as
+    | (Partial<BlogAgentState> & { clearFailedRuns?: boolean; clearAllRuns?: boolean })
+    | null
   if (!body) return NextResponse.json({ error: "Invalid body" }, { status: 400 })
+
+  if (body.clearAllRuns) {
+    const state = await clearBlogAgentAllRuns()
+    return NextResponse.json({ ok: true, state })
+  }
+
+  if (body.clearFailedRuns) {
+    const state = await clearBlogAgentFailedRuns()
+    return NextResponse.json({ ok: true, state })
+  }
 
   const current = await getBlogAgentState()
   const next: BlogAgentState = {

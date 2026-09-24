@@ -3,7 +3,7 @@ import "server-only"
 import { getStoreJson, setStoreJson } from "@/lib/store"
 import { createBlogPullRequest } from "@/lib/blog-github"
 import { getAllBlogPostsAdmin, slugifyTitle } from "@/lib/blog"
-import { resolveBlogGroqModel } from "@/lib/llm-models"
+import { blogGroqModelQueue, isGroqModelUnavailableError } from "@/lib/llm-models"
 import {
   DEFAULT_BLOG_AGENT_STATE,
   type BlogAgentRun,
@@ -71,35 +71,59 @@ async function groqJson(system: string, user: string): Promise<string> {
   const groq = process.env.GROQ_API_KEY?.trim()
   if (!groq) throw new Error("GROQ_API_KEY is not configured")
 
-  const model = resolveBlogGroqModel()
+  const models = blogGroqModelQueue()
+  let lastError = "No Groq model available"
 
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${groq}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      temperature: 0.75,
-      max_tokens: 4500,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-    }),
-    cache: "no-store",
-  })
+  for (const model of models) {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${groq}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model,
+        temperature: 0.75,
+        max_tokens: 4500,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
+      }),
+      cache: "no-store",
+    })
 
-  const data = await res.json().catch(() => null)
-  if (!res.ok) {
-    const msg =
-      typeof data?.error?.message === "string" ? data.error.message : `Groq HTTP ${res.status}`
-    throw new Error(msg)
+    const data = await res.json().catch(() => null)
+    if (!res.ok) {
+      const msg =
+        typeof data?.error?.message === "string" ? data.error.message : `Groq HTTP ${res.status}`
+      lastError = msg
+      if (isGroqModelUnavailableError(msg)) continue
+      throw new Error(msg)
+    }
+    const text = data?.choices?.[0]?.message?.content
+    if (typeof text !== "string" || !text.trim()) {
+      lastError = "Empty Groq response"
+      continue
+    }
+    return text.trim()
   }
-  const text = data?.choices?.[0]?.message?.content
-  if (typeof text !== "string" || !text.trim()) throw new Error("Empty Groq response")
-  return text.trim()
+
+  throw new Error(lastError)
+}
+
+export async function clearBlogAgentFailedRuns(): Promise<BlogAgentState> {
+  const state = await getBlogAgentState()
+  state.runs = state.runs.filter((r) => r.status !== "error")
+  await saveBlogAgentState(state)
+  return state
+}
+
+export async function clearBlogAgentAllRuns(): Promise<BlogAgentState> {
+  const state = await getBlogAgentState()
+  state.runs = []
+  await saveBlogAgentState(state)
+  return state
 }
 
 function extractJsonObject(text: string): Record<string, unknown> {

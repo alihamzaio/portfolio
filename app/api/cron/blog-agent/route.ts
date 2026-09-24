@@ -3,7 +3,7 @@ import { isCronAuthorized } from "@/lib/cron-auth"
 import { runBlogAgent } from "@/lib/blog-agent"
 
 export const dynamic = "force-dynamic"
-export const maxDuration = 60
+export const maxDuration = 300
 
 export async function GET(req: NextRequest) {
   if (!isCronAuthorized(req)) {
