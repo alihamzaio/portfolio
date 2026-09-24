@@ -630,7 +630,7 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 shrink-0 font-semibold px-7;
+    @apply inline-flex items-center justify-center gap-2 shrink-0 font-semibold px-7 cursor-pointer;
     height: 3rem;
     font-size: 0.8125rem;
     letter-spacing: 0.04em;
@@ -651,7 +651,7 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 shrink-0 font-medium px-7;
+    @apply inline-flex items-center justify-center gap-2 shrink-0 font-medium px-7 cursor-pointer;
     height: 3rem;
     font-size: 0.8125rem;
     letter-spacing: 0.04em;

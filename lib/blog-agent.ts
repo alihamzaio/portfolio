@@ -3,7 +3,7 @@ import "server-only"
 import { getStoreJson, setStoreJson } from "@/lib/store"
 import { createBlogPullRequest } from "@/lib/blog-github"
 import { getAllBlogPostsAdmin, slugifyTitle } from "@/lib/blog"
-import { resolveGroqModel } from "@/lib/llm-models"
+import { resolveBlogGroqModel } from "@/lib/llm-models"
 import {
   DEFAULT_BLOG_AGENT_STATE,
   type BlogAgentRun,
@@ -71,10 +71,7 @@ async function groqJson(system: string, user: string): Promise<string> {
   const groq = process.env.GROQ_API_KEY?.trim()
   if (!groq) throw new Error("GROQ_API_KEY is not configured")
 
-  const model =
-    process.env.BLOG_GROQ_MODEL?.trim() ||
-    process.env.GROQ_MODEL?.trim() ||
-    "llama-3.3-70b-versatile"
+  const model = resolveBlogGroqModel()
 
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -83,7 +80,7 @@ async function groqJson(system: string, user: string): Promise<string> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: model === "groq/compound-mini" ? "llama-3.3-70b-versatile" : model || resolveGroqModel(),
+      model,
       temperature: 0.75,
       max_tokens: 4500,
       messages: [
