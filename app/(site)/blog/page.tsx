@@ -5,15 +5,15 @@ import { siteConfig } from "@/lib/site"
 
 export const metadata = buildPageMetadata({
   title: "Blog",
-  description: `In-depth technical articles by ${siteConfig.name} on Next.js, MERN, AWS serverless, and production engineering — written for developers and hiring teams.`,
+  description: `Latest posts by ${siteConfig.name} on freelancing, side projects, AI tools, and building on the web. Updated as new pieces publish.`,
   path: "/blog",
   type: "website",
   keywords: [
     "Ali Hamza blog",
-    "Next.js tutorials",
-    "full stack developer articles",
-    "MERN stack guide",
-    "AWS serverless",
+    "freelance developer blog",
+    "side hustle tips",
+    "AI tools for freelancers",
+    "web development posts",
   ],
 })
 

@@ -63,8 +63,6 @@ type Props = {
   onTab: (t: AdminTab) => void
   onAddExperience: () => void
   onAddProject: () => void
-  onPublishGitHub: () => void
-  publishing: boolean
   localCounts?: {
     experience: number
     projects: number
@@ -79,8 +77,6 @@ export function AdminOverview({
   onTab,
   onAddExperience,
   onAddProject,
-  onPublishGitHub,
-  publishing,
   localCounts,
 }: Props) {
   const [data, setData] = useState<OverviewData | null>(null)
@@ -194,14 +190,6 @@ export function AdminOverview({
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={onPublishGitHub}
-                disabled={publishing || !data.sync.githubConfigured}
-                className="btn-secondary !text-xs disabled:opacity-50"
-              >
-                {publishing ? "Syncing…" : "Sync content to GitHub now"}
-              </button>
             </div>
           )}
         </Panel>

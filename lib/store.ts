@@ -153,16 +153,26 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
   memoryCache.set(key, value)
   const serialized = JSON.stringify(value, null, 2)
   const onServerless = isServerlessRuntime()
+  const canWriteGitHub = isGitHubSyncEnabled()
 
   if (hasKvStore()) {
     await kvSet(`portfolio:${key}`, value)
+    // Always push content to main when a token exists so no manual sync is needed.
+    if (canWriteGitHub) {
+      try {
+        const github = await writeLiveGitHubFile(STORE_FILE_PATHS[key], serialized, COMMIT_LABELS[key])
+        return { persisted: "kv", prUrl: github.prUrl }
+      } catch {
+        await markDirty(key)
+        return { persisted: "kv" }
+      }
+    }
     await markDirty(key)
     return { persisted: "kv" }
   }
 
-  if (onServerless && isGitHubSyncEnabled()) {
+  if (onServerless && canWriteGitHub) {
     const github = await writeLiveGitHubFile(STORE_FILE_PATHS[key], serialized, COMMIT_LABELS[key])
-    await markDirty(key)
     return { persisted: "live", prUrl: github.prUrl }
   }
 
@@ -178,10 +188,12 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
   if (result.persisted === "kv") {
-    return "Saved live. Use Sync to GitHub now, or wait for the daily job (writes straight to main)."
+    return result.prUrl
+      ? "Saved live (Redis) and committed to GitHub main."
+      : "Saved live in Redis. GitHub commit skipped (check GITHUB_TOKEN)."
   }
   if (result.persisted === "live") {
-    return result.prUrl ? "Saved directly to GitHub main (no PR to merge)." : "Saved live on GitHub."
+    return result.prUrl ? "Saved to GitHub main." : "Saved live on GitHub."
   }
   if (result.persisted === "file") {
     return "Saved locally."

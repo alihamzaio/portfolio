@@ -115,6 +115,32 @@ export async function getFileContent(
   return { content: decoded, sha: result.data.sha }
 }
 
+export type GitHubDirEntry = {
+  name: string
+  path: string
+  type: "file" | "dir" | string
+  sha?: string
+}
+
+/** List files/folders at a path on a branch (404 → empty). */
+export async function listRepoDirectory(
+  token: string,
+  repo: string,
+  branch: string,
+  dirPath: string
+): Promise<GitHubDirEntry[]> {
+  const clean = dirPath.replace(/^\/+|\/+$/g, "")
+  const result = await githubJson<GitHubDirEntry[] | GitHubDirEntry>(
+    token,
+    `/repos/${repo}/contents/${clean}?ref=${encodeURIComponent(branch)}`
+  )
+  if (result.status === 404) return []
+  if (!result.ok || !result.data) {
+    throw new Error(`GitHub list failed (${result.status}): ${result.text.slice(0, 200)}`)
+  }
+  return Array.isArray(result.data) ? result.data : []
+}
+
 export async function getFileSha(
   token: string,
   repo: string,

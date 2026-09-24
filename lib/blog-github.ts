@@ -1,6 +1,8 @@
 ﻿import {
   deleteFileContent,
+  getFileContent,
   getGitHubToken,
+  listRepoDirectory,
   mergePullRequestWithRetry,
   putBase64FileContent,
   putFileContent,
@@ -10,6 +12,7 @@ import {
   estimateReadTime,
   slugifyTitle,
   type BlogPost,
+  type BlogPostAdmin,
   type BlogReference,
   type BlogStatus,
 } from "@/lib/blog"
@@ -206,5 +209,82 @@ export async function uploadBlogCoverViaPr(opts: {
     prUrl: write.commitUrl || `https://github.com/${repo}/blob/${baseBranch}/${filePath}`,
     prNumber: 0,
     merge: { merged: true, sha: write.sha, message: "committed to main" },
+  }
+}
+
+function isBlogPost(value: unknown): value is BlogPost {
+  if (!value || typeof value !== "object") return false
+  const p = value as Record<string, unknown>
+  return (
+    typeof p.slug === "string" &&
+    typeof p.title === "string" &&
+    typeof p.excerpt === "string" &&
+    typeof p.date === "string" &&
+    typeof p.body === "string"
+  )
+}
+
+async function readPostsFromGitHubDir(
+  token: string,
+  repo: string,
+  branch: string,
+  dirPath: string,
+  folderStatus: BlogStatus
+): Promise<BlogPostAdmin[]> {
+  const entries = await listRepoDirectory(token, repo, branch, dirPath)
+  const jsonFiles = entries.filter((e) => e.type === "file" && e.name.endsWith(".json"))
+  const posts: BlogPostAdmin[] = []
+
+  await Promise.all(
+    jsonFiles.map(async (entry) => {
+      const file = await getFileContent(token, repo, branch, entry.path)
+      if (!file?.content) return
+      try {
+        const parsed = JSON.parse(file.content) as unknown
+        if (!isBlogPost(parsed)) return
+        const status: BlogStatus =
+          parsed.status === "draft" || folderStatus === "draft" ? "draft" : "published"
+        // Ignore status:draft files that somehow sit in the published folder path? keep as draft.
+        posts.push({
+          ...parsed,
+          status,
+          path: entry.path,
+        })
+      } catch {
+        // skip bad JSON
+      }
+    })
+  )
+
+  return posts
+}
+
+/**
+ * Admin list from GitHub main (drafts + published).
+ * Prefer this over the deploy filesystem so drafts show right after save.
+ */
+export async function listBlogPostsFromGitHub(): Promise<BlogPostAdmin[] | null> {
+  const token = getGitHubToken()
+  if (!token) return null
+
+  const { repo, baseBranch } = githubSyncConfig
+  try {
+    const [published, drafts] = await Promise.all([
+      readPostsFromGitHubDir(token, repo, baseBranch, "content/blog", "published"),
+      readPostsFromGitHubDir(token, repo, baseBranch, "content/blog/drafts", "draft"),
+    ])
+
+    const bySlug = new Map<string, BlogPostAdmin>()
+    for (const p of published) {
+      // Top-level content/blog/*.json may still be marked draft in JSON
+      const status: BlogStatus = p.status === "draft" ? "draft" : "published"
+      bySlug.set(p.slug, { ...p, status })
+    }
+    for (const p of drafts) {
+      bySlug.set(p.slug, { ...p, status: "draft" })
+    }
+    return [...bySlug.values()].sort((a, b) => b.date.localeCompare(a.date))
+  } catch {
+    return null
   }
 }

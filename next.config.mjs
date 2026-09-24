@@ -5,6 +5,12 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  // Keep draft + published blog JSON inside serverless functions (admin reads drafts/).
+  outputFileTracingIncludes: {
+    "/api/admin/**": ["./content/blog/**/*"],
+    "/api/admin/blog/**": ["./content/blog/**/*"],
+    "/admin": ["./content/blog/**/*"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

@@ -3,6 +3,7 @@ import { promises as fs } from "fs"
 import path from "path"
 import { readJsonFile, requireAdminAuth } from "@/lib/admin"
 import { getAllBlogPostsAdmin } from "@/lib/blog"
+import { listBlogPostsFromGitHub } from "@/lib/blog-github"
 import { getExperiences, getSiteSettings } from "@/lib/content"
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import { isGitHubSyncEnabled } from "@/lib/github-api"
@@ -70,14 +71,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const [blog, settings, experience, projects, skills, resumes] = await Promise.all([
-    getAllBlogPostsAdmin(),
+  const [blogLive, settings, experience, projects, skills, resumes] = await Promise.all([
+    listBlogPostsFromGitHub(),
     getSiteSettings(),
     getExperiences(),
     getProjectsList(),
     getSkillsList(),
     resumeStats(),
   ])
+  const blog = blogLive ?? (await getAllBlogPostsAdmin())
 
   const published = blog.filter((p) => p.status === "published").length
   const drafts = blog.filter((p) => p.status === "draft").length
@@ -114,9 +116,9 @@ export async function GET(req: NextRequest) {
       healthy: mode !== "needs-storage",
       message:
         mode === "kv-live"
-          ? "Saves go live instantly (Redis)."
+          ? "Saves go live in Redis and commit straight to main."
           : mode === "github-live"
-            ? "Saves sync via GitHub PR (blog uses PR + merge)."
+            ? "Saves commit straight to main. No PR to merge."
             : mode === "needs-storage"
               ? "Add GITHUB_TOKEN or Upstash Redis on Vercel."
               : "Local JSON files (dev).",

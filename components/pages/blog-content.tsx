@@ -18,8 +18,8 @@ export async function BlogContent() {
       <SectionHeading
         headingLevel={1}
         label="Blog"
-        title="Notes from shipping real projects"
-        description={`Practical write-ups by ${siteConfig.name} on Next.js, freelancing, and production work. Written for developers who want clear steps, not fluff.`}
+        title="Latest posts"
+        description={`New pieces by ${siteConfig.name} as they go live. Topics shift: freelancing, side projects, AI tools, and whatever is useful that week.`}
         align="center"
         className="mx-auto"
       />

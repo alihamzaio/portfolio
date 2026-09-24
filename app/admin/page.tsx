@@ -44,7 +44,6 @@ export default function AdminPage() {
   const [syncError, setSyncError] = useState<string | null>(null)
   const [syncMode, setSyncMode] = useState<string | null>(null)
   const [syncPrUrl, setSyncPrUrl] = useState<string | null>(null)
-  const [publishing, setPublishing] = useState(false)
   const [blogPublished, setBlogPublished] = useState(0)
   const [blogDrafts, setBlogDrafts] = useState(0)
 
@@ -166,33 +165,6 @@ export default function AdminPage() {
       .then((d) => setSyncMode(typeof d?.message === "string" ? d.message : null))
       .catch(() => setSyncMode(null))
   }, [authed])
-
-  const publishToGitHub = async () => {
-    setPublishing(true)
-    setSyncError(null)
-    try {
-      const res = await adminFetch("/api/admin/publish-github", { method: "POST", headers: getAuthHeaders() })
-      const data = await res.json()
-      if (!res.ok || !data.ok) {
-        setSyncError(typeof data.error === "string" ? data.error : "GitHub sync failed")
-        setSyncNotice(null)
-        setSyncPrUrl(null)
-        return
-      }
-      if (data.skipped) {
-        setSyncNotice(data.skipped)
-      } else if (data.changed?.length) {
-        setSyncNotice(`Synced ${data.changed.length} file(s) to GitHub.`)
-      } else {
-        setSyncNotice("GitHub sync complete.")
-      }
-      setSyncPrUrl(typeof data.prUrl === "string" ? data.prUrl : null)
-    } catch {
-      setSyncError("GitHub sync failed. Try again.")
-    } finally {
-      setPublishing(false)
-    }
-  }
 
   const logout = async () => {
     const session = getAdminSession()
@@ -385,23 +357,13 @@ export default function AdminPage() {
       {(syncNotice || syncError || syncMode || syncPrUrl) && (
         <div className="mb-6 space-y-2">
           {syncMode && (
-            <div className="flex flex-wrap items-center gap-3">
-              <p className="text-xs text-[var(--text-muted)] border border-white/[0.06] rounded-lg px-3 py-2 bg-[#111827]/40 flex-1 min-w-[200px]">
-                {syncMode}
-              </p>
-              <button
-                type="button"
-                onClick={publishToGitHub}
-                disabled={publishing}
-                className="btn-secondary !text-xs !py-2 !px-3 shrink-0"
-              >
-                {publishing ? "Syncing…" : "Sync to GitHub now"}
-              </button>
-            </div>
+            <p className="text-xs text-[var(--text-muted)] border border-white/[0.06] rounded-lg px-3 py-2 bg-[#111827]/40">
+              {syncMode}
+            </p>
           )}
           {!syncMode && (
             <p className="text-xs text-[var(--text-muted)] border border-white/[0.06] rounded-lg px-3 py-2 bg-[#111827]/40">
-              Loading sync status…
+              Loading status…
             </p>
           )}
           {syncNotice && (
@@ -416,7 +378,7 @@ export default function AdminPage() {
               rel="noreferrer"
               className="inline-flex text-sm text-[var(--text-primary)] underline underline-offset-4"
             >
-              Open pull request to review and merge
+              Open on GitHub
             </a>
           )}
           {syncError && (
@@ -431,8 +393,6 @@ export default function AdminPage() {
           onTab={setTab}
           onAddExperience={addExperience}
           onAddProject={createProject}
-          onPublishGitHub={publishToGitHub}
-          publishing={publishing}
           localCounts={{
             experience: experienceList.length,
             projects: projects.length,

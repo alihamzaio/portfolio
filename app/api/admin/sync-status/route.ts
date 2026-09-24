@@ -18,12 +18,11 @@ export async function GET() {
     kvConfigured,
     githubRepo: githubSyncConfig.repo,
     githubBranch: githubSyncConfig.baseBranch,
-    cronSync: "Daily at 09:00 UTC - one PR for all pending admin changes",
     message:
       mode === "kv-live"
-        ? "Admin saves go live instantly (Redis). GitHub PR opens on schedule when content changed."
+        ? "Admin saves go live in Redis and commit straight to main."
         : mode === "github-live"
-          ? "Admin saves update one GitHub branch and keep a single pull request open."
+          ? "Admin saves commit straight to main. No PR to merge."
           : mode === "needs-storage"
             ? "Add Upstash Redis in Vercel Storage, or set GITHUB_TOKEN with repo scope."
             : "Admin saves update local JSON files.",

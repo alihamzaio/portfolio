@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdminAuth } from "@/lib/admin"
 import { getAllBlogPostsAdmin } from "@/lib/blog"
-import { createBlogPullRequest, type BlogIngestInput } from "@/lib/blog-github"
+import { createBlogPullRequest, listBlogPostsFromGitHub, type BlogIngestInput } from "@/lib/blog-github"
 
 export const runtime = "nodejs"
 
 /**
- * GET  /api/admin/blog — list drafts + published
- * POST /api/admin/blog — create/update via PR (+ merge by default)
+ * GET  /api/admin/blog — list drafts + published (GitHub main first, then local)
+ * POST /api/admin/blog — create/update on main
  * Body: BlogIngestInput + { status?: "draft"|"published", autoMerge?: boolean }
  */
 export async function GET(req: NextRequest) {
@@ -15,7 +15,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const posts = await getAllBlogPostsAdmin()
+  const live = await listBlogPostsFromGitHub()
+  const posts = live ?? (await getAllBlogPostsAdmin())
   return NextResponse.json({ posts })
 }
 

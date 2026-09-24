@@ -179,8 +179,12 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
       const merged = data.merge?.merged
       onNotice(
         merged
-          ? `${status === "draft" ? "Draft" : "Published"} “${data.slug}” (PR merged). Deploy will pick it up shortly.`
-          : `${status === "draft" ? "Draft" : "Publish"} PR opened for “${data.slug}”.`,
+          ? `${status === "draft" ? "Draft" : "Published"} “${data.slug}” on main. ${
+              status === "draft"
+                ? "Hidden on the public blog until you publish."
+                : "Deploy will pick it up shortly."
+            }`
+          : `${status === "draft" ? "Draft" : "Publish"} saved for “${data.slug}”.`,
         data.prUrl || null
       )
       setShowEditor(false)
@@ -195,7 +199,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
   }
 
   const remove = async (slug: string) => {
-    if (!confirm(`Delete blog “${slug}”? This opens a PR and merges it.`)) return
+    if (!confirm(`Delete blog “${slug}”? This removes it from main.`)) return
     setDeleting(slug)
     try {
       const res = await adminFetch(`/api/admin/blog/${encodeURIComponent(slug)}`, {
@@ -207,7 +211,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
         onError(typeof data.error === "string" ? data.error : "Delete failed")
         return
       }
-      onNotice(`Deleted “${slug}” (PR merged).`, data.prUrl || null)
+      onNotice(`Deleted “${slug}” from main.`, data.prUrl || null)
       if (editingSlug === slug) {
         setShowEditor(false)
         setEditingSlug(null)
@@ -240,7 +244,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
         return
       }
       patch({ coverImage: data.path })
-      onNotice(`Cover uploaded to ${data.path} (PR merged). Site will show it after deploy.`, data.prUrl || null)
+      onNotice(`Cover uploaded to ${data.path}. Site will show it after deploy.`, data.prUrl || null)
     } catch {
       onError("Cover upload failed")
     } finally {
@@ -262,9 +266,9 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
         }
       >
         <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
-          Saves create a GitHub PR and merge it automatically — same flow as the blog ingest API.
-          Drafts stay off the public blog until you publish. Use Preview to check markdown, images, and layout
-          before publish; what you see there is what the live site renders.
+          Saves commit straight to main. Drafts stay off the public blog until you publish.
+          Use Preview to check markdown, images, and layout before publish; what you see there is
+          what the live site renders.
         </p>
 
         {loading ? (
@@ -519,7 +523,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
               onClick={() => save("published")}
               className="btn-primary !text-sm disabled:opacity-50"
             >
-              {saving ? "Publishing…" : "Publish (PR + merge)"}
+              {saving ? "Publishing…" : "Publish to main"}
             </button>
             {editorTab === "write" && (
               <button

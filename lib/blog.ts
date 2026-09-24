@@ -88,16 +88,18 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
     .sort((a, b) => b.date.localeCompare(a.date))
 }
 
-/** Admin: drafts + published. */
+/** Admin: drafts + published from the local deploy filesystem. */
 export async function getAllBlogPostsAdmin(): Promise<BlogPostAdmin[]> {
   const [published, drafts] = await Promise.all([
     readPostsFromDir(BLOG_DIR, "published"),
     readPostsFromDir(DRAFTS_DIR, "draft"),
   ])
   const bySlug = new Map<string, BlogPostAdmin>()
-  for (const p of published) bySlug.set(p.slug, { ...p, status: "published" })
+  for (const p of published) {
+    const status: BlogStatus = p.status === "draft" ? "draft" : "published"
+    bySlug.set(p.slug, { ...p, status })
+  }
   for (const p of drafts) {
-    // Draft overrides if both somehow exist
     bySlug.set(p.slug, { ...p, status: "draft" })
   }
   return [...bySlug.values()].sort((a, b) => b.date.localeCompare(a.date))
@@ -109,7 +111,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | undefined>
   try {
     const raw = await fs.readFile(path.join(BLOG_DIR, `${safe}.json`), "utf8")
     const parsed = JSON.parse(raw) as unknown
-    return isPost(parsed) ? parsed : undefined
+    if (!isPost(parsed) || parsed.status === "draft") return undefined
+    return parsed
   } catch {
     return undefined
   }
