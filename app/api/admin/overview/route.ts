@@ -21,7 +21,6 @@ function profileCompleteness(settings: SiteSettings) {
     { key: "Location", ok: Boolean(settings.location?.trim()) },
     { key: "GitHub", ok: Boolean(settings.social?.github?.trim()) },
     { key: "LinkedIn", ok: Boolean(settings.social?.linkedin?.trim()) },
-    { key: "YouTube", ok: Boolean(settings.social?.youtube?.trim()) },
   ]
   const filled = checks.filter((c) => c.ok).length
   return {

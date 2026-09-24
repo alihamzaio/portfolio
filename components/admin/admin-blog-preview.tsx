@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Clock, Tag } from "lucide-react"
 import { BlogBody, BlogReferences, blogSourceLabel } from "@/components/pages/blog-body"
@@ -88,7 +88,7 @@ export function AdminBlogPreview(form: PreviewInput) {
 
       {post.youtubeUrl && (
         <div className="mt-10 p-5 rounded-xl border border-white/10 bg-white/[0.03]">
-          <p className="text-sm text-neutral-400 mb-2">Watch the companion video on DevBuildDaily</p>
+          <p className="text-sm text-neutral-400 mb-2">Watch the companion video</p>
           <a
             href={post.youtubeUrl}
             className="text-amber-200/90 underline underline-offset-2 font-medium break-all"

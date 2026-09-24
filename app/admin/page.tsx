@@ -5,11 +5,10 @@ import { Plus, Star, Trash2 } from "lucide-react"
 import { AdminShell, Panel, type AdminTab } from "@/components/admin/admin-shell"
 import { AdminLogin } from "@/components/admin/admin-login"
 import { AdminBlogPanel } from "@/components/admin/admin-blog-panel"
-import { AdminAffiliatesPanel } from "@/components/admin/admin-affiliates-panel"
+import { AdminBlogAgentPanel } from "@/components/admin/admin-blog-agent-panel"
 import { AdminProductsPanel } from "@/components/admin/admin-products-panel"
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel"
 import { AdminOrdersPanel } from "@/components/admin/admin-orders-panel"
-import { AdminAutomationsPanel } from "@/components/admin/admin-automations-panel"
 import { AdminOverview } from "@/components/admin/admin-overview"
 import { adminFetch, clearAdminSession, getAdminSession, getAuthHeaders, setAdminSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
@@ -528,8 +527,8 @@ export default function AdminPage() {
         />
       )}
 
-      {tab === "automations" && (
-        <AdminAutomationsPanel
+      {tab === "blogAgent" && (
+        <AdminBlogAgentPanel
           onNotice={(message) => {
             setSyncNotice(message)
             setSyncError(null)
@@ -544,26 +543,6 @@ export default function AdminPage() {
               setSyncError(null)
             }
           }}
-        />
-      )}
-
-      {tab === "affiliates" && (
-        <AdminAffiliatesPanel
-          onNotice={(message, prUrl) => {
-            setSyncNotice(message)
-            setSyncError(null)
-            setSyncPrUrl(prUrl || null)
-          }}
-          onError={(message) => {
-            if (message) {
-              setSyncError(message)
-              setSyncNotice(null)
-              setSyncPrUrl(null)
-            } else {
-              setSyncError(null)
-            }
-          }}
-          noteSyncResponse={noteSyncResponse}
         />
       )}
 

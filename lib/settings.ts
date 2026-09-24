@@ -16,9 +16,6 @@ export interface SiteSettings {
     github: string
     linkedin: string
     email: string
-    youtube: string
-    tiktok: string
-    instagram: string
   }
 }
 
@@ -38,9 +35,6 @@ export const defaultSettings: SiteSettings = {
     github: siteConfig.social.github,
     linkedin: siteConfig.social.linkedin,
     email: siteConfig.social.email,
-    youtube: siteConfig.social.youtube,
-    tiktok: siteConfig.social.tiktok,
-    instagram: siteConfig.social.instagram,
   },
 }
 
@@ -54,7 +48,16 @@ function resolveOffsite(url: string | undefined, fallback: string, localPaths: s
 
 export function mergeSettings(partial: Partial<SiteSettings> | null): SiteSettings {
   if (!partial) return defaultSettings
-  const social = { ...defaultSettings.social, ...partial.social }
+  const socialIn = (partial.social || {}) as Partial<SiteSettings["social"]> & {
+    youtube?: string
+    tiktok?: string
+    instagram?: string
+  }
+  const social = {
+    github: socialIn.github ?? defaultSettings.social.github,
+    linkedin: socialIn.linkedin ?? defaultSettings.social.linkedin,
+    email: socialIn.email ?? defaultSettings.social.email,
+  }
   return {
     ...defaultSettings,
     ...partial,
@@ -62,9 +65,6 @@ export function mergeSettings(partial: Partial<SiteSettings> | null): SiteSettin
       ...social,
       github: resolveOffsite(social.github, siteConfig.social.github, ["/github"]),
       linkedin: resolveOffsite(social.linkedin, siteConfig.social.linkedin, ["/linkedin"]),
-      youtube: resolveOffsite(social.youtube, siteConfig.social.youtube, ["/youtube"]),
-      tiktok: resolveOffsite(social.tiktok, siteConfig.social.tiktok, ["/tiktok"]),
-      instagram: resolveOffsite(social.instagram, siteConfig.social.instagram, ["/instagram"]),
     },
   }
 }

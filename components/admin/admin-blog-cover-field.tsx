@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
@@ -136,8 +136,7 @@ export function AdminBlogCoverField({
       {mode === "library" && (
         <div className="space-y-2">
           <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-            Copyright-free Pexels picks{category ? ` for “${category}”` : ""}. Same library DevBuildDaily
-            uses for auto-blog.
+            Copyright-free Pexels picks{category ? ` for “${category}”` : ""}. Same cover library as the Shorts pipeline.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto pr-1">
             {library.map((item) => {

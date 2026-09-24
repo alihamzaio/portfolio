@@ -10,7 +10,6 @@ import { HireCtaBlock } from "@/components/home/hire-cta-block"
 import { BlogToolsLinks } from "@/components/pages/blog-tools-links"
 import { getAllBlogPosts, getPostBySlug, postKeywords, postSeoDescription } from "@/lib/blog"
 import { buildPageMetadata } from "@/lib/seo"
-import { siteConfig } from "@/lib/site"
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -91,7 +90,7 @@ export default async function BlogPostPage({ params }: Props) {
 
             {post.youtubeUrl && (
               <div className="mt-10 p-5 rounded-xl border border-white/10 bg-white/[0.03]">
-                <p className="text-sm text-neutral-400 mb-2">Watch the companion video on DevBuildDaily</p>
+                <p className="text-sm text-neutral-400 mb-2">Watch the companion video</p>
                 <a
                   href={post.youtubeUrl}
                   className="text-amber-200/90 underline underline-offset-2 font-medium"
@@ -108,7 +107,6 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="mt-12 pt-8 border-t border-white/[0.08] space-y-6">
               <p className="text-neutral-400 text-sm leading-relaxed">
                 {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
-                Technical tutorials also appear on {siteConfig.brand.channel}.
               </p>
               <BlogToolsLinks topic={post.title} category={post.category} />
               <HireCtaBlock
