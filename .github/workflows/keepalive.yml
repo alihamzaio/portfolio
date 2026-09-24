@@ -19,7 +19,7 @@ jobs:
           SITE_URL_VAR: ${{ vars.SITE_URL }}
         run: |
           set -euo pipefail
-          URL="https://alihamza-alilogics007s-projects.vercel.app"
+          URL="https://alihamza-fawn.vercel.app"
           if [ -n "${SITE_URL_VAR}" ]; then
             URL="${SITE_URL_VAR%/}"
           fi
