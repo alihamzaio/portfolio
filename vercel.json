@@ -3,6 +3,12 @@
   "installCommand": "npm ci --include=dev",
   "buildCommand": "npm run build",
   "framework": "nextjs",
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "main": true
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/keepalive",
