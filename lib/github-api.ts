@@ -297,3 +297,57 @@ export async function mergePullRequest(
     message: result.data?.message || "merged",
   }
 }
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/**
+ * Merge immediately with short retries (GitHub sometimes returns 405/409
+ * while the PR is still computing mergeability right after open).
+ */
+export async function mergePullRequestWithRetry(
+  token: string,
+  repo: string,
+  pullNumber: number,
+  commitTitle?: string,
+  attempts = 6
+): Promise<{ merged: boolean; sha?: string; message: string }> {
+  let lastError: Error | null = null
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const merged = await mergePullRequest(token, repo, pullNumber, commitTitle)
+      if (merged.merged) return merged
+      lastError = new Error(merged.message || "Merge returned merged=false")
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+      const msg = lastError.message
+      const retryable = /\(405\)|\(409\)|\(422\)|not mergeable|Base branch was modified|required status/i.test(
+        msg
+      )
+      if (!retryable || i === attempts - 1) throw lastError
+    }
+    await sleep(1500 + i * 500)
+  }
+  throw lastError || new Error(`Could not merge PR #${pullNumber}`)
+}
+
+/** Open (or reuse) a PR, then squash-merge it into main. */
+export async function createAndAutoMergePullRequest(
+  token: string,
+  repo: string,
+  headBranch: string,
+  baseBranch: string,
+  title: string,
+  body: string,
+  mergeTitle?: string
+): Promise<{ prUrl: string; prNumber: number; merged: boolean; sha?: string }> {
+  const pr = await createPullRequestDetailed(token, repo, headBranch, baseBranch, title, body)
+  const merge = await mergePullRequestWithRetry(token, repo, pr.number, mergeTitle || title)
+  return {
+    prUrl: pr.url,
+    prNumber: pr.number,
+    merged: merge.merged,
+    sha: merge.sha,
+  }
+}

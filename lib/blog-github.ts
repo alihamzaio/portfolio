@@ -4,7 +4,7 @@
   ensureBranchFromSha,
   getBranchSha,
   getGitHubToken,
-  mergePullRequest,
+  mergePullRequestWithRetry,
   putBase64FileContent,
   putFileContent,
 } from "@/lib/github-api"
@@ -98,8 +98,11 @@ async function openBlogPr(opts: {
   )
 
   let merge: { merged: boolean; sha?: string; message: string } | null = null
-  if (opts.autoMerge) {
-    merge = await mergePullRequest(token, repo, pr.number, opts.mergeTitle)
+  if (opts.autoMerge !== false) {
+    merge = await mergePullRequestWithRetry(token, repo, pr.number, opts.mergeTitle)
+    if (!merge.merged) {
+      throw new Error(`PR #${pr.number} opened but was not merged: ${merge.message}`)
+    }
   }
 
   return { token, repo, pr, merge }
@@ -156,10 +159,15 @@ export async function createBlogPullRequest(input: BlogIngestInput) {
     ]
       .filter(Boolean)
       .join("\n"),
-    autoMerge: input.autoMerge,
+    autoMerge: input.autoMerge !== false,
     mergeTitle: `blog: ${post.slug}`,
   })
 
+  if (status === "published" && !merge?.merged) {
+    throw new Error(
+      `Blog PR #${pr.number} was opened but not merged. Check GITHUB_TOKEN repo permissions.`
+    )
+  }
   return {
     ok: true as const,
     slug: post.slug,
@@ -241,7 +249,7 @@ export async function mergeBlogPullRequest(prNumber: number, commitTitle?: strin
   const token = getGitHubToken()
   if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
   const { repo } = githubSyncConfig
-  const result = await mergePullRequest(token, repo, prNumber, commitTitle)
+  const result = await mergePullRequestWithRetry(token, repo, prNumber, commitTitle)
   return { ok: true as const, prNumber, ...result }
 }
 

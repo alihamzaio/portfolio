@@ -1,6 +1,6 @@
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import {
-  createPullRequest,
+  createAndAutoMergePullRequest,
   ensureBranchFromSha,
   getBranchSha,
   getFileContent,
@@ -26,7 +26,7 @@ export async function writeLiveGitHubFile(
   relativePath: string,
   content: string,
   message: string
-): Promise<{ prUrl: string }> {
+): Promise<{ prUrl: string; merged: boolean }> {
   const token = getGitHubToken()
   if (!token) throw new Error("GITHUB_TOKEN is not configured")
 
@@ -37,7 +37,7 @@ export async function writeLiveGitHubFile(
   await ensureBranchFromSha(token, repo, LIVE_CONTENT_BRANCH, mainSha)
   await putFileContent(token, repo, LIVE_CONTENT_BRANCH, filePath, content, message)
 
-  const prUrl = await createPullRequest(
+  const result = await createAndAutoMergePullRequest(
     token,
     repo,
     LIVE_CONTENT_BRANCH,
@@ -46,10 +46,11 @@ export async function writeLiveGitHubFile(
     [
       "Live content from the admin panel.",
       "",
-      "Later saves update this same pull request.",
-      "Merge when ready to publish the GitHub repo and trigger a production deploy.",
-    ].join("\n")
+      "This PR is opened and squash-merged automatically so production stays in sync.",
+      `- File: \`${filePath}\``,
+    ].join("\n"),
+    message.slice(0, 72)
   )
 
-  return { prUrl }
+  return { prUrl: result.prUrl, merged: result.merged }
 }

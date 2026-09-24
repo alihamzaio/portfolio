@@ -1,6 +1,6 @@
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import {
-  createPullRequest,
+  createAndAutoMergePullRequest,
   ensureBranchFromSha,
   findOpenPullRequest,
   getBranchSha,
@@ -88,7 +88,7 @@ export async function runBatchGitHubSync(): Promise<BatchSyncResult> {
       )
     }
 
-    const prUrl = await createPullRequest(
+    const result = await createAndAutoMergePullRequest(
       token,
       repo,
       SYNC_PR_BRANCH,
@@ -100,13 +100,14 @@ export async function runBatchGitHubSync(): Promise<BatchSyncResult> {
         "Changed files:",
         ...changed.map((f) => `- \`${f}\``),
         "",
-        "Merge when ready to update the GitHub repo and trigger a production deploy.",
-      ].join("\n")
+        "Opened and squash-merged automatically.",
+      ].join("\n"),
+      `Sync admin content (${changed.length} file${changed.length === 1 ? "" : "s"})`
     )
 
     await clearSyncDirty()
 
-    return { ok: true, changed, prUrl }
+    return { ok: true, changed, prUrl: result.prUrl }
   } catch (err) {
     return {
       ok: false,
