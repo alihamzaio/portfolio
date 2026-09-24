@@ -276,7 +276,6 @@ export async function runBlogAgent(opts?: {
     run.title = generated.title
     const slug = slugifyTitle(generated.title)
 
-    const { pickAgentBlogCover } = await import("@/lib/blog-cover")
     const cover = pickAgentBlogCover(slug)
 
     const published = await createBlogPullRequest({
