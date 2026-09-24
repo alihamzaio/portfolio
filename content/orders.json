@@ -16,23 +16,6 @@
       "updatedAt": "2026-09-18T06:18:25.916Z",
       "downloadSentAt": null,
       "adminNote": ""
-    },
-    {
-      "id": "ord_mu6kezer_zdbmws",
-      "productSlug": "kickoff-forge",
-      "productName": "Kickoff Forge",
-      "priceLabel": "$19",
-      "buyerName": "Demo Client",
-      "buyerEmail": "demo.client.test@example.com",
-      "buyerPhone": "",
-      "paymentMethodLabel": "JazzCash",
-      "transactionRef": "DEMO-TID-UI-TEST-002",
-      "proofNote": "",
-      "status": "proof_submitted",
-      "createdAt": "2026-09-18T06:16:08.643Z",
-      "updatedAt": "2026-09-18T06:16:08.643Z",
-      "downloadSentAt": null,
-      "adminNote": ""
     }
   ]
 }
