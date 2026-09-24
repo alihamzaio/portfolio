@@ -18,13 +18,6 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/alihamza-fullstack-developer",
     linkedinProfile: "https://www.linkedin.com/in/alihamza-fullstack-developer",
     email: "mailto:hamzasarwer9@gmail.com",
-    youtube: "https://www.youtube.com/@DevBuildDaily",
-    tiktok: "https://www.tiktok.com/@devbuild.daily",
-    instagram: "https://www.instagram.com/devbuild.daily",
-  },
-  brand: {
-    channel: "DevBuildDaily",
-    handle: "devbuild.daily",
   },
   resumeUrl: "/api/resume/download",
   githubUsername: "alihamzaio",

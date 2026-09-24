@@ -1,4 +1,4 @@
-import {
+﻿import {
   createPullRequestDetailed,
   deleteFileContent,
   ensureBranchFromSha,
@@ -64,7 +64,7 @@ function normalizePost(input: BlogIngestInput): BlogPost {
     category: input.category || "Full Stack",
     featured: Boolean(input.featured),
     author: input.author || "Ali Hamza",
-    source: input.source || "DevBuildDaily",
+    source: input.source || "Ali Hamza Blog Agent",
     coverImage: input.coverImage?.trim() || DEFAULT_BLOG_COVER,
     coverImageAlt: input.coverImageAlt || "Ali Hamza — Full Stack Developer",
     tags: input.tags,
@@ -146,7 +146,7 @@ export async function createBlogPullRequest(input: BlogIngestInput) {
     body: [
       status === "draft"
         ? `Draft blog post from **${post.source || "admin"}**.`
-        : `Blog post from **${post.source || "DevBuildDaily"}**.`,
+        : `Blog post from **${post.source || "Ali Hamza Blog Agent"}**.`,
       "",
       `- Slug: \`${post.slug}\``,
       `- Status: ${status}`,

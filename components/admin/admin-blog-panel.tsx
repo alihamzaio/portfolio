@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useCallback, useEffect, useState } from "react"
 import { ExternalLink, Loader2, Plus, Trash2 } from "lucide-react"
@@ -262,7 +262,7 @@ export function AdminBlogPanel({ onNotice, onError }: Props) {
         }
       >
         <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
-          Saves create a GitHub PR and merge it automatically — same flow as DevBuildDaily automation.
+          Saves create a GitHub PR and merge it automatically — same flow as the blog ingest API.
           Drafts stay off the public blog until you publish. Use Preview to check markdown, images, and layout
           before publish; what you see there is what the live site renders.
         </p>

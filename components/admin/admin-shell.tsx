@@ -17,7 +17,7 @@ import {
   Package,
   CreditCard,
   ShoppingBag,
-  Radio,
+  Bot,
 } from "lucide-react"
 import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
@@ -33,8 +33,7 @@ export type AdminTab =
   | "products"
   | "payments"
   | "orders"
-  | "automations"
-  | "affiliates"
+  | "blogAgent"
   | "resume"
 
 const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
@@ -44,11 +43,10 @@ const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "projects", label: "Projects", icon: Briefcase },
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "blog", label: "Blog", icon: Newspaper },
+  { id: "blogAgent", label: "Blog Agent", icon: Bot },
   { id: "products", label: "Products", icon: Package },
   { id: "payments", label: "Payments", icon: CreditCard },
   { id: "orders", label: "Orders", icon: ShoppingBag },
-  { id: "automations", label: "DevBuildDaily", icon: Radio },
-  { id: "affiliates", label: "Affiliates", icon: TrendingUp },
   { id: "resume", label: "Resume", icon: FileText },
 ]
 
@@ -59,11 +57,10 @@ const tabTitle: Record<AdminTab, string> = {
   projects: "Projects",
   skills: "Skills",
   blog: "Blog",
+  blogAgent: "Blog Agent",
   products: "Products",
   payments: "Payments",
   orders: "Orders",
-  automations: "DevBuildDaily",
-  affiliates: "Affiliates",
   resume: "Resume",
 }
 
