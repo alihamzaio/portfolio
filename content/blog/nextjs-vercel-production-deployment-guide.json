@@ -9,8 +9,8 @@
   "featured": true,
   "author": "Ali Hamza",
   "source": "admin",
-  "coverImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVQdG5zFigrB0oUMRMKT5Zr8jHGBVjMXfVGb3cDkaMEbdS3XlpH7oFrwxR&s=10",
-  "coverImageAlt": "Laptop with code editor open on a desk",
+  "coverImage": "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "coverImageAlt": "Laptop showing code in a modern developer workspace",
   "tags": [
     "Next.js",
     "Vercel",
