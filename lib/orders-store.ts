@@ -7,18 +7,8 @@ import {
   type ProductOrder,
 } from "@/lib/orders"
 import { hasKvStore } from "@/lib/store"
-import { LIVE_CONTENT_BRANCH } from "@/lib/github-live"
-import {
-  ensureBranchExists,
-  getBranchSha,
-  getFileContent,
-  getGitHubToken,
-  putFileContent,
-} from "@/lib/github-api"
-import { githubSyncConfig } from "@/lib/github-sync-config"
 
 const ORDERS_KV_KEY = "portfolio:orders"
-const ORDERS_FILE = "content/orders.json"
 const memoryOrders: { current: OrdersConfig | null } = { current: null }
 
 async function kvGetRaw(): Promise<unknown | null> {
@@ -52,39 +42,8 @@ async function kvSetRaw(value: OrdersConfig): Promise<void> {
   })
 }
 
-async function githubGetOrders(): Promise<OrdersConfig | null> {
-  const token = getGitHubToken()
-  if (!token) return null
-  try {
-    const file = await getFileContent(token, githubSyncConfig.repo, LIVE_CONTENT_BRANCH, ORDERS_FILE)
-    if (!file?.content) return null
-    return normalizeOrdersConfig(JSON.parse(file.content))
-  } catch {
-    return null
-  }
-}
-
-async function githubSetOrders(value: OrdersConfig): Promise<void> {
-  const token = getGitHubToken()
-  if (!token) {
-    throw new Error("Orders need Upstash Redis or GITHUB_TOKEN so they can be saved.")
-  }
-  const { repo, baseBranch } = githubSyncConfig
-  const mainSha = await getBranchSha(token, repo, baseBranch)
-  await ensureBranchExists(token, repo, LIVE_CONTENT_BRANCH, mainSha)
-  await putFileContent(
-    token,
-    repo,
-    LIVE_CONTENT_BRANCH,
-    ORDERS_FILE,
-    JSON.stringify(value, null, 2),
-    "Update direct product orders."
-  )
-}
-
-export function ordersStorageMode(): "kv" | "github" | "memory" {
+export function ordersStorageMode(): "kv" | "memory" {
   if (hasKvStore()) return "kv"
-  if (getGitHubToken()) return "github"
   return "memory"
 }
 
@@ -100,12 +59,6 @@ export async function getOrdersConfig(): Promise<OrdersConfig> {
     }
   }
 
-  const fromGithub = await githubGetOrders()
-  if (fromGithub) {
-    memoryOrders.current = fromGithub
-    return fromGithub
-  }
-
   return { ...EMPTY_ORDERS, orders: [] }
 }
 
@@ -118,17 +71,12 @@ export async function saveOrdersConfig(config: OrdersConfig): Promise<OrdersConf
     return normalized
   }
 
-  if (getGitHubToken()) {
-    await githubSetOrders(normalized)
-    return normalized
-  }
-
   if (process.env.NODE_ENV === "development") {
     return normalized
   }
 
   throw new Error(
-    "Orders could not be saved. Add Upstash Redis in Vercel Storage, or ensure GITHUB_TOKEN is set."
+    "Orders need Upstash Redis in Vercel Storage. Buyer details are not written to the public GitHub repo."
   )
 }
 
