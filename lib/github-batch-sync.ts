@@ -1,9 +1,5 @@
 import { githubSyncConfig } from "@/lib/github-sync-config"
 import {
-  createAndAutoMergePullRequest,
-  ensureBranchFromSha,
-  findOpenPullRequest,
-  getBranchSha,
   getFileContent,
   getGitHubToken,
   putFileContent,
@@ -64,50 +60,34 @@ export async function runBatchGitHubSync(): Promise<BatchSyncResult> {
 
   if (pending.length === 0) {
     await clearSyncDirty()
-    const existingPr = await findOpenPullRequest(token, repo, SYNC_PR_BRANCH, baseBranch)
     return {
       ok: true,
       changed: [],
-      prUrl: existingPr,
       skipped: "No differences between live content and main",
     }
   }
 
   try {
-    const mainSha = await getBranchSha(token, repo, baseBranch)
-    await ensureBranchFromSha(token, repo, SYNC_PR_BRANCH, mainSha)
-
+    let lastCommitUrl: string | undefined
     for (const file of pending) {
-      await putFileContent(
+      const write = await putFileContent(
         token,
         repo,
-        SYNC_PR_BRANCH,
+        baseBranch,
         file.path,
         file.content,
         `Sync ${file.path} from admin panel.`
       )
+      lastCommitUrl = write.commitUrl || lastCommitUrl
     }
-
-    const result = await createAndAutoMergePullRequest(
-      token,
-      repo,
-      SYNC_PR_BRANCH,
-      baseBranch,
-      "Admin content sync",
-      [
-        "Scheduled sync from the live admin panel.",
-        "",
-        "Changed files:",
-        ...changed.map((f) => `- \`${f}\``),
-        "",
-        "Opened and squash-merged automatically.",
-      ].join("\n"),
-      `Sync admin content (${changed.length} file${changed.length === 1 ? "" : "s"})`
-    )
 
     await clearSyncDirty()
 
-    return { ok: true, changed, prUrl: result.prUrl }
+    return {
+      ok: true,
+      changed,
+      prUrl: lastCommitUrl || `https://github.com/${repo}/commits/${baseBranch}`,
+    }
   } catch (err) {
     return {
       ok: false,

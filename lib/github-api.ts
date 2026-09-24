@@ -132,9 +132,9 @@ export async function putFileContent(
   filePath: string,
   content: string,
   message: string
-): Promise<void> {
+): Promise<{ commitUrl?: string; sha?: string }> {
   const encoded = Buffer.from(content, "utf8").toString("base64")
-  await putBase64FileContent(token, repo, branch, filePath, encoded, message)
+  return putBase64FileContent(token, repo, branch, filePath, encoded, message)
 }
 
 /** Upload binary assets (images) — contentBase64 must already be base64. */
@@ -145,10 +145,13 @@ export async function putBase64FileContent(
   filePath: string,
   contentBase64: string,
   message: string
-): Promise<void> {
+): Promise<{ commitUrl?: string; sha?: string }> {
   const { authorName, authorEmail } = githubSyncConfig
   const fileSha = await getFileSha(token, repo, branch, filePath)
-  const result = await githubJson(token, `/repos/${repo}/contents/${filePath}`, {
+  const result = await githubJson<{
+    commit?: { html_url?: string; sha?: string }
+    content?: { sha?: string }
+  }>(token, `/repos/${repo}/contents/${filePath}`, {
     method: "PUT",
     body: JSON.stringify({
       message,
@@ -165,6 +168,10 @@ export async function putBase64FileContent(
         ? " Token needs Contents and Pull requests read/write (classic PAT: repo scope)."
         : ""
     throw new Error(`GitHub write failed (${result.status}): ${result.text.slice(0, 240)}.${hint}`)
+  }
+  return {
+    commitUrl: result.data?.commit?.html_url,
+    sha: result.data?.commit?.sha || result.data?.content?.sha,
   }
 }
 

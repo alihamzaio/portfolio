@@ -1,8 +1,5 @@
 ﻿import {
-  createPullRequestDetailed,
   deleteFileContent,
-  ensureBranchFromSha,
-  getBranchSha,
   getGitHubToken,
   mergePullRequestWithRetry,
   putBase64FileContent,
@@ -77,41 +74,9 @@ function normalizePost(input: BlogIngestInput): BlogPost {
   }
 }
 
-async function openBlogPr(opts: {
-  branch: string
-  title: string
-  body: string
-  autoMerge?: boolean
-  mergeTitle?: string
-}) {
-  const token = getGitHubToken()
-  if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
-  const { repo, baseBranch } = githubSyncConfig
-
-  const pr = await createPullRequestDetailed(
-    token,
-    repo,
-    opts.branch,
-    baseBranch,
-    opts.title,
-    opts.body
-  )
-
-  let merge: { merged: boolean; sha?: string; message: string } | null = null
-  if (opts.autoMerge !== false) {
-    merge = await mergePullRequestWithRetry(token, repo, pr.number, opts.mergeTitle)
-    if (!merge.merged) {
-      throw new Error(`PR #${pr.number} opened but was not merged: ${merge.message}`)
-    }
-  }
-
-  return { token, repo, pr, merge }
-}
-
 /**
- * Create or update a blog JSON via PR (+ optional merge).
+ * Create or update a blog JSON on main (no waiting PR).
  * Drafts land in content/blog/drafts/; published in content/blog/.
- * Publishing removes a matching draft file in the same PR when present.
  */
 export async function createBlogPullRequest(input: BlogIngestInput) {
   const token = getGitHubToken()
@@ -120,69 +85,34 @@ export async function createBlogPullRequest(input: BlogIngestInput) {
   const post = normalizePost(input)
   const { repo, baseBranch } = githubSyncConfig
   const status = post.status || "published"
-  const branch = `blog/${status}-${post.slug}-${Date.now().toString(36)}`.slice(0, 100)
   const filePath = blogFilePath(post.slug, status)
   const content = `${JSON.stringify(post, null, 2)}\n`
+  const message = status === "draft" ? `blog: draft ${post.slug}` : `blog: publish ${post.slug}`
 
-  const mainSha = await getBranchSha(token, repo, baseBranch)
-  await ensureBranchFromSha(token, repo, branch, mainSha)
-  await putFileContent(
-    token,
-    repo,
-    branch,
-    filePath,
-    content,
-    status === "draft" ? `blog: draft ${post.slug}` : `blog: publish ${post.slug}`
-  )
+  const write = await putFileContent(token, repo, baseBranch, filePath, content, message)
 
-  // When publishing, drop draft copy if it exists
   if (status === "published") {
     const draftPath = blogFilePath(post.slug, "draft")
-    await deleteFileContent(token, repo, branch, draftPath, `blog: remove draft ${post.slug}`).catch(
+    await deleteFileContent(token, repo, baseBranch, draftPath, `blog: remove draft ${post.slug}`).catch(
       () => false
     )
   }
 
-  const { pr, merge } = await openBlogPr({
-    branch,
-    title: status === "draft" ? `Blog draft: ${post.title}` : `Blog: ${post.title}`,
-    body: [
-      status === "draft"
-        ? `Draft blog post from **${post.source || "admin"}**.`
-        : `Blog post from **${post.source || "Ali Hamza Blog Agent"}**.`,
-      "",
-      `- Slug: \`${post.slug}\``,
-      `- Status: ${status}`,
-      `- Category: ${post.category}`,
-      `- Path: \`${filePath}\``,
-      post.youtubeUrl ? `- YouTube: ${post.youtubeUrl}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n"),
-    autoMerge: input.autoMerge !== false,
-    mergeTitle: `blog: ${post.slug}`,
-  })
-
-  if (status === "published" && !merge?.merged) {
-    throw new Error(
-      `Blog PR #${pr.number} was opened but not merged. Check GITHUB_TOKEN repo permissions.`
-    )
-  }
   return {
     ok: true as const,
     slug: post.slug,
     path: filePath,
     status,
-    branch,
-    prUrl: pr.url,
-    prNumber: pr.number,
-    merge,
+    branch: baseBranch,
+    prUrl: write.commitUrl || `https://github.com/${repo}/tree/${baseBranch}/${filePath}`,
+    prNumber: 0,
+    merge: { merged: true, sha: write.sha, message: "committed to main" },
     postUrl: status === "published" ? `/blog/${post.slug}` : null,
   }
 }
 
-/** Delete draft and/or published blog JSON via PR (+ optional merge). */
-export async function deleteBlogPullRequest(slug: string, autoMerge = true) {
+/** Delete draft and/or published blog JSON on main. */
+export async function deleteBlogPullRequest(slug: string, _autoMerge = true) {
   const token = getGitHubToken()
   if (!token) throw new Error("GITHUB_TOKEN is not configured on the portfolio")
 
@@ -190,24 +120,20 @@ export async function deleteBlogPullRequest(slug: string, autoMerge = true) {
   if (!safe) throw new Error("slug is invalid")
 
   const { repo, baseBranch } = githubSyncConfig
-  const branch = `blog/delete-${safe}-${Date.now().toString(36)}`.slice(0, 100)
   const publishedPath = blogFilePath(safe, "published")
   const draftPath = blogFilePath(safe, "draft")
-
-  const mainSha = await getBranchSha(token, repo, baseBranch)
-  await ensureBranchFromSha(token, repo, branch, mainSha)
 
   const removedPublished = await deleteFileContent(
     token,
     repo,
-    branch,
+    baseBranch,
     publishedPath,
     `blog: delete ${safe}`
   )
   const removedDraft = await deleteFileContent(
     token,
     repo,
-    branch,
+    baseBranch,
     draftPath,
     `blog: delete draft ${safe}`
   )
@@ -216,21 +142,6 @@ export async function deleteBlogPullRequest(slug: string, autoMerge = true) {
     throw new Error(`No blog file found for slug "${safe}"`)
   }
 
-  const { pr, merge } = await openBlogPr({
-    branch,
-    title: `Blog delete: ${safe}`,
-    body: [
-      `Delete blog post \`${safe}\`.`,
-      "",
-      removedPublished ? `- Removed \`${publishedPath}\`` : "",
-      removedDraft ? `- Removed \`${draftPath}\`` : "",
-    ]
-      .filter(Boolean)
-      .join("\n"),
-    autoMerge,
-    mergeTitle: `blog: delete ${safe}`,
-  })
-
   return {
     ok: true as const,
     slug: safe,
@@ -238,10 +149,10 @@ export async function deleteBlogPullRequest(slug: string, autoMerge = true) {
       published: removedPublished,
       draft: removedDraft,
     },
-    branch,
-    prUrl: pr.url,
-    prNumber: pr.number,
-    merge,
+    branch: baseBranch,
+    prUrl: `https://github.com/${repo}/commits/${baseBranch}`,
+    prNumber: 0,
+    merge: { merged: true, message: "deleted on main" },
   }
 }
 
@@ -254,7 +165,7 @@ export async function mergeBlogPullRequest(prNumber: number, commitTitle?: strin
 }
 
 /**
- * Upload a cover image into public/blog/covers/ via PR (+ optional merge).
+ * Upload a cover image into public/blog/covers/ on main.
  * Returns the public path e.g. /blog/covers/my-slug.jpg
  */
 export async function uploadBlogCoverViaPr(opts: {
@@ -275,36 +186,25 @@ export async function uploadBlogCoverViaPr(opts: {
   }
 
   const { repo, baseBranch } = githubSyncConfig
-  const branch = `blog/cover-${Date.now().toString(36)}`.slice(0, 100)
   const filePath = `public/blog/covers/${safeName}`
   const publicPath = `/blog/covers/${safeName}`
 
-  const mainSha = await getBranchSha(token, repo, baseBranch)
-  await ensureBranchFromSha(token, repo, branch, mainSha)
-  await putBase64FileContent(
+  const write = await putBase64FileContent(
     token,
     repo,
-    branch,
+    baseBranch,
     filePath,
     opts.contentBase64,
     `blog: cover ${safeName}`
   )
 
-  const { pr, merge } = await openBlogPr({
-    branch,
-    title: `Blog cover: ${safeName}`,
-    body: [`Upload cover image \`${filePath}\`.`, "", `- Public path: \`${publicPath}\``].join("\n"),
-    autoMerge: opts.autoMerge !== false,
-    mergeTitle: `blog: cover ${safeName}`,
-  })
-
   return {
     ok: true as const,
     path: publicPath,
     filePath,
-    branch,
-    prUrl: pr.url,
-    prNumber: pr.number,
-    merge,
+    branch: baseBranch,
+    prUrl: write.commitUrl || `https://github.com/${repo}/blob/${baseBranch}/${filePath}`,
+    prNumber: 0,
+    merge: { merged: true, sha: write.sha, message: "committed to main" },
   }
 }
