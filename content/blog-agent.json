@@ -17,6 +17,16 @@
   ],
   "runs": [
     {
+      "id": "run_mufuls5u_h69rd6",
+      "at": "2026-09-24T18:11:17.583Z",
+      "status": "error",
+      "attempts": 2,
+      "retryOf": "run_mufu4pzq_msdlhy",
+      "weekdayUtc": 4,
+      "error": "The model `llama-3.3-70b-versatile` does not exist or you do not have access to it.",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mufu4pzq_msdlhy",
       "at": "2026-09-24T17:58:01.620Z",
       "status": "error",
