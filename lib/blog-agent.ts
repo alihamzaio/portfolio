@@ -83,8 +83,9 @@ async function groqJson(system: string, user: string): Promise<string> {
       },
       body: JSON.stringify({
         model,
-        temperature: 0.75,
-        max_tokens: 4500,
+        temperature: 0.6,
+        max_tokens: 8000,
+        response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },
           { role: "user", content: user },
@@ -98,11 +99,23 @@ async function groqJson(system: string, user: string): Promise<string> {
       const msg =
         typeof data?.error?.message === "string" ? data.error.message : `Groq HTTP ${res.status}`
       lastError = msg
+      // json_object unsupported on some IDs: retry same model without it once via next loop pass
       if (isGroqModelUnavailableError(msg)) continue
+      if (/response_format|json_object|structured/i.test(msg)) {
+        const plain = await groqJsonPlain(groq, model, system, user)
+        if (plain) return plain
+        continue
+      }
       throw new Error(msg)
     }
-    const text = data?.choices?.[0]?.message?.content
-    if (typeof text !== "string" || !text.trim()) {
+    const msg = data?.choices?.[0]?.message
+    const text =
+      typeof msg?.content === "string"
+        ? msg.content
+        : typeof msg?.reasoning === "string"
+          ? msg.reasoning
+          : ""
+    if (!text.trim()) {
       lastError = "Empty Groq response"
       continue
     }
@@ -110,6 +123,43 @@ async function groqJson(system: string, user: string): Promise<string> {
   }
 
   throw new Error(lastError)
+}
+
+async function groqJsonPlain(
+  groq: string,
+  model: string,
+  system: string,
+  user: string
+): Promise<string | null> {
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${groq}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.6,
+      max_tokens: 8000,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    }),
+    cache: "no-store",
+  })
+  const data = await res.json().catch(() => null)
+  if (!res.ok) return null
+  const text = data?.choices?.[0]?.message?.content
+  return typeof text === "string" && text.trim() ? text.trim() : null
+}
+
+function stripModelNoise(text: string): string {
+  return text
+    .replace(/<think>[\s\S]*?<\/think>/gi, "")
+    .replace(/<\/?thinking>/gi, "")
+    .replace(/^\s*Here(?:'s| is)(?: the)? JSON[:\s]*/i, "")
+    .trim()
 }
 
 export async function clearBlogAgentFailedRuns(): Promise<BlogAgentState> {
@@ -127,12 +177,30 @@ export async function clearBlogAgentAllRuns(): Promise<BlogAgentState> {
 }
 
 function extractJsonObject(text: string): Record<string, unknown> {
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i)
-  const raw = (fenced?.[1] || text).trim()
+  const cleaned = stripModelNoise(text)
+  const fenced = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/i)
+  let raw = (fenced?.[1] || cleaned).trim()
+
+  // Prefer outermost object braces
   const start = raw.indexOf("{")
   const end = raw.lastIndexOf("}")
   if (start < 0 || end <= start) throw new Error("Model did not return JSON")
-  return JSON.parse(raw.slice(start, end + 1)) as Record<string, unknown>
+  raw = raw.slice(start, end + 1)
+
+  try {
+    return JSON.parse(raw) as Record<string, unknown>
+  } catch {
+    // Common model glitches: trailing commas, smart quotes
+    const repaired = raw
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/,\s*([}\]])/g, "$1")
+    try {
+      return JSON.parse(repaired) as Record<string, unknown>
+    } catch {
+      throw new Error("Model did not return JSON")
+    }
+  }
 }
 
 async function generatePost(opts: {
@@ -143,25 +211,20 @@ async function generatePost(opts: {
   const used = opts.existingTitles.slice(0, 40).join("\n- ")
   const pillars = opts.pillars.join("; ")
 
-  const draftText = await groqJson(
-    `You write viral, SEO-first blog posts for Ali Hamza's site (alihamza-fawn.vercel.app).
-Goal: ranking + shares + reader trust that can lead to earning (digital products, freelancing, Kickoff Forge).
-NOT a tech-stack tutorial blog. Do NOT default to Next.js, MERN, AWS, TypeScript, or portfolio engineering posts unless the viral angle truly needs it.
+  const system = `You are a JSON API that writes viral SEO blog posts for Ali Hamza (alihamza-fawn.vercel.app).
+Return ONE JSON object only. No markdown fences. No commentary.
+Required keys: topic (string), title (string), excerpt (string), metaDescription (string), category (string), tags (string array), keywords (string array), body (markdown string).
+Goal: ranking + shares + earning trust (digital products, freelancing, Kickoff Forge).
+NOT a tech-stack tutorial blog unless the viral angle truly needs it.
+Rules: high-intent 2025-2026 search topics; human voice; no fluff; no em dashes; light CTA only when natural.
+Body: 1000-1500 words, H2/H3, short paragraphs, one FAQ, scannable lists.`
 
-Rules:
-- Chase top internet search trends and high-intent queries (2025-2026).
-- Titles that earn clicks without clickbait lies.
-- Human voice, specific examples, clear takeaways.
-- No fluff, no em dashes, no "In today's digital landscape".
-- Light, natural CTA only when it fits (e.g. building systems / freelancing); never hard-sell.
-- Return ONLY valid JSON with keys: topic, title, excerpt, metaDescription, category, tags (array), keywords (array), body (markdown).
-- Body: 1000-1500 words, H2/H3, short paragraphs, one FAQ, scannable lists. Write for Google + humans.`,
-    opts.forcedTopic
-      ? `Write a full SEO post about this topic (retry after a failed job): ${opts.forcedTopic}
+  const user = opts.forcedTopic
+    ? `Write a full SEO post about this topic (retry after a failed job): ${opts.forcedTopic}
 
 Avoid duplicating these existing titles:
 - ${used || "(none)"}`
-      : `Pick ONE fresh, high-search topic from these earning/viral pillars:
+    : `Pick ONE fresh, high-search topic from these earning/viral pillars:
 ${pillars}
 
 Prefer angles that can go viral or rank: money online, AI leverage, creator growth, productivity, side hustles, tools people compare, "how to" + "best" + "vs" intent.
@@ -169,18 +232,33 @@ Use a title people would actually search or share this week.
 
 Avoid duplicating these existing titles:
 - ${used || "(none)"}`
-  )
 
-  const draft = extractJsonObject(draftText)
+  let draft: Record<string, unknown>
+  try {
+    draft = extractJsonObject(await groqJson(system, user))
+  } catch {
+    draft = extractJsonObject(
+      await groqJson(
+        `${system}\nCRITICAL: Output must be parseable by JSON.parse. Escape newlines in strings as \\n.`,
+        user
+      )
+    )
+  }
 
-  const humanizedText = await groqJson(
-    `You rewrite portfolio blog JSON to sound more human and less AI.
+  let post = draft
+  try {
+    const humanizedText = await groqJson(
+      `Rewrite this blog JSON to sound more human and less AI.
 Keep facts. Tighten sentences. Remove clichés. No em dashes.
-Return ONLY JSON with the same keys: topic, title, excerpt, metaDescription, category, tags, keywords, body.`,
-    JSON.stringify(draft)
-  )
+Return ONLY the same JSON keys: topic, title, excerpt, metaDescription, category, tags, keywords, body.`,
+      JSON.stringify(draft)
+    )
+    post = extractJsonObject(humanizedText)
+  } catch {
+    // Keep draft if the polish pass fails
+    post = draft
+  }
 
-  const post = extractJsonObject(humanizedText)
   const title = String(post.title || draft.title || "").trim()
   const body = String(post.body || draft.body || "").trim()
   if (!title || !body) throw new Error("Generated post missing title/body")
