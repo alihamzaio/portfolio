@@ -1,4 +1,4 @@
-﻿{
+{
   "enabled": true,
   "publishWeekdaysUtc": [1, 3, 5],
   "maxRetries": 3,
@@ -11,5 +11,19 @@
     "Hot internet debates explained simply (searchable, shareable)",
     "Practical how-to guides for beginners with high click intent"
   ],
-  "runs": []
+  "runs": [
+    {
+      "id": "run_mufv9m9n_b9iqpo",
+      "at": "2026-09-24T18:29:49.688Z",
+      "status": "ok",
+      "attempts": 1,
+      "weekdayUtc": 4,
+      "topic": "Making Money with AI Prompt Marketplaces in 2025",
+      "title": "Earn $1,000+ a Month Selling AI Prompts in 2025 - A Practical Guide",
+      "slug": "earn-1-000-a-month-selling-ai-prompts-in-2025-a-practical-guide",
+      "prUrl": "https://github.com/alihamzaio/portfolio/pull/25",
+      "postUrl": "/blog/earn-1-000-a-month-selling-ai-prompts-in-2025-a-practical-guide",
+      "reason": "Published on schedule"
+    }
+  ]
 }
