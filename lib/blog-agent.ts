@@ -124,7 +124,7 @@ async function generatePost(opts: {
 
   const draftText = await groqJson(
     `You write viral, SEO-first blog posts for Ali Hamza's site (alihamza-fawn.vercel.app).
-Goal: ranking + shares + reader trust that can lead to earning (digital products, freelance, affiliate-friendly topics).
+Goal: ranking + shares + reader trust that can lead to earning (digital products, freelancing, Kickoff Forge).
 NOT a tech-stack tutorial blog. Do NOT default to Next.js, MERN, AWS, TypeScript, or portfolio engineering posts unless the viral angle truly needs it.
 
 Rules:
