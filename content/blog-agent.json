@@ -17,16 +17,16 @@
   ],
   "runs": [
     {
-      "id": "run_mufwr82i_zg9u54",
-      "at": "2026-09-24T19:11:30.691Z",
+      "id": "run_mufx88m3_2tqf8f",
+      "at": "2026-09-24T19:24:44.535Z",
       "status": "ok",
       "attempts": 1,
       "weekdayUtc": 4,
-      "topic": "AI tools and workflows for freelance client onboarding",
-      "title": "Can AI Really Cut My Freelance Onboarding Time in Half? My Tested Workflow",
-      "slug": "can-ai-really-cut-my-freelance-onboarding-time-in-half-my-tested-workflow",
-      "prUrl": "https://github.com/alihamzaio/portfolio/pull/30",
-      "postUrl": "/blog/can-ai-really-cut-my-freelance-onboarding-time-in-half-my-tested-workflow",
+      "topic": "AI-powered side-hustle workflow for freelancers",
+      "title": "Can a 30-minute AI Prompt Routine Earn You $500 a Month? My Real-World Test",
+      "slug": "can-a-30-minute-ai-prompt-routine-earn-you-500-a-month-my-real-world-test",
+      "prUrl": "https://github.com/alihamzaio/portfolio/pull/32",
+      "postUrl": "/blog/can-a-30-minute-ai-prompt-routine-earn-you-500-a-month-my-real-world-test",
       "reason": "Published on schedule"
     },
     {
