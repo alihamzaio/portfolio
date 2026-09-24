@@ -59,6 +59,30 @@ type Block =
   | { type: "quote"; text: string }
   | { type: "code"; text: string }
   | { type: "img"; alt: string; src: string }
+  | { type: "table"; headers: string[]; rows: string[][] }
+
+function isMarkdownTableChunk(c: string): boolean {
+  const lines = c.split("\n").map((l) => l.trim()).filter(Boolean)
+  if (lines.length < 2) return false
+  if (!lines.every((l) => l.includes("|"))) return false
+  // header + separator row like |---|---|
+  return /^\|?[\s:|-]+\|[\s:|-]+/.test(lines[1].replace(/\s/g, ""))
+}
+
+function parseMarkdownTable(c: string): { headers: string[]; rows: string[][] } | null {
+  const lines = c.split("\n").map((l) => l.trim()).filter(Boolean)
+  if (lines.length < 2) return null
+  const splitRow = (line: string) =>
+    line
+      .replace(/^\|/, "")
+      .replace(/\|$/, "")
+      .split("|")
+      .map((cell) => cell.trim())
+  const headers = splitRow(lines[0])
+  const rows = lines.slice(2).map(splitRow).filter((r) => r.some((cell) => cell.length > 0))
+  if (!headers.length || !rows.length) return null
+  return { headers, rows }
+}
 
 function parseBlocks(body: string): Block[] {
   const blocks: Block[] = []
@@ -89,6 +113,13 @@ function parseBlocks(body: string): Block[] {
     if (imgMatch) {
       blocks.push({ type: "img", alt: imgMatch[1], src: imgMatch[2] })
       continue
+    }
+    if (isMarkdownTableChunk(c)) {
+      const table = parseMarkdownTable(c)
+      if (table) {
+        blocks.push({ type: "table", headers: table.headers, rows: table.rows })
+        continue
+      }
     }
     const lines = c.split("\n")
     if (lines.every((l) => l.match(/^[-*]\s+/))) {
@@ -180,6 +211,33 @@ export function BlogBody({ body }: { body: string }) {
                   </figcaption>
                 )}
               </figure>
+            )
+          case "table":
+            return (
+              <div key={i} className="my-6 overflow-x-auto rounded-xl border border-white/10">
+                <table className="w-full min-w-[32rem] text-left text-sm">
+                  <thead className="bg-white/[0.04] text-neutral-400">
+                    <tr>
+                      {block.headers.map((h, hi) => (
+                        <th key={hi} className="px-3 py-2.5 font-medium border-b border-white/10">
+                          {renderInline(h)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row, ri) => (
+                      <tr key={ri} className="border-b border-white/[0.06] last:border-0">
+                        {block.headers.map((_, ci) => (
+                          <td key={ci} className="px-3 py-2.5 align-top text-neutral-300">
+                            {renderInline(row[ci] || "")}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )
           default:
             return (
