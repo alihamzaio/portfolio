@@ -178,11 +178,11 @@ export async function setStoreJson(key: StoreKey, value: JsonValue): Promise<Sto
 
 export function storeSyncMessage(result: StoreWriteResult): string | null {
   if (result.persisted === "kv") {
-    return "Saved live. Use Sync to GitHub now, or wait for the daily job to open one PR."
+    return "Saved live. Use Sync to GitHub now, or wait for the daily job (auto-merges into main)."
   }
   if (result.persisted === "live") {
     return result.prUrl
-      ? "Saved live. One pull request is open; later saves update the same PR."
+      ? "Saved and auto-merged to GitHub main."
       : "Saved live on GitHub."
   }
   if (result.persisted === "file") {
