@@ -97,14 +97,26 @@ export function AdminPaymentsPanel({ onNotice, onError, noteSyncResponse }: Prop
       }
     >
       <p className="text-sm text-[var(--text-muted)] mb-6 max-w-2xl">
-        This is where you add bank / JazzCash / IBAN details for buyers who pay you directly (not Gumroad).
-        Turn <strong className="text-[var(--text-primary)]">Enable</strong> on, fill each method, then
-        Save. Orders with payment proof show under <strong className="text-[var(--text-primary)]">Orders</strong>.
+        Public checkout copy (headline / instructions) can be edited here. Bank IBAN, JazzCash numbers, and
+        notify email should live in <strong className="text-[var(--text-primary)]">Vercel env</strong>, not
+        in the public GitHub repo. Orders with proof show under{" "}
+        <strong className="text-[var(--text-primary)]">Orders</strong>.
       </p>
 
+      {settings.secretsFromEnv ? (
+        <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+          Payment methods and notify email are loaded from Vercel env (`PAYMENT_METHODS_JSON` /
+          `PAYMENT_METHOD_*` / `PAYMENT_NOTIFY_EMAIL`). Edit them in the Vercel dashboard, not in this form.
+        </div>
+      ) : (
+        <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+          No payment env secrets detected. Add `PAYMENT_METHODS_JSON` (and optionally `PAYMENT_NOTIFY_EMAIL`)
+          in Vercel Production env so IBAN / JazzCash stay out of git.
+        </div>
+      )}
+
       <div className="mb-6 rounded-xl border border-[var(--accent-primary)]/25 bg-[var(--accent-primary)]/10 px-4 py-3 text-sm text-[var(--text-primary)]">
-        Path: Admin sidebar → <strong>Payments</strong> (credit card icon). If you do not see that tab,
-        hard-refresh after the latest deploy.
+        Path: Admin sidebar → <strong>Payments</strong>. Hard-refresh after deploy if the tab is missing.
       </div>
 
       <label className="flex items-center gap-2 text-sm text-[var(--text-primary)] mb-6">
@@ -141,6 +153,7 @@ export function AdminPaymentsPanel({ onNotice, onError, noteSyncResponse }: Prop
           value={settings.notifyEmail}
           onChange={(v) => setSettings({ ...settings, notifyEmail: v })}
           placeholder="Leave empty to use admin email"
+          readOnly={Boolean(settings.secretsFromEnv)}
         />
       </div>
 
@@ -162,20 +175,23 @@ export function AdminPaymentsPanel({ onNotice, onError, noteSyncResponse }: Prop
                   setSettings({ ...settings, methods })
                 }}
                 placeholder="Bank Alfalah / JazzCash"
+                readOnly={Boolean(settings.secretsFromEnv)}
               />
-              <button
-                type="button"
-                aria-label="Remove method"
-                onClick={() =>
-                  setSettings({
-                    ...settings,
-                    methods: settings.methods.filter((_, i) => i !== index),
-                  })
-                }
-                className="text-[var(--text-muted)] hover:text-red-400 mt-5"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+              {!settings.secretsFromEnv ? (
+                <button
+                  type="button"
+                  aria-label="Remove method"
+                  onClick={() =>
+                    setSettings({
+                      ...settings,
+                      methods: settings.methods.filter((_, i) => i !== index),
+                    })
+                  }
+                  className="text-[var(--text-muted)] hover:text-red-400 mt-5"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              ) : null}
             </div>
             <label className="block text-xs text-[var(--text-muted)] space-y-1">
               Details (account title, IBAN, number)
@@ -188,20 +204,23 @@ export function AdminPaymentsPanel({ onNotice, onError, noteSyncResponse }: Prop
                   setSettings({ ...settings, methods })
                 }}
                 rows={3}
-                className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)] font-mono"
+                readOnly={Boolean(settings.secretsFromEnv)}
+                className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)] font-mono read-only:opacity-70"
               />
             </label>
           </div>
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={() => setSettings({ ...settings, methods: [...settings.methods, emptyMethod()] })}
-        className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:underline"
-      >
-        <Plus className="h-4 w-4" /> Add payment method
-      </button>
+      {!settings.secretsFromEnv ? (
+        <button
+          type="button"
+          onClick={() => setSettings({ ...settings, methods: [...settings.methods, emptyMethod()] })}
+          className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent-primary)] hover:underline"
+        >
+          <Plus className="h-4 w-4" /> Add payment method
+        </button>
+      ) : null}
     </Panel>
   )
 }
@@ -211,11 +230,13 @@ function Field({
   value,
   onChange,
   placeholder,
+  readOnly,
 }: {
   label: string
   value: string
   onChange: (v: string) => void
   placeholder?: string
+  readOnly?: boolean
 }) {
   return (
     <label className="block text-xs text-[var(--text-muted)] space-y-1 flex-1">
@@ -223,8 +244,9 @@ function Field({
       <input
         value={value}
         placeholder={placeholder}
+        readOnly={readOnly}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)]"
+        className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)] read-only:opacity-70"
       />
     </label>
   )

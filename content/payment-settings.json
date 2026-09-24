@@ -2,18 +2,7 @@
   "enabled": true,
   "headline": "Pay Ali Hamza directly",
   "instructions": "Transfer the Kickoff Forge price ($19 / PKR equivalent) using Bank AL Habib or JazzCash below. Then submit your name, email, and transaction ID on the product page so I can confirm and email your download.",
-  "methods": [
-    {
-      "id": "bank-al-habib",
-      "label": "Bank AL Habib (BAHL)",
-      "details": "Account title: Ali Hamza\nBank: Bank AL Habib\nIBAN: PK35BAHL0076182200662101\nSWIFT: BAHLPKKALHR"
-    },
-    {
-      "id": "jazzcash",
-      "label": "JazzCash",
-      "details": "Account title: Ali Hamza\nJazzCash: 03097300913\nSend the product amount and keep your TID."
-    }
-  ],
+  "methods": [],
   "footerNote": "Orders are confirmed manually, usually within a few hours. You get the download by email after payment is verified.",
-  "notifyEmail": "alilogics007@gmail.com"
+  "notifyEmail": ""
 }
