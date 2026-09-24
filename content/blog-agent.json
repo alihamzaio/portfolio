@@ -17,6 +17,19 @@
   ],
   "runs": [
     {
+      "id": "run_mufwr82i_zg9u54",
+      "at": "2026-09-24T19:11:30.691Z",
+      "status": "ok",
+      "attempts": 1,
+      "weekdayUtc": 4,
+      "topic": "AI tools and workflows for freelance client onboarding",
+      "title": "Can AI Really Cut My Freelance Onboarding Time in Half? My Tested Workflow",
+      "slug": "can-ai-really-cut-my-freelance-onboarding-time-in-half-my-tested-workflow",
+      "prUrl": "https://github.com/alihamzaio/portfolio/pull/30",
+      "postUrl": "/blog/can-ai-really-cut-my-freelance-onboarding-time-in-half-my-tested-workflow",
+      "reason": "Published on schedule"
+    },
+    {
       "id": "run_mufvrvs1_iwxlnj",
       "at": "2026-09-24T18:44:01.787Z",
       "status": "ok",
