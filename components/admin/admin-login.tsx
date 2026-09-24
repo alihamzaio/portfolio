@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Loader2, Mail, Lock } from "lucide-react"
 import { SESSION_TTL_DAYS, setAdminSession } from "@/lib/auth-client"
@@ -56,6 +56,10 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
   }
 
   const verifyOtp = async () => {
+    if (otp.length !== 6) {
+      setError("Enter the 6-digit code")
+      return
+    }
     setError("")
     setLoading(true)
     try {
@@ -83,6 +87,18 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
     }
   }
 
+  const onSendSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
+    void sendOtp()
+  }
+
+  const onVerifySubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (loading) return
+    void verifyOtp()
+  }
+
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
       <motion.div
@@ -99,7 +115,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
         </div>
 
         {step === "email" ? (
-          <div className="space-y-4">
+          <form className="space-y-4" onSubmit={onSendSubmit}>
             <div>
               <label htmlFor="admin-email" className="text-xs text-[var(--text-secondary)] mb-1.5 block">
                 Admin email
@@ -109,6 +125,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--text-muted)]" />
                 <input
                   id="admin-email"
+                  name="email"
                   type="email"
                   value={email}
                   readOnly
@@ -121,12 +138,12 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               </p>
             </div>
             {error && <p className="text-sm text-[var(--accent-primary)]">{error}</p>}
-            <button type="button" onClick={sendOtp} disabled={loading} className="btn-primary w-full">
+            <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Send OTP <ArrowRight className="h-4 w-4" /></>}
             </button>
-          </div>
+          </form>
         ) : (
-          <div className="space-y-4">
+          <form className="space-y-4" onSubmit={onVerifySubmit}>
             <p className="text-sm text-[var(--text-secondary)]">
               Enter the 6-digit code sent to <span className="text-[var(--text-primary)] font-medium">{email}</span>
             </p>
@@ -137,7 +154,9 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             )}
             <input
               type="text"
+              name="otp"
               inputMode="numeric"
+              autoComplete="one-time-code"
               maxLength={6}
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
@@ -146,7 +165,7 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
               autoFocus
             />
             {error && <p className="text-sm text-[var(--accent-primary)]">{error}</p>}
-            <button type="button" onClick={verifyOtp} disabled={loading || otp.length !== 6} className="btn-primary w-full">
+            <button type="submit" disabled={loading || otp.length !== 6} className="btn-primary w-full">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify & sign in"}
             </button>
             <button
@@ -156,11 +175,11 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
                 setOtp("")
                 setError("")
               }}
-              className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] w-full"
+              className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] w-full cursor-pointer"
             >
-              Resend code
+              Back / resend code
             </button>
-          </div>
+          </form>
         )}
 
         <p className="text-[10px] text-[var(--text-muted)] mt-6 text-center">
