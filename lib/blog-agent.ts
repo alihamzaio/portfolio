@@ -211,34 +211,35 @@ async function generatePost(opts: {
   const used = opts.existingTitles.slice(0, 40).join("\n- ")
   const pillars = opts.pillars.join("; ")
 
-  const system = `You are a JSON API that writes viral SEO blog posts for Ali Hamza (alihamza-fawn.vercel.app).
-Return ONE JSON object only. No markdown fences. No commentary.
-Required keys: topic (string), title (string), excerpt (string), metaDescription (string), category (string), tags (string array), keywords (string array), body (markdown string).
-Goal: ranking + shares + earning trust (digital products, freelancing, Kickoff Forge).
-NOT a tech-stack tutorial blog unless the viral angle truly needs it.
+  const system = `You write blog posts as Ali Hamza for alihamza-fawn.vercel.app.
+Return ONE JSON object only. No markdown fences. No commentary outside JSON.
+Keys: topic, title, excerpt, metaDescription, category, tags (string[]), keywords (string[]), body (markdown string).
 
-Voice (critical):
-- Sound like a real person who ships work, not a content farm.
-- Prefer first-person or direct "you" voice. Short paragraphs. Specific examples.
-- Ban: "In today's digital landscape", "roadmap", "leverage", "unlock", "delve", "game-changer", "comprehensive guide", em dashes.
-- Ban markdown pipe tables (| col |). Use short bullet lists or bold labels instead.
-- Avoid fake precision (exact conversion rates you cannot prove). Be honest when numbers are estimates.
-- Light CTA only when natural (freelance systems / Kickoff Forge). Never hard-sell.
+Who you are: a working full-stack freelancer. Direct, specific, slightly skeptical of hype. Not a content farm.
 
-Body: 900-1400 words, H2/H3, scannable lists, one short FAQ. Write for Google + humans.`
+Hard voice rules:
+- First person ("I") or direct "you". Short paragraphs (2-4 sentences).
+- Open with a real doubt or sharp question, never "Introduction" or "In this guide".
+- Ban these words/phrases: roadmap, leverage, unlock, delve, game-changer, comprehensive, cutting-edge, landscape, "data-driven look", "key platforms", "step-by-step checklist" as a heading style.
+- Ban em dashes and fancy hyphens. Use normal "-" or commas.
+- Ban markdown pipe tables. Use bold labels + short bullets instead.
+- No fake surveys, invented medians, or precise stats you cannot source. Soft ranges or "rough mental model" only.
+- No "grab my free checklist" fake lead magnets. Light CTA only for Kickoff Forge / freelance systems when it fits.
+- Body 800-1200 words. H2/H3. One short FAQ. End with a clear bottom line.
+
+Goal: searchable and shareable (side hustles, AI tools, freelancing, creator growth). Not default Next.js tutorials.`
 
   const user = opts.forcedTopic
-    ? `Write a full SEO post about this topic (retry after a failed job): ${opts.forcedTopic}
+    ? `Write the full post about: ${opts.forcedTopic}
 
-Avoid duplicating these existing titles:
+Avoid these existing titles:
 - ${used || "(none)"}`
-    : `Pick ONE fresh, high-search topic from these earning/viral pillars:
+    : `Pick ONE fresh high-intent topic from:
 ${pillars}
 
-Prefer angles that can go viral or rank: money online, AI leverage, creator growth, productivity, side hustles, tools people compare, "how to" + "best" + "vs" intent.
-Use a title people would actually search or share this week.
+Title should sound like something a person would search or share, not a textbook chapter.
 
-Avoid duplicating these existing titles:
+Avoid these existing titles:
 - ${used || "(none)"}`
 
   let draft: Record<string, unknown>
@@ -247,7 +248,7 @@ Avoid duplicating these existing titles:
   } catch {
     draft = extractJsonObject(
       await groqJson(
-        `${system}\nCRITICAL: Output must be parseable by JSON.parse. Escape newlines in strings as \\n.`,
+        `${system}\nCRITICAL: Valid JSON only. Escape newlines in strings as \\n.`,
         user
       )
     )
@@ -256,30 +257,51 @@ Avoid duplicating these existing titles:
   let post = draft
   try {
     const humanizedText = await groqJson(
-      `Rewrite this blog JSON to sound more human and less AI.
-Keep facts. Tighten sentences. Remove clichés. No em dashes.
-Return ONLY the same JSON keys: topic, title, excerpt, metaDescription, category, tags, keywords, body.`,
-      JSON.stringify(draft)
+      `You are an editor. Rewrite this blog JSON so it cannot be spotted as AI slop.
+Keep the topic and useful facts. Cut brochure tone. Add one concrete example or opinion.
+Replace any pipe tables with bullets. Replace em dashes with "-" or new sentences.
+Remove fake statistics. Keep JSON keys: topic, title, excerpt, metaDescription, category, tags, keywords, body.
+Return ONLY JSON.`,
+      JSON.stringify({
+        title: draft.title,
+        excerpt: draft.excerpt,
+        metaDescription: draft.metaDescription,
+        category: draft.category,
+        tags: draft.tags,
+        keywords: draft.keywords,
+        body: draft.body,
+        topic: draft.topic,
+      })
     )
     post = extractJsonObject(humanizedText)
   } catch {
-    // Keep draft if the polish pass fails
     post = draft
   }
 
-  const title = String(post.title || draft.title || "").trim()
-  const body = String(post.body || draft.body || "").trim()
+  const scrub = (s: string) =>
+    s
+      .replace(/\u2014/g, " - ")
+      .replace(/\u2013/g, "-")
+      .replace(/\u2011/g, "-")
+      .replace(/\u00a0/g, " ")
+
+  const title = scrub(String(post.title || draft.title || "").trim())
+  const body = scrub(String(post.body || draft.body || "").trim())
   if (!title || !body) throw new Error("Generated post missing title/body")
 
-  const excerpt = String(post.excerpt || body.replace(/\s+/g, " ").slice(0, 180)).trim()
+  const excerpt = scrub(
+    String(post.excerpt || body.replace(/\s+/g, " ").slice(0, 180)).trim()
+  )
   return {
-    topic: String(post.topic || opts.forcedTopic || title).trim(),
+    topic: scrub(String(post.topic || opts.forcedTopic || title).trim()),
     title,
     excerpt,
-    metaDescription: String(post.metaDescription || excerpt).trim().slice(0, 160),
-    category: String(post.category || "Trends").trim(),
-    tags: Array.isArray(post.tags) ? post.tags.map(String).slice(0, 8) : [],
-    keywords: Array.isArray(post.keywords) ? post.keywords.map(String).slice(0, 12) : [],
+    metaDescription: scrub(String(post.metaDescription || excerpt).trim().slice(0, 160)),
+    category: scrub(String(post.category || "Trends").trim()),
+    tags: Array.isArray(post.tags) ? post.tags.map((t) => scrub(String(t))).slice(0, 8) : [],
+    keywords: Array.isArray(post.keywords)
+      ? post.keywords.map((k) => scrub(String(k))).slice(0, 12)
+      : [],
     body,
   }
 }
