@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { AlertTriangle, CheckCircle2, Loader2, Play, RefreshCw } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Download, Loader2, Play, RefreshCw } from "lucide-react"
 import { AdminLogin } from "@/components/admin/admin-login"
 import { StatCard } from "@/components/admin/admin-shell"
 import { ExtLink, StudioPanel, StudioShell, type StudioTab } from "@/components/studio/studio-shell"
@@ -35,6 +35,16 @@ type Run = {
 }
 type Workflows = Record<string, { file: string; label: string; kind: string }>
 
+type Artifact = {
+  id: number
+  name: string
+  size_mb: number
+  created_at: string
+  expired: boolean
+  download_url: string
+  actions_url: string
+  workflow_run_id: number | null
+}
 type StudioPayload = {
   channel: { name: string; handle: string; tagline: string; signoff: string }
   platforms: Platform[]
@@ -45,7 +55,15 @@ type StudioPayload = {
   history: HistoryRow[]
   failures: { at?: string; title?: string; kind?: string; channel?: string; error?: string }[]
   runs: Run[]
-  stats: { publishes: number; ok: number; failed: number; running: number; platforms: number }
+  artifacts?: Artifact[]
+  stats: {
+    publishes: number
+    ok: number
+    failed: number
+    running: number
+    platforms: number
+    videos?: number
+  }
 }
 
 function statusPill(status?: string) {
@@ -69,6 +87,7 @@ export function StudioWorkspace() {
   const [data, setData] = useState<StudioPayload | null>(null)
   const [loading, setLoading] = useState(false)
   const [dispatching, setDispatching] = useState<string | null>(null)
+  const [downloadingId, setDownloadingId] = useState<number | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -172,6 +191,40 @@ export function StudioWorkspace() {
     }
   }
 
+  const downloadArtifact = async (artifact: Artifact) => {
+    setDownloadingId(artifact.id)
+    setNotice(null)
+    setError(null)
+    try {
+      const res = await adminFetch(artifact.download_url)
+      if (res.status === 401) {
+        clearAdminSession()
+        setAuthed(false)
+        return
+      }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error((body as { error?: string }).error || `Download failed (${res.status})`)
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${artifact.name || "studio-output"}-${artifact.id}.zip`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+      setNotice(
+        `Downloaded ${artifact.name}. Unzip and open output/video/*.mp4, then manual-upload to any platform that failed.`
+      )
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Download failed")
+    } finally {
+      setDownloadingId(null)
+    }
+  }
+
   if (checking) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-[var(--bg-void)]">
@@ -191,7 +244,14 @@ export function StudioWorkspace() {
     )
   }
 
-  const stats = data?.stats || { publishes: 0, ok: 0, failed: 0, running: 0, platforms: 0 }
+  const stats = data?.stats || {
+    publishes: 0,
+    ok: 0,
+    failed: 0,
+    running: 0,
+    platforms: 0,
+    videos: 0,
+  }
   const last = data?.last
   const channel = data?.channel
 
@@ -374,6 +434,87 @@ export function StudioWorkspace() {
               <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/weekly_long.yml`}>
                 Weekly Long workflow
               </ExtLink>
+            </div>
+          </StudioPanel>
+        </div>
+      )}
+
+      {tab === "videos" && (
+        <div className="space-y-6">
+          <StudioPanel title="Rendered videos (GitHub Actions artifacts)">
+            <p className="mb-4 text-sm text-[var(--text-secondary)]">
+              Every finished (or partially finished) run uploads <code className="font-mono">output/</code> as a zip.
+              Download it, open <code className="font-mono">output/video/*.mp4</code>, and manual-post to platforms
+              that failed auto-upload. Kept ~30 days after the next retention bump.
+            </p>
+            {data?.artifacts?.length ? (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[720px] text-left text-sm">
+                  <thead>
+                    <tr className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+                      <th className="pb-3 font-semibold">Artifact</th>
+                      <th className="pb-3 font-semibold">Size</th>
+                      <th className="pb-3 font-semibold">When</th>
+                      <th className="pb-3 font-semibold">Status</th>
+                      <th className="pb-3 font-semibold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.artifacts.map((a) => (
+                      <tr key={a.id} className="border-t border-white/[0.06]">
+                        <td className="py-3 font-medium">{a.name}</td>
+                        <td className="py-3 text-[var(--text-muted)]">{a.size_mb} MB</td>
+                        <td className="py-3 text-[var(--text-muted)]">{a.created_at}</td>
+                        <td className="py-3">
+                          <span className={statusPill(a.expired ? "failure" : a.size_mb > 0.05 ? "ok" : "unknown")}>
+                            {a.expired ? "expired" : a.size_mb > 0.05 ? "has files" : "tiny / no mp4"}
+                          </span>
+                        </td>
+                        <td className="py-3">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <button
+                              type="button"
+                              disabled={a.expired || downloadingId === a.id}
+                              onClick={() => void downloadArtifact(a)}
+                              className="btn-primary inline-flex items-center gap-2 !px-3 !py-1.5 text-xs"
+                            >
+                              {downloadingId === a.id ? (
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              ) : (
+                                <Download className="h-3.5 w-3.5" />
+                              )}
+                              Download zip
+                            </button>
+                            <ExtLink href={a.actions_url}>Run</ExtLink>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-sm text-[var(--text-muted)]">
+                No artifacts yet. After the next Short run finishes, videos appear here for download.
+              </p>
+            )}
+          </StudioPanel>
+
+          <StudioPanel title="Manual upload targets (if auto failed)">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {(data?.platforms || [])
+                .filter((p) => p.group === "Publish")
+                .map((p) => (
+                  <a
+                    key={p.id}
+                    href={p.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="glass-card-interactive rounded-xl border border-white/[0.06] px-4 py-4 text-sm font-medium text-[var(--text-primary)]"
+                  >
+                    Upload to {p.label}
+                  </a>
+                ))}
             </div>
           </StudioPanel>
         </div>

@@ -20,11 +20,12 @@ import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
 import { easeCinematic } from "@/lib/motion"
 
-export type StudioTab = "overview" | "publish" | "platforms" | "runs" | "failures"
+export type StudioTab = "overview" | "publish" | "videos" | "platforms" | "runs" | "failures"
 
 const nav: { id: StudioTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "publish", label: "Create & publish", icon: Play },
+  { id: "videos", label: "Videos & download", icon: History },
   { id: "platforms", label: "Platforms", icon: Link2 },
   { id: "runs", label: "Actions runs", icon: Radio },
   { id: "failures", label: "Failures", icon: AlertTriangle },
@@ -33,6 +34,7 @@ const nav: { id: StudioTab; label: string; icon: typeof LayoutDashboard }[] = [
 const titles: Record<StudioTab, string> = {
   overview: "Overview",
   publish: "Create & publish",
+  videos: "Videos & download",
   platforms: "Platforms",
   runs: "Actions runs",
   failures: "Failures",
@@ -44,6 +46,7 @@ type Stats = {
   failed: number
   running: number
   platforms: number
+  videos?: number
 }
 
 function SidebarNav({
@@ -129,10 +132,10 @@ export function StudioShell({
 
   const chips = [
     { label: "Publishes", value: stats.publishes, icon: History },
+    { label: "Videos", value: stats.videos ?? 0, icon: Youtube },
     { label: "OK", value: stats.ok, icon: Youtube },
     { label: "Failed", value: stats.failed, icon: AlertTriangle },
     { label: "Running", value: stats.running, icon: Radio },
-    { label: "Platforms", value: stats.platforms, icon: Link2 },
   ]
 
   return (

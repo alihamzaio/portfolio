@@ -168,6 +168,75 @@ export async function dispatchStudioWorkflow(workflow: StudioWorkflowKey): Promi
   }
 }
 
+export type StudioArtifact = {
+  id: number
+  name: string
+  size_bytes: number
+  size_mb: number
+  created_at: string
+  expired: boolean
+  workflow_run_id: number | null
+  download_url: string
+  actions_url: string
+}
+
+export async function listStudioArtifacts(limit = 30): Promise<StudioArtifact[]> {
+  const token = getGitHubToken()
+  if (!token) return []
+  const result = await githubJson<{
+    artifacts?: Array<{
+      id: number
+      name?: string
+      size_in_bytes?: number
+      created_at?: string
+      expired?: boolean
+      workflow_run?: { id?: number }
+    }>
+  }>(token, `/repos/${STUDIO_REPO}/actions/artifacts?per_page=${limit}`)
+  if (!result.ok || !result.data?.artifacts) return []
+  return result.data.artifacts.map((a) => {
+    const size = a.size_in_bytes || 0
+    return {
+      id: a.id,
+      name: a.name || "output",
+      size_bytes: size,
+      size_mb: Math.round((size / (1024 * 1024)) * 10) / 10,
+      created_at: a.created_at || "",
+      expired: Boolean(a.expired),
+      workflow_run_id: a.workflow_run?.id ?? null,
+      download_url: `/api/studio/videos/${a.id}/download`,
+      actions_url: a.workflow_run?.id
+        ? `https://github.com/${STUDIO_REPO}/actions/runs/${a.workflow_run.id}`
+        : `https://github.com/${STUDIO_REPO}/actions`,
+    }
+  })
+}
+
+export async function downloadStudioArtifactZip(
+  artifactId: number
+): Promise<{ ok: true; buffer: ArrayBuffer; filename: string } | { ok: false; status: number; message: string }> {
+  const token = getGitHubToken()
+  if (!token) {
+    return { ok: false, status: 400, message: "GITHUB_TOKEN missing" }
+  }
+  const url = `https://api.github.com/repos/${STUDIO_REPO}/actions/artifacts/${artifactId}/zip`
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+    redirect: "follow",
+    cache: "no-store",
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    return { ok: false, status: res.status, message: text.slice(0, 400) || `Download failed (${res.status})` }
+  }
+  const buffer = await res.arrayBuffer()
+  return { ok: true, buffer, filename: `studio-artifact-${artifactId}.zip` }
+}
+
 export function collectFailures(history: StudioHistoryRow[], limit = 25) {
   const failures: Array<{
     at?: string
@@ -194,15 +263,17 @@ export function collectFailures(history: StudioHistoryRow[], limit = 25) {
 }
 
 export async function getStudioDashboardPayload() {
-  const [last, history, runs] = await Promise.all([
+  const [last, history, runs, artifacts] = await Promise.all([
     getStudioLastRun(),
     getStudioHistory(),
     listStudioWorkflowRuns(20),
+    listStudioArtifacts(30),
   ])
   const failures = collectFailures(history)
   const okCount = history.filter((h) => h.overall === "ok").length
   const failCount = history.filter((h) => h.overall === "error" || (h.errors && h.errors.length > 0)).length
   const recentRunning = runs.filter((r) => r.status === "in_progress" || r.status === "queued").length
+  const videoArtifacts = artifacts.filter((a) => !a.expired && a.size_bytes > 50_000)
   return {
     channel: STUDIO_CHANNEL,
     platforms: STUDIO_PLATFORMS,
@@ -213,12 +284,14 @@ export async function getStudioDashboardPayload() {
     history: history.slice(0, 25),
     failures,
     runs,
+    artifacts,
     stats: {
       publishes: history.length,
       ok: okCount,
       failed: failCount,
       running: recentRunning,
       platforms: STUDIO_PLATFORMS.filter((p) => p.group === "Publish").length,
+      videos: videoArtifacts.length,
     },
   }
 }
