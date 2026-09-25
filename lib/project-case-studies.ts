@@ -7,7 +7,7 @@ export const CASE_STUDY_OVERRIDES: Record<
 > = {
   26: {
     problem:
-      "Pakistani shoppers needed a trusted local store for original products with cash on delivery, easy returns, and 24/7 support — not a generic marketplace. The merchant needed one system for storefront, inventory, orders, and admin instead of disconnected tools.",
+      "Pakistani shoppers needed a trusted local store for original products with cash on delivery, easy returns, and 24/7 support - not a generic marketplace. The merchant needed one system for storefront, inventory, orders, and admin instead of disconnected tools.",
     solution:
       "I built Adam Store as a full MERN e-commerce platform: customer storefront with product browsing, cart, and checkout; admin dashboard for inventory, orders, and users; REST APIs on Node.js, Express, and MongoDB. Live at adamstore.pk with free delivery, COD, and 15-day returns.",
     architecture: [
@@ -77,7 +77,7 @@ export const CASE_STUDY_OVERRIDES: Record<
     problem:
       "Entrepreneurs in Libya faced significant barriers to starting e-commerce businesses: limited access to reliable product sourcing channels, complex international supply chain management, language barriers with Chinese suppliers, payment processing challenges for cross-border transactions, shipping logistics and customs documentation, and no unified platform for managing orders and inventory.",
     solution:
-      "I built Senzi as a dropshipping platform for the Libyan market with direct 1688 and Taobao API integrations, one-click product import, automated order processing, multi-provider shipping workflows, local payment method support, and business analytics for sellers—reducing time-to-market from months to days.",
+      "I built Senzi as a dropshipping platform for the Libyan market with direct 1688 and Taobao API integrations, one-click product import, automated order processing, multi-provider shipping workflows, local payment method support, and business analytics for sellers-reducing time-to-market from months to days.",
     architecture: [
       "Next.js and React frontend with SEO-friendly product discovery",
       "Node.js and Express REST services with background order jobs",
@@ -92,7 +92,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   23: {
     problem:
-      "Patients with hand and wrist complaints needed a clear, accessible way to understand treatment options, find a specialist nearby, and start care — without a generic clinic template that hid the medical offer.",
+      "Patients with hand and wrist complaints needed a clear, accessible way to understand treatment options, find a specialist nearby, and start care - without a generic clinic template that hid the medical offer.",
     solution:
       "I built HandenPols.nl with Next.js and Tailwind CSS: accessible layouts, SEO, and mobile-first pages for therapy and rehabilitation. Copy and flows explain diagnosis, therapy vs surgery, and how to contact a hand surgeon.",
     architecture: [
@@ -109,7 +109,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   22: {
     problem:
-      "Energy operators needed one operational view of UK energy mix, interconnectors, gas prices, and generation — not scattered spreadsheets and delayed reports.",
+      "Energy operators needed one operational view of UK energy mix, interconnectors, gas prices, and generation - not scattered spreadsheets and delayed reports.",
     solution:
       "I built Solanity Grid as a real-time dashboard for gas, oil, weather, and generation data from REST APIs. React and TypeScript UI with charts, tables, map-ready layouts, and Tailwind CSS for operational monitoring.",
     architecture: [
@@ -143,7 +143,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   13: {
     problem:
-      "Pest-control operators needed location-level KPIs — appointments, tech time on site, production, re-service rate — without rebuilding reports in spreadsheets every month.",
+      "Pest-control operators needed location-level KPIs - appointments, tech time on site, production, re-service rate - without rebuilding reports in spreadsheets every month.",
     solution:
       "I built Pest Insights as an operational dashboard: React charts and admin flows, Express APIs for company creation and metrics, MongoDB storage, and Google Sheets import so campaign and location data stay in one place.",
     architecture: [
@@ -177,7 +177,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   16: {
     problem:
-      "PyMC Labs needed a public site that matches a Bayesian AI consultancy: services, workshops, blog, and CRM capture — not a generic agency template that hid the open-source and enterprise story.",
+      "PyMC Labs needed a public site that matches a Bayesian AI consultancy: services, workshops, blog, and CRM capture - not a generic agency template that hid the open-source and enterprise story.",
     solution:
       "I built the PyMC Labs website with Next.js and Tailwind CSS: service pages, Strapi-powered blog, CRM integration, and a layout that presents Bayesian consulting, case studies, and training to enterprise visitors.",
     architecture: [
@@ -194,7 +194,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   21: {
     problem:
-      "Truvest Capital Market GmbH needed a professional public site for commodity trading and medical supply: segments, global network, and inquiry capture — not a placeholder brochure.",
+      "Truvest Capital Market GmbH needed a professional public site for commodity trading and medical supply: segments, global network, and inquiry capture - not a placeholder brochure.",
     solution:
       "I built the Truvest frontend with Create React App: responsive layouts for minerals, steel, medical PPE, global reach, and inquiry forms integrated with backend portals and banking-oriented service access.",
     architecture: [
@@ -245,7 +245,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   18: {
     problem:
-      "An interiors studio needed a portfolio that shows material palettes next to CGI rooms — not a generic template that buried the work.",
+      "An interiors studio needed a portfolio that shows material palettes next to CGI rooms - not a generic template that buried the work.",
     solution:
       "I built Liddy Silver Interiors with React and Swiper.js: project galleries, background color transitions, and slider-based case views so material boards and bedroom CGI sit side by side.",
     architecture: [
@@ -262,7 +262,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   17: {
     problem:
-      "Living Wall needed a landing site that explains turn-key digital placemaking — concept, coordination, installation — for architects and developers, not a thin brochure.",
+      "Living Wall needed a landing site that explains turn-key digital placemaking - concept, coordination, installation - for architects and developers, not a thin brochure.",
     solution:
       "I built livingwall.au with React, Vite, and Bootstrap: hero, interior/exterior/experience solutions, process phases, and contact. CSS transforms for section motion and SEO-ready marketing pages.",
     architecture: [
@@ -279,7 +279,7 @@ export const CASE_STUDY_OVERRIDES: Record<
   },
   15: {
     problem:
-      "DevenCodes needed a software-studio site that sells AI agents and full-stack delivery, with a stack story and a path to book a consult — not a generic dark template.",
+      "DevenCodes needed a software-studio site that sells AI agents and full-stack delivery, with a stack story and a path to book a consult - not a generic dark template.",
     solution:
       "I built devencodes.com with Next.js, Tailwind CSS, Framer Motion, and Shadcn UI: services, process, testimonials, and tech stack, with Cloudinary-backed media and a dark theme.",
     architecture: [

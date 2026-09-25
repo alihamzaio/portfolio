@@ -36,7 +36,7 @@ export function SiteFooterClient() {
       <div className="site-grid relative z-[1] pt-[var(--space-5)] pb-[max(var(--space-5),calc(5rem+env(safe-area-inset-bottom)))] lg:pb-[var(--space-5)]">
         <div className="grid gap-10 md:grid-cols-3 lg:gap-[var(--space-7)]">
           <div className="max-w-md md:col-span-1">
-            <Link href="/" className="inline-flex mb-[var(--space-4)]" aria-label={`${profile.name} — home`}>
+            <Link href="/" className="inline-flex mb-[var(--space-4)]" aria-label={`${profile.name} - home`}>
               <Logo name={profile.name} showName size={36} instanceId="footer" />
             </Link>
             <p className="type-body-sm leading-relaxed text-[var(--text-secondary)]">{profile.title}</p>

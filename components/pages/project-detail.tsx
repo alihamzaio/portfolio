@@ -37,7 +37,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         >
           <Image
             src={project.image}
-            alt={`${project.title} — project screenshot`}
+            alt={`${project.title} - project screenshot`}
             fill
             className="object-cover"
             priority

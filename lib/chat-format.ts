@@ -1,4 +1,4 @@
-/** Clean model output before display — content preserved, markup normalized */
+/** Clean model output before display - content preserved, markup normalized */
 export function normalizeAgentReply(raw: string): string {
   return raw
     .replace(/\r\n/g, "\n")
@@ -40,7 +40,7 @@ function parseBrief(text: string): { block: ChatBlock; trailing: string } | null
   lines.forEach((line, i) => {
     const m = line.match(/^([A-Za-z][A-Za-z\s/]+):\s*(.*)$/)
     if (m) {
-      rows.push({ label: m[1]!.trim(), value: m[2]!.trim() || "—" })
+      rows.push({ label: m[1]!.trim(), value: m[2]!.trim() || "-" })
       lastField = i
     }
   })

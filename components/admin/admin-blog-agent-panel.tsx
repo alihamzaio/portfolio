@@ -322,7 +322,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                       ) : null}
                     </td>
                     <td className="py-2.5 pr-3">
-                      <div>{run.title || run.topic || "—"}</div>
+                      <div>{run.title || run.topic || "-"}</div>
                       {run.slug ? (
                         <a
                           href={run.postUrl || `/blog/${run.slug}`}
@@ -358,7 +358,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                           Retry
                         </button>
                       ) : (
-                        "—"
+                        "-"
                       )}
                     </td>
                   </tr>

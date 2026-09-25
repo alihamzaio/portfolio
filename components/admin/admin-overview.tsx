@@ -114,7 +114,7 @@ export function AdminOverview({
         <div>
           <h1 className="text-2xl font-semibold mb-1 tracking-tight">Dashboard</h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Content counts, site health, and shortcuts — everything in one place.
+            Content counts, site health, and shortcuts - everything in one place.
           </p>
         </div>
         {data?.links && (
@@ -153,7 +153,7 @@ export function AdminOverview({
         <StatCard label="Resumes" value={resumes} sub={activeResume || "None active"} />
         <StatCard
           label="Profile"
-          value={data ? `${data.profile.percent}%` : "—"}
+          value={data ? `${data.profile.percent}%` : "-"}
           sub={data ? `${data.profile.filled}/${data.profile.total} fields` : "Loading…"}
         />
       </div>

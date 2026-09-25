@@ -8,7 +8,7 @@ const REPLY_TIME = "I typically reply within one business day."
 
 const selectedWork = getShowcaseProjects(6).map((p) => ({
   title: p.title,
-  shortTitle: p.title.split(/[-–:]/)[0]?.trim() || p.title,
+  shortTitle: p.title.split(/[--:]/)[0]?.trim() || p.title,
   description: p.description,
   tags: p.tags,
   link: p.link,
@@ -59,7 +59,7 @@ function briefProgress(history: ChatMessage[]): number {
 }
 
 /**
- * Conversational replies about Ali's portfolio — free, no API key.
+ * Conversational replies about Ali's portfolio - free, no API key.
  * If GROQ_API_KEY / OPENAI_API_KEY is set server-side, the chat route can upgrade to a real LLM.
  */
 export function replyFromKnowledge(userText: string, history: ChatMessage[] = []): string {
@@ -74,11 +74,11 @@ export function replyFromKnowledge(userText: string, history: ChatMessage[] = []
   }
 
   if (/(hi|hello|hey|salam|assalam|good morning|good evening)\b/.test(q)) {
-    return `Hello — I'm the AI Project Concierge for ${agentKnowledge.name}'s portfolio. I can explain his experience, recommend relevant projects, or help you outline a project brief. What would you like to know?`
+    return `Hello - I'm the AI Project Concierge for ${agentKnowledge.name}'s portfolio. I can explain his experience, recommend relevant projects, or help you outline a project brief. What would you like to know?`
   }
 
   if (/(who (are|is) (you|ali)|about ali|tell me about|introduce)\b/.test(q)) {
-    return `${agentKnowledge.name} is a ${agentKnowledge.title} based in ${agentKnowledge.location}. He helps startups and product teams ship reliable backends and full-stack apps. I am an assistant on his portfolio — not Ali himself.`
+    return `${agentKnowledge.name} is a ${agentKnowledge.title} based in ${agentKnowledge.location}. He helps startups and product teams ship reliable backends and full-stack apps. I am an assistant on his portfolio - not Ali himself.`
   }
 
   if (/(stack|technolog|skills|tools|node|next|aws|postgres|mongo|docker|what (do|does) (he|you) use)\b/.test(q)) {
@@ -104,7 +104,7 @@ export function replyFromKnowledge(userText: string, history: ChatMessage[] = []
   }
 
   if (/(service|offer|help with|can (he|you) (build|do|make)|what (can|do) (he|you)|products do you build)\b/.test(q)) {
-    return `Based on listed services, visitors usually ask about: ${agentKnowledge.services}. I can only speak to experience shown on this site — not invent past clients or results.`
+    return `Based on listed services, visitors usually ask about: ${agentKnowledge.services}. I can only speak to experience shown on this site - not invent past clients or results.`
   }
 
   if (/(hire|available|price|cost|rate|budget|quote|contract|full.?time|freelance|retain)\b/.test(q)) {
@@ -122,7 +122,7 @@ export function replyFromKnowledge(userText: string, history: ChatMessage[] = []
   if (inBrief || /(i have a project|project idea|start a project conversation|brief)\b/.test(q)) {
     const step = Math.max(0, briefProgress(history))
     if (step >= BRIEF_STEPS.length) {
-      return `Thanks — that outlines a useful brief. Next step: use the contact form or email ${agentKnowledge.email} so Ali can review it. I cannot confirm availability or pricing.`
+      return `Thanks - that outlines a useful brief. Next step: use the contact form or email ${agentKnowledge.email} so Ali can review it. I cannot confirm availability or pricing.`
     }
     if (turns === 0 || step === 0) {
       return `Happy to collect a concise project brief, one question at a time. ${BRIEF_STEPS[0]}`
@@ -135,7 +135,7 @@ export function replyFromKnowledge(userText: string, history: ChatMessage[] = []
   }
 
   if (turns >= 2) {
-    return `I can cover stack, selected projects, or a short project brief next. Or use contact — ${agentKnowledge.email}. What should we cover?`
+    return `I can cover stack, selected projects, or a short project brief next. Or use contact - ${agentKnowledge.email}. What should we cover?`
   }
 
   return `For “${userText.slice(0, 80)}”, I can only use facts from this portfolio. Ask about products he builds, strongest projects, technologies, or how to contact him. Would you like to turn this into a project brief?`

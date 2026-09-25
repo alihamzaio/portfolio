@@ -42,7 +42,7 @@ const featuredProjects = showcaseProjects.filter((p) => p.featured).slice(0, 6)
 const selectedProjects = (featuredProjects.length ? featuredProjects : showcaseProjects.slice(0, 6)).map((p) => ({
   id: String(p.id),
   title: p.title,
-  shortTitle: p.title.split(/[-–:]/)[0]?.trim() || p.title,
+  shortTitle: p.title.split(/[--:]/)[0]?.trim() || p.title,
   description: p.description,
   details: p.details,
   tags: p.tags,
@@ -72,13 +72,13 @@ export const BRIEF_QUESTIONS: Array<{ key: keyof ProjectBrief; prompt: string }>
   {
     key: "productType",
     prompt:
-      "What type of product is it — website, dashboard, e-commerce, API, backend system, or something else?",
+      "What type of product is it - website, dashboard, e-commerce, API, backend system, or something else?",
   },
   { key: "audience", prompt: "Who will use it?" },
   { key: "importantFeatures", prompt: "Which features matter most right now?" },
   { key: "preferredTechnology", prompt: "Do you have a preferred technology stack?" },
   { key: "timeline", prompt: "What is your approximate timeline?" },
-  { key: "contactMethod", prompt: "What is the best contact method — email, WhatsApp, or phone?" },
+  { key: "contactMethod", prompt: "What is the best contact method - email, WhatsApp, or phone?" },
   { key: "contactValue", prompt: "What contact details should Ali use?" },
 ]
 
@@ -106,7 +106,7 @@ export const portfolioKnowledge = {
     .map((p) => ({
       id: String(p.id),
       title: p.title,
-      shortTitle: p.title.split(/[-–:]/)[0]?.trim() || p.title,
+      shortTitle: p.title.split(/[--:]/)[0]?.trim() || p.title,
       description: p.description,
       tags: p.tags,
       link: p.link,
@@ -153,11 +153,11 @@ export function askPortfolioQuestion(message: string): string {
   const q = normalize(message)
 
   if (/(hi|hello|hey|salam)\b/.test(q)) {
-    return `Hello — I'm Project Intelligence for ${portfolioKnowledge.name}'s portfolio. I can explore the work, explain the stack, or help you prepare a project brief. What would you like to do?`
+    return `Hello - I'm Project Intelligence for ${portfolioKnowledge.name}'s portfolio. I can explore the work, explain the stack, or help you prepare a project brief. What would you like to do?`
   }
 
   if (/(who (are|is) (you|ali)|about ali|tell me about)\b/.test(q)) {
-    return `${portfolioKnowledge.name} is a ${portfolioKnowledge.title} based in ${portfolioKnowledge.location}. ${portfolioKnowledge.aboutDescription} I am an assistant on this portfolio — not Ali.`
+    return `${portfolioKnowledge.name} is a ${portfolioKnowledge.title} based in ${portfolioKnowledge.location}. ${portfolioKnowledge.aboutDescription} I am an assistant on this portfolio - not Ali.`
   }
 
   if (/(process|full.?stack process|how (do|does) (you|he) (work|build|deliver))\b/.test(q)) {
@@ -176,7 +176,7 @@ export function askPortfolioQuestion(message: string): string {
   if (/(project|work|relevant|show me|recommend|portfolio|adam|verana|magic|handen|solanity|dotgod)\b/.test(q)) {
     const picks = recommendProjects(message, 3)
     return `Relevant work from this portfolio:\n${picks
-      .map((p) => `• ${p.title} — ${p.description}`)
+      .map((p) => `• ${p.title} - ${p.description}`)
       .join("\n")}\nWould you like to turn this into a project brief?`
   }
 
@@ -185,7 +185,7 @@ export function askPortfolioQuestion(message: string): string {
 
 export function startProjectBrief(): { reply: string; brief: ProjectBrief; step: number } {
   return {
-    reply: `We'll prepare a concise project brief for Ali — one question at a time. ${BRIEF_QUESTIONS[0]!.prompt}`,
+    reply: `We'll prepare a concise project brief for Ali - one question at a time. ${BRIEF_QUESTIONS[0]!.prompt}`,
     brief: emptyBrief(),
     step: 0,
   }
@@ -194,13 +194,13 @@ export function startProjectBrief(): { reply: string; brief: ProjectBrief; step:
 export function formatBrief(brief: ProjectBrief): string {
   return [
     "Project brief draft",
-    `Idea: ${brief.productIdea || "—"}`,
-    `Type: ${brief.productType || "—"}`,
-    `Audience: ${brief.audience || "—"}`,
-    `Features: ${brief.importantFeatures || "—"}`,
-    `Preferred tech: ${brief.preferredTechnology || "—"}`,
-    `Timeline: ${brief.timeline || "—"}`,
-    `Contact: ${brief.contactMethod || "—"} ${brief.contactValue || ""}`.trim(),
+    `Idea: ${brief.productIdea || "-"}`,
+    `Type: ${brief.productType || "-"}`,
+    `Audience: ${brief.audience || "-"}`,
+    `Features: ${brief.importantFeatures || "-"}`,
+    `Preferred tech: ${brief.preferredTechnology || "-"}`,
+    `Timeline: ${brief.timeline || "-"}`,
+    `Contact: ${brief.contactMethod || "-"} ${brief.contactValue || ""}`.trim(),
   ].join("\n")
 }
 
@@ -225,7 +225,7 @@ export function advanceBrief(
     return {
       brief: nextBrief,
       step: nextStep,
-      reply: `Thanks — here is the draft brief.\n\n${formatBrief(nextBrief)}\n\nReview it, edit if needed, then send to Ali. I cannot promise pricing or delivery dates.`,
+      reply: `Thanks - here is the draft brief.\n\n${formatBrief(nextBrief)}\n\nReview it, edit if needed, then send to Ali. I cannot promise pricing or delivery dates.`,
       complete: true,
     }
   }

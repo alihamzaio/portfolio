@@ -41,7 +41,7 @@ export function AdminBlogPreview(form: PreviewInput) {
     category: form.category || "Full Stack",
     author: form.author || "Ali Hamza",
     coverImage: resolveBlogCover(form.coverImage),
-    coverImageAlt: form.coverImageAlt || "Ali Hamza — Full Stack Developer",
+    coverImageAlt: form.coverImageAlt || "Ali Hamza - Full Stack Developer",
     tags: tags.length ? tags : undefined,
     youtubeUrl: form.youtubeUrl || undefined,
     body: form.body.trim() || "_Start writing in the Write tab. Preview uses the same renderer as the live blog._",

@@ -84,7 +84,7 @@ export function AdminBlogCoverField({
         URL.revokeObjectURL(localPreview)
         setLocalPreview(null)
       }
-      onCoverChange(DEFAULT_BLOG_COVER, "Ali Hamza — Full Stack Developer")
+      onCoverChange(DEFAULT_BLOG_COVER, "Ali Hamza - Full Stack Developer")
     }
   }
 
@@ -193,7 +193,7 @@ export function AdminBlogCoverField({
             placeholder="https://images.pexels.com/photos/…/….jpeg"
           />
           <p className="text-[11px] text-amber-200/80 leading-relaxed">
-            Paste a direct image link (ends in .jpg / .png / .webp), copyright-free only —
+            Paste a direct image link (ends in .jpg / .png / .webp), copyright-free only -
             Pexels, Unsplash, or your own CDN. Google Images thumbnails often break; open the
             photo → right‑click → Copy image address.
           </p>
