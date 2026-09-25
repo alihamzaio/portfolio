@@ -441,63 +441,81 @@ export function StudioWorkspace() {
 
       {tab === "videos" && (
         <div className="space-y-6">
-          <StudioPanel title="Rendered videos (GitHub Actions artifacts)">
+          <StudioPanel title="Download videos (manual share / re-upload)">
             <p className="mb-4 text-sm text-[var(--text-secondary)]">
-              Every finished (or partially finished) run uploads <code className="font-mono">output/</code> as a zip.
-              Download it, open <code className="font-mono">output/video/*.mp4</code>, and manual-post to platforms
-              that failed auto-upload. Kept ~30 days after the next retention bump.
+              Each finished Actions run saves a zip. Prefer rows marked <strong>has video</strong>. Click{" "}
+              <strong>Download zip</strong>, unzip, then open <code className="font-mono">output/video/*.mp4</code>{" "}
+              (or the MP4 inside <code className="font-mono">short-videos</code> / <code className="font-mono">long-videos</code>).
+              Use the platform buttons below to post by hand if auto-upload failed.
             </p>
             {data?.artifacts?.length ? (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+                <table className="w-full min-w-[760px] text-left text-sm">
                   <thead>
                     <tr className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
                       <th className="pb-3 font-semibold">Artifact</th>
                       <th className="pb-3 font-semibold">Size</th>
                       <th className="pb-3 font-semibold">When</th>
                       <th className="pb-3 font-semibold">Status</th>
-                      <th className="pb-3 font-semibold">Actions</th>
+                      <th className="pb-3 font-semibold">Download / share</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.artifacts.map((a) => (
-                      <tr key={a.id} className="border-t border-white/[0.06]">
-                        <td className="py-3 font-medium">{a.name}</td>
-                        <td className="py-3 text-[var(--text-muted)]">{a.size_mb} MB</td>
-                        <td className="py-3 text-[var(--text-muted)]">{a.created_at}</td>
-                        <td className="py-3">
-                          <span className={statusPill(a.expired ? "failure" : a.size_mb > 0.05 ? "ok" : "unknown")}>
-                            {a.expired ? "expired" : a.size_mb > 0.05 ? "has files" : "tiny / no mp4"}
-                          </span>
-                        </td>
-                        <td className="py-3">
-                          <div className="flex flex-wrap items-center gap-3">
-                            <button
-                              type="button"
-                              disabled={a.expired || downloadingId === a.id}
-                              onClick={() => void downloadArtifact(a)}
-                              className="btn-primary inline-flex items-center gap-2 !px-3 !py-1.5 text-xs"
-                            >
-                              {downloadingId === a.id ? (
-                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                              ) : (
-                                <Download className="h-3.5 w-3.5" />
-                              )}
-                              Download zip
-                            </button>
-                            <ExtLink href={a.actions_url}>Run</ExtLink>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {[...data.artifacts]
+                      .sort((a, b) => {
+                        const score = (x: Artifact) =>
+                          x.expired ? -1 : x.name.includes("video") ? 3 : x.size_mb >= 1 ? 2 : 0
+                        return score(b) - score(a) || b.id - a.id
+                      })
+                      .map((a) => {
+                        const hasVideo = !a.expired && a.size_mb >= 1
+                        return (
+                          <tr key={a.id} className="border-t border-white/[0.06]">
+                            <td className="py-3 font-medium">{a.name}</td>
+                            <td className="py-3 text-[var(--text-muted)]">{a.size_mb} MB</td>
+                            <td className="py-3 text-[var(--text-muted)]">{a.created_at}</td>
+                            <td className="py-3">
+                              <span
+                                className={statusPill(
+                                  a.expired ? "failure" : hasVideo ? "ok" : "unknown"
+                                )}
+                              >
+                                {a.expired ? "expired" : hasVideo ? "has video" : "tiny / failed run"}
+                              </span>
+                            </td>
+                            <td className="py-3">
+                              <div className="flex flex-wrap items-center gap-3">
+                                <button
+                                  type="button"
+                                  disabled={a.expired || downloadingId === a.id}
+                                  onClick={() => void downloadArtifact(a)}
+                                  className="btn-primary inline-flex items-center gap-2 !px-3 !py-1.5 text-xs"
+                                >
+                                  {downloadingId === a.id ? (
+                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                  ) : (
+                                    <Download className="h-3.5 w-3.5" />
+                                  )}
+                                  Download zip
+                                </button>
+                                <ExtLink href={a.actions_url}>Open run</ExtLink>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
                   </tbody>
                 </table>
               </div>
             ) : (
               <p className="text-sm text-[var(--text-muted)]">
-                No artifacts yet. After the next Short run finishes, videos appear here for download.
+                No artifacts yet. After the next Short finishes, download buttons appear here. Until then you can also
+                grab files from GitHub → Actions → run → Artifacts.
               </p>
             )}
+            <p className="mt-4 text-xs text-[var(--text-muted)]">
+              Tip: last good full Short zip was ~40 MB (Sep 21). Tiny ~1 KB zips mean create crashed before the MP4.
+            </p>
           </StudioPanel>
 
           <StudioPanel title="Manual upload targets (if auto failed)">
