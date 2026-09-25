@@ -3,82 +3,47 @@
 import { useRef, useState, type ReactNode } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Briefcase,
-  FileText,
+  AlertTriangle,
+  Clapperboard,
+  ExternalLink,
+  History,
   LayoutDashboard,
+  Link2,
   LogOut,
-  User,
-  Sparkles,
-  Building2,
   Menu,
+  Play,
+  Radio,
   X,
-  TrendingUp,
-  Newspaper,
-  Package,
-  CreditCard,
-  ShoppingBag,
-  Bot,
+  Youtube,
 } from "lucide-react"
 import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
-import { ease, easeCinematic } from "@/lib/motion"
+import { easeCinematic } from "@/lib/motion"
 
-export type AdminTab =
-  | "overview"
-  | "profile"
-  | "experience"
-  | "projects"
-  | "skills"
-  | "blog"
-  | "products"
-  | "payments"
-  | "orders"
-  | "blogAgent"
-  | "resume"
+export type StudioTab = "overview" | "publish" | "platforms" | "runs" | "failures"
 
-const nav: { id: AdminTab; label: string; icon: typeof LayoutDashboard }[] = [
+const nav: { id: StudioTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "profile", label: "Profile & Hero", icon: User },
-  { id: "experience", label: "Experience", icon: Building2 },
-  { id: "projects", label: "Projects", icon: Briefcase },
-  { id: "skills", label: "Skills", icon: Sparkles },
-  { id: "blog", label: "Blog", icon: Newspaper },
-  { id: "blogAgent", label: "Blog Agent", icon: Bot },
-  { id: "products", label: "Products", icon: Package },
-  { id: "payments", label: "Payments", icon: CreditCard },
-  { id: "orders", label: "Orders", icon: ShoppingBag },
-  { id: "resume", label: "Resume", icon: FileText },
+  { id: "publish", label: "Create & publish", icon: Play },
+  { id: "platforms", label: "Platforms", icon: Link2 },
+  { id: "runs", label: "Actions runs", icon: Radio },
+  { id: "failures", label: "Failures", icon: AlertTriangle },
 ]
 
-const tabTitle: Record<AdminTab, string> = {
+const titles: Record<StudioTab, string> = {
   overview: "Overview",
-  profile: "Profile & Hero",
-  experience: "Experience",
-  projects: "Projects",
-  skills: "Skills",
-  blog: "Blog",
-  blogAgent: "Blog Agent",
-  products: "Products",
-  payments: "Payments",
-  orders: "Orders",
-  resume: "Resume",
+  publish: "Create & publish",
+  platforms: "Platforms",
+  runs: "Actions runs",
+  failures: "Failures",
 }
 
-interface AdminShellProps {
-  children: ReactNode
-  tab: AdminTab
-  /** Optional header title override (e.g. New blog post) */
-  pageTitle?: string
-  onTab: (t: AdminTab) => void
-  onLogout: () => void
-  stats: {
-    projects: number
-    skills: number
-    resumes: number
-    experience: number
-    blogPublished?: number
-    blogDrafts?: number
-  }
+type Stats = {
+  publishes: number
+  ok: number
+  failed: number
+  running: number
+  platforms: number
 }
 
 function SidebarNav({
@@ -86,20 +51,20 @@ function SidebarNav({
   onTab,
   onLogout,
 }: {
-  tab: AdminTab
-  onTab: (t: AdminTab) => void
+  tab: StudioTab
+  onTab: (t: StudioTab) => void
   onLogout: () => void
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-3 shrink-0 px-1 pb-6">
         <div className="relative">
-          <LogoMark size={44} instanceId="admin" />
+          <LogoMark size={44} instanceId="studio" />
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent-primary)] border-2 border-[#0c0c0c]" />
         </div>
         <div>
-          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Portfolio CMS</p>
-          <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">SaaS Admin</p>
+          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Behind The Price</p>
+          <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">Channel Studio</p>
         </div>
       </div>
 
@@ -124,10 +89,10 @@ function SidebarNav({
       </nav>
 
       <a
-        href="/studio"
+        href="/admin"
         className="mt-2 flex w-full shrink-0 items-center gap-2.5 rounded-xl border border-transparent px-3.5 py-3 text-sm text-[var(--text-secondary)] transition-all hover:border-white/10 hover:bg-white/[0.04] hover:text-[var(--text-primary)]"
       >
-        <TrendingUp className="h-4 w-4" /> Channel Studio
+        <Clapperboard className="h-4 w-4" /> Portfolio CMS
       </a>
 
       <button
@@ -141,23 +106,33 @@ function SidebarNav({
   )
 }
 
-export function AdminShell({ children, tab, pageTitle, onTab, onLogout, stats }: AdminShellProps) {
+export function StudioShell({
+  children,
+  tab,
+  onTab,
+  onLogout,
+  stats,
+}: {
+  children: ReactNode
+  tab: StudioTab
+  onTab: (t: StudioTab) => void
+  onLogout: () => void
+  stats: Stats
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
 
-  const selectTab = (next: AdminTab) => {
+  const selectTab = (next: StudioTab) => {
     onTab(next)
     mainRef.current?.scrollTo({ top: 0 })
   }
 
-  const headerTitle = pageTitle || tabTitle[tab]
-
-  const statItems = [
-    { label: "Roles", value: stats.experience, icon: Building2 },
-    { label: "Projects", value: stats.projects, icon: Briefcase },
-    { label: "Skills", value: stats.skills, icon: Sparkles },
-    { label: "Blog", value: stats.blogPublished ?? 0, icon: Newspaper },
-    { label: "Resumes", value: stats.resumes, icon: FileText },
+  const chips = [
+    { label: "Publishes", value: stats.publishes, icon: History },
+    { label: "OK", value: stats.ok, icon: Youtube },
+    { label: "Failed", value: stats.failed, icon: AlertTriangle },
+    { label: "Running", value: stats.running, icon: Radio },
+    { label: "Platforms", value: stats.platforms, icon: Link2 },
   ]
 
   return (
@@ -181,12 +156,12 @@ export function AdminShell({ children, tab, pageTitle, onTab, onLogout, stats }:
               <Menu className="h-5 w-5" />
             </button>
             <div>
-              <p className="text-sm font-bold tracking-tight text-[var(--text-primary)]">{headerTitle}</p>
-              <p className="font-mono text-[10px] text-[var(--text-muted)]">Content management</p>
+              <p className="text-sm font-bold tracking-tight text-[var(--text-primary)]">{titles[tab]}</p>
+              <p className="font-mono text-[10px] text-[var(--text-muted)]">Channel ops · Vercel</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            {statItems.map((s) => (
+            {chips.map((s) => (
               <div
                 key={s.label}
                 className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-1.5 text-xs"
@@ -202,7 +177,7 @@ export function AdminShell({ children, tab, pageTitle, onTab, onLogout, stats }:
         <main ref={mainRef} className="relative min-h-0 flex-1 overflow-y-auto p-6 sm:p-10 lg:p-12">
           <div className="pointer-events-none absolute inset-0 grid-fine opacity-20" />
           <motion.div
-            key={pageTitle || tab}
+            key={tab}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: easeCinematic }}
@@ -256,25 +231,7 @@ export function AdminShell({ children, tab, pageTitle, onTab, onLogout, stats }:
   )
 }
 
-export function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
-  return (
-    <motion.div
-      whileHover={{ y: -3 }}
-      transition={{ duration: 0.35, ease }}
-      className="glass-card-interactive rounded-2xl p-6 relative overflow-hidden group"
-    >
-      <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[var(--accent-primary)]/8 blur-3xl pointer-events-none" />
-      <div className="flex items-center gap-2 mb-3">
-        <TrendingUp className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
-        <p className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-[0.2em]">{label}</p>
-      </div>
-      <p className="text-3xl font-bold text-[var(--text-primary)] tabular-nums tracking-tight">{value}</p>
-      {sub && <p className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed">{sub}</p>}
-    </motion.div>
-  )
-}
-
-export function Panel({
+export function StudioPanel({
   title,
   children,
   action,
@@ -291,5 +248,19 @@ export function Panel({
       </div>
       <div className="p-6">{children}</div>
     </div>
+  )
+}
+
+export function ExtLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-1.5 text-[var(--accent-primary)] hover:underline"
+    >
+      {children}
+      <ExternalLink className="h-3 w-3" />
+    </a>
   )
 }
