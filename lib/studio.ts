@@ -22,7 +22,7 @@ export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: 
   { id: "threads", label: "Threads", url: "https://www.threads.com/@behindthepricebyali", group: "Publish" },
   { id: "facebook", label: "Facebook", url: "https://www.facebook.com/behindthepricebyali", group: "Publish" },
   { id: "business_suite", label: "Meta Business Suite", url: "https://business.facebook.com/latest/?asset_id=1307166245817929", group: "Tools" },
-  { id: "blog", label: "Portfolio Blog", url: "https://alihamza-fawn.vercel.app/blog", group: "Tools" },
+  { id: "blog", label: "Portfolio Blog CMS", url: "https://alihamza-fawn.vercel.app/admin/blog", group: "Tools" },
   { id: "actions", label: "GitHub Actions", url: `https://github.com/${STUDIO_REPO}/actions`, group: "Ops" },
   {
     id: "actions_short",
