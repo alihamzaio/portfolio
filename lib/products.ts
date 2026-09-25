@@ -87,11 +87,15 @@ export function normalizeProduct(
 
   const downloadUrl = String((raw as { downloadUrl?: string }).downloadUrl || "").trim()
   if (downloadUrl) {
-    try {
-      const u = new URL(downloadUrl)
-      if (u.protocol !== "http:" && u.protocol !== "https:") return null
-    } catch {
-      return null
+    if (downloadUrl.startsWith("/")) {
+      // Same-origin path, e.g. /downloads/kickoff-forge.zip
+    } else {
+      try {
+        const u = new URL(downloadUrl)
+        if (u.protocol !== "http:" && u.protocol !== "https:") return null
+      } catch {
+        return null
+      }
     }
   }
 
