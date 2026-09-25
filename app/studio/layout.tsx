@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
-  title: "Behind The Price Studio",
+  title: "Click Case Files Studio",
   robots: { index: false, follow: false, nocache: true, noimageindex: true },
 }
 

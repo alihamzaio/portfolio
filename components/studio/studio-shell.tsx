@@ -66,7 +66,7 @@ function SidebarNav({
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent-primary)] border-2 border-[#0c0c0c]" />
         </div>
         <div>
-          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Behind The Price</p>
+          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Click Case Files</p>
           <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">Channel Studio</p>
         </div>
       </div>

@@ -8,19 +8,19 @@ export const STUDIO_REPO =
 export const STUDIO_BRANCH = process.env.YT_AUTO_BRANCH?.trim() || "main"
 
 export const STUDIO_CHANNEL = {
-  name: "Behind The Price",
-  handle: "BehindThePriceByAli",
-  tagline: "The real reason everything costs what it does.",
-  signoff: "That's the catch.",
+  name: "Click Case Files",
+  handle: "ClickCaseFiles",
+  tagline: "We open the case on why it went viral.",
+  signoff: "Case closed.",
 } as const
 
 export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: string }[] = [
-  { id: "youtube", label: "YouTube", url: "https://www.youtube.com/@BehindThePriceByAli", group: "Publish" },
-  { id: "youtube_studio", label: "YouTube Studio", url: "https://studio.youtube.com/channel/UCflLNkk3fdoe_5MkPhbD7Uw", group: "Publish" },
-  { id: "tiktok", label: "TikTok", url: "https://www.tiktok.com/@costlymistakesbyali", group: "Publish" },
-  { id: "instagram", label: "Instagram", url: "https://www.instagram.com/behindthepricebyali", group: "Publish" },
-  { id: "threads", label: "Threads", url: "https://www.threads.com/@behindthepricebyali", group: "Publish" },
-  { id: "facebook", label: "Facebook", url: "https://www.facebook.com/behindthepricebyali", group: "Publish" },
+  { id: "youtube", label: "YouTube", url: "https://www.youtube.com/@ClickCaseFiles", group: "Publish" },
+  { id: "youtube_studio", label: "YouTube Studio", url: "https://studio.youtube.com/", group: "Publish" },
+  { id: "tiktok", label: "TikTok", url: "https://www.tiktok.com/@clickcasefiles", group: "Publish" },
+  { id: "instagram", label: "Instagram", url: "https://www.instagram.com/clickcasefiles", group: "Publish" },
+  { id: "threads", label: "Threads", url: "https://www.threads.com/@clickcasefiles", group: "Publish" },
+  { id: "facebook", label: "Facebook", url: "https://www.facebook.com/clickcasefiles", group: "Publish" },
   { id: "business_suite", label: "Meta Business Suite", url: "https://business.facebook.com/latest/?asset_id=1307166245817929", group: "Tools" },
   { id: "blog", label: "Portfolio Blog CMS", url: "https://alihamza-fawn.vercel.app/admin/blog", group: "Tools" },
   { id: "actions", label: "GitHub Actions", url: `https://github.com/${STUDIO_REPO}/actions`, group: "Ops" },

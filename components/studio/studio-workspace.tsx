@@ -260,7 +260,7 @@ export function StudioWorkspace() {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-display text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-            {channel?.name || "Behind The Price"} Studio
+            {channel?.name || "Click Case Files"} Studio
           </p>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
             {channel?.tagline || "Channel create + publish ops"}
