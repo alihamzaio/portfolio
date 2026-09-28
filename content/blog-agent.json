@@ -17,6 +17,19 @@
   ],
   "runs": [
     {
+      "id": "run_mukv21hr_aoza2a",
+      "at": "2026-09-28T06:22:47.016Z",
+      "status": "ok",
+      "attempts": 1,
+      "weekdayUtc": 1,
+      "topic": "AI tools, prompts, and workflows that save time or make money",
+      "title": "I tried a 5-minute AI prompt workflow - did it boost my freelance income?",
+      "slug": "i-tried-a-5-minute-ai-prompt-workflow-did-it-boost-my-freelance-income",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/4657a1719796eac8b32a4fb0b5c8cef0b663e5dd",
+      "postUrl": "/blog/i-tried-a-5-minute-ai-prompt-workflow-did-it-boost-my-freelance-income",
+      "reason": "Published on schedule"
+    },
+    {
       "id": "run_mufxogn3_9yue1n",
       "at": "2026-09-24T19:37:21.455Z",
       "status": "ok",
