@@ -1,0 +1,212 @@
+{
+  "updated_at": "2026-09-28",
+  "timezone_note": "Dates are calendar days (local). Unlock mornings of the due_on date.",
+  "brand": {
+    "display_name_target": "ClickCaseFiles",
+    "display_name_alt": "Click Case Files",
+    "handle": "ClickCaseFiles",
+    "tagline": "We open the case on why it went viral.",
+    "signoff": "Case closed.",
+    "name_note": "YouTube accepted the name intent. Blocked only by rename quota until 2026-10-08. Prefer ClickCaseFiles (one word)."
+  },
+  "items": [
+    {
+      "id": "yt-display-name",
+      "platform": "YouTube",
+      "title": "Set display name to ClickCaseFiles",
+      "detail": "Name approved. Quota only until 2026-10-08. Handle @ClickCaseFiles already live.",
+      "value": "ClickCaseFiles",
+      "due_on": "2026-10-08",
+      "status": "waiting",
+      "action_url": "https://studio.youtube.com/channel/UCflLNkk3fdoe_5MkPhbD7Uw/editing/details",
+      "reminder": true
+    },
+    {
+      "id": "yt-banner-avatar",
+      "platform": "YouTube",
+      "title": "Upload banner + avatar",
+      "detail": "User confirmed done 2026-09-28.",
+      "value": "done",
+      "due_on": "2026-09-26",
+      "status": "done",
+      "action_url": "https://studio.youtube.com/channel/UCflLNkk3fdoe_5MkPhbD7Uw/editing/profile",
+      "reminder": false
+    },
+    {
+      "id": "tiktok-nickname",
+      "platform": "TikTok",
+      "title": "Change nickname to Click Case Files",
+      "detail": "Nickname cooldown until Sep 30. Bio + avatar already done. Username stays @costlymistakesbyali until Oct 23.",
+      "value": "Click Case Files",
+      "due_on": "2026-09-30",
+      "status": "waiting",
+      "action_url": "https://www.tiktok.com/@costlymistakesbyali",
+      "reminder": true
+    },
+    {
+      "id": "tiktok-username",
+      "platform": "TikTok",
+      "title": "Change username to clickcasefiles",
+      "detail": "Username locked until Oct 23 2026.",
+      "value": "clickcasefiles",
+      "due_on": "2026-10-23",
+      "status": "waiting",
+      "action_url": "https://www.tiktok.com/@costlymistakesbyali",
+      "reminder": true
+    },
+    {
+      "id": "tiktok-bio",
+      "platform": "TikTok",
+      "title": "Save TikTok bio + avatar",
+      "detail": "User confirmed bio and avatar done 2026-09-28.",
+      "value": "done",
+      "due_on": "2026-09-26",
+      "status": "done",
+      "action_url": "https://www.tiktok.com/@costlymistakesbyali",
+      "reminder": false
+    },
+    {
+      "id": "ig-avatar",
+      "platform": "Instagram",
+      "title": "Instagram avatar",
+      "detail": "User confirmed done 2026-09-28. Handle @clickcasefiles live.",
+      "value": "done",
+      "due_on": "2026-09-26",
+      "status": "done",
+      "action_url": "https://www.instagram.com/clickcasefiles",
+      "reminder": false
+    },
+    {
+      "id": "fb-display-name",
+      "platform": "Facebook",
+      "title": "Page display name (SKIPPED)",
+      "detail": "Meta blocks every rename. Keep Behind The Price. Username clickcasefiles + bio carry brand.",
+      "value": "Behind The Price (keep)",
+      "due_on": "2026-09-26",
+      "status": "done",
+      "action_url": "https://www.facebook.com/clickcasefiles",
+      "reminder": false
+    },
+    {
+      "id": "fb-bio",
+      "platform": "Facebook",
+      "title": "Replace Behind The Price Page bio",
+      "detail": "Done earlier.",
+      "value": "done",
+      "due_on": "2026-09-26",
+      "status": "done",
+      "action_url": "https://www.facebook.com/clickcasefiles/about",
+      "reminder": false
+    },
+    {
+      "id": "threads-display-name",
+      "platform": "Threads",
+      "title": "Threads display name Click Case Files",
+      "detail": "Confirmed live 2026-09-28: threads.com/@clickcasefiles shows Click Case Files.",
+      "value": "Click Case Files",
+      "due_on": "2026-09-28",
+      "status": "done",
+      "action_url": "https://www.threads.com/@clickcasefiles",
+      "reminder": false
+    },
+    {
+      "id": "fb-same-video-upload",
+      "platform": "Facebook",
+      "title": "Same Short auto-uploads to Facebook Page Reels",
+      "detail": "Already live via Graph API on Page @clickcasefiles (Page ID 1307166245817929). Latest reel CASE 001 posted 2026-09-28. Display name stays Behind The Price until Meta unlocks rename.",
+      "value": "https://www.facebook.com/clickcasefiles",
+      "due_on": "2026-09-28",
+      "status": "done",
+      "action_url": "https://www.facebook.com/reel/4395862487391678",
+      "reminder": false
+    },
+    {
+      "id": "earn-dailymotion-setup",
+      "platform": "Dailymotion",
+      "title": "Enable Dailymotion Partner API (laptop-off uploads)",
+      "detail": "One-time: create Private API key in Dailymotion Studio, then python scripts/setup_dailymotion.py --push. After that weekly longs upload from GitHub Actions with laptop off.",
+      "value": "DAILYMOTION_ENABLED + API key/secret/profile",
+      "due_on": "2026-10-02",
+      "status": "waiting",
+      "action_url": "https://www.dailymotion.com/",
+      "reminder": true
+    },
+    {
+      "id": "earn-odysee-setup",
+      "platform": "Odysee",
+      "title": "Link Odysee YouTube Sync once",
+      "detail": "One-time: claim @ClickCaseFiles on Odysee, link YT via sync.odysee.tv, then python scripts/setup_odysee_sync.py --enable. New YT uploads mirror with laptop off.",
+      "value": "ODYSEE_YOUTUBE_SYNC=true",
+      "due_on": "2026-10-02",
+      "status": "waiting",
+      "action_url": "https://sync.odysee.tv/",
+      "reminder": true
+    },
+    {
+      "id": "earn-spotify-setup",
+      "platform": "Spotify",
+      "title": "One-time Spotify for Creators login (Actions Playwright)",
+      "detail": "No public DIY upload API. Laptop used once: python scripts/setup_spotify_login.py. Weekly longs then publish from GitHub Actions headless Chromium while laptop is off.",
+      "value": "SPOTIFY_STORAGE_STATE_B64 + SPOTIFY_AUTO_UPLOAD",
+      "due_on": "2026-10-02",
+      "status": "waiting",
+      "action_url": "https://creators.spotify.com/",
+      "reminder": true
+    },
+    {
+      "id": "earn-snapchat-spotlight",
+      "platform": "Snapchat",
+      "title": "Add Snapchat Spotlight (cash per view)",
+      "detail": "Create Spotlight publisher for Click Case Files, then wire upload pack (same Short). Highest cash upside of the next platforms.",
+      "value": "Spotlight account + auto upload",
+      "due_on": "2026-10-05",
+      "status": "waiting",
+      "action_url": "https://www.snapchat.com/spotlight",
+      "reminder": true
+    },
+    {
+      "id": "earn-pinterest",
+      "platform": "Pinterest",
+      "title": "Add Pinterest video Pins (affiliate + SEO)",
+      "detail": "Business account + vertical Pins of each Short. Strong for affiliate links once affiliates.yaml is filled.",
+      "value": "Pinterest Business + auto Pin",
+      "due_on": "2026-10-12",
+      "status": "waiting",
+      "action_url": "https://www.pinterest.com/business/create/",
+      "reminder": true
+    },
+    {
+      "id": "earn-x-twitter",
+      "platform": "X",
+      "title": "Add X video posts (Creator Revenue)",
+      "detail": "Post same Short to X once Premium / revenue sharing eligible. API or Playwright.",
+      "value": "X auto video",
+      "due_on": "2026-10-19",
+      "status": "waiting",
+      "action_url": "https://x.com/",
+      "reminder": true
+    },
+    {
+      "id": "earn-affiliates",
+      "platform": "Affiliates",
+      "title": "Fill real affiliate links (blog + YT descriptions)",
+      "detail": "Join 2-3 programs you already use (e.g. editing, hosting, creator tools). Paste tracked URLs into config/affiliates.yaml and portfolio Admin → Affiliates.",
+      "value": "config/affiliates.yaml",
+      "due_on": "2026-10-01",
+      "status": "waiting",
+      "action_url": "https://alihamza-fawn.vercel.app/admin",
+      "reminder": true
+    },
+    {
+      "id": "yt-case001-description",
+      "platform": "YouTube",
+      "title": "Clean CASE 001 description (remove kickoff-forge / FindTheGlitch)",
+      "detail": "Cleaned where found; OAuth restored; YOUTUBE_TOKEN_JSON pushed to Actions.",
+      "value": "More from Ali Hamza + youtube.com/@ClickCaseFiles + alihamza-fawn.vercel.app",
+      "due_on": "2026-09-28",
+      "status": "done",
+      "action_url": "https://studio.youtube.com/channel/UCflLNkk3fdoe_5MkPhbD7Uw/videos/upload",
+      "reminder": false
+    }
+  ]
+}
