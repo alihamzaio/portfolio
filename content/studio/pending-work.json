@@ -189,12 +189,12 @@
     {
       "id": "earn-pinterest",
       "platform": "Pinterest",
-      "title": "Pinterest Pins: finish app connect (icon + captcha)",
-      "detail": "2026-09-29: Business account Click Case Files created. Developer Connect App form filled (personal API, pin creation). Need: upload app icon + solve reCAPTCHA + Submit. Then agent runs OAuth --push for Actions auto Pins.",
-      "value": "setup_pinterest_oauth.py",
+      "title": "Pinterest: Trial access pending (App 1617152)",
+      "detail": "2026-09-29: Business + app Click Case Files Auto Pins created (App id 1617152). Secret/redirect locked until Pinterest approves Trial access (usually 1-3 business days; backlog common). After approval: run setup_pinterest_oauth.py --push for Actions auto Pins. No further manual Pins needed once secrets live.",
+      "value": "app_id=1617152 trial_pending",
       "due_on": "2026-10-12",
       "status": "waiting",
-      "action_url": "https://developers.pinterest.com/apps/connect/",
+      "action_url": "https://developers.pinterest.com/apps/1617152/",
       "reminder": true
     },
     {
