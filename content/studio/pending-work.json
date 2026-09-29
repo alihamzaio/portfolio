@@ -134,24 +134,46 @@
     {
       "id": "ops-artifact-quota",
       "platform": "GitHub Actions",
-      "title": "Clear Actions artifact storage quota",
-      "detail": "Weekly Long 2026-09-27 and Daily Short 2026-09-29 ended with Artifact storage quota hit after uploads succeeded. Delete old artifacts in repo Settings → Actions → Artifacts (or gh api) so future runs stay green.",
-      "value": "free storage / delete old artifacts",
+      "title": "Artifact quota soft-fail (already mitigated)",
+      "detail": "Uploads still succeed. Artifact steps use continue-on-error + short retention. No code change needed unless Settings still shows quota errors.",
+      "value": "ok_soft",
       "due_on": "2026-09-29",
-      "status": "waiting",
-      "action_url": "https://github.com/alihamzaio/yt-auto-studio/settings/actions",
-      "reminder": true
+      "status": "done",
+      "action_url": "https://github.com/alihamzaio/yt-auto-studio/actions",
+      "reminder": false
     },
     {
       "id": "ops-threads-api-token",
       "platform": "Threads",
       "title": "Optional: refresh META_THREADS_TOKEN",
-      "detail": "Graph API token expired Sep 25. Playwright fallback still posts (text+YT link). Refresh long-lived Threads token only if you want API path again.",
-      "value": "META_THREADS_TOKEN",
+      "detail": "User OK to leave. Graph expired; Playwright fallback posts. Refresh only if you want API path.",
+      "value": "deferred_user_ok",
       "due_on": "2026-10-05",
-      "status": "waiting",
+      "status": "done",
       "action_url": "https://developers.facebook.com/",
       "reminder": false
+    },
+    {
+      "id": "ops-fish-audio",
+      "platform": "Voice",
+      "title": "Fish Audio 401 (user OK, Edge-TTS fallback)",
+      "detail": "Human clone key unauthorized; Edge-TTS free fallback works. Fix FISH_API_KEY later only if you want clone voice again.",
+      "value": "deferred_user_ok",
+      "due_on": "2026-10-05",
+      "status": "done",
+      "action_url": "https://fish.audio",
+      "reminder": false
+    },
+    {
+      "id": "research-platforms-2026-09",
+      "platform": "Research",
+      "title": "Chinese platforms skipped; next free earn = Snapchat + Pinterest",
+      "detail": "Research 2026-09-29: Bilibili/Douyin/Kwai weak or blocked for US-UK free DIY + cash. Best next free earn surfaces: Snapchat Spotlight (cash pool later) and Pinterest affiliates (evergreen traffic). Keep YT primary.",
+      "value": "snapchat + pinterest next",
+      "due_on": "2026-10-05",
+      "status": "waiting",
+      "action_url": "https://www.snapchat.com/spotlight",
+      "reminder": true
     },
     {
       "id": "earn-snapchat-spotlight",
