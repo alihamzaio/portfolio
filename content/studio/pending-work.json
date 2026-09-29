@@ -178,12 +178,12 @@
     {
       "id": "earn-snapchat-spotlight",
       "platform": "Snapchat",
-      "title": "Snapchat: Public Profile live; API app needs email",
-      "detail": "2026-09-29: Business org + Public Profile Click Case Files (@clickcasefiles) live. Profile ID d6039304-f72b-4283-8b70-77bc724de864 saved. Developer Portal blocked until Snap account has an email. Then create Marketing API OAuth app + allowlist for Actions Spotlights. Ads payment steps not needed for organic posts.",
-      "value": "@clickcasefiles profile_id=d6039304...",
+      "title": "Snapchat: verify email in app (blocks Developer Portal)",
+      "detail": "2026-09-29: Business + @clickcasefiles Public Profile live; profile ID saved. Auto Spotlight API needs Snap Kit/Marketing OAuth. Blocker: Snap requires verified email in the mobile app (cannot do on web). After email verified, open kit.snapchat.com/manage/apps and create app; agent finishes OAuth + secrets.",
+      "value": "@clickcasefiles needs_app_email_verify",
       "due_on": "2026-10-05",
       "status": "waiting",
-      "action_url": "https://profile.snapchat.com/14ab36d0-ba01-44f5-8765-4c040e9b487f/profiles/d6039304-f72b-4283-8b70-77bc724de864",
+      "action_url": "https://kit.snapchat.com/manage/apps",
       "reminder": true
     },
     {
