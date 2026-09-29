@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-09-29",
   "timezone_note": "Dates are calendar days (local). Unlock mornings of the due_on date.",
   "brand": {
     "display_name_target": "ClickCaseFiles",
@@ -167,34 +167,34 @@
     {
       "id": "research-platforms-2026-09",
       "platform": "Research",
-      "title": "Chinese platforms skipped; next free earn = Snapchat + Pinterest",
-      "detail": "Research 2026-09-29: Bilibili/Douyin/Kwai weak or blocked for US-UK free DIY + cash. Best next free earn surfaces: Snapchat Spotlight (cash pool later) and Pinterest affiliates (evergreen traffic). Keep YT primary.",
-      "value": "snapchat + pinterest next",
+      "title": "Chinese platforms skipped; Snapchat + Pinterest wired",
+      "detail": "Research 2026-09-29: Bilibili/Douyin/Kwai skipped. Code wired for Snapchat Spotlight + Pinterest Pins in Daily Short / Weekly Long. Remaining: one-time OAuth secrets then fully unattended.",
+      "value": "snapchat + pinterest wired",
       "due_on": "2026-10-05",
-      "status": "waiting",
-      "action_url": "https://www.snapchat.com/spotlight",
-      "reminder": true
+      "status": "done",
+      "action_url": "https://github.com/alihamzaio/yt-auto-studio/actions",
+      "reminder": false
     },
     {
       "id": "earn-snapchat-spotlight",
       "platform": "Snapchat",
-      "title": "Add Snapchat Spotlight (cash per view)",
-      "detail": "Create Spotlight publisher for Click Case Files, then wire upload pack (same Short). Highest cash upside of the next platforms.",
-      "value": "Spotlight account + auto upload",
+      "title": "Snapchat Spotlight: one-time OAuth then auto",
+      "detail": "Upload pipeline live in Actions (AES media + spotlights API). Run: python scripts/setup_snapchat_oauth.py then --push. Needs free Public Profile + Marketing API allowlist. After secrets, zero manual posts.",
+      "value": "setup_snapchat_oauth.py",
       "due_on": "2026-10-05",
       "status": "waiting",
-      "action_url": "https://www.snapchat.com/spotlight",
+      "action_url": "https://business.snapchat.com/",
       "reminder": true
     },
     {
       "id": "earn-pinterest",
       "platform": "Pinterest",
-      "title": "Add Pinterest video Pins (affiliate + SEO)",
-      "detail": "Business account + vertical Pins of each Short. Strong for affiliate links once affiliates.yaml is filled.",
-      "value": "Pinterest Business + auto Pin",
+      "title": "Pinterest Pins: one-time OAuth then auto",
+      "detail": "Video Pin pipeline live in Actions. Run: python scripts/setup_pinterest_oauth.py then --push (needs free Business app id/secret). Continuous refresh keeps tokens alive. After secrets, zero manual Pins.",
+      "value": "setup_pinterest_oauth.py",
       "due_on": "2026-10-12",
       "status": "waiting",
-      "action_url": "https://www.pinterest.com/business/create/",
+      "action_url": "https://developers.pinterest.com/apps/",
       "reminder": true
     },
     {
