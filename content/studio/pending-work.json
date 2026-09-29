@@ -121,36 +121,14 @@
       "reminder": false
     },
     {
-      "id": "earn-dailymotion-setup",
-      "platform": "Dailymotion",
-      "title": "Add Dailymotion Private API keys (Pro)",
-      "detail": "No Playwright. Free accounts cannot create Private API keys. When you have Studio Pro keys: put DAILYMOTION_API_KEY/SECRET/PROFILE_ID in .env then python scripts/setup_dailymotion.py --push. Actions uploads with laptop off.",
-      "value": "DAILYMOTION_ENABLED + API key/secret/profile",
-      "due_on": "2026-10-02",
-      "status": "waiting",
-      "action_url": "https://faq.dailymotion.com/hc/en-us/articles/5483274630930-Create-and-manage-your-API-keys",
-      "reminder": true
-    },
-    {
       "id": "earn-odysee-setup",
       "platform": "Odysee",
-      "title": "Link Odysee YouTube Sync once (already flagged in Actions)",
-      "detail": "ODYSEE_YOUTUBE_SYNC=true is set in GitHub secrets. One-time: claim @ClickCaseFiles and link YT at sync.odysee.tv. After that new YT uploads mirror with laptop off. No Playwright.",
+      "title": "Link Odysee YouTube Sync once (free)",
+      "detail": "ODYSEE_YOUTUBE_SYNC=true is set. One-time free link at sync.odysee.tv for @ClickCaseFiles. Then new YT uploads mirror with laptop off.",
       "value": "ODYSEE_YOUTUBE_SYNC=true",
       "due_on": "2026-10-02",
       "status": "waiting",
       "action_url": "https://sync.odysee.tv/",
-      "reminder": true
-    },
-    {
-      "id": "earn-spotify-setup",
-      "platform": "Spotify",
-      "title": "Spotify video needs partner host API (no DIY upload API)",
-      "detail": "Spotify has no self-serve upload API. For Actions automation use Libsyn/Podigee/Audioboom Distribution API and set SPOTIFY_HOST_* secrets, or upload video episodes manually in Spotify for Creators. Playwright path removed.",
-      "value": "SPOTIFY_HOST_ENABLED + host upload URL/token",
-      "due_on": "2026-10-02",
-      "status": "waiting",
-      "action_url": "https://creators.spotify.com/",
       "reminder": true
     },
     {
@@ -178,13 +156,13 @@
     {
       "id": "earn-x-twitter",
       "platform": "X",
-      "title": "Add X video posts (Creator Revenue)",
-      "detail": "Post same Short to X once Premium / revenue sharing eligible. API or Playwright.",
-      "value": "X auto video",
+      "title": "X video skipped (needs paid Premium)",
+      "detail": "Free-only stack: X Creator Revenue needs X Premium. Not wiring until policy allows paid tools.",
+      "value": "skipped_paid",
       "due_on": "2026-10-19",
-      "status": "waiting",
+      "status": "done",
       "action_url": "https://x.com/",
-      "reminder": true
+      "reminder": false
     },
     {
       "id": "earn-affiliates",
