@@ -189,12 +189,12 @@
     {
       "id": "earn-pinterest",
       "platform": "Pinterest",
-      "title": "Pinterest Pins: one-time OAuth then auto",
-      "detail": "Code live in Actions. 2026-09-29: login page reached; Continue with Google blocked in automation (no popup). Need one Business login in your browser, then agent finishes app + OAuth + --push.",
+      "title": "Pinterest Pins: finish app connect (icon + captcha)",
+      "detail": "2026-09-29: Business account Click Case Files created. Developer Connect App form filled (personal API, pin creation). Need: upload app icon + solve reCAPTCHA + Submit. Then agent runs OAuth --push for Actions auto Pins.",
       "value": "setup_pinterest_oauth.py",
       "due_on": "2026-10-12",
       "status": "waiting",
-      "action_url": "https://developers.pinterest.com/apps/",
+      "action_url": "https://developers.pinterest.com/apps/connect/",
       "reminder": true
     },
     {
