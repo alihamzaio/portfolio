@@ -203,12 +203,12 @@ export default async function ProductDetailPage({ params }: Props) {
               <HireCtaBlock
                 variant="compact"
                 title={
-                  product.slug === "birxment-calendar"
-                    ? "Need a private multi-calendar hub like this?"
+                  product.slug === "syncforge-calendar"
+                    ? "Need a private multi-calendar hub like SyncForge?"
                     : "Need this customized for a client?"
                 }
                 description={
-                  product.slug === "birxment-calendar"
+                  product.slug === "syncforge-calendar"
                     ? "I can design and deploy a similar sync board for your team. Production stays yours; we do not publish live client calendars."
                     : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
                 }

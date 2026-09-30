@@ -31,21 +31,21 @@
       "enabled": true
     },
     {
-      "slug": "birxment-calendar",
-      "name": "Birxment Calendar",
-      "tagline": "One private team board for every company calendar you work with.",
-      "description": "A private multi-company schedule aggregator I built for real campaign work: connect Google and Outlook/ICS sources, label each as a company, and see conflicts and free time on one board without leaking join links.",
+      "slug": "syncforge-calendar",
+      "name": "SyncForge",
+      "tagline": "Every company calendar on one private team board.",
+      "description": "Personal multi-company schedule product (Kickoff Forge family). Connect Google and Outlook/ICS, label each source as a company, and see conflicts and free time without leaking join links. First install records who bought it, then creates the admin.",
       "priceLabel": "Private build",
       "buyUrl": "",
       "checkout": "gumroad",
       "demoUrl": "",
       "problem": "Working across several client companies meant living in many Google and Outlook calendars at once. The team could not answer a simple question: who is free, who is double-booked, and which company owns this hour? Sharing raw calendar links exposed join URLs and meeting notes. Spreadsheets and screenshots went stale within minutes.",
-      "solution": "Birxment Calendar pulls every connected company calendar into one color-coded team schedule. Members see availability, conflicts, and free slots. An optional public page shows busy/free and titles only: no descriptions, locations, or meeting URLs. Admins connect sources, set company labels and colors, import ICS/PDF when OAuth is not available, and hit Sync now instead of waiting for the next cron tick.",
-      "howBuilt": "I designed it as a monorepo: Next.js dashboard, Bun HTTP API, Drizzle on Postgres, Redis + BullMQ for ingest and push jobs, Better Auth for email/password (first user is admin). Cron ingests Google OAuth and ICS feeds into normalized event state; the UI reads Postgres rather than hitting Google on every page load. Production runs on containerized Railway-style hosting with Supabase Postgres. The live production instance stays private because it holds real client calendars; this portfolio only shows sanitized mock screenshots.",
+      "solution": "SyncForge pulls every connected company calendar into one color-coded team schedule. Members see availability, conflicts, and free slots. An optional public page shows busy/free and titles only: no descriptions, locations, or meeting URLs. Admins connect sources, set company labels and colors, import ICS/PDF when OAuth is not available, and hit Sync now instead of waiting for the next cron tick. First install captures buyer license details for anyone who purchases from you.",
+      "howBuilt": "Monorepo: Next.js dashboard, Bun HTTP API, Drizzle on Postgres, Redis + BullMQ for ingest and push jobs, Better Auth for email/password (first user is admin). Cron ingests Google OAuth and ICS feeds into normalized event state; the UI reads Postgres rather than hitting Google on every page load. Schedule range indexes and short response caches keep the board snappy. Client production stays private; this portfolio shows sanitized mock screenshots only (Acme, Contoso, Northwind).",
       "screenshots": [
-        "/projects/birxment-week.png",
-        "/projects/birxment-admin.png",
-        "/projects/birxment-public.png"
+        "/projects/syncforge-week.png",
+        "/projects/syncforge-admin.png",
+        "/projects/syncforge-public.png"
       ],
       "downloadUrl": "",
       "includes": [
@@ -54,6 +54,7 @@
         "Conflict detection across synced calendars",
         "Free-time finder across the team week",
         "Day, week, month, and agenda views",
+        "First-install buyer / license capture",
         "Private authenticated schedule for the team",
         "Privacy-safe public schedule (busy/free + title only)",
         "Import .ics files or Outlook print PDFs",

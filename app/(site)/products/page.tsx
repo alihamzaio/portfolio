@@ -9,7 +9,7 @@ import { buildPageMetadata } from "@/lib/seo"
 export const metadata = buildPageMetadata({
   title: "Products",
   description:
-    "Products by Ali Hamza: Kickoff Forge freelance kickoff templates, and Birxment Calendar for multi-company schedule sync.",
+    "Products by Ali Hamza: Kickoff Forge freelance kickoff templates, and SyncForge for multi-company schedule sync.",
   path: "/products",
 })
 
@@ -23,7 +23,7 @@ export default async function ProductsPage() {
         headingLevel={1}
         label="Products"
         title="Tools and kits from real client work"
-        description="Kickoff Forge locks scope before code. Birxment Calendar is a private multi-company schedule case study (screenshots only; production is not public). Hire me when you want a full build."
+        description="Kickoff Forge locks scope before code. SyncForge is a private multi-company schedule case study (screenshots only; production is not public). Hire me when you want a full build."
         align="center"
         className="mx-auto"
       />
@@ -31,6 +31,7 @@ export default async function ProductsPage() {
       <div className="mx-auto max-w-3xl space-y-6">
         {products.map((product) => {
           const onSale = productIsOnSale(product)
+          const isCaseStudy = Boolean(product.problem || product.screenshots?.length)
           return (
             <PremiumReveal key={product.slug}>
               <PremiumCard className="p-6 sm:p-8">
@@ -71,7 +72,7 @@ export default async function ProductsPage() {
                       Pay directly
                     </Link>
                   ) : null}
-                  {!onSale && !product.demoUrl ? (
+                  {!onSale && !product.demoUrl && !isCaseStudy ? (
                     <span className="inline-flex items-center text-sm text-neutral-500">
                       Checkout coming soon
                     </span>

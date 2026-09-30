@@ -22,13 +22,12 @@ export async function getProductsConfig(): Promise<ProductsConfig> {
   const kv = await getStoreJson("products")
   if (kv && typeof kv === "object") {
     const kvConfig = normalizeProductsConfig(kv)
-    // KV wins for existing slugs (admin edits). File adds any new slugs not yet in KV
-    // so a deploy can ship products without requiring an admin re-save first.
-    const bySlug = new Map(kvConfig.products.map((p) => [p.slug, p]))
-    for (const p of fileConfig.products) {
-      if (!bySlug.has(p.slug)) bySlug.set(p.slug, p)
+    const kvBySlug = new Map(kvConfig.products.map((p) => [p.slug, p]))
+    // File defines which products exist (so removals/renames ship on deploy).
+    // KV overrides matching slugs for admin edits without resurrecting deleted products.
+    return {
+      products: fileConfig.products.map((p) => kvBySlug.get(p.slug) ?? p),
     }
-    return { products: [...bySlug.values()] }
   }
 
   return fileConfig

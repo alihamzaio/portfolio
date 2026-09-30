@@ -9,10 +9,10 @@ export const CASE_STUDY_OVERRIDES: Record<
     problem:
       "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",
     solution:
-      "I built Birxment Calendar so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Production stays private because it holds real client data; portfolio uses sanitized mock screenshots.",
+      "I built SyncForge so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Buyers who purchase a private deploy go through an install wizard that stores license details. Client production stays private; portfolio uses sanitized mock screenshots.",
     architecture: [
       "Next.js dashboard with day/week/month/agenda views and company filters",
-      "Bun API + Better Auth; first user becomes admin for user and calendar management",
+      "Bun API + Better Auth; first-install buyer license then first admin",
       "Drizzle/Postgres normalized event state; Redis + BullMQ for ingest and push jobs",
       "Google OAuth and ICS/Outlook ingest; Sync now for on-demand refresh",
       "Privacy boundary: public schedule strips descriptions, locations, and join URLs",
