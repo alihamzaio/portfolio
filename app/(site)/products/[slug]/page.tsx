@@ -95,7 +95,9 @@ export default async function ProductDetailPage({ params }: Props) {
                   Pay directly in 3 steps
                 </a>
               ) : null}
-              {!onSale && !product.demoUrl ? (
+              {product.slug === "syncforge-calendar" ? (
+                <AmberGlassCta href="#buy-private-install">Buy a private install</AmberGlassCta>
+              ) : !onSale && !product.demoUrl ? (
                 <AmberGlassCta href="/contact">
                   {hasCaseStudy ? "Ask about a similar build" : "Ask about early access"}
                 </AmberGlassCta>
@@ -199,17 +201,57 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
 
+            {product.slug === "syncforge-calendar" ? (
+              <section
+                id="buy-private-install"
+                className="mt-14 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-6 sm:px-8 sm:py-8"
+              >
+                <p className="meta-label mb-3">Private install</p>
+                <h2 className="text-xl font-semibold text-white tracking-tight">
+                  Buy a private SyncForge install
+                </h2>
+                <p className="mt-3 text-sm text-neutral-400 leading-relaxed max-w-2xl">
+                  Not a public SaaS. I deploy SyncForge on your infra, connect your company calendars,
+                  and leave you with admin plus a license record from first install. Production stays
+                  yours. No shared Google links, no live client calendars on this portfolio.
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-neutral-300">
+                  <li className="flex gap-2">
+                    <span className="text-[var(--accent-primary)]" aria-hidden>
+                      ✓
+                    </span>
+                    SyncForge private install: up to 5 calendar sources, install wizard, 14-day support
+                    ($1.5k-$3.5k)
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="text-[var(--accent-primary)]" aria-hidden>
+                      ✓
+                    </span>
+                    Full setup: Google OAuth + ICS wiring, company labels, walkthrough ($4k-$8k)
+                  </li>
+                </ul>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <AmberGlassCta href="/contact?topic=syncforge-install">
+                    Request a private install
+                  </AmberGlassCta>
+                  <Link href="/contact" className="btn-secondary btn-responsive inline-flex">
+                    Book a 15-min walkthrough
+                  </Link>
+                </div>
+              </section>
+            ) : null}
+
             <div className="mt-14">
               <HireCtaBlock
                 variant="compact"
                 title={
                   product.slug === "syncforge-calendar"
-                    ? "Need a private multi-calendar hub like SyncForge?"
+                    ? "Need a custom multi-calendar hub beyond the package?"
                     : "Need this customized for a client?"
                 }
                 description={
                   product.slug === "syncforge-calendar"
-                    ? "I can design and deploy a similar sync board for your team. Production stays yours; we do not publish live client calendars."
+                    ? "Hire me to extend SyncForge for your team: more sources, SSO, or a branded public schedule. Client production stays private."
                     : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
                 }
               />
