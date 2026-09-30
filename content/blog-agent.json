@@ -17,6 +17,19 @@
   ],
   "runs": [
     {
+      "id": "run_muoh5850_0obmh2",
+      "at": "2026-09-30T19:04:25.678Z",
+      "status": "ok",
+      "attempts": 1,
+      "weekdayUtc": 3,
+      "topic": "AI-generated social media templates as a side hustle",
+      "title": "Can selling AI-generated social media templates really earn you $200 a week? My test",
+      "slug": "can-selling-ai-generated-social-media-templates-really-earn-you-200-a-week-my-te",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/6356f2ed31f514db775ee99aeec39dbad054124d",
+      "postUrl": "/blog/can-selling-ai-generated-social-media-templates-really-earn-you-200-a-week-my-te",
+      "reason": "Published on schedule"
+    },
+    {
       "id": "run_mukv21hr_aoza2a",
       "at": "2026-09-28T06:22:47.016Z",
       "status": "ok",
