@@ -1,5 +1,40 @@
 [
   {
+    "id": 27,
+    "title": "Birxment Calendar - Multi-Campaign Schedule Sync",
+    "description": "Private team calendar aggregator that syncs multiple company Google and Outlook calendars into one color-coded schedule with conflict and free-time views.",
+    "tags": [
+      "TypeScript",
+      "Next.js",
+      "Bun",
+      "PostgreSQL",
+      "Redis",
+      "BullMQ",
+      "Drizzle",
+      "Better Auth",
+      "Google Calendar",
+      "ICS"
+    ],
+    "image": "/projects/birxment-calendar.png",
+    "details": "Built for multi-company campaign work: ingest Google OAuth and ICS sources, normalize events in Postgres, and serve a privacy-safe team board. Production stays private (real client data). Portfolio shows sanitized mock screenshots only.",
+    "link": "",
+    "featured": true,
+    "problem": "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",
+    "solution": "I built Birxment Calendar so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only.",
+    "architecture": [
+      "Next.js dashboard with day/week/month/agenda views and company filters",
+      "Bun API + Better Auth; first user becomes admin for user and calendar management",
+      "Drizzle/Postgres normalized event state; Redis + BullMQ for ingest and push jobs",
+      "Google OAuth and ICS/Outlook ingest; Sync now for on-demand refresh",
+      "Privacy boundary: public schedule strips descriptions, locations, and join URLs"
+    ],
+    "metrics": [
+      { "label": "sources", "value": "Google + ICS" },
+      { "label": "views", "value": "4" },
+      { "label": "demo", "value": "Private" }
+    ]
+  },
+  {
     "id": 26,
     "title": "Adam Store - Full E-Commerce Platform",
     "description": "MERN e-commerce platform with customer storefront, admin dashboard, and REST API for products, orders, and users.",

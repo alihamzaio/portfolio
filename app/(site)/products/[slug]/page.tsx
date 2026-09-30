@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
@@ -37,6 +38,8 @@ export default async function ProductDetailPage({ params }: Props) {
   const onSale = productIsOnSale(product)
   const showGumroad = productAllowsGumroad(product)
   const showDirect = productAllowsDirect(product)
+  const hasCaseStudy = Boolean(product.problem || product.solution || product.howBuilt)
+  const shots = product.screenshots.filter(Boolean)
 
   return (
     <>
@@ -50,7 +53,9 @@ export default async function ProductDetailPage({ params }: Props) {
       <PremiumPage>
         <PremiumReveal>
           <article className="mx-auto max-w-3xl">
-            <p className="meta-label mb-3">Digital product</p>
+            <p className="meta-label mb-3">
+              {hasCaseStudy && !onSale ? "Case study" : "Digital product"}
+            </p>
             <div className="flex flex-wrap items-baseline justify-between gap-3 mb-4">
               <h1 className="text-3xl md:text-[2.2rem] font-semibold text-white tracking-tight leading-tight">
                 {product.name}
@@ -61,12 +66,26 @@ export default async function ProductDetailPage({ params }: Props) {
             <p className="mt-4 text-neutral-500 text-sm leading-relaxed max-w-2xl">{product.description}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
+              {product.demoUrl ? (
+                <a
+                  href={product.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary btn-responsive inline-flex"
+                >
+                  Open live demo
+                </a>
+              ) : null}
               {showGumroad ? (
                 <a
                   href={product.buyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary btn-responsive inline-flex"
+                  className={
+                    product.demoUrl
+                      ? "btn-secondary btn-responsive inline-flex"
+                      : "btn-primary btn-responsive inline-flex"
+                  }
                 >
                   Buy on Gumroad
                 </a>
@@ -76,24 +95,74 @@ export default async function ProductDetailPage({ params }: Props) {
                   Pay directly in 3 steps
                 </a>
               ) : null}
-              {!onSale ? (
-                <AmberGlassCta href="/contact">Ask about early access</AmberGlassCta>
+              {!onSale && !product.demoUrl ? (
+                <AmberGlassCta href="/contact">
+                  {hasCaseStudy ? "Ask about a similar build" : "Ask about early access"}
+                </AmberGlassCta>
               ) : null}
               <Link href="/contact" className="btn-secondary btn-responsive inline-flex">
                 Hire me instead
               </Link>
             </div>
 
-            {!onSale && (
+            {!onSale && !product.demoUrl && !hasCaseStudy ? (
               <p className="mt-4 text-xs text-neutral-600">
                 Checkout is not linked yet. Use contact if you want the zip early, or wait for a public buy
                 link.
               </p>
-            )}
+            ) : null}
+
+            {hasCaseStudy ? (
+              <div className="mt-12 space-y-8">
+                {product.problem ? (
+                  <section>
+                    <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">The problem</h2>
+                    <p className="text-sm text-neutral-300 leading-relaxed">{product.problem}</p>
+                  </section>
+                ) : null}
+                {product.solution ? (
+                  <section>
+                    <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">The solution</h2>
+                    <p className="text-sm text-neutral-300 leading-relaxed">{product.solution}</p>
+                  </section>
+                ) : null}
+                {product.howBuilt ? (
+                  <section>
+                    <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">How I built it</h2>
+                    <p className="text-sm text-neutral-300 leading-relaxed">{product.howBuilt}</p>
+                  </section>
+                ) : null}
+              </div>
+            ) : null}
+
+            {shots.length > 0 ? (
+              <section className="mt-12">
+                <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Dashboard screenshots</h2>
+                <p className="text-xs text-neutral-600 mb-4">
+                  Sanitized mock UI for portfolio. Production stays private (real client calendars are not linked).
+                </p>
+                <div className="space-y-4">
+                  {shots.map((src) => (
+                    <div
+                      key={src}
+                      className="relative overflow-hidden rounded-xl border border-white/10 aspect-[16/9] bg-black/40"
+                    >
+                      <Image
+                        src={src}
+                        alt={`${product.name} dashboard screenshot`}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 768px) 100vw, 768px"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <div className="mt-12 grid gap-10 sm:grid-cols-2">
               <div>
-                <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Includes</h2>
+                <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Features</h2>
                 <ul className="space-y-2 text-sm text-neutral-300">
                   {product.includes.map((item) => (
                     <li key={item} className="flex gap-2">
@@ -133,8 +202,16 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mt-14">
               <HireCtaBlock
                 variant="compact"
-                title="Need this customized for a client?"
-                description="Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
+                title={
+                  product.slug === "birxment-calendar"
+                    ? "Need a private multi-calendar hub like this?"
+                    : "Need this customized for a client?"
+                }
+                description={
+                  product.slug === "birxment-calendar"
+                    ? "I can design and deploy a similar sync board for your team. Production stays yours; we do not publish live client calendars."
+                    : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
+                }
               />
             </div>
 

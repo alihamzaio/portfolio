@@ -21,6 +21,16 @@ export type DigitalProduct = {
    * - both: show Gumroad and direct
    */
   checkout: ProductCheckout
+  /** Optional live demo / app URL (shown as Open live demo). Leave empty for private builds. */
+  demoUrl: string
+  /** Case study: the pain before the product */
+  problem: string
+  /** Case study: what the product does */
+  solution: string
+  /** Case study: how it was built */
+  howBuilt: string
+  /** Portfolio-safe screenshots (public paths). Never point these at live prod with real data. */
+  screenshots: string[]
   /** Sent by email after you mark an order paid (direct sales). */
   downloadUrl: string
   includes: string[]
@@ -99,6 +109,16 @@ export function normalizeProduct(
     }
   }
 
+  const demoUrl = String((raw as { demoUrl?: string }).demoUrl || "").trim()
+  if (demoUrl) {
+    try {
+      const u = new URL(demoUrl)
+      if (u.protocol !== "http:" && u.protocol !== "https:") return null
+    } catch {
+      return null
+    }
+  }
+
   return {
     slug,
     name,
@@ -107,6 +127,11 @@ export function normalizeProduct(
     priceLabel: String(raw.priceLabel || "").trim() || "$0",
     buyUrl,
     checkout,
+    demoUrl,
+    problem: String((raw as { problem?: string }).problem || "").trim(),
+    solution: String((raw as { solution?: string }).solution || "").trim(),
+    howBuilt: String((raw as { howBuilt?: string }).howBuilt || "").trim(),
+    screenshots: asStringList((raw as { screenshots?: unknown }).screenshots),
     downloadUrl,
     includes: asStringList(raw.includes),
     idealFor: asStringList(raw.idealFor),

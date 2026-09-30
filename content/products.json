@@ -8,6 +8,11 @@
       "priceLabel": "$19",
       "buyUrl": "https://logicwave7.gumroad.com/l/kickoff-forge",
       "checkout": "both",
+      "demoUrl": "",
+      "problem": "",
+      "solution": "",
+      "howBuilt": "",
+      "screenshots": [],
       "downloadUrl": "/downloads/kickoff-forge.zip",
       "includes": [
         "Discovery call worksheet",
@@ -23,6 +28,46 @@
         "Anyone who wants a repeatable kickoff ritual"
       ],
       "starterPath": "digital-products/kickoff-forge",
+      "enabled": true
+    },
+    {
+      "slug": "birxment-calendar",
+      "name": "Birxment Calendar",
+      "tagline": "One private team board for every company calendar you work with.",
+      "description": "A private multi-company schedule aggregator I built for real campaign work: connect Google and Outlook/ICS sources, label each as a company, and see conflicts and free time on one board without leaking join links.",
+      "priceLabel": "Private build",
+      "buyUrl": "",
+      "checkout": "gumroad",
+      "demoUrl": "",
+      "problem": "Working across several client companies meant living in many Google and Outlook calendars at once. The team could not answer a simple question: who is free, who is double-booked, and which company owns this hour? Sharing raw calendar links exposed join URLs and meeting notes. Spreadsheets and screenshots went stale within minutes.",
+      "solution": "Birxment Calendar pulls every connected company calendar into one color-coded team schedule. Members see availability, conflicts, and free slots. An optional public page shows busy/free and titles only: no descriptions, locations, or meeting URLs. Admins connect sources, set company labels and colors, import ICS/PDF when OAuth is not available, and hit Sync now instead of waiting for the next cron tick.",
+      "howBuilt": "I designed it as a monorepo: Next.js dashboard, Bun HTTP API, Drizzle on Postgres, Redis + BullMQ for ingest and push jobs, Better Auth for email/password (first user is admin). Cron ingests Google OAuth and ICS feeds into normalized event state; the UI reads Postgres rather than hitting Google on every page load. Production runs on containerized Railway-style hosting with Supabase Postgres. The live production instance stays private because it holds real client calendars; this portfolio only shows sanitized mock screenshots.",
+      "screenshots": [
+        "/projects/birxment-week.png",
+        "/projects/birxment-admin.png",
+        "/projects/birxment-public.png"
+      ],
+      "downloadUrl": "",
+      "includes": [
+        "Multi-source sync: Google OAuth + ICS/iCal (Outlook publish links)",
+        "Company labels, colors, and company filter",
+        "Conflict detection across synced calendars",
+        "Free-time finder across the team week",
+        "Day, week, month, and agenda views",
+        "Private authenticated schedule for the team",
+        "Privacy-safe public schedule (busy/free + title only)",
+        "Import .ics files or Outlook print PDFs",
+        "Manual meeting entry when a source is missing",
+        "Admin user management and Sync now",
+        "Background ingest + push reconciliation"
+      ],
+      "idealFor": [
+        "Agencies and freelancers with many client calendars",
+        "Ops teams that need one wall of company meetings",
+        "Teams that cannot share raw Google/Outlook links company-wide",
+        "Anyone who wants a similar private calendar hub built for them"
+      ],
+      "starterPath": "",
       "enabled": true
     }
   ]

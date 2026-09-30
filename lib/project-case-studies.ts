@@ -5,6 +5,24 @@ export const CASE_STUDY_OVERRIDES: Record<
   number,
   Pick<Project, "problem" | "solution" | "architecture" | "metrics">
 > = {
+  27: {
+    problem:
+      "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",
+    solution:
+      "I built Birxment Calendar so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Production stays private because it holds real client data; portfolio uses sanitized mock screenshots.",
+    architecture: [
+      "Next.js dashboard with day/week/month/agenda views and company filters",
+      "Bun API + Better Auth; first user becomes admin for user and calendar management",
+      "Drizzle/Postgres normalized event state; Redis + BullMQ for ingest and push jobs",
+      "Google OAuth and ICS/Outlook ingest; Sync now for on-demand refresh",
+      "Privacy boundary: public schedule strips descriptions, locations, and join URLs",
+    ],
+    metrics: [
+      { label: "sources", value: "Google + ICS" },
+      { label: "views", value: "4" },
+      { label: "demo", value: "Private" },
+    ],
+  },
   26: {
     problem:
       "Pakistani shoppers needed a trusted local store for original products with cash on delivery, easy returns, and 24/7 support - not a generic marketplace. The merchant needed one system for storefront, inventory, orders, and admin instead of disconnected tools.",

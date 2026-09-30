@@ -11,16 +11,27 @@ import {
 const FILE = "content/products.json"
 
 export async function getProductsConfig(): Promise<ProductsConfig> {
-  const kv = await getStoreJson("products")
-  if (kv && typeof kv === "object") {
-    return normalizeProductsConfig(kv)
-  }
+  let fileConfig: ProductsConfig = { ...EMPTY_PRODUCTS, products: [] }
   try {
     const file = await readJsonFile<unknown>(FILE)
-    return normalizeProductsConfig(file)
+    fileConfig = normalizeProductsConfig(file)
   } catch {
-    return { ...EMPTY_PRODUCTS, products: [] }
+    // no local file
   }
+
+  const kv = await getStoreJson("products")
+  if (kv && typeof kv === "object") {
+    const kvConfig = normalizeProductsConfig(kv)
+    // KV wins for existing slugs (admin edits). File adds any new slugs not yet in KV
+    // so a deploy can ship products without requiring an admin re-save first.
+    const bySlug = new Map(kvConfig.products.map((p) => [p.slug, p]))
+    for (const p of fileConfig.products) {
+      if (!bySlug.has(p.slug)) bySlug.set(p.slug, p)
+    }
+    return { products: [...bySlug.values()] }
+  }
+
+  return fileConfig
 }
 
 export async function saveProductsConfig(raw: unknown): Promise<{

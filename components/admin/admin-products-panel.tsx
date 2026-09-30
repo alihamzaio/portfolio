@@ -16,6 +16,7 @@ type Props = {
 type Row = DigitalProduct & {
   includesCsv: string
   idealForCsv: string
+  screenshotsCsv: string
 }
 
 function toRow(p: DigitalProduct): Row {
@@ -23,6 +24,7 @@ function toRow(p: DigitalProduct): Row {
     ...p,
     includesCsv: (p.includes || []).join(", "),
     idealForCsv: (p.idealFor || []).join(", "),
+    screenshotsCsv: (p.screenshots || []).join(", "),
   }
 }
 
@@ -35,6 +37,11 @@ function emptyRow(): Row {
     priceLabel: "$19",
     buyUrl: "",
     checkout: "both",
+    demoUrl: "",
+    problem: "",
+    solution: "",
+    howBuilt: "",
+    screenshots: [],
     downloadUrl: "",
     includes: [],
     idealFor: [],
@@ -42,6 +49,7 @@ function emptyRow(): Row {
     enabled: true,
     includesCsv: "",
     idealForCsv: "",
+    screenshotsCsv: "",
   }
 }
 
@@ -91,6 +99,11 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
         priceLabel: r.priceLabel,
         buyUrl: r.buyUrl,
         checkout: r.checkout,
+        demoUrl: r.demoUrl,
+        problem: r.problem,
+        solution: r.solution,
+        howBuilt: r.howBuilt,
+        screenshots: csvList(r.screenshotsCsv),
         downloadUrl: r.downloadUrl,
         starterPath: r.starterPath,
         enabled: r.enabled,
@@ -209,6 +222,12 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
                 onChange={(v) => patchRow(index, { buyUrl: v })}
                 placeholder="https://….gumroad.com/l/…"
               />
+              <Field
+                label="Live demo URL"
+                value={row.demoUrl}
+                onChange={(v) => patchRow(index, { demoUrl: v })}
+                placeholder="https://…"
+              />
               <label className="block text-xs text-[var(--text-muted)] space-y-1">
                 Checkout
                 <select
@@ -255,6 +274,39 @@ export function AdminProductsPanel({ onNotice, onError, noteSyncResponse }: Prop
               value={row.idealForCsv}
               onChange={(v) => patchRow(index, { idealForCsv: v })}
             />
+            <Field
+              label="Screenshot paths (comma-separated)"
+              value={row.screenshotsCsv}
+              onChange={(v) => patchRow(index, { screenshotsCsv: v })}
+              placeholder="/projects/foo.png, /projects/bar.png"
+            />
+            <label className="block text-xs text-[var(--text-muted)] space-y-1">
+              Problem
+              <textarea
+                value={row.problem}
+                onChange={(e) => patchRow(index, { problem: e.target.value })}
+                rows={2}
+                className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)]"
+              />
+            </label>
+            <label className="block text-xs text-[var(--text-muted)] space-y-1">
+              Solution
+              <textarea
+                value={row.solution}
+                onChange={(e) => patchRow(index, { solution: e.target.value })}
+                rows={2}
+                className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)]"
+              />
+            </label>
+            <label className="block text-xs text-[var(--text-muted)] space-y-1">
+              How I built it
+              <textarea
+                value={row.howBuilt}
+                onChange={(e) => patchRow(index, { howBuilt: e.target.value })}
+                rows={2}
+                className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--text-primary)]"
+              />
+            </label>
             <Field
               label="Starter path (repo folder)"
               value={row.starterPath}

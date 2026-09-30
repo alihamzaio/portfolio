@@ -9,7 +9,7 @@ import { buildPageMetadata } from "@/lib/seo"
 export const metadata = buildPageMetadata({
   title: "Products",
   description:
-    "Digital products by Ali Hamza: Kickoff Forge freelance client kickoff templates to lock scope before code.",
+    "Products by Ali Hamza: Kickoff Forge freelance kickoff templates, and Birxment Calendar for multi-company schedule sync.",
   path: "/products",
 })
 
@@ -22,8 +22,8 @@ export default async function ProductsPage() {
       <SectionHeading
         headingLevel={1}
         label="Products"
-        title="Freelance kits that sell your process"
-        description="Kickoff Forge helps you lock scope before code. Hire me when you want the full build done with you."
+        title="Tools and kits from real client work"
+        description="Kickoff Forge locks scope before code. Birxment Calendar is a private multi-company schedule case study (screenshots only; production is not public). Hire me when you want a full build."
         align="center"
         className="mx-auto"
       />
@@ -43,6 +43,16 @@ export default async function ProductsPage() {
                   <Link href={`/products/${product.slug}`} className="btn-primary btn-responsive inline-flex">
                     View details
                   </Link>
+                  {product.demoUrl ? (
+                    <a
+                      href={product.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-secondary btn-responsive inline-flex"
+                    >
+                      Open live demo
+                    </a>
+                  ) : null}
                   {productAllowsGumroad(product) ? (
                     <a
                       href={product.buyUrl}
@@ -61,7 +71,7 @@ export default async function ProductsPage() {
                       Pay directly
                     </Link>
                   ) : null}
-                  {!onSale ? (
+                  {!onSale && !product.demoUrl ? (
                     <span className="inline-flex items-center text-sm text-neutral-500">
                       Checkout coming soon
                     </span>
