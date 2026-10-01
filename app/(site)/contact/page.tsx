@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { ContactContent } from "@/components/pages/contact-content"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { buildPageMetadata } from "@/lib/seo"
@@ -18,7 +19,9 @@ export default function ContactPage() {
           { name: "Contact", path: "/contact" },
         ]}
       />
-      <ContactContent />
+      <Suspense fallback={null}>
+        <ContactContent />
+      </Suspense>
     </>
   )
 }

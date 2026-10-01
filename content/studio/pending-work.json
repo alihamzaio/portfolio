@@ -36,9 +36,9 @@
       "id": "tiktok-nickname",
       "platform": "TikTok",
       "title": "Change nickname to Click Case Files",
-      "detail": "Nickname cooldown until Sep 30. Bio + avatar already done. Username stays @costlymistakesbyali until Oct 23.",
+      "detail": "Nickname unlock was Sep 30. User wants try tomorrow (2026-10-01). Bio + avatar already done. Username stays @costlymistakesbyali until Oct 23.",
       "value": "Click Case Files",
-      "due_on": "2026-09-30",
+      "due_on": "2026-10-01",
       "status": "waiting",
       "action_url": "https://www.tiktok.com/@costlymistakesbyali",
       "reminder": true
@@ -121,17 +121,6 @@
       "reminder": false
     },
     {
-      "id": "earn-odysee-setup",
-      "platform": "Odysee",
-      "title": "Odysee sync started: claim @ClickCaseFiles when ready",
-      "detail": "2026-09-29 check: still Syncing 39 videos; Claim Channel button disabled (\"check back later / finish syncing\"). Auto-claim when button enables. Secrets already set.",
-      "value": "https://odysee.com/@ClickCaseFiles",
-      "due_on": "2026-09-30",
-      "status": "waiting",
-      "action_url": "https://odysee.com/$/channels",
-      "reminder": true
-    },
-    {
       "id": "ops-artifact-quota",
       "platform": "GitHub Actions",
       "title": "Artifact quota soft-fail (already mitigated)",
@@ -145,12 +134,23 @@
     {
       "id": "ops-threads-api-token",
       "platform": "Threads",
-      "title": "Optional: refresh META_THREADS_TOKEN",
-      "detail": "User OK to leave. Graph expired; Playwright fallback posts. Refresh only if you want API path.",
-      "value": "deferred_user_ok",
-      "due_on": "2026-10-05",
+      "title": "Threads Graph token (auto-renew)",
+      "detail": "2026-10-01: META_THREADS_TOKEN valid for @clickcasefiles. Preflight renews long-lived tokens to GH secrets. Also fixed video publish to poll container status before threads_publish (was Media Not Found → text fallback).",
+      "value": "ok_clickcasefiles",
+      "due_on": "2026-09-30",
       "status": "done",
-      "action_url": "https://developers.facebook.com/",
+      "action_url": "https://www.threads.com/@clickcasefiles",
+      "reminder": false
+    },
+    {
+      "id": "ops-threads-video-poll",
+      "platform": "Threads",
+      "title": "Threads video: poll container before publish",
+      "detail": "2026-10-01: Daily Short was falling back to text after 4279009 Media Not Found. crosspost_meta now waits for FINISHED and retries publish on the same creation_id.",
+      "value": "fixed_in_crosspost_meta",
+      "due_on": "2026-10-01",
+      "status": "done",
+      "action_url": "https://github.com/alihamzaio/yt-auto-studio/actions",
       "reminder": false
     },
     {
@@ -176,11 +176,22 @@
       "reminder": false
     },
     {
+      "id": "earn-bluesky",
+      "platform": "Bluesky",
+      "title": "Bluesky live (email verified + secrets)",
+      "detail": "2026-09-30: @clickcasefiles.bsky.social emailConfirmed=true. GH secrets + AUTO_UPLOAD=true live. Daily Short / Weekly Long will post Bluesky Shorts laptop-off.",
+      "value": "https://bsky.app/profile/clickcasefiles.bsky.social",
+      "due_on": "2026-09-30",
+      "status": "done",
+      "action_url": "https://bsky.app/profile/clickcasefiles.bsky.social",
+      "reminder": false
+    },
+    {
       "id": "earn-snapchat-spotlight",
       "platform": "Snapchat",
-      "title": "Snapchat: verify email in app (blocks Developer Portal)",
-      "detail": "2026-09-29: Business + @clickcasefiles Public Profile live; profile ID saved. Auto Spotlight API needs Snap Kit/Marketing OAuth. Blocker: Snap requires verified email in the mobile app (cannot do on web). After email verified, open kit.snapchat.com/manage/apps and create app; agent finishes OAuth + secrets.",
-      "value": "@clickcasefiles needs_app_email_verify",
+      "title": "Snapchat: account locked + email verify in app",
+      "detail": "2026-09-30: Phone access disabled after unusual activity / failed logins. Wait ~24h, one clean login, then verify email in Snapchat app (web cannot). After unlock: Snap Kit OAuth + secrets for auto Spotlight.",
+      "value": "@clickcasefiles locked_wait_email",
       "due_on": "2026-10-05",
       "status": "waiting",
       "action_url": "https://kit.snapchat.com/manage/apps",
@@ -211,13 +222,13 @@
     {
       "id": "earn-affiliates",
       "platform": "Affiliates",
-      "title": "Fill real affiliate links (blog + YT descriptions)",
-      "detail": "Join 2-3 programs you already use (e.g. editing, hosting, creator tools). Paste tracked URLs into config/affiliates.yaml and portfolio Admin → Affiliates.",
-      "value": "config/affiliates.yaml",
-      "due_on": "2026-10-01",
-      "status": "waiting",
+      "title": "Affiliates (deferred - future work)",
+      "detail": "2026-09-29: User skipped for now. One-time join + paste tracked URLs into config/affiliates.yaml + Admin → Affiliates; then Daily Short/blog auto-include. Saved in yt-auto-studio/docs/earning-ideas.md. Do later when traffic is up.",
+      "value": "deferred_future",
+      "due_on": "2026-11-01",
+      "status": "done",
       "action_url": "https://alihamza-fawn.vercel.app/admin",
-      "reminder": true
+      "reminder": false
     },
     {
       "id": "yt-case001-description",

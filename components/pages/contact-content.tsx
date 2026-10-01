@@ -1,7 +1,8 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Mail, MapPin, Phone, Github, Linkedin, Send } from "lucide-react"
 import { PremiumIcon, PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
@@ -10,12 +11,30 @@ import { RippleButton } from "@/components/ui/ripple-button"
 import { siteConfig } from "@/lib/site"
 import { offsiteAnchorProps } from "@/lib/navigation"
 
+const TOPIC_PRESETS: Record<string, { subject: string; message: string }> = {
+  "syncforge-install": {
+    subject: "SyncForge private install",
+    message:
+      "Hi Ali,\n\nI am interested in a private SyncForge install.\n\nPackage: [private install $1.5k-$3.5k / full setup $4k-$8k]\nCalendar sources I need: [Google / Outlook ICS / count]\nTeam size:\nPreferred timeline:\n\nThanks.",
+  },
+}
+
 export function ContactContent() {
+  const searchParams = useSearchParams()
   const [form, setForm] = useState({ name: "", email: "", message: "" })
+  const [subjectHint, setSubjectHint] = useState("Inquiry")
+
+  useEffect(() => {
+    const topic = (searchParams.get("topic") || "").trim().toLowerCase()
+    const preset = TOPIC_PRESETS[topic]
+    if (!preset) return
+    setSubjectHint(preset.subject)
+    setForm((prev) => (prev.message.trim() ? prev : { ...prev, message: preset.message }))
+  }, [searchParams])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Inquiry from ${form.name}`)
+    const subject = encodeURIComponent(`${subjectHint} from ${form.name}`)
     const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)
     window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`
   }
