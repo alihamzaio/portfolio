@@ -4,8 +4,8 @@ import { getAdSenseClient, isAdSenseConfigured } from "@/lib/adsense"
 export { getAdSenseClient, isAdSenseConfigured }
 
 /**
- * Load AdSense once from root layout. Units only mount on blog pages.
- * Requires NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-XXXXXXXX on Vercel.
+ * AdSense loader in <head> (required for site ownership verify).
+ * Units only render on blog pages via AdSenseUnit.
  */
 export function AdSenseScript() {
   const client = getAdSenseClient()
@@ -16,7 +16,7 @@ export function AdSenseScript() {
       async
       src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`}
       crossOrigin="anonymous"
-      strategy="lazyOnload"
+      strategy="beforeInteractive"
     />
   )
 }

@@ -43,6 +43,9 @@ export { viewport } from "@/lib/viewport"
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark site-noise" prefix="og: https://ogp.me/ns#" suppressHydrationWarning>
+      <head>
+        <AdSenseScript />
+      </head>
       <body className={`${dmSans.variable} ${bricolage.variable} ${plexMono.variable} font-sans antialiased`} suppressHydrationWarning>
         <Script id="extension-error-filter" strategy="beforeInteractive">
           {extensionErrorFilterScript}
@@ -50,7 +53,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <StructuredData />
         {children}
         <GoogleAnalytics />
-        <AdSenseScript />
         <AnalyticsDeferred />
       </body>
     </html>
