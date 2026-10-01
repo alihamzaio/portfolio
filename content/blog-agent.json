@@ -17,6 +17,14 @@
   ],
   "runs": [
     {
+      "id": "run_muoxnpp0_2samj3",
+      "at": "2026-10-01T02:46:42.132Z",
+      "status": "skipped",
+      "reason": "Not a publish day (UTC weekday 4). Schedule: 1,3,5",
+      "attempts": 0,
+      "weekdayUtc": 4
+    },
+    {
       "id": "run_muoh90n8_dlx7am",
       "at": "2026-09-30T19:07:22.628Z",
       "status": "skipped",
