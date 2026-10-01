@@ -3,6 +3,7 @@ import type React from "react"
 import Script from "next/script"
 import { Bricolage_Grotesque, DM_Sans, IBM_Plex_Mono } from "next/font/google"
 import { AnalyticsDeferred } from "@/components/analytics-deferred"
+import { AdSenseScript } from "@/components/adsense-script"
 import { GoogleAnalytics } from "@/components/google-analytics"
 import { StructuredData } from "@/components/structured-data"
 import { buildRootMetadata } from "@/lib/seo"
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <StructuredData />
         {children}
         <GoogleAnalytics />
+        <AdSenseScript />
         <AnalyticsDeferred />
       </body>
     </html>

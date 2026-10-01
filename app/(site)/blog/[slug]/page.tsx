@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { Clock, Tag } from "lucide-react"
 import { BlogBody, BlogReferences, blogSourceLabel } from "@/components/pages/blog-body"
 import { BlogCoverImage } from "@/components/pages/blog-cover-image"
+import { AdSenseUnit } from "@/components/adsense-unit"
 import { BlogArticleJsonLd } from "@/components/seo/blog-article-json-ld"
 import { PageBreadcrumbJsonLd } from "@/components/seo/page-breadcrumb-json-ld"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
@@ -86,6 +87,8 @@ export default async function BlogPostPage({ params }: Props) {
             </figure>
 
             <BlogBody body={post.body} />
+
+            <AdSenseUnit />
 
             {post.youtubeUrl && (
               <div className="mt-10 p-5 rounded-xl border border-white/10 bg-white/[0.03]">
