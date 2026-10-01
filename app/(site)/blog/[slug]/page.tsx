@@ -107,6 +107,19 @@ export default async function BlogPostPage({ params }: Props) {
               <p className="text-neutral-400 text-sm leading-relaxed">
                 {author} is a full-stack developer in Lahore specializing in MERN, Next.js, and AWS serverless.
               </p>
+              <p className="text-sm text-neutral-400">
+                Free resource:{" "}
+                <Link
+                  href="/free/viral-packaging-checklist"
+                  className="text-[var(--accent-primary)] hover:underline underline-offset-4"
+                >
+                  viral packaging checklist
+                </Link>
+                {" · "}
+                <Link href="/products" className="text-neutral-300 hover:text-white transition-colors">
+                  products
+                </Link>
+              </p>
               <HireCtaBlock
                 variant="compact"
                 title="Want this built for your product?"

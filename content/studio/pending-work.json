@@ -222,12 +222,23 @@
     {
       "id": "earn-affiliates",
       "platform": "Affiliates",
-      "title": "Affiliates (deferred - future work)",
-      "detail": "2026-09-29: User skipped for now. One-time join + paste tracked URLs into config/affiliates.yaml + Admin → Affiliates; then Daily Short/blog auto-include. Saved in yt-auto-studio/docs/earning-ideas.md. Do later when traffic is up.",
+      "title": "Affiliates (deferred - after traffic)",
+      "detail": "Join programs when views are steady. Paste tracked URLs into yt-auto config/affiliates.yaml.",
       "value": "deferred_future",
       "due_on": "2026-11-01",
       "status": "done",
       "action_url": "https://alihamza-fawn.vercel.app/admin",
+      "reminder": false
+    },
+    {
+      "id": "earn-lead-magnet",
+      "platform": "Portfolio",
+      "title": "Lead magnet + hire CTA live",
+      "detail": "2026-10-01: /free/viral-packaging-checklist + video description hire links + blog footer.",
+      "value": "https://alihamza-fawn.vercel.app/free/viral-packaging-checklist",
+      "due_on": "2026-10-01",
+      "status": "done",
+      "action_url": "https://alihamza-fawn.vercel.app/free/viral-packaging-checklist",
       "reminder": false
     },
     {

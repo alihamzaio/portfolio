@@ -17,6 +17,11 @@ const TOPIC_PRESETS: Record<string, { subject: string; message: string }> = {
     message:
       "Hi Ali,\n\nI am interested in a private SyncForge install.\n\nPackage: [private install $1.5k-$3.5k / full setup $4k-$8k]\nCalendar sources I need: [Google / Outlook ICS / count]\nTeam size:\nPreferred timeline:\n\nThanks.",
   },
+  hire: {
+    subject: "Hire Ali Hamza",
+    message:
+      "Hi Ali,\n\nI found you via Click Case Files / your portfolio.\n\nWhat I need built:\nWho will use it:\nTimeline:\nBudget range (optional):\n\nThanks.",
+  },
 }
 
 export function ContactContent() {

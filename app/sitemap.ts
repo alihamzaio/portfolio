@@ -13,6 +13,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/tech-stack", priority: 0.8, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.85, changeFrequency: "weekly" },
   { path: "/products", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/free/viral-packaging-checklist", priority: 0.75, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.85, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
 ]
