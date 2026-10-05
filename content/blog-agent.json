@@ -17,6 +17,15 @@
   ],
   "runs": [
     {
+      "id": "run_muvmtbgo_5az8r1",
+      "at": "2026-10-05T19:17:31.038Z",
+      "status": "error",
+      "attempts": 1,
+      "weekdayUtc": 1,
+      "error": "Model did not return JSON",
+      "reason": "Publish failed"
+    },
+    {
       "id": "run_mur60ayh_edrwa5",
       "at": "2026-10-02T16:15:58.782Z",
       "status": "ok",
