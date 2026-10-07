@@ -17,13 +17,27 @@
   ],
   "runs": [
     {
+      "id": "run_muydoovi_oo87gb",
+      "at": "2026-10-07T17:25:17.127Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 3,
+      "topic": "AI email drafting workflow for freelancers",
+      "title": "I built a 3-step AI email drafting workflow - did it really free up time and boost my freelance earnings?",
+      "slug": "i-built-a-3-step-ai-email-drafting-workflow-did-it-really-free-up-time-and-boost",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/f5197dbb1d58cb9b187d7e055dde87baa226e742",
+      "postUrl": "/blog/i-built-a-3-step-ai-email-drafting-workflow-did-it-really-free-up-time-and-boost",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_muvmtbgo_5az8r1",
       "at": "2026-10-05T19:17:31.038Z",
       "status": "error",
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Publish failed"
+      "reason": "Superseded by retry run_muydoovi_oo87gb"
     },
     {
       "id": "run_mur60ayh_edrwa5",
