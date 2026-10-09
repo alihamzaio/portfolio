@@ -17,6 +17,20 @@
   ],
   "runs": [
     {
+      "id": "run_mv17mx0y_puv8qn",
+      "at": "2026-10-09T16:59:15.201Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 5,
+      "topic": "AI-driven freelance proposal automation",
+      "title": "Can AI-generated freelance proposals really land more clients? My test",
+      "slug": "can-ai-generated-freelance-proposals-really-land-more-clients-my-test",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/de372d0e76e023dff3e0dd9499c5472ed5bdb4c3",
+      "postUrl": "/blog/can-ai-generated-freelance-proposals-really-land-more-clients-my-test",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_muydoovi_oo87gb",
       "at": "2026-10-07T17:25:17.127Z",
       "status": "ok",
@@ -37,7 +51,7 @@
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_muydoovi_oo87gb"
+      "reason": "Superseded by retry run_mv17mx0y_puv8qn"
     },
     {
       "id": "run_mur60ayh_edrwa5",
