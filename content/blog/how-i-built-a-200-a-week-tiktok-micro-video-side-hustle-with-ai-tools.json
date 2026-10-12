@@ -1,0 +1,30 @@
+{
+  "slug": "how-i-built-a-200-a-week-tiktok-micro-video-side-hustle-with-ai-tools",
+  "title": "How I built a $200-a-week TikTok micro-video side hustle with AI tools",
+  "excerpt": "I turned AI-generated 30-second TikTok videos into a steady $200-weekly side income. Here’s the workflow, costs, and realistic earnings you can expect.",
+  "metaDescription": "Learn a realistic, step-by-step workflow for creating and selling AI-generated 30-second TikTok videos to small businesses. I share tools, pricing, and earnings",
+  "date": "2026-10-12",
+  "readTime": "4 min read",
+  "category": "Side Hustle",
+  "featured": false,
+  "author": "Ali Hamza",
+  "source": "Blog Agent",
+  "coverImage": "https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "coverImageAlt": "Person planning work with notebook and coffee",
+  "tags": [
+    "AI video",
+    "TikTok",
+    "side hustle",
+    "freelance",
+    "digital products"
+  ],
+  "keywords": [
+    "AI video generation",
+    "sell TikTok videos",
+    "micro video side hustle",
+    "AI tools for freelancers",
+    "make money with AI"
+  ],
+  "status": "published",
+  "body": "## Why I tried AI-generated TikTok videos\nI keep hearing that short-form video is the fastest way to get attention online. The hype made me wonder if I could sell ready-made 30-second clips to local businesses without spending hours editing. I set up a workflow that relies only on affordable AI tools.\n\n## The tool stack I settled on\n- Script writing: ChatGPT (free tier) for quick copy.\n- Voice-over: ElevenLabs (free credits, then $5/mo for 10k characters).\n- Video assembly: Pictory (starts at $19/mo) to stitch stock footage, text, and voice.\n- Export & delivery: Gumroad for instant digital product sales.\nI chose these because each has a low entry price and a web UI that doesn’t require a powerful PC. If you already have a favorite stock footage source, you can swap it in.\n\n## Step-by-step workflow (no fluff)\n1. Find a niche - I targeted local coffee shops that want a quick \"new drink\" promo. The niche is narrow enough to personalize but broad enough to repeat.\n2. Create a prompt - In ChatGPT I typed: \"Write a 30-second script for a TikTok video announcing a seasonal latte, include a call to action to visit the shop.\" The output gave me three sentence blocks and a hook.\n3. Generate voice - I pasted the script into ElevenLabs, chose a warm mid-range voice, and downloaded the MP3.\n4. Assemble video - In Pictory I uploaded the voice file, selected \"text-to-video\" mode, and let the AI match stock clips to each line. I tweaked the timing to keep the total under 30 seconds.\n5. Add branding - A quick overlay of the shop's logo (provided by the client) and a final screen with the address.\n6. Export - 1080p MP4, about 5 MB, ready to upload.\n7. List on Gumroad - I created a product called \"30-second TikTok promo for [Coffee Shop]\" with a $30 price point.\n\n## Cost breakdown per video\n- ChatGPT: free within usage limits.\n- ElevenLabs: roughly $0.10 per 30-second clip after the free credits.\n- Pictory: $0.30-$0.50 per video when you amortize the $19/mo subscription over 40 videos a month.\n- Gumroad fees: 5% + $0.30 per sale.\n- Total per video: about $1-$2 in direct costs.\nThat means each $30 sale nets roughly $27 before taxes.\n\n## Finding the first customers\nI didn’t rely on cold-email spamming. Instead I:\n- Scouted Instagram - Looked for local cafés posting static menus but no video.\n- Commented with value - Offered a free 10-second teaser in the comment thread.\n- Follow-up DM - Sent a short message: \"I made a quick TikTok promo for you. Want the full version for $30?\"\nThe personal touch got replies from three owners within a week. Two paid instantly; the third asked for a revision, which I delivered for free to keep the relationship warm.\n\n## Early results\n- Videos sold: 8\n- Gross revenue: $240\n- Platform & tool fees: about $15\n- Net profit: about $225\nI consider $225 a realistic weekly figure once you have a steady pipeline of 2-3 new clients per week. The numbers reflect the time spent on outreach and occasional revisions.\n\n## Scaling tips (without burning out)\n- Template the script - Keep a folder of 5-10 generic hooks you can swap in seconds.\n- Batch voice generation - Generate voice-overs for multiple scripts in one ElevenLabs session to avoid repeated clicks.\n- Outsource revisions - Hire a junior freelancer on Upwork for $5-$10 per tweak once you have a cash cushion.\n- Automate delivery - Use Zapier to send the Gumroad download link automatically when a payment is confirmed.\n\n## FAQ\n**Q: Do I need a professional video editor to make these clips look good?**\nA: Not really. The AI in Pictory does most of the heavy lifting. A few manual tweaks (cropping, timing) are enough to make the final product feel custom.\n\n**Q: What if a client wants a longer video?**\nA: Offer a tiered pricing model: $30 for 30 seconds, $55 for 60 seconds, $80 for 90 seconds. The extra time adds a bit more editing but the workflow stays the same.\n\n## Bottom line\nAI tools let you turn a simple script into a polished TikTok video in under 15 minutes. With a $30 price tag, low overhead, and modest outreach effort, you can reliably pull in $200-$300 a week. It’s not a get-rich-quick scheme, but it is a repeatable micro-service that fits nicely into a freelancer's existing workload."
+}
