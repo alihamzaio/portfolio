@@ -17,6 +17,20 @@
   ],
   "runs": [
     {
+      "id": "run_mv5nzg96_grggds",
+      "at": "2026-10-12T19:47:58.558Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 1,
+      "topic": "AI-generated micro-video side hustle",
+      "title": "How I built a $200-a-week TikTok micro-video side hustle with AI tools",
+      "slug": "how-i-built-a-200-a-week-tiktok-micro-video-side-hustle-with-ai-tools",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/d8398e2b863a6c973210fdd98f30ace26fc17724",
+      "postUrl": "/blog/how-i-built-a-200-a-week-tiktok-micro-video-side-hustle-with-ai-tools",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mv17mx0y_puv8qn",
       "at": "2026-10-09T16:59:15.201Z",
       "status": "ok",
@@ -51,7 +65,7 @@
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mv17mx0y_puv8qn"
+      "reason": "Superseded by retry run_mv5nzg96_grggds"
     },
     {
       "id": "run_mur60ayh_edrwa5",
