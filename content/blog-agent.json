@@ -17,6 +17,20 @@
   ],
   "runs": [
     {
+      "id": "run_mv88u6he_fg4txo",
+      "at": "2026-10-14T15:07:16.884Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 3,
+      "topic": "AI-powered newsletter curation side hustle",
+      "title": "How a simple AI newsletter workflow saved me hours and added extra income",
+      "slug": "how-a-simple-ai-newsletter-workflow-saved-me-hours-and-added-extra-income",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/5b24660aecbeb773522f952398221501ad9b2244",
+      "postUrl": "/blog/how-a-simple-ai-newsletter-workflow-saved-me-hours-and-added-extra-income",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mv5nzg96_grggds",
       "at": "2026-10-12T19:47:58.558Z",
       "status": "ok",
@@ -65,7 +79,7 @@
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mv5nzg96_grggds"
+      "reason": "Superseded by retry run_mv88u6he_fg4txo"
     },
     {
       "id": "run_mur60ayh_edrwa5",
