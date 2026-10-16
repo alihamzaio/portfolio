@@ -1,5 +1,35 @@
 [
   {
+    "id": 28,
+    "title": "SyncForge Job Tracker",
+    "description": "Chrome extension that saves a remote job in one click: role, price, status, and the next follow-up, stored in your own Google Sheet.",
+    "tags": [
+      "Chrome Extension",
+      "JavaScript",
+      "Google Sheets",
+      "SyncForge",
+      "Job Search"
+    ],
+    "image": "/projects/syncforge-job-tracker.png",
+    "details": "SyncForge Job Tracker is a personal product for written-first remote job search. The popup captures the role, company, price, and follow-up, then writes the row to a Google Sheet the user owns. The sheet is the record of every application, meeting, and next step.",
+    "link": "",
+    "github": "https://github.com/alihamzaio/syncforge-job-tracker",
+    "featured": true,
+    "problem": "Applications, prices, and follow-ups were scattered across tabs and memory, so a part-time remote search had no single place to see what was sent, what was said, and what was due next.",
+    "solution": "I packaged SyncForge Job Tracker so one click on a job page saves the role, the price, and the follow-up into a Google Sheet. The sheet stays the source of truth, and the extension is sold as a SyncForge download.",
+    "architecture": [
+      "Chrome extension popup, content script, and background worker",
+      "Google Apps Script endpoint that appends a row to the user's sheet",
+      "Local dashboard for status counts when the sheet is offline",
+      "SyncForge theme aligned with the portfolio: near-black surfaces and vermillion accent"
+    ],
+    "metrics": [
+      { "label": "save", "value": "1 click" },
+      { "label": "record", "value": "Your Sheet" },
+      { "label": "brand", "value": "SyncForge" }
+    ]
+  },
+  {
     "id": 27,
     "title": "SyncForge - Multi-Company Schedule Sync",
     "description": "Private team calendar aggregator that syncs multiple company Google and Outlook calendars into one color-coded schedule with conflict and free-time views.",
