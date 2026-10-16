@@ -17,6 +17,20 @@
   ],
   "runs": [
     {
+      "id": "run_mvb346hy_j7b85y",
+      "at": "2026-10-16T14:50:24.319Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 5,
+      "topic": "AI tools for freelance proposal automation",
+      "title": "Does an AI proposal writer really save me time and win more gigs? My 2-week test",
+      "slug": "does-an-ai-proposal-writer-really-save-me-time-and-win-more-gigs-my-2-week-test",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/41c57f7736de168d9260b8d13a0cb62b5455b869",
+      "postUrl": "/blog/does-an-ai-proposal-writer-really-save-me-time-and-win-more-gigs-my-2-week-test",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mv88u6he_fg4txo",
       "at": "2026-10-14T15:07:16.884Z",
       "status": "ok",
@@ -79,7 +93,7 @@
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mv88u6he_fg4txo"
+      "reason": "Superseded by retry run_mvb346hy_j7b85y"
     },
     {
       "id": "run_mur60ayh_edrwa5",
