@@ -1,26 +1,15 @@
-# Kickoff Forge
+# Kickoff Forge 2.0
 
-Freelance client kickoff templates used to turn a vague chat into a clear build plan.
+Freelance kickoff pack. Turn a vague client chat into a written scope, a price, and a week-one plan before you write code.
 
-Copy each file into your Notion/Docs, fill the blanks, send to the client before you write code.
+Open `00-start-here.md` first.
 
-## Files
+## What changed in 2.0
 
-| File | Use when |
-|------|----------|
-| `01-discovery-call.md` | First call / discovery |
-| `02-scope-one-pager.md` | Written agreement of what ships |
-| `03-estimate-sheet.md` | Rough hours and price bands |
-| `04-tech-decision.md` | Stack choices with tradeoffs |
-| `05-week-one-plan.md` | First 5 working days |
-| `06-handoff-checklist.md` | Launch and ownership transfer |
-
-## How to use
-
-1. Duplicate the pack per client (rename the folder).
-2. Fill discovery during or after the first call.
-3. Send the scope one-pager for written confirmation.
-4. Only then open the repo and start building.
+- A start order, so you know which file to fill on the call
+- The message you paste to the client the same day
+- A change-request sheet for work that shows up after sign-off
+- A filled example (Nova Clinics) of discovery, scope, and estimate
 
 ## License
 

@@ -12,8 +12,7 @@ export function KickoffForgeDemo() {
         Discovery call: filled example
       </h2>
       <p className="mt-2 text-sm text-neutral-500 max-w-2xl leading-relaxed">
-        This is what a completed sheet looks like. The pack you buy is blank templates you reuse per
-        client.
+        This is what a completed sheet looks like. Version 2 of the pack includes this example plus the blank sheets, the client message, and a change request.
       </p>
 
       <div className="mt-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-6 sm:px-7 sm:py-8 font-mono text-[13px] leading-relaxed text-neutral-300">

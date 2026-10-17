@@ -31,6 +31,12 @@ Project: ________________
 - Content migration
 - Rush timeline
 
+## Payment
+
+- Deposit before any build: 40% of the chosen band
+- Balance: on launch
+- Work that is not in the scope: use `08-change-request.md` before you build it
+
 ## Recommendation to client
 
 I recommend the ________ band because:
