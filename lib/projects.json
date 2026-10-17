@@ -66,7 +66,7 @@
     "image": "/projects/syncforge-calendar.png",
     "details": "Built Weeklane for multi-company campaign work: ingest Google OAuth and ICS sources, normalize events in Postgres, and serve a privacy-safe team board. First install records buyer license details. Client production stays private; portfolio shows sanitized mock screenshots only.",
     "link": "",
-    "github": "https://github.com/alihamzaio/syncforge-calendar",
+    "github": "https://github.com/alihamzaio/weeklane",
     "featured": true,
     "problem": "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",
     "solution": "I built Weeklane so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Buyers who purchase a private deploy go through an install wizard that stores license details.",
