@@ -95,7 +95,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   Pay directly in 3 steps
                 </a>
               ) : null}
-              {product.slug === "syncforge-calendar" ? (
+              {product.slug === "weeklane" ? (
                 <AmberGlassCta href="#buy-private-install">Buy a private install</AmberGlassCta>
               ) : !onSale && !product.demoUrl ? (
                 <AmberGlassCta href="/contact">
@@ -140,7 +140,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {shots.length > 0 ? (
               <section className="mt-12">
                 <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Screenshots</h2>
-                {product.slug === "syncforge-calendar" ? (
+                {product.slug === "weeklane" ? (
                   <p className="text-xs text-neutral-600 mb-4">
                     Sanitized mock UI for portfolio. Production stays private (real client calendars are not linked).
                   </p>
@@ -203,17 +203,17 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
 
-            {product.slug === "syncforge-calendar" ? (
+            {product.slug === "weeklane" ? (
               <section
                 id="buy-private-install"
                 className="mt-14 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-6 sm:px-8 sm:py-8"
               >
                 <p className="meta-label mb-3">Private install</p>
                 <h2 className="text-xl font-semibold text-white tracking-tight">
-                  Buy a private SyncForge install
+                  Buy a private Weeklane install
                 </h2>
                 <p className="mt-3 text-sm text-neutral-400 leading-relaxed max-w-2xl">
-                  Not a public SaaS. I deploy SyncForge on your infra, connect your company calendars,
+                  Not a public SaaS. I deploy Weeklane on your infra, connect your company calendars,
                   and leave you with admin plus a license record from first install. Production stays
                   yours. No shared Google links, no live client calendars on this portfolio.
                 </p>
@@ -222,7 +222,7 @@ export default async function ProductDetailPage({ params }: Props) {
                     <span className="text-[var(--accent-primary)]" aria-hidden>
                       ✓
                     </span>
-                    SyncForge private install: up to 5 calendar sources, install wizard, 14-day support
+                    Weeklane private install: up to 5 calendar sources, install wizard, 14-day support
                     ($1.5k-$3.5k)
                   </li>
                   <li className="flex gap-2">
@@ -233,7 +233,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   </li>
                 </ul>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <AmberGlassCta href="/contact?topic=syncforge-install">
+                  <AmberGlassCta href="/contact?topic=weeklane-install">
                     Request a private install
                   </AmberGlassCta>
                   <Link href="/contact" className="btn-secondary btn-responsive inline-flex">
@@ -247,13 +247,13 @@ export default async function ProductDetailPage({ params }: Props) {
               <HireCtaBlock
                 variant="compact"
                 title={
-                  product.slug === "syncforge-calendar"
+                  product.slug === "weeklane"
                     ? "Need a custom multi-calendar hub beyond the package?"
                     : "Need this customized for a client?"
                 }
                 description={
-                  product.slug === "syncforge-calendar"
-                    ? "Hire me to extend SyncForge for your team: more sources, SSO, or a branded public schedule. Client production stays private."
+                  product.slug === "weeklane"
+                    ? "Hire me to extend Weeklane for your team: more sources, SSO, or a branded public schedule. Client production stays private."
                     : product.slug === "jobrow"
                       ? "Buy Jobrow if you want the tracker as it is, or hire me to adapt it for a team."
                       : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."

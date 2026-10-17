@@ -97,13 +97,13 @@ export default function ViralPackagingChecklistPage() {
               </h2>
               <p className="text-sm text-neutral-400 leading-relaxed">
                 I ship production Next.js, MERN, and AWS work. If you need a private multi-company
-                calendar hub, see SyncForge. If you need a clean freelance kickoff pack, see Kickoff
+                calendar hub, see Weeklane. If you need a clean freelance kickoff pack, see Kickoff
                 Forge.
               </p>
               <div className="flex flex-wrap gap-3">
                 <AmberGlassCta href="/contact?topic=hire">Hire me</AmberGlassCta>
-                <Link href="/products/syncforge-calendar" className="btn-secondary btn-responsive inline-flex">
-                  SyncForge
+                <Link href="/products/weeklane" className="btn-secondary btn-responsive inline-flex">
+                  Weeklane
                 </Link>
                 <Link href="/products/kickoff-forge" className="btn-secondary btn-responsive inline-flex">
                   Kickoff Forge

@@ -9,7 +9,7 @@ export const CASE_STUDY_OVERRIDES: Record<
     problem:
       "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",
     solution:
-      "I built SyncForge so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Buyers who purchase a private deploy go through an install wizard that stores license details. Client production stays private; portfolio uses sanitized mock screenshots.",
+      "I built Weeklane so each company account gets a label and color, sources sync into one Postgres-backed schedule, and the team sees conflicts plus free time without exposing meeting links. Optional public page is busy/free only. Buyers who purchase a private deploy go through an install wizard that stores license details. Client production stays private; portfolio uses sanitized mock screenshots.",
     architecture: [
       "Next.js dashboard with day/week/month/agenda views and company filters",
       "Bun API + Better Auth; first-install buyer license then first admin",

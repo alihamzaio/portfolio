@@ -12,10 +12,15 @@ import { siteConfig } from "@/lib/site"
 import { offsiteAnchorProps } from "@/lib/navigation"
 
 const TOPIC_PRESETS: Record<string, { subject: string; message: string }> = {
-  "syncforge-install": {
-    subject: "SyncForge private install",
+  "weeklane-install": {
+    subject: "Weeklane private install",
     message:
-      "Hi Ali,\n\nI am interested in a private SyncForge install.\n\nPackage: [private install $1.5k-$3.5k / full setup $4k-$8k]\nCalendar sources I need: [Google / Outlook ICS / count]\nTeam size:\nPreferred timeline:\n\nThanks.",
+      "Hi Ali,\n\nI am interested in a private Weeklane install.\n\nPackage: [private install $1.5k-$3.5k / full setup $4k-$8k]\nCalendar sources I need: [Google / Outlook ICS / count]\nTeam size:\nPreferred timeline:\n\nThanks.",
+  },
+  "syncforge-install": {
+    subject: "Weeklane private install",
+    message:
+      "Hi Ali,\n\nI am interested in a private Weeklane install.\n\nPackage: [private install $1.5k-$3.5k / full setup $4k-$8k]\nCalendar sources I need: [Google / Outlook ICS / count]\nTeam size:\nPreferred timeline:\n\nThanks.",
   },
   hire: {
     subject: "Hire Ali Hamza",
