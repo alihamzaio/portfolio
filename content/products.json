@@ -1,11 +1,11 @@
 {
   "products": [
     {
-      "slug": "kickoff-forge",
-      "name": "Kickoff Forge",
-      "tagline": "Version 2. Turn a vague client chat into a written scope, a price, and a yes before you write code.",
-      "description": "Kickoff Forge 2.0 is the freelance kickoff pack: discovery, scope, a three-band estimate, the message you send the client, and a change-request sheet. A filled clinic example shows what a finished kickoff looks like. Fill the blanks, send them, then ship.",
-      "priceLabel": "$19",
+      "slug": "scopefirst",
+      "name": "Scopefirst",
+      "tagline": "Get a written scope and a price before you write code.",
+      "description": "Scopefirst is a freelance kickoff pack: discovery, scope, a three-band estimate, the message you send the client, and a change-request sheet. A filled clinic example shows what a finished kickoff looks like. Fill the blanks, send them, then ship.",
+      "priceLabel": "$9",
       "buyUrl": "https://logicwave7.gumroad.com/l/kickoff-forge",
       "checkout": "both",
       "demoUrl": "",
@@ -13,11 +13,11 @@
       "solution": "",
       "howBuilt": "",
       "screenshots": [
-        "/products/kickoff-forge.png"
+        "/products/scopefirst.png"
       ],
-      "downloadUrl": "/downloads/kickoff-forge.zip",
+      "downloadUrl": "/downloads/scopefirst.zip",
       "includes": [
-        "Kickoff Forge 2.0, with a start order",
+        "Scopefirst, with a start order",
         "Discovery call worksheet",
         "Scope one-pager for written sign-off",
         "Estimate sheet with lean / standard / protected bands and a 40% deposit",

@@ -44,6 +44,8 @@ const nextConfig = {
   htmlLimitedBots: /.*/,
   async redirects() {
     return [
+      { source: "/products/kickoff-forge", destination: "/products/scopefirst", statusCode: 301 },
+      { source: "/projects/kickoff-forge", destination: "/projects/scopefirst", statusCode: 301 },
       { source: "/products/syncforge-calendar", destination: "/products/weeklane", statusCode: 301 },
       { source: "/projects/syncforge-multi-company-schedule-sync", destination: "/projects/weeklane", statusCode: 301 },
       { source: "/favicon.ico", destination: "/icon", permanent: false },

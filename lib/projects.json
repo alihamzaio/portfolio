@@ -25,23 +25,23 @@
   },
   {
     "id": 29,
-    "slug": "kickoff-forge",
-    "title": "Kickoff Forge",
-    "description": "Kickoff Forge 2.0 turns a vague client chat into a written scope, a three-band price, and the message you send before you write code.",
+    "slug": "scopefirst",
+    "title": "Scopefirst",
+    "description": "Scopefirst turns a vague client chat into a written scope, a three-band price, and the message you send before you write code.",
     "tags": ["Freelance", "Templates", "Scope", "Estimates"],
-    "image": "/products/kickoff-forge.png",
-    "details": "Version 2 adds the client message, a change-request sheet, and a filled clinic example on top of discovery, scope, estimate, tech decisions, week one, and handoff. Fill the blanks and send them before you write code.",
+    "image": "/products/scopefirst.png",
+    "details": "Scopefirst is the client kickoff pack: discovery, scope, a three-band estimate with a deposit, the message you send the same day, a change-request sheet, and a filled clinic example. Fill the blanks and send them before you write code.",
     "link": "https://logicwave7.gumroad.com/l/kickoff-forge",
     "featured": true,
     "problem": "Freelance builds start from a chat. Scope, price, and the first week stay verbal, then the work drifts.",
-    "solution": "Kickoff Forge 2.0 is the kickoff pack: discovery, scope, estimate, the message you send the same day, and a change request when new work appears. A filled example shows the finished pages. The client can sign the scope before the build starts.",
+    "solution": "Scopefirst is the kickoff pack: discovery, scope, estimate, the message you send the same day, and a change request when new work appears. A filled example shows the finished pages. The client can sign the scope before the build starts.",
     "architecture": [
       "Discovery, scope, and a three-band estimate with a deposit",
       "Client message and a change-request sheet",
       "Filled example, week-one plan, and launch handoff"
     ],
     "metrics": [
-      { "label": "price", "value": "$19" },
+      { "label": "price", "value": "$9" },
       { "label": "version", "value": "2.0" },
       { "label": "buy", "value": "Gumroad" }
     ]

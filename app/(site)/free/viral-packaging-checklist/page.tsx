@@ -97,7 +97,7 @@ export default function ViralPackagingChecklistPage() {
               </h2>
               <p className="text-sm text-neutral-400 leading-relaxed">
                 I ship production Next.js, MERN, and AWS work. If you need a private multi-company
-                calendar hub, see Weeklane. If you need a clean freelance kickoff pack, see Kickoff
+                calendar hub, see Weeklane. If you need a clean freelance kickoff pack, see Scopefirst.
                 Forge.
               </p>
               <div className="flex flex-wrap gap-3">
@@ -105,8 +105,8 @@ export default function ViralPackagingChecklistPage() {
                 <Link href="/products/weeklane" className="btn-secondary btn-responsive inline-flex">
                   Weeklane
                 </Link>
-                <Link href="/products/kickoff-forge" className="btn-secondary btn-responsive inline-flex">
-                  Kickoff Forge
+                <Link href="/products/scopefirst" className="btn-secondary btn-responsive inline-flex">
+                  Scopefirst
                 </Link>
               </div>
             </div>

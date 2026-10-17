@@ -1,4 +1,4 @@
-# Kickoff Forge 2.0
+# Scopefirst
 
 Freelance kickoff pack. Turn a vague client chat into a written scope, a price, and a week-one plan before you write code.
 

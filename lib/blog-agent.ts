@@ -224,7 +224,7 @@ Hard voice rules:
 - Ban em dashes and fancy hyphens. Use normal "-" or commas.
 - Ban markdown pipe tables. Use bold labels + short bullets instead.
 - No fake surveys, invented medians, or precise stats you cannot source. Soft ranges or "rough mental model" only.
-- No "grab my free checklist" fake lead magnets. Light CTA only for Kickoff Forge / freelance systems when it fits.
+- No "grab my free checklist" fake lead magnets. Light CTA only for Scopefirst / freelance systems when it fits.
 - Body 800-1200 words. H2/H3. One short FAQ. End with a clear bottom line.
 
 Goal: searchable and shareable (side hustles, AI tools, freelancing, creator growth). Not default Next.js tutorials.`

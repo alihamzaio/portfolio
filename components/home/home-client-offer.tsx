@@ -47,10 +47,10 @@ export function HomeClientOffer() {
           </SmartLink>
           {" "}or{" "}
           <SmartLink
-            href="/products/kickoff-forge"
+            href="/products/scopefirst"
             className="text-[var(--accent-primary)] hover:underline underline-offset-4"
           >
-            Kickoff Forge ($19)
+            Scopefirst ($9)
           </SmartLink>
           .
         </p>

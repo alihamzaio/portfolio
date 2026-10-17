@@ -9,7 +9,7 @@ import { buildPageMetadata } from "@/lib/seo"
 export const metadata = buildPageMetadata({
   title: "Products",
   description:
-    "Products by Ali Hamza: Jobrow job application tracker, Kickoff Forge freelance kickoff templates, and Weeklane for multi-company schedule sync.",
+    "Products by Ali Hamza: Jobrow job application tracker, Scopefirst freelance kickoff templates, and Weeklane for multi-company schedule sync.",
   path: "/products",
 })
 
@@ -23,7 +23,7 @@ export default async function ProductsPage() {
         headingLevel={1}
         label="Products"
         title="Tools and kits from real client work"
-        description="Jobrow saves a role when you click Apply. Kickoff Forge locks scope before code. Weeklane is a private multi-company schedule case study (screenshots only; production is not public). Hire me when you want a full build."
+        description="Jobrow saves a role when you click Apply. Scopefirst locks scope before code. Weeklane is a private multi-company schedule case study (screenshots only; production is not public). Hire me when you want a full build."
         align="center"
         className="mx-auto"
       />

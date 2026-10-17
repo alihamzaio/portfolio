@@ -201,7 +201,7 @@ export default async function ProductDetailPage({ params }: Props) {
               />
             ) : null}
 
-            {product.slug === "kickoff-forge" && <KickoffForgeDemo />}
+            {product.slug === "scopefirst" && <KickoffForgeDemo />}
 
             {product.slug === "weeklane" ? (
               <section

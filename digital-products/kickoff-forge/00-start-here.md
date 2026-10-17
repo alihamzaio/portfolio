@@ -1,8 +1,8 @@
-# Kickoff Forge 2.0
+# Scopefirst
 
 Use this pack before you write code. One client, one folder, then send the scope for a written yes.
 
-Version 2 adds the message you paste to the client, a change-request sheet, and a filled example (Nova Clinics) so you can see a finished kickoff.
+The pack includes the message you paste to the client, a change-request sheet, and a filled example (Nova Clinics) so you can see a finished kickoff.
 
 ## Order of work
 

@@ -63,10 +63,10 @@ export function HireCtaBlock({
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-[var(--accent-primary)] hover:underline underline-offset-4 self-center"
         >
-          Buy Kickoff Forge ($19)
+          Buy Scopefirst ($9)
         </a>
         <Link
-          href="/products/kickoff-forge"
+          href="/products/scopefirst"
           className="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors self-center"
         >
           Product details
