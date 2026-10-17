@@ -11,6 +11,10 @@ const nextConfig = {
     "/api/admin/blog/**": ["./content/blog/**/*"],
     "/admin": ["./content/blog/**/*"],
   },
+  // Reel videos live in public/ and must stay out of serverless traces.
+  outputFileTracingExcludes: {
+    "*": ["./public/tmp-reels/**/*", "./public/**/*.mp4"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
