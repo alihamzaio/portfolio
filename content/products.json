@@ -41,7 +41,7 @@
       "description": "A Chrome extension that fills a preview from the job page, keeps every application in the browser, and exports a CSV for Google Sheets or Excel. No Google account and no script to paste.",
       "priceLabel": "$9",
       "buyUrl": "https://logicwave7.gumroad.com/l/jobrow",
-      "checkout": "gumroad",
+      "checkout": "both",
       "demoUrl": "",
       "problem": "",
       "solution": "",
@@ -51,7 +51,7 @@
         "/products/jobrow-board.png",
         "/products/jobrow-setup.png"
       ],
-      "downloadUrl": "",
+      "downloadUrl": "/downloads/jobrow.zip",
       "includes": [
         "Jobrow for Chrome, version 3.5.0",
         "Preview of role, company, price, place, and link when you click Apply",
@@ -74,7 +74,7 @@
       "description": "A private multi-company schedule. Connect Google and Outlook or ICS, label each source as a company, and see conflicts and free time without leaking join links. First install records who bought it, then creates the admin.",
       "priceLabel": "Private build",
       "buyUrl": "",
-      "checkout": "gumroad",
+      "checkout": "both",
       "demoUrl": "",
       "problem": "Working across several client companies meant living in many Google and Outlook calendars at once. The team could not answer a simple question: who is free, who is double-booked, and which company owns this hour? Sharing raw calendar links exposed join URLs and meeting notes. Spreadsheets and screenshots went stale within minutes.",
       "solution": "Weeklane pulls every connected company calendar into one color-coded team schedule. Members see availability, conflicts, and free slots. An optional public page shows busy/free and titles only: no descriptions, locations, or meeting URLs. Admins connect sources, set company labels and colors, import ICS/PDF when OAuth is not available, and hit Sync now instead of waiting for the next cron tick. First install captures buyer license details for anyone who purchases from you.",

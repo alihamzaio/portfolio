@@ -2,7 +2,7 @@ import Link from "next/link"
 import { PremiumPage, PremiumReveal } from "@/components/premium"
 import { SectionHeading } from "@/components/ui/section-heading"
 import { PremiumCard } from "@/components/ui/premium-card"
-import { productAllowsGumroad, productIsOnSale, publicProducts } from "@/lib/products"
+import { productAllowsDirect, productAllowsGumroad, productIsOnSale, publicProducts } from "@/lib/products"
 import { getProductsConfig } from "@/lib/products-store"
 import { buildPageMetadata } from "@/lib/seo"
 
@@ -64,7 +64,7 @@ export default async function ProductsPage() {
                       Buy on Gumroad
                     </a>
                   ) : null}
-                  {onSale && !productAllowsGumroad(product) ? (
+                  {productAllowsDirect(product) ? (
                     <Link
                       href={`/products/${product.slug}#pay-direct`}
                       className="btn-secondary btn-responsive inline-flex"

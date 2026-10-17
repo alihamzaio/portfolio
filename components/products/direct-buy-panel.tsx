@@ -119,9 +119,8 @@ export function DirectBuyPanel({ productSlug, productName, priceLabel }: Props) 
         <p className="meta-label mb-3">Order received</p>
         <h2 className="text-2xl font-semibold text-white tracking-tight">Thanks. I am reviewing your payment.</h2>
         <p className="mt-3 text-sm text-neutral-400 leading-relaxed max-w-xl">
-          Your download for <span className="text-white">{productName}</span> ({priceLabel}) will go to{" "}
-          <span className="text-white">{buyerEmail}</span> after I verify the transfer. Most orders clear within a
-          few hours.
+          I will email <span className="text-white">{buyerEmail}</span> after I verify the transfer for{" "}
+          <span className="text-white">{productName}</span> ({priceLabel}). Most orders clear within a few hours.
         </p>
         {orderId ? (
           <p className="mt-4 font-mono text-xs text-neutral-500">Reference: {orderId}</p>
@@ -141,7 +140,7 @@ export function DirectBuyPanel({ productSlug, productName, priceLabel }: Props) 
           {payment.headline || "Pay Ali Hamza directly"}
         </h2>
         <p className="mt-2 text-sm text-neutral-400 max-w-xl leading-relaxed">
-          Three short steps. No Gumroad account needed. You get the files by email after payment is confirmed.
+          Three short steps. No Gumroad account needed. After I confirm the payment, I email you the download or the next step.
         </p>
         <p className="mt-3 font-mono text-sm text-[var(--accent-primary)]">
           {productName} · {priceLabel}

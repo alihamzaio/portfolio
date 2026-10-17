@@ -167,7 +167,7 @@ export function productAllowsGumroad(product: DigitalProduct): boolean {
 }
 
 export function productAllowsDirect(product: DigitalProduct): boolean {
-  return product.checkout === "direct" || product.checkout === "both"
+  return product.enabled !== false
 }
 
 /** Sync helpers used by pages that still import from this module. Prefer products-store on server. */
