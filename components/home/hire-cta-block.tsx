@@ -58,7 +58,7 @@ export function HireCtaBlock({
           Buy Jobrow ($9)
         </a>
         <a
-          href="https://logicwave7.gumroad.com/l/kickoff-forge"
+          href="https://logicwave7.gumroad.com/l/scopefirst"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-[var(--accent-primary)] hover:underline underline-offset-4 self-center"
