@@ -50,12 +50,20 @@ export function HireCtaBlock({
       >
         <AmberGlassCta href="/contact">Hire me for your project</AmberGlassCta>
         <a
+          href="https://logicwave7.gumroad.com/l/jobrow"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center text-sm text-[var(--accent-primary)] hover:underline underline-offset-4 self-center"
+        >
+          Buy Jobrow ($9)
+        </a>
+        <a
           href="https://logicwave7.gumroad.com/l/kickoff-forge"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-[var(--accent-primary)] hover:underline underline-offset-4 self-center"
         >
-          Buy Kickoff Forge
+          Buy Kickoff Forge ($19)
         </a>
         <Link
           href="/products/kickoff-forge"

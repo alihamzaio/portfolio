@@ -139,10 +139,12 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {shots.length > 0 ? (
               <section className="mt-12">
-                <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Dashboard screenshots</h2>
-                <p className="text-xs text-neutral-600 mb-4">
-                  Sanitized mock UI for portfolio. Production stays private (real client calendars are not linked).
-                </p>
+                <h2 className="text-sm uppercase tracking-wider text-neutral-500 mb-3">Screenshots</h2>
+                {product.slug === "syncforge-calendar" ? (
+                  <p className="text-xs text-neutral-600 mb-4">
+                    Sanitized mock UI for portfolio. Production stays private (real client calendars are not linked).
+                  </p>
+                ) : null}
                 <div className="space-y-4">
                   {shots.map((src) => (
                     <div
@@ -153,7 +155,7 @@ export default async function ProductDetailPage({ params }: Props) {
                         src={src}
                         alt={`${product.name} dashboard screenshot`}
                         fill
-                        className="object-cover object-top"
+                        className={product.slug === "jobrow" ? "object-contain object-top" : "object-cover object-top"}
                         sizes="(max-width: 768px) 100vw, 768px"
                       />
                     </div>
@@ -252,7 +254,9 @@ export default async function ProductDetailPage({ params }: Props) {
                 description={
                   product.slug === "syncforge-calendar"
                     ? "Hire me to extend SyncForge for your team: more sources, SSO, or a branded public schedule. Client production stays private."
-                    : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
+                    : product.slug === "jobrow"
+                      ? "Buy Jobrow if you want the tracker as it is, or hire me to adapt it for a team."
+                      : "Buy the pack for a repeatable kickoff, or hire me to run discovery and ship the build."
                 }
               />
             </div>

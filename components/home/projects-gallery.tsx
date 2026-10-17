@@ -6,6 +6,7 @@ import Image from "next/image"
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react"
 import gsap from "gsap"
 import { getGalleryProjects } from "@/lib/gallery-projects"
+import { liveSiteCta } from "@/lib/live-site"
 import { copy } from "@/lib/copy"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 import { prefersReducedMotion } from "@/lib/motion-prefs"
@@ -177,7 +178,7 @@ export function ProjectsGallery() {
                       alt={item.title}
                       fill
                       sizes="(max-width: 1024px) 100vw, 58vw"
-                      className="project-panel-photo object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      className={`project-panel-photo transition-transform duration-700 ease-out group-hover:scale-[1.03] ${item.image.includes("/products/jobrow") ? "object-contain object-top" : "object-cover"}`}
                       priority={i === 0}
                     />
                     <span className="project-panel-image-shade pointer-events-none absolute inset-0" aria-hidden />
@@ -224,16 +225,29 @@ export function ProjectsGallery() {
                         Case study
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </Link>
-                      {(item.demo || item.github) && (
+                      {item.demo && (
                         <Link
-                          href={item.demo || item.github || "#"}
+                          href={item.demo}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-[var(--space-2)] type-label !text-[var(--text-muted)] hover:!text-[var(--text-primary)] transition-colors"
                           data-cursor="external"
                           tabIndex={i === index ? 0 : -1}
                         >
-                          {item.demo ? "Live" : "Source"}
+                          {liveSiteCta(item.demo).label}
+                          <ArrowUpRight className="h-3.5 w-3.5" />
+                        </Link>
+                      )}
+                      {item.github && (
+                        <Link
+                          href={item.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-[var(--space-2)] type-label !text-[var(--text-muted)] hover:!text-[var(--text-primary)] transition-colors"
+                          data-cursor="external"
+                          tabIndex={i === index ? 0 : -1}
+                        >
+                          Source
                           <ArrowUpRight className="h-3.5 w-3.5" />
                         </Link>
                       )}

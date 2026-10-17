@@ -38,7 +38,14 @@ export function HomeClientOffer() {
           <SmartLink href="/#contact" className="text-[var(--accent-primary)] hover:underline underline-offset-4">
             Send your requirements
           </SmartLink>
-          . Prefer a DIY kickoff pack?{" "}
+          . Prefer a product you can buy today?{" "}
+          <SmartLink
+            href="/products/jobrow"
+            className="text-[var(--accent-primary)] hover:underline underline-offset-4"
+          >
+            Jobrow ($9)
+          </SmartLink>
+          {" "}or{" "}
           <SmartLink
             href="/products/kickoff-forge"
             className="text-[var(--accent-primary)] hover:underline underline-offset-4"

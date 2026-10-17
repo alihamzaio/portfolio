@@ -1,32 +1,49 @@
 [
   {
     "id": 28,
-    "title": "SyncForge Job Tracker",
-    "description": "Chrome extension that saves a remote job in one click: role, price, status, and the next follow-up, stored in your own Google Sheet.",
-    "tags": [
-      "Chrome Extension",
-      "JavaScript",
-      "Google Sheets",
-      "SyncForge",
-      "Job Search"
-    ],
-    "image": "/projects/syncforge-job-tracker.png",
-    "details": "SyncForge Job Tracker is a personal product for written-first remote job search. The popup captures the role, company, price, and follow-up, then writes the row to a Google Sheet the user owns. The sheet is the record of every application, meeting, and next step.",
-    "link": "",
-    "github": "https://github.com/alihamzaio/syncforge-job-tracker",
+    "slug": "jobrow",
+    "title": "Jobrow",
+    "description": "Chrome extension that opens a preview when you click Apply, fills the role, company, price, and link, and keeps the search on your computer.",
+    "tags": ["Chrome extension", "JavaScript", "Job search", "CSV export"],
+    "image": "/products/jobrow-save.png",
+    "details": "Click Apply on a job page and Jobrow opens a preview. Fix the company, price, or link if the page got it wrong, then save. The board can be searched and filtered. Export a CSV when you want Google Sheets or Excel.",
+    "link": "https://logicwave7.gumroad.com/l/jobrow",
+    "github": "https://github.com/alihamzaio/jobrow",
     "featured": true,
-    "problem": "Applications, prices, and follow-ups were scattered across tabs and memory, so a part-time remote search had no single place to see what was sent, what was said, and what was due next.",
-    "solution": "I packaged SyncForge Job Tracker so one click on a job page saves the role, the price, and the follow-up into a Google Sheet. The sheet stays the source of truth, and the extension is sold as a SyncForge download.",
+    "problem": "A job search spreads across LinkedIn, Indeed, and company career pages. The role, company, and price are easy to lose, and a spreadsheet setup gets skipped.",
+    "solution": "Jobrow reads the posting when you click Apply, lets you correct the fields, and stores the application in the browser. A follow-up badge appears when a role is still Applied after 7 days.",
     "architecture": [
-      "Chrome extension popup, content script, and background worker",
-      "Google Apps Script endpoint that appends a row to the user's sheet",
-      "Local dashboard for status counts when the sheet is offline",
-      "SyncForge theme aligned with the portfolio: near-black surfaces and vermillion accent"
+      "Preview opens on Apply with role, company, price, place, and link",
+      "Board search plus Applied, In progress, Rejected, and Need follow-up filters",
+      "CSV and JSON export and import, with no Google account"
     ],
     "metrics": [
-      { "label": "save", "value": "1 click" },
-      { "label": "record", "value": "Your Sheet" },
-      { "label": "brand", "value": "SyncForge" }
+      { "label": "price", "value": "$9" },
+      { "label": "version", "value": "3.5.0" },
+      { "label": "buy", "value": "Gumroad" }
+    ]
+  },
+  {
+    "id": 29,
+    "slug": "kickoff-forge",
+    "title": "Kickoff Forge",
+    "description": "Six freelance templates that turn a vague client chat into a written scope, estimate, and week-one plan.",
+    "tags": ["Freelance", "Templates", "Scope", "Estimates"],
+    "image": "/products/kickoff-forge.png",
+    "details": "Discovery notes, a scope one-pager, an estimate with three bands, a tech decision sheet, a week-one plan, and a handoff checklist. Fill the blanks and send them to the client before you write code.",
+    "link": "https://logicwave7.gumroad.com/l/kickoff-forge",
+    "featured": true,
+    "problem": "Freelance builds start from a chat. Scope, price, and the first week stay verbal, then the work drifts.",
+    "solution": "Kickoff Forge is a six-template pack: discovery, scope, estimate, tech decisions, week-one plan, and handoff. The client can sign the scope before the build starts.",
+    "architecture": [
+      "Discovery call worksheet",
+      "Scope one-pager and three-band estimate",
+      "Week-one plan and launch handoff checklist"
+    ],
+    "metrics": [
+      { "label": "price", "value": "$19" },
+      { "label": "templates", "value": "6" },
+      { "label": "buy", "value": "Gumroad" }
     ]
   },
   {

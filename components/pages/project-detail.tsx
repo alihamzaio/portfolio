@@ -39,7 +39,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             src={project.image}
             alt={`${project.title} - project screenshot`}
             fill
-            className="object-cover"
+            className={project.image.includes("/products/jobrow") ? "object-contain object-top" : "object-cover"}
             priority
             sizes="100vw"
           />

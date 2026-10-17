@@ -7,5 +7,8 @@ export function liveSiteCta(url: string): { label: string; cursorLabel: string }
   if (u.includes("testnet") || u.includes(".exec9.")) {
     return { label: "Open staging", cursorLabel: "Staging" }
   }
+  if (u.includes("gumroad.com")) {
+    return { label: "Buy", cursorLabel: "Buy" }
+  }
   return { label: "View live site", cursorLabel: "Open live site" }
 }
