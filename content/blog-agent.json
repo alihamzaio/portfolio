@@ -10,7 +10,6 @@
     6
   ],
   "maxRetries": 3,
-  "useTrendTopics": true,
   "pillars": [
     "Next.js App Router, Vercel deploys, and production debugging from real projects",
     "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
@@ -18,7 +17,16 @@
     "Full-stack patterns I use: auth, Postgres, queues, and admin dashboards",
     "Practical SEO and content quality for developer sites (not side-hustle spam)"
   ],
+  "useTrendTopics": true,
   "runs": [
+    {
+      "id": "run_mvfi0ij7_hz6liv",
+      "at": "2026-10-19T16:58:32.275Z",
+      "status": "skipped",
+      "reason": "Already published successfully today",
+      "attempts": 0,
+      "weekdayUtc": 1
+    },
     {
       "id": "run_mveuldp5_ldzble",
       "at": "2026-10-19T06:02:54.958Z",
