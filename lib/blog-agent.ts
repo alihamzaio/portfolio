@@ -11,6 +11,7 @@ import {
   type BlogAgentState,
 } from "@/lib/blog-agent-types"
 import { pickAgentBlogCover } from "@/lib/blog-cover"
+import { pickDailyTrendTopic } from "@/lib/blog-topic-trends"
 
 export type { BlogAgentRun, BlogAgentRunStatus, BlogAgentState } from "@/lib/blog-agent-types"
 
@@ -34,6 +35,7 @@ function normalizeState(raw: unknown): BlogAgentState {
         : [...DEFAULT_STATE.publishWeekdaysUtc],
     maxRetries: Math.min(5, Math.max(1, Number(o.maxRetries) || 3)),
     pillars,
+    useTrendTopics: o.useTrendTopics !== false,
     runs: Array.isArray(o.runs) ? (o.runs as BlogAgentRun[]) : [],
   }
 }
@@ -456,14 +458,30 @@ export async function runBlogAgent(opts?: {
   }
 
   try {
+    let forcedTopic = failed?.topic || failed?.title || undefined
+    let topicSource: BlogAgentRun["topicSource"] = failed ? "retry" : "pillar"
+    let trendTitle: string | undefined
+
+    if (!forcedTopic && state.useTrendTopics !== false) {
+      const picked = await pickDailyTrendTopic(existingTitles)
+      if (picked.seed && picked.topic) {
+        forcedTopic = picked.topic
+        topicSource = picked.seed.source
+        trendTitle = picked.seed.title
+        run.reason = picked.reason
+      }
+    }
+
     const generated = await generatePost({
       pillars: state.pillars,
       existingTitles,
-      forcedTopic: failed?.topic || failed?.title,
+      forcedTopic,
     })
 
     run.topic = generated.topic
     run.title = generated.title
+    run.topicSource = topicSource
+    run.trendTitle = trendTitle
     const slug = slugifyTitle(generated.title)
 
     const cover = pickAgentBlogCover(slug)

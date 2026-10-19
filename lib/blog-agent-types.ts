@@ -14,20 +14,25 @@ export type BlogAgentRun = {
   attempts: number
   retryOf?: string
   weekdayUtc?: number
+  /** Where the topic seed came from */
+  topicSource?: "reddit" | "google_trends" | "pillar" | "retry"
+  trendTitle?: string
 }
 
 export type BlogAgentState = {
   enabled: boolean
-  /** 0=Sun … 6=Sat (UTC). Default Mon/Wed/Fri = 1,3,5 */
+  /** 0=Sun … 6=Sat (UTC). Default daily. */
   publishWeekdaysUtc: number[]
   maxRetries: number
   pillars: string[]
+  /** Prefer Reddit + Google Trends seeds when available */
+  useTrendTopics?: boolean
   runs: BlogAgentRun[]
 }
 
 export const DEFAULT_BLOG_AGENT_STATE: BlogAgentState = {
   enabled: true,
-  publishWeekdaysUtc: [1, 3],
+  publishWeekdaysUtc: [0, 1, 2, 3, 4, 5, 6],
   maxRetries: 3,
   pillars: [
     "Next.js App Router, Vercel deploys, and production debugging from real projects",
@@ -36,6 +41,7 @@ export const DEFAULT_BLOG_AGENT_STATE: BlogAgentState = {
     "Full-stack patterns I use: auth, Postgres, queues, and admin dashboards",
     "Practical SEO and content quality for developer sites (not side-hustle spam)",
   ],
+  useTrendTopics: true,
   runs: [],
 }
 

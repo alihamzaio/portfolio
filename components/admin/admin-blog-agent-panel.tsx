@@ -59,6 +59,7 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
           enabled: state.enabled,
           publishWeekdaysUtc: state.publishWeekdaysUtc,
           maxRetries: state.maxRetries,
+          useTrendTopics: state.useTrendTopics !== false,
           pillars,
         }),
       })
@@ -155,8 +156,8 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
     <div className="space-y-6">
       <Panel title="Blog Agent">
         <p className="text-sm text-[var(--text-secondary)] mb-4">
-          Auto-publishes viral, SEO-friendly trend posts 3x/week (Mon / Wed / Fri UTC by default) via Groq.
-          Focus is search demand and shareability (side hustles, AI, creator growth), not tech-stack tutorials.
+          Daily (UTC) blog agent: picks a fresh Reddit or Google Trends topic in webdev / freelance niches,
+          then writes a proper first-person case-study style post. Hustle and make-money spam is blocked.
           Failed jobs stay in history and are retried automatically (up to max retries).
         </p>
 
@@ -172,6 +173,14 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                   onChange={(e) => setState({ ...state, enabled: e.target.checked })}
                 />
                 Enabled
+              </label>
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={state.useTrendTopics !== false}
+                  onChange={(e) => setState({ ...state, useTrendTopics: e.target.checked })}
+                />
+                Reddit + Google Trends topics
               </label>
               <span
                 className={cn(
@@ -323,6 +332,12 @@ export function AdminBlogAgentPanel({ onNotice, onError }: Props) {
                     </td>
                     <td className="py-2.5 pr-3">
                       <div>{run.title || run.topic || "-"}</div>
+                      {run.topicSource || run.trendTitle ? (
+                        <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                          {run.topicSource || "topic"}
+                          {run.trendTitle ? `: ${run.trendTitle}` : ""}
+                        </div>
+                      ) : null}
                       {run.slug ? (
                         <a
                           href={run.postUrl || `/blog/${run.slug}`}
