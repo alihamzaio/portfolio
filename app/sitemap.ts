@@ -16,6 +16,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/free/viral-packaging-checklist", priority: 0.75, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.85, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/terms", priority: 0.4, changeFrequency: "yearly" },
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

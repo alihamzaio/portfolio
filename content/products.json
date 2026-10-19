@@ -9,9 +9,9 @@
       "buyUrl": "https://logicwave7.gumroad.com/l/scopefirst",
       "checkout": "both",
       "demoUrl": "",
-      "problem": "",
-      "solution": "",
-      "howBuilt": "",
+      "problem": "Freelance projects stall when the client never sees a written scope. Chat threads replace a signed one-pager, estimates live in your head, and change requests arrive as \"quick\" extras with no paper trail. You lose days clarifying work you already explained.",
+      "solution": "Scopefirst is a kickoff pack you fill once: discovery questions, a scope one-pager, three-band estimates with a deposit line, the client message, and a change-request sheet. A filled clinic example shows what done looks like so you are not inventing the format under pressure.",
+      "howBuilt": "Markdown templates plus a portfolio product page with direct and Gumroad checkout. Files ship as a zip from /downloads. No account required to buy; the value is the ritual and the filled example, not a SaaS login.",
       "screenshots": [
         "/products/scopefirst.png"
       ],
@@ -43,9 +43,9 @@
       "buyUrl": "https://logicwave7.gumroad.com/l/jobrow",
       "checkout": "both",
       "demoUrl": "",
-      "problem": "",
-      "solution": "",
-      "howBuilt": "",
+      "problem": "Job boards scatter role, company, salary, and apply links across tabs. Spreadsheets go stale, and you forget which listings need a follow-up. Pasting scripts into Google Sheets is brittle and often breaks.",
+      "solution": "Jobrow is a Chrome extension that captures a preview when you click Apply, stores applications in the browser, and exports CSV/JSON for Sheets or Excel. Filters and a 7-day follow-up badge keep the board useful without a backend account.",
+      "howBuilt": "Manifest V3 Chrome extension with local storage, board UI, and import/export. No Google account required. Screenshots on this site are from the packaged build. License fulfillment is through Gumroad or direct checkout on the product page.",
       "screenshots": [
         "/products/jobrow-save.png",
         "/products/jobrow-board.png",

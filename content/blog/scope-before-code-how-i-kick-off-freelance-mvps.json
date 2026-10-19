@@ -1,0 +1,14 @@
+{
+  "slug": "scope-before-code-how-i-kick-off-freelance-mvps",
+  "title": "Scope before code: how I kick off freelance MVPs",
+  "excerpt": "The kickoff ritual I use before writing client code: discovery, written scope, three-band estimate, deposit, and a change-request path so \"quick extras\" do not erase the plan.",
+  "metaDescription": "Freelance MVP kickoff process: discovery call, written scope, estimate bands, deposit, and change requests before you write production code.",
+  "category": "Freelance",
+  "tags": ["freelance", "scope", "mvp", "clients", "estimation"],
+  "keywords": ["freelance project scope", "mvp estimate", "client kickoff checklist"],
+  "coverImage": "/products/scopefirst.png",
+  "author": "Ali Hamza",
+  "status": "published",
+  "publishedAt": "2026-10-19",
+  "body": "## The expensive mistake\n\nStarting a client MVP in a chat thread feels fast. It is not. Without a written scope, every new message can redefine the product. You either eat the cost or fight about it later.\n\nI kick off with paper (or Markdown) before a repo.\n\n## Step 1: Discovery that fits one call\n\nI ask for:\n\n- Who the user is and what they do today without the product\n- The one outcome that means version one worked\n- Must-have vs later\n- Logins, payments, admin needs, and data sensitivity\n- Deadline and who approves\n\nIf the client cannot answer those, we are not ready to estimate.\n\n## Step 2: One-page scope\n\nThe scope names:\n\n- In-scope screens and flows\n- Out-of-scope items (explicitly)\n- Assumptions\n- Definition of done for the first release\n\nI send this for written sign-off. Chat agreement is not enough.\n\n## Step 3: Three-band estimate\n\nI price lean / standard / protected bands so the client sees tradeoffs. A deposit (often around 40%) starts the work. The protected band exists for unclear APIs, design churn, or multi-role admin.\n\n## Step 4: Change requests\n\nAfter sign-off, new work goes on a change-request sheet: what changed, why, impact on timeline and price. This keeps the relationship adult when \"one more button\" appears.\n\n## Tools I use\n\nI packed this ritual into **Scopefirst**, a kickoff pack with a filled clinic example. The point is not the PDF. The point is repeating the same clear steps on every engagement.\n\n## After kickoff\n\nOnly then do I open the repo: Next.js or the stack the constraint requires, staging on Vercel, and a short week-one plan. Code without scope is expensive theater.\n\nIf you are stuck mid-project without a written scope, stop coding for a day, write the one-pager, and reset expectations with the client."
+}

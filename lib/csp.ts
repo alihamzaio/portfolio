@@ -11,12 +11,18 @@ export type CspOptions = {
 export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): string {
   // Static Next.js pages cannot stamp per-request nonces on all hydration scripts.
   // Prefer a host-allowlist CSP that keeps XSS protections without console CSP noise.
+  void nonce
   const scriptSrc = [
     "'self'",
     "'unsafe-inline'",
     "https://va.vercel-scripts.com",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
+    // Google AdSense (ownership check + ad serving)
+    "https://pagead2.googlesyndication.com",
+    "https://www.googleadservices.com",
+    "https://www.googletagservices.com",
+    "https://adservice.google.com",
     // next dev react-refresh uses eval(); only on http://localhost, not production https.
     ...(!isSecure ? ["'unsafe-eval'"] : []),
   ]
@@ -28,7 +34,19 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "https://www.google-analytics.com",
     "https://region1.google-analytics.com",
     "https://www.googletagmanager.com",
+    "https://pagead2.googlesyndication.com",
+    "https://googleads.g.doubleclick.net",
+    "https://tpc.googlesyndication.com",
+    "https://adservice.google.com",
     ...(!isSecure ? ["ws://localhost:*", "wss://localhost:*"] : []),
+  ]
+
+  const frameSrc = [
+    "'self'",
+    "https://googleads.g.doubleclick.net",
+    "https://tpc.googlesyndication.com",
+    "https://www.google.com",
+    "https://pagead2.googlesyndication.com",
   ]
 
   return [
@@ -37,10 +55,11 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline'",
     // Allow any https image host so blog covers (Pexels, Unsplash, Cloudinary, etc.) work.
-    // Still no http: — upgrade-insecure-requests covers mixed content on https pages.
+    // Still no http: upgrade-insecure-requests covers mixed content on https pages.
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     `connect-src ${connectSrc.join(" ")}`,
+    `frame-src ${frameSrc.join(" ")}`,
     "frame-ancestors 'none'",
     "base-uri 'none'",
     "form-action 'self' mailto:",
@@ -48,4 +67,3 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     ...(isSecure ? ["upgrade-insecure-requests"] : []),
   ].join("; ")
 }
-
