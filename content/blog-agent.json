@@ -17,6 +17,20 @@
   ],
   "runs": [
     {
+      "id": "run_mveuldp5_ldzble",
+      "at": "2026-10-19T06:02:54.958Z",
+      "status": "ok",
+      "attempts": 2,
+      "retryOf": "run_muvmtbgo_5az8r1",
+      "weekdayUtc": 1,
+      "topic": "AI-driven pricing models for freelancers",
+      "title": "Can AI really help me price my freelance projects better? My test",
+      "slug": "can-ai-really-help-me-price-my-freelance-projects-better-my-test",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/c5fd7d9eb679197e26dcd7129c95c444aaad13b0",
+      "postUrl": "/blog/can-ai-really-help-me-price-my-freelance-projects-better-my-test",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mvb346hy_j7b85y",
       "at": "2026-10-16T14:50:24.319Z",
       "status": "ok",
@@ -93,7 +107,7 @@
       "attempts": 1,
       "weekdayUtc": 1,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mvb346hy_j7b85y"
+      "reason": "Superseded by retry run_mveuldp5_ldzble"
     },
     {
       "id": "run_mur60ayh_edrwa5",
