@@ -26,17 +26,15 @@ export type BlogAgentState = {
 }
 
 export const DEFAULT_BLOG_AGENT_STATE: BlogAgentState = {
-  enabled: true,
-  publishWeekdaysUtc: [1, 3, 5],
+  enabled: false,
+  publishWeekdaysUtc: [1, 3],
   maxRetries: 3,
   pillars: [
-    "Viral money and side-hustle trends people search this week",
-    "AI tools, prompts, and workflows that save time or make money",
-    "Online income: freelancing, digital products, Gumroad, newsletters",
-    "Career and productivity hacks with strong search demand",
-    "Creator economy: growth, SEO blogging, audience building",
-    "Hot internet debates explained simply (searchable, shareable)",
-    "Practical how-to guides for beginners with high click intent",
+    "Next.js App Router, Vercel deploys, and production debugging from real projects",
+    "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
+    "Building portfolio case studies and digital products with honest constraints",
+    "Full-stack patterns I use: auth, Postgres, queues, and admin dashboards",
+    "Practical SEO and content quality for developer sites (not side-hustle spam)",
   ],
   runs: [],
 }

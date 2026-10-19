@@ -118,6 +118,9 @@ export function SiteFooterClient() {
             <Link href="/privacy" className="hover:text-[var(--text-secondary)] transition-colors">
               Privacy
             </Link>
+            <Link href="/terms" className="hover:text-[var(--text-secondary)] transition-colors">
+              Terms
+            </Link>
           </div>
           <button
             type="button"
