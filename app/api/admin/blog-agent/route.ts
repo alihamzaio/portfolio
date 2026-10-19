@@ -54,6 +54,8 @@ export async function PATCH(req: NextRequest) {
     pillars: Array.isArray(body.pillars)
       ? body.pillars.map(String).filter(Boolean)
       : current.pillars,
+    useTrendTopics:
+      typeof body.useTrendTopics === "boolean" ? body.useTrendTopics : current.useTrendTopics !== false,
     runs: current.runs,
   }
 
