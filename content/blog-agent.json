@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "publishWeekdaysUtc": [
     1,
     3

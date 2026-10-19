@@ -6,6 +6,7 @@ import { getAllBlogPostsAdmin, slugifyTitle } from "@/lib/blog"
 import { blogGroqModelQueue, isGroqModelUnavailableError } from "@/lib/llm-models"
 import {
   DEFAULT_BLOG_AGENT_STATE,
+  pillarsLookLikeHustleSpam,
   type BlogAgentRun,
   type BlogAgentState,
 } from "@/lib/blog-agent-types"
@@ -18,6 +19,13 @@ const DEFAULT_STATE = DEFAULT_BLOG_AGENT_STATE
 function normalizeState(raw: unknown): BlogAgentState {
   if (!raw || typeof raw !== "object") return { ...DEFAULT_STATE, runs: [] }
   const o = raw as Partial<BlogAgentState>
+  const pillarsRaw =
+    Array.isArray(o.pillars) && o.pillars.length
+      ? o.pillars.map(String).filter(Boolean)
+      : [...DEFAULT_STATE.pillars]
+  const pillars = pillarsLookLikeHustleSpam(pillarsRaw)
+    ? [...DEFAULT_STATE.pillars]
+    : pillarsRaw
   return {
     enabled: o.enabled !== false,
     publishWeekdaysUtc:
@@ -25,10 +33,7 @@ function normalizeState(raw: unknown): BlogAgentState {
         ? o.publishWeekdaysUtc.map((n) => Number(n)).filter((n) => n >= 0 && n <= 6)
         : [...DEFAULT_STATE.publishWeekdaysUtc],
     maxRetries: Math.min(5, Math.max(1, Number(o.maxRetries) || 3)),
-    pillars:
-      Array.isArray(o.pillars) && o.pillars.length
-        ? o.pillars.map(String).filter(Boolean)
-        : [...DEFAULT_STATE.pillars],
+    pillars,
     runs: Array.isArray(o.runs) ? (o.runs as BlogAgentRun[]) : [],
   }
 }
@@ -203,6 +208,43 @@ function extractJsonObject(text: string): Record<string, unknown> {
   }
 }
 
+const BANNED_HUSTLE =
+  /\b(side[- ]?hustle|make money online|\$\d+\s*(a|per)\s*(day|week|month)|passive income|get rich|sell(ing)? (ai )?prompts?|print on demand|gumroad empire|chatgpt prompts? for sale)\b/i
+
+const BANNED_SLOP =
+  /\b(roadmap|leverage|unlock|delve|game-?changer|comprehensive|cutting-edge|landscape|data-driven|key platforms|in this guide|introduction)\b/i
+
+function wordCount(text: string): number {
+  return text
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#>*_\-|[\]()`]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length
+}
+
+function assertQualityPost(title: string, body: string, category: string) {
+  const blob = `${title}\n${body}\n${category}`
+  if (BANNED_HUSTLE.test(blob)) {
+    throw new Error("Rejected: looks like side-hustle / make-money spam")
+  }
+  if (BANNED_SLOP.test(title)) {
+    throw new Error("Rejected: title uses banned brochure words")
+  }
+  const words = wordCount(body)
+  if (words < 900) {
+    throw new Error(`Rejected: body too thin (${words} words; need 900+)`)
+  }
+  if (words > 1800) {
+    throw new Error(`Rejected: body too long (${words} words; keep under 1800)`)
+  }
+  if (!/\bI\b/.test(body) && !/\bmy\b/i.test(body)) {
+    throw new Error("Rejected: missing first-person experience voice")
+  }
+  if (!/^##\s+/m.test(body)) {
+    throw new Error("Rejected: body needs H2 sections")
+  }
+}
+
 async function generatePost(opts: {
   pillars: string[]
   existingTitles: string[]
@@ -215,29 +257,41 @@ async function generatePost(opts: {
 Return ONE JSON object only. No markdown fences. No commentary outside JSON.
 Keys: topic, title, excerpt, metaDescription, category, tags (string[]), keywords (string[]), body (markdown string).
 
-Who you are: a working full-stack freelancer. Direct, specific, slightly skeptical of hype. Not a content farm.
+Who you are: a working full-stack freelancer (Next.js, clients, digital products like Scopefirst/Jobrow/Weeklane). You write from real build and client work, not a content farm.
+
+ALLOWED topics only:
+- Case studies / postmortems (what broke, constraints, what you shipped)
+- Next.js, Vercel, auth, Postgres, queues, admin dashboards, CSP, SEO for real sites
+- Freelance practice: scoping, estimates, kickoff, change requests, client communication
+- Portfolio / product craft: how you structure pages, screenshots, trust pages
+
+FORBIDDEN topics (never write these):
+- Side hustles, "make money online", passive income, selling prompts, POD, fake TikTok income
+- Generic AI tool roundups with no personal project attached
+- Clickbait earnings claims ($X/week) you did not measure
 
 Hard voice rules:
-- First person ("I") or direct "you". Short paragraphs (2-4 sentences).
-- Open with a real doubt or sharp question, never "Introduction" or "In this guide".
-- Ban these words/phrases: roadmap, leverage, unlock, delve, game-changer, comprehensive, cutting-edge, landscape, "data-driven look", "key platforms", "step-by-step checklist" as a heading style.
-- Ban em dashes and fancy hyphens. Use normal "-" or commas.
-- Ban markdown pipe tables. Use bold labels + short bullets instead.
-- No fake surveys, invented medians, or precise stats you cannot source. Soft ranges or "rough mental model" only.
-- No "grab my free checklist" fake lead magnets. Light CTA only for Scopefirst / freelance systems when it fits.
-- Body 800-1200 words. H2/H3. One short FAQ. End with a clear bottom line.
-
-Goal: searchable and shareable (side hustles, AI tools, freelancing, creator growth). Not default Next.js tutorials.`
+- First person ("I") with concrete details (stack, failure, fix, tradeoff).
+- Short paragraphs (2-4 sentences). Open with a real problem, never "Introduction".
+- Ban: roadmap, leverage, unlock, delve, game-changer, comprehensive, cutting-edge, landscape, "data-driven", "key platforms".
+- Ban em dashes. Use "-" or commas or a new sentence.
+- Ban markdown pipe tables. Use bold labels + short bullets.
+- No fake surveys or invented statistics.
+- Light CTA only when natural: /projects, /contact, Scopefirst, Jobrow, Weeklane.
+- Body 900-1400 words. H2/H3. One short FAQ. End with a clear bottom line.
+- Category must be one of: Engineering, Freelance, Case Study, Products (not Trends/Money).`
 
   const user = opts.forcedTopic
-    ? `Write the full post about: ${opts.forcedTopic}
+    ? `Write a REAL experience / case-study style post about: ${opts.forcedTopic}
+
+Ground it in concrete freelance or portfolio work. No hustle spam.
 
 Avoid these existing titles:
 - ${used || "(none)"}`
-    : `Pick ONE fresh high-intent topic from:
+    : `Pick ONE fresh topic from these pillars only:
 ${pillars}
 
-Title should sound like something a person would search or share, not a textbook chapter.
+Title should sound like a practitioner search query (how / why / what broke), not a textbook or money clickbait.
 
 Avoid these existing titles:
 - ${used || "(none)"}`
@@ -257,9 +311,11 @@ Avoid these existing titles:
   let post = draft
   try {
     const humanizedText = await groqJson(
-      `You are an editor. Rewrite this blog JSON so it cannot be spotted as AI slop.
-Keep the topic and useful facts. Cut brochure tone. Add one concrete example or opinion.
-Replace any pipe tables with bullets. Replace em dashes with "-" or new sentences.
+      `You are an editor for a developer portfolio blog.
+Rewrite this JSON into a sharper first-person case study / how-I-work post.
+Keep useful facts. Cut brochure tone. Add one concrete failure or tradeoff.
+If the draft smells like side-hustle or make-money spam, rewrite onto a real engineering/freelance practice angle instead.
+Replace pipe tables with bullets. Replace em dashes with "-" or new sentences.
 Remove fake statistics. Keep JSON keys: topic, title, excerpt, metaDescription, category, tags, keywords, body.
 Return ONLY JSON.`,
       JSON.stringify({
@@ -289,6 +345,11 @@ Return ONLY JSON.`,
   const body = scrub(String(post.body || draft.body || "").trim())
   if (!title || !body) throw new Error("Generated post missing title/body")
 
+  let category = scrub(String(post.category || draft.category || "Engineering").trim())
+  if (/trend|money|hustle|income/i.test(category)) category = "Engineering"
+
+  assertQualityPost(title, body, category)
+
   const excerpt = scrub(
     String(post.excerpt || body.replace(/\s+/g, " ").slice(0, 180)).trim()
   )
@@ -297,7 +358,7 @@ Return ONLY JSON.`,
     title,
     excerpt,
     metaDescription: scrub(String(post.metaDescription || excerpt).trim().slice(0, 160)),
-    category: scrub(String(post.category || "Trends").trim()),
+    category,
     tags: Array.isArray(post.tags) ? post.tags.map((t) => scrub(String(t))).slice(0, 8) : [],
     keywords: Array.isArray(post.keywords)
       ? post.keywords.map((k) => scrub(String(k))).slice(0, 12)

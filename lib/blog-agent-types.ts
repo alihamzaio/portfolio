@@ -26,7 +26,7 @@ export type BlogAgentState = {
 }
 
 export const DEFAULT_BLOG_AGENT_STATE: BlogAgentState = {
-  enabled: false,
+  enabled: true,
   publishWeekdaysUtc: [1, 3],
   maxRetries: 3,
   pillars: [
@@ -37,4 +37,18 @@ export const DEFAULT_BLOG_AGENT_STATE: BlogAgentState = {
     "Practical SEO and content quality for developer sites (not side-hustle spam)",
   ],
   runs: [],
+}
+
+/** Old money-farm pillars must never keep publishing. */
+export function pillarsLookLikeHustleSpam(pillars: string[]): boolean {
+  const blob = pillars.join(" ").toLowerCase()
+  return (
+    blob.includes("side hustle") ||
+    blob.includes("side-hustle") ||
+    blob.includes("make money") ||
+    blob.includes("passive income") ||
+    blob.includes("gumroad") ||
+    blob.includes("creator economy") ||
+    blob.includes("viral money")
+  )
 }
