@@ -1,5 +1,8 @@
 import "server-only"
 
+import { readFile } from "fs/promises"
+import path from "path"
+
 import { getGitHubToken, githubJson } from "@/lib/github-api"
 
 export const STUDIO_REPO =
@@ -8,39 +11,132 @@ export const STUDIO_REPO =
 export const STUDIO_BRANCH = process.env.YT_AUTO_BRANCH?.trim() || "main"
 
 export const STUDIO_CHANNEL = {
-  name: "Click Case Files",
-  handle: "ClickCaseFiles",
-  tagline: "We open the case on why it went viral.",
-  signoff: "Case closed.",
+  name: "Curio Why Science",
+  handle: "CurioWhyScience",
+  displayNameTarget: "Curio Why Science",
+  tagline: "Everyday science questions, explained clearly.",
+  signoff: "Stay curious.",
+  channelId: "UCylbJf-Objxcejpae6z5R2g",
+  youtubeUrl: "https://www.youtube.com/@CurioWhyScience",
+  studioUrl: "https://studio.youtube.com/channel/UCylbJf-Objxcejpae6z5R2g",
 } as const
 
+export type PendingWorkItem = {
+  id: string
+  platform: string
+  title: string
+  detail: string
+  value?: string
+  due_on: string
+  status: string
+  action_url?: string
+  reminder?: boolean
+}
+
+export type PendingWorkFile = {
+  updated_at?: string
+  timezone_note?: string
+  brand?: {
+    display_name_target?: string
+    display_name_alt?: string
+    handle?: string
+    tagline?: string
+    signoff?: string
+    name_note?: string
+  }
+  items: PendingWorkItem[]
+}
+
+export type PendingWorkViewItem = PendingWorkItem & {
+  state: "done" | "due" | "waiting"
+  days_until: number
+  remind_now: boolean
+}
+
+function todayIsoLocal(d = new Date()): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
+function daysBetween(fromIso: string, toIso: string): number {
+  const a = new Date(`${fromIso}T12:00:00`)
+  const b = new Date(`${toIso}T12:00:00`)
+  return Math.round((b.getTime() - a.getTime()) / 86_400_000)
+}
+
+export function enrichPendingWork(file: PendingWorkFile | null, today = todayIsoLocal()): {
+  brand: PendingWorkFile["brand"]
+  updated_at?: string
+  items: PendingWorkViewItem[]
+  due_count: number
+  waiting_count: number
+  open_count: number
+} {
+  const items = (file?.items || []).map((item) => {
+    const done = item.status === "done"
+    const days_until = daysBetween(today, item.due_on)
+    const state: PendingWorkViewItem["state"] = done ? "done" : days_until <= 0 ? "due" : "waiting"
+    return {
+      ...item,
+      state,
+      days_until,
+      remind_now: Boolean(item.reminder) && !done && days_until <= 0,
+    }
+  })
+  items.sort((a, b) => {
+    const rank = (s: string) => (s === "due" ? 0 : s === "waiting" ? 1 : 2)
+    return rank(a.state) - rank(b.state) || a.due_on.localeCompare(b.due_on)
+  })
+  return {
+    brand: file?.brand,
+    updated_at: file?.updated_at,
+    items,
+    due_count: items.filter((i) => i.state === "due").length,
+    waiting_count: items.filter((i) => i.state === "waiting").length,
+    open_count: items.filter((i) => i.state !== "done").length,
+  }
+}
+
 export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: string }[] = [
-  { id: "youtube", label: "YouTube", url: "https://www.youtube.com/@ClickCaseFiles", group: "Publish" },
-  { id: "youtube_studio", label: "YouTube Studio", url: "https://studio.youtube.com/", group: "Publish" },
-  { id: "tiktok", label: "TikTok", url: "https://www.tiktok.com/@clickcasefiles", group: "Publish" },
-  { id: "instagram", label: "Instagram", url: "https://www.instagram.com/clickcasefiles", group: "Publish" },
-  { id: "threads", label: "Threads", url: "https://www.threads.com/@clickcasefiles", group: "Publish" },
-  { id: "facebook", label: "Facebook", url: "https://www.facebook.com/clickcasefiles", group: "Publish" },
-  { id: "business_suite", label: "Meta Business Suite", url: "https://business.facebook.com/latest/?asset_id=1307166245817929", group: "Tools" },
+  { id: "youtube", label: "YouTube (Curio)", url: "https://www.youtube.com/@CurioWhyScience", group: "Publish" },
+  {
+    id: "youtube_studio",
+    label: "YouTube Studio (Curio)",
+    url: "https://studio.youtube.com/channel/UCylbJf-Objxcejpae6z5R2g",
+    group: "Publish",
+  },
   { id: "blog", label: "Portfolio Blog CMS", url: "https://alihamza-fawn.vercel.app/admin/blog", group: "Tools" },
   { id: "actions", label: "GitHub Actions", url: `https://github.com/${STUDIO_REPO}/actions`, group: "Ops" },
   {
+    id: "actions_curio",
+    label: "Actions: Curio long (1-13)",
+    url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_topic_finder.yml`,
+    group: "Ops",
+  },
+  {
     id: "actions_short",
-    label: "Actions: Daily Short",
+    label: "Actions: Daily Short (legacy)",
     url: `https://github.com/${STUDIO_REPO}/actions/workflows/daily_short.yml`,
     group: "Ops",
   },
   {
     id: "actions_long",
-    label: "Actions: Weekly Long",
+    label: "Actions: Weekly Long (legacy)",
     url: `https://github.com/${STUDIO_REPO}/actions/workflows/weekly_long.yml`,
     group: "Ops",
   },
 ]
 
 export const STUDIO_WORKFLOWS = {
-  daily_short: { file: "daily_short.yml", label: "Create + publish Short", kind: "short" },
-  weekly_long: { file: "weekly_long.yml", label: "Create + publish Long", kind: "long" },
+  curio_long: {
+    file: "curio_topic_finder.yml",
+    label: "Curio: make + QC + upload long",
+    kind: "curio",
+  },
+  daily_short: { file: "daily_short.yml", label: "Legacy: Daily Short", kind: "short" },
+  weekly_long: { file: "weekly_long.yml", label: "Legacy: Weekly Long", kind: "long" },
   session_keepalive: { file: "session_keepalive.yml", label: "Warm sessions", kind: "ops" },
 } as const
 
@@ -237,14 +333,47 @@ export async function downloadStudioArtifactZip(
   return { ok: true, buffer, filename: `studio-artifact-${artifactId}.zip` }
 }
 
-export function collectFailures(history: StudioHistoryRow[], limit = 25) {
-  const failures: Array<{
-    at?: string
+export type StudioFailure = {
+  at?: string
+  title?: string
+  kind?: string
+  channel?: string
+  error?: string
+  fix?: string
+  action_url?: string
+  severity?: string
+}
+
+export type CurioOpsStatus = {
+  generated_at?: string
+  overall?: string
+  topic?: string
+  slug?: string
+  qc_status?: string | null
+  publish_status?: string | null
+  youtube_url?: string | null
+  approve_pass?: boolean | null
+  issue_count?: number
+  block_count?: number
+  issues?: Array<{
+    code?: string
+    severity?: string
     title?: string
-    kind?: string
-    channel?: string
-    error?: string
-  }> = []
+    detail?: string
+    fix?: string
+    action_url?: string
+  }>
+  channel?: {
+    name?: string
+    handle?: string
+    id?: string
+    url?: string
+    studio?: string
+  }
+}
+
+export function collectFailures(history: StudioHistoryRow[], limit = 25): StudioFailure[] {
+  const failures: StudioFailure[] = []
   for (const row of history.slice(0, 40)) {
     for (const err of row.errors || []) {
       if (err?.error) {
@@ -254,6 +383,9 @@ export function collectFailures(history: StudioHistoryRow[], limit = 25) {
           kind: row.kind,
           channel: err.channel,
           error: err.error,
+          fix: "Open the Actions run, fix the platform error, then re-dispatch or manual-upload from Videos tab.",
+          action_url: `https://github.com/${STUDIO_REPO}/actions`,
+          severity: "block",
         })
       }
       if (failures.length >= limit) return failures
@@ -262,18 +394,72 @@ export function collectFailures(history: StudioHistoryRow[], limit = 25) {
   return failures
 }
 
+function collectCurioFailures(ops: CurioOpsStatus | null): StudioFailure[] {
+  if (!ops?.issues?.length) return []
+  return ops.issues.map((i) => ({
+    at: ops.generated_at,
+    title: ops.topic || ops.slug || "Curio",
+    kind: "curio",
+    channel: i.code || "curio",
+    error: i.detail ? `${i.title || "Issue"}: ${i.detail}` : i.title || "Issue",
+    fix: i.fix,
+    action_url: i.action_url,
+    severity: i.severity,
+  }))
+}
+
+export async function getCurioOpsStatus(): Promise<CurioOpsStatus | null> {
+  const primary = await readRepoJsonFile<CurioOpsStatus>("data/curio/ops_status.json")
+  if (primary && typeof primary === "object") return primary
+  return readRepoJsonFile<CurioOpsStatus>("data/curio/topics/ops_status_latest.json")
+}
+
+async function readLocalPendingWork(): Promise<PendingWorkFile | null> {
+  try {
+    const filePath = path.join(process.cwd(), "content", "studio", "pending-work.json")
+    const raw = await readFile(filePath, "utf8")
+    return JSON.parse(raw) as PendingWorkFile
+  } catch {
+    return null
+  }
+}
+
+export async function getStudioPendingWork(): Promise<PendingWorkFile | null> {
+  const fromRepo = await readRepoJsonFile<PendingWorkFile>("data/pending-work.json")
+  if (fromRepo && Array.isArray(fromRepo.items)) return fromRepo
+  return readLocalPendingWork()
+}
+
 export async function getStudioDashboardPayload() {
-  const [last, history, runs, artifacts] = await Promise.all([
+  const [last, history, runs, artifacts, pendingRaw, curioOps] = await Promise.all([
     getStudioLastRun(),
     getStudioHistory(),
     listStudioWorkflowRuns(20),
     listStudioArtifacts(30),
+    getStudioPendingWork(),
+    getCurioOpsStatus(),
   ])
-  const failures = collectFailures(history)
-  const okCount = history.filter((h) => h.overall === "ok").length
-  const failCount = history.filter((h) => h.overall === "error" || (h.errors && h.errors.length > 0)).length
+  const pending = enrichPendingWork(pendingRaw)
+  const legacyFailures = collectFailures(history)
+  const curioFailures = collectCurioFailures(curioOps)
+  const failures = [...curioFailures, ...legacyFailures].slice(0, 40)
+
+  const curioRuns = runs.filter(
+    (r) =>
+      r.path.includes("curio_topic_finder") ||
+      r.name.toLowerCase().includes("curio") ||
+      r.display_title.toLowerCase().includes("curio")
+  )
+  const okCount =
+    history.filter((h) => h.overall === "ok").length +
+    curioRuns.filter((r) => r.conclusion === "success").length
+  const failCount =
+    history.filter((h) => h.overall === "error" || (h.errors && h.errors.length > 0)).length +
+    curioRuns.filter((r) => r.conclusion === "failure").length +
+    (curioOps?.block_count || 0)
   const recentRunning = runs.filter((r) => r.status === "in_progress" || r.status === "queued").length
   const videoArtifacts = artifacts.filter((a) => !a.expired && a.size_bytes > 50_000)
+
   return {
     channel: STUDIO_CHANNEL,
     platforms: STUDIO_PLATFORMS,
@@ -283,15 +469,21 @@ export async function getStudioDashboardPayload() {
     last,
     history: history.slice(0, 25),
     failures,
+    curio: curioOps,
     runs,
     artifacts,
+    pending,
     stats: {
-      publishes: history.length,
+      publishes: history.length + curioRuns.filter((r) => r.conclusion === "success").length,
       ok: okCount,
       failed: failCount,
       running: recentRunning,
       platforms: STUDIO_PLATFORMS.filter((p) => p.group === "Publish").length,
       videos: videoArtifacts.length,
+      pending_due: pending.due_count,
+      pending_open: pending.open_count,
+      curio_blocks: curioOps?.block_count || 0,
+      curio_issues: curioOps?.issue_count || 0,
     },
   }
 }

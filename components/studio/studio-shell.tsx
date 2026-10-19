@@ -9,6 +9,7 @@ import {
   History,
   LayoutDashboard,
   Link2,
+  ListTodo,
   LogOut,
   Menu,
   Play,
@@ -20,10 +21,11 @@ import { LogoMark } from "@/components/brand/logo"
 import { cn } from "@/lib/utils"
 import { easeCinematic } from "@/lib/motion"
 
-export type StudioTab = "overview" | "publish" | "videos" | "platforms" | "runs" | "failures"
+export type StudioTab = "overview" | "pending" | "publish" | "videos" | "platforms" | "runs" | "failures"
 
 const nav: { id: StudioTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "pending", label: "Pending work", icon: ListTodo },
   { id: "publish", label: "Create & publish", icon: Play },
   { id: "videos", label: "Videos & download", icon: History },
   { id: "platforms", label: "Platforms", icon: Link2 },
@@ -33,6 +35,7 @@ const nav: { id: StudioTab; label: string; icon: typeof LayoutDashboard }[] = [
 
 const titles: Record<StudioTab, string> = {
   overview: "Overview",
+  pending: "Pending work",
   publish: "Create & publish",
   videos: "Videos & download",
   platforms: "Platforms",
@@ -47,16 +50,20 @@ type Stats = {
   running: number
   platforms: number
   videos?: number
+  pending_due?: number
+  pending_open?: number
 }
 
 function SidebarNav({
   tab,
   onTab,
   onLogout,
+  brandName,
 }: {
   tab: StudioTab
   onTab: (t: StudioTab) => void
   onLogout: () => void
+  brandName?: string
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -66,7 +73,9 @@ function SidebarNav({
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent-primary)] border-2 border-[#0c0c0c]" />
         </div>
         <div>
-          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">Click Case Files</p>
+          <p className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
+            {brandName || "Curio Why Science"}
+          </p>
           <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em]">Channel Studio</p>
         </div>
       </div>
@@ -115,12 +124,14 @@ export function StudioShell({
   onTab,
   onLogout,
   stats,
+  brandName,
 }: {
   children: ReactNode
   tab: StudioTab
   onTab: (t: StudioTab) => void
   onLogout: () => void
   stats: Stats
+  brandName?: string
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
@@ -131,6 +142,7 @@ export function StudioShell({
   }
 
   const chips = [
+    { label: "Due", value: stats.pending_due ?? 0, icon: ListTodo },
     { label: "Publishes", value: stats.publishes, icon: History },
     { label: "Videos", value: stats.videos ?? 0, icon: Youtube },
     { label: "OK", value: stats.ok, icon: Youtube },
@@ -143,7 +155,7 @@ export function StudioShell({
       <aside className="relative hidden h-full w-[272px] shrink-0 flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-secondary)] lg:flex">
         <div className="pointer-events-none absolute inset-0 mesh-ambient opacity-50" />
         <div className="relative flex h-full min-h-0 flex-col p-6">
-          <SidebarNav tab={tab} onTab={selectTab} onLogout={onLogout} />
+          <SidebarNav tab={tab} onTab={selectTab} onLogout={onLogout} brandName={brandName} />
         </div>
       </aside>
 
@@ -224,6 +236,7 @@ export function StudioShell({
                     setSidebarOpen(false)
                   }}
                   onLogout={onLogout}
+                  brandName={brandName}
                 />
               </div>
             </motion.aside>
