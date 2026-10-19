@@ -45,17 +45,77 @@ type Artifact = {
   actions_url: string
   workflow_run_id: number | null
 }
+type PendingItem = {
+  id: string
+  platform: string
+  title: string
+  detail: string
+  value?: string
+  due_on: string
+  status: string
+  action_url?: string
+  state: "done" | "due" | "waiting"
+  days_until: number
+  remind_now: boolean
+}
 type StudioPayload = {
-  channel: { name: string; handle: string; tagline: string; signoff: string }
+  channel: {
+    name: string
+    handle: string
+    displayNameTarget?: string
+    tagline: string
+    signoff: string
+  }
   platforms: Platform[]
   workflows: Workflows
   repo: string
   hasGithubToken: boolean
   last: HistoryRow | null
   history: HistoryRow[]
-  failures: { at?: string; title?: string; kind?: string; channel?: string; error?: string }[]
+  failures: {
+    at?: string
+    title?: string
+    kind?: string
+    channel?: string
+    error?: string
+    fix?: string
+    action_url?: string
+    severity?: string
+  }[]
+  curio?: {
+    generated_at?: string
+    overall?: string
+    topic?: string
+    slug?: string
+    qc_status?: string | null
+    publish_status?: string | null
+    youtube_url?: string | null
+    issue_count?: number
+    block_count?: number
+    issues?: {
+      code?: string
+      severity?: string
+      title?: string
+      detail?: string
+      fix?: string
+      action_url?: string
+    }[]
+  } | null
   runs: Run[]
   artifacts?: Artifact[]
+  pending?: {
+    brand?: {
+      display_name_target?: string
+      display_name_alt?: string
+      handle?: string
+      name_note?: string
+    }
+    updated_at?: string
+    items: PendingItem[]
+    due_count: number
+    waiting_count: number
+    open_count: number
+  }
   stats: {
     publishes: number
     ok: number
@@ -63,7 +123,22 @@ type StudioPayload = {
     running: number
     platforms: number
     videos?: number
+    pending_due?: number
+    pending_open?: number
+    curio_blocks?: number
+    curio_issues?: number
   }
+}
+
+function pendingPill(state: PendingItem["state"]) {
+  return cn(
+    "inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+    state === "due"
+      ? "bg-amber-500/20 text-amber-200"
+      : state === "waiting"
+        ? "bg-sky-500/15 text-sky-300"
+        : "bg-emerald-500/15 text-emerald-400"
+  )
 }
 
 function statusPill(status?: string) {
@@ -256,15 +331,21 @@ export function StudioWorkspace() {
   const channel = data?.channel
 
   return (
-    <StudioShell tab={tab} onTab={setTab} onLogout={onLogout} stats={stats}>
+    <StudioShell
+      tab={tab}
+      onTab={setTab}
+      onLogout={onLogout}
+      stats={stats}
+      brandName={channel?.name || "Curio Why Science"}
+    >
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-display text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-            {channel?.name || "Click Case Files"} Studio
+            {channel?.name || "Curio Why Science"} Studio
           </p>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            {channel?.tagline || "Channel create + publish ops"}
-            {channel?.signoff ? ` · “${channel.signoff}”` : ""}
+            {channel?.tagline || "Auto make, QC pass/fail, upload ops"}
+            {channel?.signoff ? ` · "${channel.signoff}"` : ""}
           </p>
         </div>
         <button
@@ -301,12 +382,109 @@ export function StudioWorkspace() {
 
       {tab === "overview" && (
         <div className="space-y-6">
+          {(data?.pending?.due_count || 0) > 0 && (
+            <button
+              type="button"
+              onClick={() => setTab("pending")}
+              className="w-full rounded-xl border border-amber-500/35 bg-amber-500/10 px-4 py-3 text-left text-sm text-amber-100 transition hover:border-amber-400/50"
+            >
+              <strong>{data?.pending?.due_count} reminder(s) due now.</strong> Open Pending work to finish
+              rename / brand tasks.
+            </button>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Publishes" value={stats.publishes} sub="From upload history in repo" />
-            <StatCard label="Successful" value={stats.ok} sub="overall = ok" />
+            <StatCard label="Publishes" value={stats.publishes} sub="Curio + history" />
+            <StatCard label="Successful" value={stats.ok} sub="Actions OK / uploads OK" />
             <StatCard label="Failed / errored" value={stats.failed} sub="Needs retry or fix" />
-            <StatCard label="Actions running" value={stats.running} sub="Queued or in progress" />
+            <StatCard
+              label="Curio issues"
+              value={stats.curio_issues ?? data?.curio?.issue_count ?? 0}
+              sub={`${stats.curio_blocks ?? data?.curio?.block_count ?? 0} blocking`}
+            />
           </div>
+
+          <StudioPanel title="Curio pipeline status (pass / fail)">
+            {data?.curio ? (
+              <div className="space-y-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={statusPill(data.curio.overall || "unknown")}>
+                    {data.curio.overall || "unknown"}
+                  </span>
+                  <span className="text-[var(--text-muted)]">
+                    QC {data.curio.qc_status || "-"} · Publish {data.curio.publish_status || "-"}
+                  </span>
+                </div>
+                <p className="text-[var(--text-secondary)]">
+                  Topic: <strong className="text-[var(--text-primary)]">{data.curio.topic || data.curio.slug || "-"}</strong>
+                  {data.curio.youtube_url ? (
+                    <>
+                      {" "}
+                      · <ExtLink href={data.curio.youtube_url}>Open video</ExtLink>
+                    </>
+                  ) : null}
+                </p>
+                {(data.curio.issues || []).length > 0 ? (
+                  <ul className="space-y-2">
+                    {(data.curio.issues || []).slice(0, 6).map((issue, i) => (
+                      <li
+                        key={`${issue.code}-${i}`}
+                        className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2"
+                      >
+                        <p className="font-medium text-[var(--text-primary)]">
+                          [{issue.severity || "info"}] {issue.title}
+                        </p>
+                        {issue.detail ? (
+                          <p className="mt-1 text-[var(--text-muted)]">{issue.detail}</p>
+                        ) : null}
+                        {issue.fix ? (
+                          <p className="mt-1 text-[var(--accent-primary)]">Do: {issue.fix}</p>
+                        ) : null}
+                        {issue.action_url ? (
+                          <div className="mt-1">
+                            <ExtLink href={issue.action_url}>Open fix link</ExtLink>
+                          </div>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-emerald-300">No Curio issues in latest ops status.</p>
+                )}
+                <button type="button" onClick={() => setTab("failures")} className="text-xs text-[var(--accent-primary)]">
+                  All failures
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-[var(--text-muted)]">
+                No <code className="font-mono">data/curio/ops_status.json</code> yet. After the next Curio Actions run,
+                pass/fail details appear here.
+              </p>
+            )}
+          </StudioPanel>
+
+          <StudioPanel
+            title="Saved YouTube name (quota)"
+            action={
+              <button type="button" onClick={() => setTab("pending")} className="text-xs text-[var(--accent-primary)]">
+                All pending
+              </button>
+            }
+          >
+            <p className="text-lg font-semibold text-[var(--text-primary)]">
+              Set to{" "}
+              <span className="font-mono text-[var(--accent-primary)]">
+                {data?.pending?.brand?.display_name_target ||
+                  channel?.displayNameTarget ||
+                  "ClickCaseFiles"}
+              </span>{" "}
+              on <span className="font-mono">2026-10-08</span>
+            </p>
+            <p className="mt-2 text-sm text-[var(--text-secondary)]">
+              {data?.pending?.brand?.name_note ||
+                "Name is fine. YouTube only blocked a rename for 12 days. Handle @ClickCaseFiles is already live."}
+            </p>
+          </StudioPanel>
 
           <StudioPanel
             title="Last publish"
@@ -393,6 +571,84 @@ export function StudioWorkspace() {
         </div>
       )}
 
+      {tab === "pending" && (
+        <div className="space-y-6">
+          <StudioPanel title="Approved brand names">
+            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">YouTube display</dt>
+                <dd className="mt-1 font-mono text-[var(--text-primary)]">
+                  {data?.pending?.brand?.display_name_target || "Curio Why Science"}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Handle</dt>
+                <dd className="mt-1 font-mono text-[var(--text-primary)]">
+                  @{data?.pending?.brand?.handle || channel?.handle || "CurioWhyScience"}
+                </dd>
+              </div>
+              <div className="sm:col-span-2">
+                <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Note</dt>
+                <dd className="mt-1 text-[var(--text-secondary)]">
+                  {data?.pending?.brand?.name_note ||
+                    "Quota only until 2026-10-08. Not a policy reject."}
+                </dd>
+              </div>
+            </dl>
+          </StudioPanel>
+
+          <StudioPanel title="Timed reminders">
+            <p className="mb-4 text-sm text-[var(--text-secondary)]">
+              Due items light up when the unlock date arrives. Mark done in{" "}
+              <code className="font-mono">data/pending-work.json</code> (repo) or{" "}
+              <code className="font-mono">content/studio/pending-work.json</code> after you finish.
+              List updated {data?.pending?.updated_at || "—"}.
+            </p>
+            {data?.pending?.items?.length ? (
+              <ul className="space-y-3">
+                {data.pending.items.map((item) => (
+                  <li
+                    key={item.id}
+                    className={cn(
+                      "rounded-xl border px-4 py-3",
+                      item.state === "due"
+                        ? "border-amber-500/35 bg-amber-500/10"
+                        : item.state === "waiting"
+                          ? "border-sky-500/20 bg-sky-500/5"
+                          : "border-emerald-500/20 bg-emerald-500/5"
+                    )}
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={pendingPill(item.state)}>
+                        {item.state === "due"
+                          ? "due now"
+                          : item.state === "waiting"
+                            ? `in ${item.days_until}d`
+                            : "done"}
+                      </span>
+                      <span className="text-xs text-[var(--text-muted)]">{item.platform}</span>
+                      <span className="font-mono text-xs text-[var(--text-muted)]">due {item.due_on}</span>
+                    </div>
+                    <p className="mt-2 font-semibold text-[var(--text-primary)]">{item.title}</p>
+                    {item.value && (
+                      <p className="mt-1 font-mono text-sm text-[var(--accent-primary)]">{item.value}</p>
+                    )}
+                    <p className="mt-1 text-sm text-[var(--text-secondary)]">{item.detail}</p>
+                    {item.action_url && (
+                      <div className="mt-2">
+                        <ExtLink href={item.action_url}>Open to do it</ExtLink>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-[var(--text-muted)]">No pending items loaded.</p>
+            )}
+          </StudioPanel>
+        </div>
+      )}
+
       {tab === "publish" && (
         <div className="space-y-6">
           <StudioPanel title="Dispatch GitHub Actions">
@@ -411,7 +667,7 @@ export function StudioWorkspace() {
                   onClick={() => void dispatch(key)}
                   className={cn(
                     "inline-flex items-center gap-2",
-                    key === "daily_short" ? "btn-primary" : "btn-secondary"
+                    key === "curio_long" || key === "daily_short" ? "btn-primary" : "btn-secondary"
                   )}
                 >
                   {dispatching === key ? (
@@ -428,11 +684,14 @@ export function StudioWorkspace() {
           <StudioPanel title="Quick links">
             <div className="flex flex-wrap gap-4 text-sm">
               <ExtLink href={`https://github.com/${data?.repo}/actions`}>All Actions</ExtLink>
+              <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/curio_topic_finder.yml`}>
+                Curio long workflow
+              </ExtLink>
               <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/daily_short.yml`}>
-                Daily Short workflow
+                Legacy Daily Short
               </ExtLink>
               <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/weekly_long.yml`}>
-                Weekly Long workflow
+                Legacy Weekly Long
               </ExtLink>
             </div>
           </StudioPanel>
@@ -603,7 +862,7 @@ export function StudioWorkspace() {
       )}
 
       {tab === "failures" && (
-        <StudioPanel title="Why it failed">
+        <StudioPanel title="What failed + what to do">
           {data?.failures?.length ? (
             <ul className="space-y-4">
               {data.failures.map((f, i) => (
@@ -611,13 +870,26 @@ export function StudioWorkspace() {
                   key={`${f.at}-${f.channel}-${i}`}
                   className="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm"
                 >
-                  <div className="mb-1 flex items-center gap-2 text-[var(--text-muted)]">
+                  <div className="mb-1 flex flex-wrap items-center gap-2 text-[var(--text-muted)]">
                     <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
                     {f.at || "?"} · {f.kind || "?"} · {f.title || "run"}
+                    {f.severity ? (
+                      <span className={statusPill(f.severity === "block" ? "failure" : "partial")}>
+                        {f.severity}
+                      </span>
+                    ) : null}
                   </div>
                   <p className="text-[var(--text-primary)]">
                     <strong>{f.channel}</strong>: {f.error}
                   </p>
+                  {f.fix ? (
+                    <p className="mt-2 text-[var(--accent-primary)]">Do next: {f.fix}</p>
+                  ) : null}
+                  {f.action_url ? (
+                    <div className="mt-2">
+                      <ExtLink href={f.action_url}>Open fix link</ExtLink>
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>
