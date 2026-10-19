@@ -63,9 +63,9 @@
       "Google Calendar",
       "ICS"
     ],
-    "image": "/projects/syncforge-calendar.png",
+    "image": "/projects/weeklane-week.png",
     "details": "Built Weeklane for multi-company campaign work: ingest Google OAuth and ICS sources, normalize events in Postgres, and serve a privacy-safe team board. First install records buyer license details. Client production stays private; portfolio shows sanitized mock screenshots only.",
-    "link": "",
+    "link": "https://logicwave7.gumroad.com/l/weeklane",
     "github": "https://github.com/alihamzaio/weeklane",
     "featured": true,
     "problem": "Teams juggling several client companies could not see one truthful week: calendars lived in separate Google and Outlook accounts, conflicts were invisible until someone double-booked, and sharing live calendar links leaked join URLs and notes.",

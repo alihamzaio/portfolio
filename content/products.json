@@ -72,19 +72,20 @@
       "name": "Weeklane",
       "tagline": "Every company calendar on one private team board.",
       "description": "A private multi-company schedule. Connect Google and Outlook or ICS, label each source as a company, and see conflicts and free time without leaking join links. First install records who bought it, then creates the admin.",
-      "priceLabel": "Private build",
-      "buyUrl": "",
+      "priceLabel": "$29",
+      "buyUrl": "https://logicwave7.gumroad.com/l/weeklane",
       "checkout": "both",
       "demoUrl": "",
       "problem": "Working across several client companies meant living in many Google and Outlook calendars at once. The team could not answer a simple question: who is free, who is double-booked, and which company owns this hour? Sharing raw calendar links exposed join URLs and meeting notes. Spreadsheets and screenshots went stale within minutes.",
       "solution": "Weeklane pulls every connected company calendar into one color-coded team schedule. Members see availability, conflicts, and free slots. An optional public page shows busy/free and titles only: no descriptions, locations, or meeting URLs. Admins connect sources, set company labels and colors, import ICS/PDF when OAuth is not available, and hit Sync now instead of waiting for the next cron tick. First install captures buyer license details for anyone who purchases from you.",
       "howBuilt": "Monorepo: Next.js dashboard, Bun HTTP API, Drizzle on Postgres, Redis + BullMQ for ingest and push jobs, Better Auth for email/password (first user is admin). Cron ingests Google OAuth and ICS feeds into normalized event state; the UI reads Postgres rather than hitting Google on every page load. Schedule range indexes and short response caches keep the board snappy. Client production stays private; this portfolio shows sanitized mock screenshots only (Acme, Contoso, Northwind).",
       "screenshots": [
-        "/projects/syncforge-week.png",
-        "/projects/syncforge-admin.png",
-        "/projects/syncforge-public.png"
+        "/products/weeklane-schedule.png",
+        "/products/weeklane-calendars.png",
+        "/products/weeklane-settings.png",
+        "/products/weeklane-signin.png"
       ],
-      "downloadUrl": "",
+      "downloadUrl": "/downloads/weeklane.zip",
       "includes": [
         "Multi-source sync: Google OAuth + ICS/iCal (Outlook publish links)",
         "Company labels, colors, and company filter",
