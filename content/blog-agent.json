@@ -20,6 +20,16 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvhnto1v_4ujgb9",
+      "at": "2026-10-21T05:16:42.844Z",
+      "status": "error",
+      "attempts": 2,
+      "retryOf": "run_mvhnglh0_srcynl",
+      "weekdayUtc": 3,
+      "error": "Model did not return JSON",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mvhnglh0_srcynl",
       "at": "2026-10-21T05:06:32.966Z",
       "status": "error",
