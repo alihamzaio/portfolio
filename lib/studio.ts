@@ -115,6 +115,12 @@ export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: 
     url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_topic_finder.yml`,
     group: "Ops",
   },
+  {
+    id: "actions_curio_short",
+    label: "Actions: Curio Short",
+    url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_short.yml`,
+    group: "Ops",
+  },
 ]
 
 export const STUDIO_WORKFLOWS = {
@@ -122,6 +128,11 @@ export const STUDIO_WORKFLOWS = {
     file: "curio_topic_finder.yml",
     label: "Curio: make + QC + upload long",
     kind: "curio",
+  },
+  curio_short: {
+    file: "curio_short.yml",
+    label: "Curio: Short (real B-roll to YouTube)",
+    kind: "short",
   },
   // Legacy Click Case Files workflows kept for API compatibility but hidden from Studio UI.
   session_keepalive: { file: "session_keepalive.yml", label: "Warm sessions", kind: "ops" },
@@ -440,6 +451,49 @@ export async function getCurioPublishedVideos(
         artifact: matchArtifactForDate(artifacts, man.generated_at),
       })
     }
+    const shortMan = await readRepoJsonFile<{
+      status?: string
+      youtube_id?: string
+      youtube_url?: string
+      slug?: string
+      topic?: string
+      title?: string
+      generated_at?: string
+    }>(`data/curio/topics/${slug}/short_publish_manifest.json`)
+    if (shortMan?.status === "uploaded" && shortMan.youtube_id) {
+      byId.set(shortMan.youtube_id, {
+        slug: String(shortMan.slug || slug),
+        title: String(shortMan.title || shortMan.topic || slug),
+        format: "short",
+        youtube_id: shortMan.youtube_id,
+        youtube_url: shortMan.youtube_url || `https://youtu.be/${shortMan.youtube_id}`,
+        date: (shortMan.generated_at || "").slice(0, 10),
+        status: "uploaded",
+        artifact: matchArtifactForDate(artifacts, shortMan.generated_at),
+      })
+    }
+  }
+
+  const shortLatest = await readRepoJsonFile<{
+    status?: string
+    youtube_id?: string
+    youtube_url?: string
+    slug?: string
+    topic?: string
+    title?: string
+    generated_at?: string
+  }>("data/curio/topics/short_publish_manifest_latest.json")
+  if (shortLatest?.status === "uploaded" && shortLatest.youtube_id) {
+    byId.set(shortLatest.youtube_id, {
+      slug: String(shortLatest.slug || shortLatest.topic || "topic"),
+      title: String(shortLatest.title || shortLatest.topic || shortLatest.slug || "Curio Short"),
+      format: "short",
+      youtube_id: shortLatest.youtube_id,
+      youtube_url: shortLatest.youtube_url || `https://youtu.be/${shortLatest.youtube_id}`,
+      date: (shortLatest.generated_at || "").slice(0, 10),
+      status: "uploaded",
+      artifact: matchArtifactForDate(artifacts, shortLatest.generated_at),
+    })
   }
 
   return [...byId.values()].sort((a, b) => (b.date || "").localeCompare(a.date || ""))
@@ -685,9 +739,9 @@ export async function getStudioDashboardPayload() {
     // Curio pipeline zips only (for download next to published rows)
     artifacts,
     publishedVideos,
-    shorts_enabled: false,
+    shorts_enabled: true,
     shorts_note:
-      "Curio currently auto-uploads long explainers only. Click Case daily shorts are retired. A Curio Shorts pipeline can be added next.",
+      "Curio Shorts use real Pexels/NASA B-roll + short narration (no AI avatar, no generative video). Dispatch Curio: Short from Create and publish.",
     pending,
     stats: {
       publishes,
