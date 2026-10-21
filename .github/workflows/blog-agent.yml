@@ -7,8 +7,8 @@ name: Blog agent publish
 
 on:
   schedule:
-    # Mon / Wed / Fri 10:15 UTC (after the Vercel cron window)
-    - cron: "15 10 * * 1,3,5"
+    # Daily 10:15 UTC — backup if Vercel Hobby cron misses (agent itself may skip non-publish days)
+    - cron: "15 10 * * *"
   workflow_dispatch:
     inputs:
       force:

@@ -43,13 +43,28 @@ const DRAFTS_DIR = path.join(BLOG_DIR, "drafts")
 function isPost(value: unknown): value is BlogPost {
   if (!value || typeof value !== "object") return false
   const p = value as Record<string, unknown>
+  const dateOk =
+    typeof p.date === "string" ||
+    typeof p.publishedAt === "string" ||
+    typeof (p as { published_at?: unknown }).published_at === "string"
   return (
     typeof p.slug === "string" &&
     typeof p.title === "string" &&
     typeof p.excerpt === "string" &&
-    typeof p.date === "string" &&
+    dateOk &&
     typeof p.body === "string"
   )
+}
+
+/** Normalize hand-written / legacy JSON (publishedAt, missing readTime). */
+function normalizeLoadedPost(raw: BlogPost): BlogPost {
+  const r = raw as BlogPost & { publishedAt?: string; published_at?: string }
+  const date = (r.date || r.publishedAt || r.published_at || "").trim()
+  return {
+    ...r,
+    date,
+    readTime: r.readTime?.trim() || estimateReadTime(r.body || ""),
+  }
 }
 
 async function readPostsFromDir(
@@ -65,13 +80,15 @@ async function readPostsFromDir(
       const raw = await fs.readFile(filePath, "utf8")
       const parsed = JSON.parse(raw) as unknown
       if (!isPost(parsed)) continue
+      const normalized = normalizeLoadedPost(parsed)
+      if (!normalized.date) continue
       posts.push({
-        ...parsed,
-        status: parsed.status || status,
+        ...normalized,
+        status: normalized.status || status,
         path:
           status === "draft"
-            ? `content/blog/drafts/${parsed.slug}.json`
-            : `content/blog/${parsed.slug}.json`,
+            ? `content/blog/drafts/${normalized.slug}.json`
+            : `content/blog/${normalized.slug}.json`,
       })
     }
     return posts
@@ -112,7 +129,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | undefined>
     const raw = await fs.readFile(path.join(BLOG_DIR, `${safe}.json`), "utf8")
     const parsed = JSON.parse(raw) as unknown
     if (!isPost(parsed) || parsed.status === "draft") return undefined
-    return parsed
+    const normalized = normalizeLoadedPost(parsed)
+    if (!normalized.date) return undefined
+    return normalized
   } catch {
     return undefined
   }
