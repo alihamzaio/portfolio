@@ -20,6 +20,16 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvhnxytx_5at6mo",
+      "at": "2026-10-21T05:20:03.432Z",
+      "status": "error",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 3,
+      "error": "Rejected: body needs H2 sections",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mvhnto1v_4ujgb9",
       "at": "2026-10-21T05:16:42.844Z",
       "status": "error",
