@@ -115,6 +115,12 @@ export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: 
     url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_topic_finder.yml`,
     group: "Ops",
   },
+  {
+    id: "actions_curio_short",
+    label: "Actions: Curio Short",
+    url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_short.yml`,
+    group: "Ops",
+  },
 ]
 
 export const STUDIO_WORKFLOWS = {
@@ -122,6 +128,11 @@ export const STUDIO_WORKFLOWS = {
     file: "curio_topic_finder.yml",
     label: "Curio: make + QC + upload long",
     kind: "curio",
+  },
+  curio_short: {
+    file: "curio_short.yml",
+    label: "Curio: Short (real B-roll → YouTube)",
+    kind: "short",
   },
   // Legacy Click Case Files workflows kept for API compatibility but hidden from Studio UI.
   session_keepalive: { file: "session_keepalive.yml", label: "Warm sessions", kind: "ops" },
@@ -685,9 +696,9 @@ export async function getStudioDashboardPayload() {
     // Curio pipeline zips only (for download next to published rows)
     artifacts,
     publishedVideos,
-    shorts_enabled: false,
+    shorts_enabled: true,
     shorts_note:
-      "Curio currently auto-uploads long explainers only. Click Case daily shorts are retired. A Curio Shorts pipeline can be added next.",
+      "Curio Shorts use real Pexels/NASA B-roll + short narration (no AI avatar, no generative video). Dispatch “Curio: Short” from Create & publish.",
     pending,
     stats: {
       publishes,
