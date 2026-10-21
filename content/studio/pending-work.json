@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-19",
+  "updated_at": "2026-10-21",
   "timezone_note": "Dates are calendar days (local).",
   "brand": {
     "display_name_target": "Curio Why Science",
@@ -7,7 +7,7 @@
     "handle": "CurioWhyScience",
     "tagline": "Everyday science questions, explained clearly.",
     "signoff": "Stay curious.",
-    "name_note": "Active channel for yt-auto-studio automation. Click Case Files is retired from this Studio."
+    "name_note": "Active channel only. Click Case Files history is archived and hidden from this Studio."
   },
   "items": [
     {
@@ -33,26 +33,26 @@
       "reminder": false
     },
     {
-      "id": "curio-watch-actions",
-      "platform": "GitHub Actions",
-      "title": "Watch Curio auto runs (pass/fail)",
-      "detail": "Mon/Thu 16:00 UTC. If QC FAIL or upload fails, open Failures in this dashboard and follow the fix.",
-      "value": "curio_topic_finder.yml",
-      "due_on": "2026-10-20",
+      "id": "curio-rerender-gravity",
+      "platform": "YouTube",
+      "title": "Re-render gravity video (no black screens) + upload public",
+      "detail": "Old gravity/brain videos set private. Local hybrid re-render running with visual QC gate, then public upload.",
+      "value": "how-does-gravity-work-on-earth",
+      "due_on": "2026-10-21",
       "status": "waiting",
-      "action_url": "https://github.com/alihamzaio/yt-auto-studio/actions/workflows/curio_topic_finder.yml",
+      "action_url": "https://studio.youtube.com/channel/UCylbJf-Objxcejpae6z5R2g",
       "reminder": true
     },
     {
-      "id": "curio-share-brain",
-      "platform": "YouTube",
-      "title": "Optional: share brain video once",
-      "detail": "Cold channel. One share helps impressions.",
-      "value": "https://youtu.be/cjXR3dFWny0",
-      "due_on": "2026-10-21",
+      "id": "curio-watch-actions",
+      "platform": "GitHub Actions",
+      "title": "Watch Curio auto runs (pass/fail)",
+      "detail": "Mon/Thu 16:00 UTC. Only curio_topic_finder.yml — not legacy daily/weekly Click Case workflows.",
+      "value": "curio_topic_finder.yml",
+      "due_on": "2026-10-22",
       "status": "waiting",
-      "action_url": "https://youtu.be/cjXR3dFWny0",
-      "reminder": false
+      "action_url": "https://github.com/alihamzaio/yt-auto-studio/actions/workflows/curio_topic_finder.yml",
+      "reminder": true
     }
   ]
 }
