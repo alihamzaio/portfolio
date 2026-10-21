@@ -681,7 +681,7 @@ export function StudioWorkspace() {
                   onClick={() => void dispatch(key)}
                   className={cn(
                     "inline-flex items-center gap-2",
-                    key === "curio_long" ? "btn-primary" : "btn-secondary"
+                    key === "curio_long" || key === "curio_short" ? "btn-primary" : "btn-secondary"
                   )}
                 >
                   {dispatching === key ? (
@@ -783,14 +783,14 @@ export function StudioWorkspace() {
           <StudioPanel title="Shorts">
             <p className="text-sm text-[var(--text-secondary)]">
               {data?.shorts_note ||
-                "Curio auto currently uploads long explainers only. Shorts pipeline is not enabled yet."}
+                "Curio Shorts: real B-roll + short narration. Dispatch from Create and publish."}
             </p>
-            {!data?.shorts_enabled && (
+            {data?.shorts_enabled ? (
               <p className="mt-3 text-xs text-[var(--text-muted)]">
-                Next step: add a Curio Shorts Actions workflow (vertical 60s science clips) that uploads to the
-                same channel and lists here after a successful YouTube upload.
+                After upload, Shorts appear in Videos with format <strong>short</strong> and an Open YouTube
+                link.
               </p>
-            )}
+            ) : null}
           </StudioPanel>
 
           <StudioPanel title="Open YouTube Studio">
