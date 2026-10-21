@@ -20,6 +20,21 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvho67sg_adqwez",
+      "at": "2026-10-21T05:26:28.297Z",
+      "status": "ok",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 3,
+      "topic": "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
+      "title": "Why your MVP scope is too big: how I cut feature creep before kickoff",
+      "topicSource": "retry",
+      "slug": "why-your-mvp-scope-is-too-big-how-i-cut-feature-creep-before-kickoff",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/af66537e5bb8b5b8f4a166ab187c31ba08684331",
+      "postUrl": "/blog/why-your-mvp-scope-is-too-big-how-i-cut-feature-creep-before-kickoff",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mvho1t4x_nl5132",
       "at": "2026-10-21T05:23:02.680Z",
       "status": "error",
@@ -47,7 +62,7 @@
       "retryOf": "run_mvhnglh0_srcynl",
       "weekdayUtc": 3,
       "error": "Model did not return JSON",
-      "reason": "Retry failed"
+      "reason": "Superseded by retry run_mvho67sg_adqwez"
     },
     {
       "id": "run_mvhnglh0_srcynl",
