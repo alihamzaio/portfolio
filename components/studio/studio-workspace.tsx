@@ -394,7 +394,7 @@ export function StudioWorkspace() {
           )}
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Publishes" value={stats.publishes} sub="Curio + history" />
+            <StatCard label="Publishes" value={stats.publishes} sub="Curio only" />
             <StatCard label="Successful" value={stats.ok} sub="Actions OK / uploads OK" />
             <StatCard label="Failed / errored" value={stats.failed} sub="Needs retry or fix" />
             <StatCard
@@ -464,7 +464,7 @@ export function StudioWorkspace() {
           </StudioPanel>
 
           <StudioPanel
-            title="Saved YouTube name (quota)"
+            title="Active channel"
             action={
               <button type="button" onClick={() => setTab("pending")} className="text-xs text-[var(--accent-primary)]">
                 All pending
@@ -472,17 +472,19 @@ export function StudioWorkspace() {
             }
           >
             <p className="text-lg font-semibold text-[var(--text-primary)]">
-              Set to{" "}
               <span className="font-mono text-[var(--accent-primary)]">
                 {data?.pending?.brand?.display_name_target ||
                   channel?.displayNameTarget ||
-                  "ClickCaseFiles"}
-              </span>{" "}
-              on <span className="font-mono">2026-10-08</span>
+                  "Curio Why Science"}
+              </span>
+              {" · "}
+              <span className="font-mono text-[var(--text-secondary)]">
+                @{data?.pending?.brand?.handle || channel?.handle || "CurioWhyScience"}
+              </span>
             </p>
             <p className="mt-2 text-sm text-[var(--text-secondary)]">
               {data?.pending?.brand?.name_note ||
-                "Name is fine. YouTube only blocked a rename for 12 days. Handle @ClickCaseFiles is already live."}
+                "Active channel for this Studio. Retired Click Case Files platforms are hidden."}
             </p>
           </StudioPanel>
 
@@ -522,13 +524,13 @@ export function StudioWorkspace() {
               </div>
             ) : (
               <p className="text-sm text-[var(--text-muted)]">
-                No <code className="font-mono">data/last-run.json</code> in the yt-auto-studio repo yet. Dispatch a
-                Short to create one.
+                No Curio publish yet. After the next Curio Actions run, the latest YouTube result appears here
+                (Click Case Files history stays archived).
               </p>
             )}
           </StudioPanel>
 
-          <StudioPanel title="Recent history">
+          <StudioPanel title="Recent Curio history">
             {data?.history?.length ? (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[640px] text-left text-sm">
@@ -667,7 +669,7 @@ export function StudioWorkspace() {
                   onClick={() => void dispatch(key)}
                   className={cn(
                     "inline-flex items-center gap-2",
-                    key === "curio_long" || key === "daily_short" ? "btn-primary" : "btn-secondary"
+                    key === "curio_long" ? "btn-primary" : "btn-secondary"
                   )}
                 >
                   {dispatching === key ? (
@@ -687,11 +689,9 @@ export function StudioWorkspace() {
               <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/curio_topic_finder.yml`}>
                 Curio long workflow
               </ExtLink>
-              <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/daily_short.yml`}>
-                Legacy Daily Short
-              </ExtLink>
-              <ExtLink href={`https://github.com/${data?.repo}/actions/workflows/weekly_long.yml`}>
-                Legacy Weekly Long
+              <ExtLink href="https://www.youtube.com/@CurioWhyScience">Curio YouTube</ExtLink>
+              <ExtLink href="https://studio.youtube.com/channel/UCylbJf-Objxcejpae6z5R2g">
+                YouTube Studio
               </ExtLink>
             </div>
           </StudioPanel>

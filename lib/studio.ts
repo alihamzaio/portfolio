@@ -115,18 +115,6 @@ export const STUDIO_PLATFORMS: { id: string; label: string; url: string; group: 
     url: `https://github.com/${STUDIO_REPO}/actions/workflows/curio_topic_finder.yml`,
     group: "Ops",
   },
-  {
-    id: "actions_short",
-    label: "Actions: Daily Short (legacy)",
-    url: `https://github.com/${STUDIO_REPO}/actions/workflows/daily_short.yml`,
-    group: "Ops",
-  },
-  {
-    id: "actions_long",
-    label: "Actions: Weekly Long (legacy)",
-    url: `https://github.com/${STUDIO_REPO}/actions/workflows/weekly_long.yml`,
-    group: "Ops",
-  },
 ]
 
 export const STUDIO_WORKFLOWS = {
@@ -135,9 +123,14 @@ export const STUDIO_WORKFLOWS = {
     label: "Curio: make + QC + upload long",
     kind: "curio",
   },
+  // Legacy Click Case Files workflows kept for API compatibility but hidden from Studio UI.
+  session_keepalive: { file: "session_keepalive.yml", label: "Warm sessions", kind: "ops" },
+} as const
+
+/** @deprecated Retired Click Case cross-post workflows — do not surface in Curio Studio. */
+export const LEGACY_STUDIO_WORKFLOWS = {
   daily_short: { file: "daily_short.yml", label: "Legacy: Daily Short", kind: "short" },
   weekly_long: { file: "weekly_long.yml", label: "Legacy: Weekly Long", kind: "long" },
-  session_keepalive: { file: "session_keepalive.yml", label: "Warm sessions", kind: "ops" },
 } as const
 
 export type StudioWorkflowKey = keyof typeof STUDIO_WORKFLOWS
@@ -430,8 +423,70 @@ export async function getStudioPendingWork(): Promise<PendingWorkFile | null> {
   return readLocalPendingWork()
 }
 
+/** Retired Click Case Files multi-platform rows — never surface in Curio Studio. */
+const LEGACY_CROSSPOST_CHANNELS = new Set([
+  "tiktok",
+  "threads",
+  "threads_api",
+  "facebook",
+  "instagram",
+  "snapchat",
+  "pinterest",
+  "bluesky",
+])
+
+function isLegacyClickCaseRow(row: StudioHistoryRow | null | undefined): boolean {
+  if (!row || typeof row !== "object") return false
+  if (row.kind === "curio") return false
+  const blob = [
+    row.title,
+    row.topic,
+    row.kind,
+    JSON.stringify(row.verify || {}),
+    JSON.stringify(row.channels || {}),
+  ]
+    .filter(Boolean)
+    .join(" ")
+  if (/click\s*case|clickcasefiles|@clickcasefiles|costlymistakesbyali/i.test(blob)) return true
+  const channels = Object.keys(row.channels || {})
+  if (channels.some((c) => LEGACY_CROSSPOST_CHANNELS.has(c))) return true
+  // Old orchestrator used short/long kinds with CASE titles
+  if ((row.kind === "short" || row.kind === "long") && /case\s*\d+/i.test(row.title || "")) return true
+  return false
+}
+
+function curioOpsAsLastRun(ops: CurioOpsStatus | null): StudioHistoryRow | null {
+  if (!ops || typeof ops !== "object") return null
+  const ytStatus =
+    ops.publish_status === "uploaded" || ops.youtube_url
+      ? ops.overall === "ok" || ops.overall === "success"
+        ? "ok"
+        : ops.overall === "error" || (ops.block_count || 0) > 0
+          ? "error"
+          : ops.publish_status || "partial"
+      : "skipped"
+  const errors = (ops.issues || [])
+    .filter((i) => i.severity === "block" || i.severity === "error")
+    .map((i) => ({
+      channel: i.code || "curio",
+      error: i.detail ? `${i.title || "Issue"}: ${i.detail}` : i.title || "Issue",
+    }))
+  return {
+    at: ops.generated_at,
+    kind: "curio",
+    topic: ops.topic || ops.slug,
+    title: ops.topic || ops.slug || "Curio run",
+    overall: ops.overall,
+    channels: { youtube: ytStatus },
+    errors,
+    verify: {
+      youtube: ops.youtube_url || ops.channel?.url || STUDIO_CHANNEL.youtubeUrl,
+    },
+  }
+}
+
 export async function getStudioDashboardPayload() {
-  const [last, history, runs, artifacts, pendingRaw, curioOps] = await Promise.all([
+  const [legacyLast, rawHistory, runs, artifacts, pendingRaw, curioOps] = await Promise.all([
     getStudioLastRun(),
     getStudioHistory(),
     listStudioWorkflowRuns(20),
@@ -440,9 +495,15 @@ export async function getStudioDashboardPayload() {
     getCurioOpsStatus(),
   ])
   const pending = enrichPendingWork(pendingRaw)
-  const legacyFailures = collectFailures(history)
+  // Curio Studio only — never show Click Case Files / multi-platform rows
+  const history = rawHistory.filter((row) => !isLegacyClickCaseRow(row) && row.kind === "curio")
+  const lastFromOps = curioOpsAsLastRun(curioOps)
+  const lastFromFile =
+    legacyLast && !isLegacyClickCaseRow(legacyLast) && legacyLast.kind === "curio" ? legacyLast : null
+  const last = lastFromOps || lastFromFile || history[0] || null
   const curioFailures = collectCurioFailures(curioOps)
-  const failures = [...curioFailures, ...legacyFailures].slice(0, 40)
+  const historyFailures = collectFailures(history)
+  const failures = [...curioFailures, ...historyFailures].slice(0, 40)
 
   const curioRuns = runs.filter(
     (r) =>
@@ -450,15 +511,22 @@ export async function getStudioDashboardPayload() {
       r.name.toLowerCase().includes("curio") ||
       r.display_title.toLowerCase().includes("curio")
   )
-  const okCount =
-    history.filter((h) => h.overall === "ok").length +
-    curioRuns.filter((r) => r.conclusion === "success").length
-  const failCount =
-    history.filter((h) => h.overall === "error" || (h.errors && h.errors.length > 0)).length +
-    curioRuns.filter((r) => r.conclusion === "failure").length +
-    (curioOps?.block_count || 0)
-  const recentRunning = runs.filter((r) => r.status === "in_progress" || r.status === "queued").length
+  const curioOkRuns = curioRuns.filter((r) => r.conclusion === "success").length
+  const curioFailRuns = curioRuns.filter((r) => r.conclusion === "failure").length
+  const historyOk = history.filter((h) => h.overall === "ok").length
+  const historyFail = history.filter(
+    (h) => h.overall === "error" || (h.errors && h.errors.length > 0)
+  ).length
+  const okCount = historyOk + curioOkRuns
+  const failCount = historyFail + curioFailRuns + (curioOps?.block_count || 0)
+  const recentRunning = curioRuns.filter(
+    (r) => r.status === "in_progress" || r.status === "queued"
+  ).length
   const videoArtifacts = artifacts.filter((a) => !a.expired && a.size_bytes > 50_000)
+  const curioPublished =
+    curioOps?.publish_status === "uploaded" || Boolean(curioOps?.youtube_url) ? 1 : 0
+  let publishes = history.length + (curioPublished ? 0 : 0)
+  publishes = Math.max(history.length, curioOkRuns, curioPublished)
 
   return {
     channel: STUDIO_CHANNEL,
@@ -470,11 +538,11 @@ export async function getStudioDashboardPayload() {
     history: history.slice(0, 25),
     failures,
     curio: curioOps,
-    runs,
+    runs: curioRuns,
     artifacts,
     pending,
     stats: {
-      publishes: history.length + curioRuns.filter((r) => r.conclusion === "success").length,
+      publishes,
       ok: okCount,
       failed: failCount,
       running: recentRunning,
