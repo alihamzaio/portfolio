@@ -108,6 +108,11 @@ async function groqJson(system: string, user: string): Promise<string> {
       lastError = msg
       // json_object unsupported on some IDs: retry same model without it once via next loop pass
       if (isGroqModelUnavailableError(msg)) continue
+      if (/rate limit|OTPM|tokens per minute/i.test(msg)) {
+        lastError = msg
+        await new Promise((r) => setTimeout(r, 20_000))
+        continue
+      }
       if (/response_format|json_object|structured/i.test(msg)) {
         const plain = await groqJsonPlain(groq, model, system, user)
         if (plain) return plain
@@ -420,12 +425,15 @@ export async function runBlogAgent(opts?: {
     return { ok: true, action: "skipped", run, state }
   }
 
+  // force=1 means publish a fresh post today, not keep replaying a broken retry chain.
   const failed =
-    (opts?.retryId
-      ? state.runs.find((r) => r.id === opts.retryId && r.status === "error")
-      : state.runs.find(
-          (r) => r.status === "error" && (r.attempts || 1) < state.maxRetries
-        )) || null
+    opts?.force && !opts?.retryId
+      ? null
+      : (opts?.retryId
+          ? state.runs.find((r) => r.id === opts.retryId && r.status === "error")
+          : state.runs.find(
+              (r) => r.status === "error" && (r.attempts || 1) < state.maxRetries
+            )) || null
 
   const alreadyOkToday = state.runs.some(
     (r) => r.status === "ok" && typeof r.at === "string" && r.at.startsWith(today)
