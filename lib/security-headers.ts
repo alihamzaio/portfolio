@@ -4,7 +4,7 @@ import { buildContentSecurityPolicy } from "./csp"
 export function buildSecurityHeaders(csp: string) {
   return [
     { key: "Content-Security-Policy", value: csp },
-    { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+    { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
     { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "X-Frame-Options", value: "DENY" },
