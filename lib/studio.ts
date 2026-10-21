@@ -269,7 +269,24 @@ export type StudioArtifact = {
   actions_url: string
 }
 
-export async function listStudioArtifacts(limit = 30): Promise<StudioArtifact[]> {
+export type CurioPublishedVideo = {
+  slug: string
+  title: string
+  format: "long" | "short"
+  youtube_id: string
+  youtube_url: string
+  date?: string
+  status: "uploaded"
+  artifact: StudioArtifact | null
+}
+
+function isCurioPipelineArtifact(name: string): boolean {
+  const n = (name || "").toLowerCase()
+  // Only Curio pipeline zips — never Click Case short-videos / long-videos
+  return n.includes("curio-pipeline") || n.startsWith("curio-")
+}
+
+export async function listStudioArtifacts(limit = 40): Promise<StudioArtifact[]> {
   const token = getGitHubToken()
   if (!token) return []
   const result = await githubJson<{
@@ -283,22 +300,149 @@ export async function listStudioArtifacts(limit = 30): Promise<StudioArtifact[]>
     }>
   }>(token, `/repos/${STUDIO_REPO}/actions/artifacts?per_page=${limit}`)
   if (!result.ok || !result.data?.artifacts) return []
-  return result.data.artifacts.map((a) => {
-    const size = a.size_in_bytes || 0
-    return {
-      id: a.id,
-      name: a.name || "output",
-      size_bytes: size,
-      size_mb: Math.round((size / (1024 * 1024)) * 10) / 10,
-      created_at: a.created_at || "",
-      expired: Boolean(a.expired),
-      workflow_run_id: a.workflow_run?.id ?? null,
-      download_url: `/api/studio/videos/${a.id}/download`,
-      actions_url: a.workflow_run?.id
-        ? `https://github.com/${STUDIO_REPO}/actions/runs/${a.workflow_run.id}`
-        : `https://github.com/${STUDIO_REPO}/actions`,
+  return result.data.artifacts
+    .filter((a) => isCurioPipelineArtifact(a.name || ""))
+    .map((a) => {
+      const size = a.size_in_bytes || 0
+      return {
+        id: a.id,
+        name: a.name || "output",
+        size_bytes: size,
+        size_mb: Math.round((size / (1024 * 1024)) * 10) / 10,
+        created_at: a.created_at || "",
+        expired: Boolean(a.expired),
+        workflow_run_id: a.workflow_run?.id ?? null,
+        download_url: `/api/studio/videos/${a.id}/download`,
+        actions_url: a.workflow_run?.id
+          ? `https://github.com/${STUDIO_REPO}/actions/runs/${a.workflow_run.id}`
+          : `https://github.com/${STUDIO_REPO}/actions`,
+      }
+    })
+}
+
+async function readRepoTextFile(path: string): Promise<string | null> {
+  const token = getGitHubToken()
+  if (!token) return null
+  const result = await githubJson<{ content?: string; encoding?: string }>(
+    token,
+    `/repos/${STUDIO_REPO}/contents/${path}?ref=${encodeURIComponent(STUDIO_BRANCH)}`
+  )
+  if (!result.ok || !result.data?.content) return null
+  try {
+    return Buffer.from(result.data.content.replace(/\n/g, ""), "base64").toString("utf8")
+  } catch {
+    return null
+  }
+}
+
+function parseYoutubeIdFromNotes(notes: string): string | null {
+  const m = notes.match(/yt:([A-Za-z0-9_-]{6,})/i)
+  return m?.[1] || null
+}
+
+function matchArtifactForDate(artifacts: StudioArtifact[], dateIso?: string): StudioArtifact | null {
+  const usable = artifacts.filter((a) => !a.expired && a.size_bytes > 50_000)
+  if (!usable.length) return null
+  if (!dateIso) return usable[0]
+  const day = dateIso.slice(0, 10)
+  const sameDay = usable.find((a) => (a.created_at || "").startsWith(day))
+  return sameDay || usable[0]
+}
+
+/** Successfully uploaded Curio YouTube videos (long + short when available). */
+export async function getCurioPublishedVideos(
+  artifacts: StudioArtifact[] = []
+): Promise<CurioPublishedVideo[]> {
+  const byId = new Map<string, CurioPublishedVideo>()
+
+  // 1) Tracker rows with yt:… notes
+  const csv = await readRepoTextFile("data/curio/tracker.csv")
+  if (csv) {
+    const lines = csv.split(/\r?\n/).slice(1)
+    for (const line of lines) {
+      if (!line.trim()) continue
+      // naive CSV: date,slug,title,format,...,notes
+      const parts: string[] = []
+      let cur = ""
+      let inQ = false
+      for (const ch of line) {
+        if (ch === '"') {
+          inQ = !inQ
+          continue
+        }
+        if (ch === "," && !inQ) {
+          parts.push(cur)
+          cur = ""
+          continue
+        }
+        cur += ch
+      }
+      parts.push(cur)
+      const [date, slug, title, format, , , , , , notes = ""] = parts
+      const ytId = parseYoutubeIdFromNotes(notes || "")
+      if (!ytId || !slug) continue
+      byId.set(ytId, {
+        slug,
+        title: title || slug,
+        format: format === "short" ? "short" : "long",
+        youtube_id: ytId,
+        youtube_url: `https://youtu.be/${ytId}`,
+        date,
+        status: "uploaded",
+        artifact: matchArtifactForDate(artifacts, date),
+      })
     }
-  })
+  }
+
+  // 2) Latest publish manifest (if uploaded)
+  const latest = await readRepoJsonFile<{
+    status?: string
+    youtube_id?: string
+    youtube_url?: string
+    slug?: string
+    topic?: string
+    meta_title?: string
+    generated_at?: string
+  }>("data/curio/topics/publish_manifest_latest.json")
+  if (latest?.status === "uploaded" && latest.youtube_id) {
+    byId.set(latest.youtube_id, {
+      slug: String(latest.slug || latest.topic || "topic"),
+      title: String(latest.meta_title || latest.topic || latest.slug || "Curio video"),
+      format: "long",
+      youtube_id: latest.youtube_id,
+      youtube_url: latest.youtube_url || `https://youtu.be/${latest.youtube_id}`,
+      date: (latest.generated_at || "").slice(0, 10),
+      status: "uploaded",
+      artifact: matchArtifactForDate(artifacts, latest.generated_at),
+    })
+  }
+
+  // Known topic manifests (gravity / brain) when present on main
+  for (const slug of ["how-does-gravity-work-on-earth", "how-does-the-brain-learn"]) {
+    const man = await readRepoJsonFile<{
+      status?: string
+      youtube_id?: string
+      youtube_url?: string
+      slug?: string
+      topic?: string
+      meta_title?: string
+      generated_at?: string
+    }>(`data/curio/topics/${slug}/publish_manifest.json`)
+    if (man?.status === "uploaded" && man.youtube_id) {
+      byId.set(man.youtube_id, {
+        slug: String(man.slug || slug),
+        title: String(man.meta_title || man.topic || slug),
+        format: "long",
+        youtube_id: man.youtube_id,
+        youtube_url: man.youtube_url || `https://youtu.be/${man.youtube_id}`,
+        date: (man.generated_at || "").slice(0, 10),
+        status: "uploaded",
+        artifact: matchArtifactForDate(artifacts, man.generated_at),
+      })
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => (b.date || "").localeCompare(a.date || ""))
 }
 
 export async function downloadStudioArtifactZip(
@@ -522,11 +666,10 @@ export async function getStudioDashboardPayload() {
   const recentRunning = curioRuns.filter(
     (r) => r.status === "in_progress" || r.status === "queued"
   ).length
-  const videoArtifacts = artifacts.filter((a) => !a.expired && a.size_bytes > 50_000)
+  const publishedVideos = await getCurioPublishedVideos(artifacts)
   const curioPublished =
     curioOps?.publish_status === "uploaded" || Boolean(curioOps?.youtube_url) ? 1 : 0
-  let publishes = history.length + (curioPublished ? 0 : 0)
-  publishes = Math.max(history.length, curioOkRuns, curioPublished)
+  const publishes = Math.max(publishedVideos.length, history.length, curioOkRuns, curioPublished)
 
   return {
     channel: STUDIO_CHANNEL,
@@ -539,7 +682,12 @@ export async function getStudioDashboardPayload() {
     failures,
     curio: curioOps,
     runs: curioRuns,
+    // Curio pipeline zips only (for download next to published rows)
     artifacts,
+    publishedVideos,
+    shorts_enabled: false,
+    shorts_note:
+      "Curio currently auto-uploads long explainers only. Click Case daily shorts are retired. A Curio Shorts pipeline can be added next.",
     pending,
     stats: {
       publishes,
@@ -547,7 +695,7 @@ export async function getStudioDashboardPayload() {
       failed: failCount,
       running: recentRunning,
       platforms: STUDIO_PLATFORMS.filter((p) => p.group === "Publish").length,
-      videos: videoArtifacts.length,
+      videos: publishedVideos.length,
       pending_due: pending.due_count,
       pending_open: pending.open_count,
       curio_blocks: curioOps?.block_count || 0,

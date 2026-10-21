@@ -103,6 +103,18 @@ type StudioPayload = {
   } | null
   runs: Run[]
   artifacts?: Artifact[]
+  publishedVideos?: {
+    slug: string
+    title: string
+    format: "long" | "short"
+    youtube_id: string
+    youtube_url: string
+    date?: string
+    status: "uploaded"
+    artifact: Artifact | null
+  }[]
+  shorts_enabled?: boolean
+  shorts_note?: string
   pending?: {
     brand?: {
       display_name_target?: string
@@ -700,84 +712,88 @@ export function StudioWorkspace() {
 
       {tab === "videos" && (
         <div className="space-y-6">
-          <StudioPanel title="Download videos (manual share / re-upload)">
+          <StudioPanel title="Uploaded on YouTube (Curio)">
             <p className="mb-4 text-sm text-[var(--text-secondary)]">
-              Each finished Actions run saves a zip. Prefer rows marked <strong>has video</strong>. Click{" "}
-              <strong>Download zip</strong>, unzip, then open <code className="font-mono">output/video/*.mp4</code>{" "}
-              (or the MP4 inside <code className="font-mono">short-videos</code> / <code className="font-mono">long-videos</code>).
-              Use the platform buttons below to post by hand if auto-upload failed.
+              Only videos that uploaded successfully to{" "}
+              <strong className="text-[var(--text-primary)]">@CurioWhyScience</strong>. Open on YouTube, or
+              download the Curio pipeline zip when an artifact is still available.
             </p>
-            {data?.artifacts?.length ? (
+            {data?.publishedVideos?.length ? (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <thead>
                     <tr className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
-                      <th className="pb-3 font-semibold">Artifact</th>
-                      <th className="pb-3 font-semibold">Size</th>
+                      <th className="pb-3 font-semibold">Title</th>
+                      <th className="pb-3 font-semibold">Format</th>
                       <th className="pb-3 font-semibold">When</th>
-                      <th className="pb-3 font-semibold">Status</th>
-                      <th className="pb-3 font-semibold">Download / share</th>
+                      <th className="pb-3 font-semibold">YouTube</th>
+                      <th className="pb-3 font-semibold">Download</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {[...data.artifacts]
-                      .sort((a, b) => {
-                        const score = (x: Artifact) =>
-                          x.expired ? -1 : x.name.includes("video") ? 3 : x.size_mb >= 1 ? 2 : 0
-                        return score(b) - score(a) || b.id - a.id
-                      })
-                      .map((a) => {
-                        const hasVideo = !a.expired && a.size_mb >= 1
-                        return (
-                          <tr key={a.id} className="border-t border-white/[0.06]">
-                            <td className="py-3 font-medium">{a.name}</td>
-                            <td className="py-3 text-[var(--text-muted)]">{a.size_mb} MB</td>
-                            <td className="py-3 text-[var(--text-muted)]">{a.created_at}</td>
-                            <td className="py-3">
-                              <span
-                                className={statusPill(
-                                  a.expired ? "failure" : hasVideo ? "ok" : "unknown"
-                                )}
+                    {data.publishedVideos.map((v) => {
+                      const art = v.artifact
+                      const canDl = Boolean(art && !art.expired && art.size_mb >= 1)
+                      return (
+                        <tr key={v.youtube_id} className="border-t border-white/[0.06]">
+                          <td className="py-3 font-medium">{v.title}</td>
+                          <td className="py-3 text-[var(--text-muted)]">{v.format}</td>
+                          <td className="py-3 text-[var(--text-muted)]">{v.date || "-"}</td>
+                          <td className="py-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className={statusPill("ok")}>uploaded</span>
+                              <ExtLink href={v.youtube_url}>Open video</ExtLink>
+                            </div>
+                          </td>
+                          <td className="py-3">
+                            {canDl && art ? (
+                              <button
+                                type="button"
+                                disabled={downloadingId === art.id}
+                                onClick={() => void downloadArtifact(art)}
+                                className="btn-primary inline-flex items-center gap-2 !px-3 !py-1.5 text-xs"
                               >
-                                {a.expired ? "expired" : hasVideo ? "has video" : "tiny / failed run"}
+                                {downloadingId === art.id ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <Download className="h-3.5 w-3.5" />
+                                )}
+                                Download zip ({art.size_mb} MB)
+                              </button>
+                            ) : (
+                              <span className="text-xs text-[var(--text-muted)]">
+                                Zip expired — use YouTube Studio download
                               </span>
-                            </td>
-                            <td className="py-3">
-                              <div className="flex flex-wrap items-center gap-3">
-                                <button
-                                  type="button"
-                                  disabled={a.expired || downloadingId === a.id}
-                                  onClick={() => void downloadArtifact(a)}
-                                  className="btn-primary inline-flex items-center gap-2 !px-3 !py-1.5 text-xs"
-                                >
-                                  {downloadingId === a.id ? (
-                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                  ) : (
-                                    <Download className="h-3.5 w-3.5" />
-                                  )}
-                                  Download zip
-                                </button>
-                                <ExtLink href={a.actions_url}>Open run</ExtLink>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      })}
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
             ) : (
               <p className="text-sm text-[var(--text-muted)]">
-                No artifacts yet. After the next Short finishes, download buttons appear here. Until then you can also
-                grab files from GitHub → Actions → run → Artifacts.
+                No successful Curio YouTube uploads yet. After the next Curio long run finishes Step 12, videos
+                appear here.
               </p>
             )}
-            <p className="mt-4 text-xs text-[var(--text-muted)]">
-              Tip: last good full Short zip was ~40 MB (Sep 21). Tiny ~1 KB zips mean create crashed before the MP4.
-            </p>
           </StudioPanel>
 
-          <StudioPanel title="Manual upload targets (if auto failed)">
+          <StudioPanel title="Shorts">
+            <p className="text-sm text-[var(--text-secondary)]">
+              {data?.shorts_note ||
+                "Curio auto currently uploads long explainers only. Shorts pipeline is not enabled yet."}
+            </p>
+            {!data?.shorts_enabled && (
+              <p className="mt-3 text-xs text-[var(--text-muted)]">
+                Next step: add a Curio Shorts Actions workflow (vertical 60s science clips) that uploads to the
+                same channel and lists here after a successful YouTube upload.
+              </p>
+            )}
+          </StudioPanel>
+
+          <StudioPanel title="Open YouTube Studio">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {(data?.platforms || [])
                 .filter((p) => p.group === "Publish")
@@ -789,7 +805,7 @@ export function StudioWorkspace() {
                     rel="noreferrer"
                     className="glass-card-interactive rounded-xl border border-white/[0.06] px-4 py-4 text-sm font-medium text-[var(--text-primary)]"
                   >
-                    Upload to {p.label}
+                    {p.label}
                   </a>
                 ))}
             </div>
