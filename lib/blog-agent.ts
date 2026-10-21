@@ -116,17 +116,16 @@ async function groqJson(system: string, user: string): Promise<string> {
       throw new Error(msg)
     }
     const msg = data?.choices?.[0]?.message
-    const text =
-      typeof msg?.content === "string"
-        ? msg.content
-        : typeof msg?.reasoning === "string"
-          ? msg.reasoning
-          : ""
-    if (!text.trim()) {
-      lastError = "Empty Groq response"
+    const content = typeof msg?.content === "string" ? msg.content.trim() : ""
+    // Prefer content; some reasoning models put prose in `reasoning` which is not JSON.
+    const text = content || ""
+    if (!text || !text.includes("{")) {
+      const plain = await groqJsonPlain(groq, model, system, user)
+      if (plain && plain.includes("{")) return plain
+      lastError = "Empty or non-JSON Groq response"
       continue
     }
-    return text.trim()
+    return text
   }
 
   throw new Error(lastError)

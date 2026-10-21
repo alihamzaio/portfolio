@@ -7,14 +7,14 @@
  * https://console.groq.com/docs/deprecations
  */
 export const DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b"
-export const DEFAULT_BLOG_GROQ_MODEL = "openai/gpt-oss-120b"
+export const DEFAULT_BLOG_GROQ_MODEL = "qwen/qwen3.8-27b"
 export const DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
 
-/** Prefer quality first, then speed, then other solid chat models. */
+/** Prefer models that reliably return json_object for long blog drafts. */
 const BLOG_GROQ_CANDIDATES = [
-  "openai/gpt-oss-120b",
-  "openai/gpt-oss-20b",
   "qwen/qwen3.8-27b",
+  "openai/gpt-oss-20b",
+  "openai/gpt-oss-120b",
 ] as const
 
 const RETIRED_GROQ_MODELS = new Set([
