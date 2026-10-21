@@ -13,6 +13,10 @@ import { buildPageMetadata } from "@/lib/seo"
 
 type Props = { params: Promise<{ slug: string }> }
 
+/** Allow new posts after build; parent layout is force-static. */
+export const dynamicParams = true
+export const revalidate = 60
+
 export async function generateStaticParams() {
   const posts = await getAllBlogPosts()
   return posts.map((p) => ({ slug: p.slug }))
