@@ -211,7 +211,7 @@ function extractJsonObject(text: string): Record<string, unknown> {
 }
 
 const BANNED_HUSTLE =
-  /\b(side[- ]?hustle|make money online|\$\d+\s*(a|per)\s*(day|week|month)|passive income|get rich|sell(ing)? (ai )?prompts?|print on demand|gumroad empire|chatgpt prompts? for sale)\b/i
+  /\b(side[- ]?hustle|make money( online)?|extra income|passive income|get rich|earn \$?\d+|\$\d+\s*(a|per)\s*(day|week|month)|sell(ing)? (ai )?prompts?|print[- ]?on[- ]?demand|gumroad|chatgpt prompts? for sale|tiktok (micro[- ]?)?video|newsletter workflow saved me|boost(ed)? my freelance (income|earnings))\b/i
 
 const BANNED_SLOP =
   /\b(roadmap|leverage|unlock|delve|game-?changer|comprehensive|cutting-edge|landscape|data-driven|key platforms|in this guide|introduction)\b/i

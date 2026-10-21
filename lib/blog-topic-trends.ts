@@ -27,7 +27,7 @@ const RELEVANT =
   /\b(next\.?js|react|typescript|javascript|vercel|node\.?js|postgres|sql|auth|oauth|seo|freelance|client|mvp|saas|api|tailwind|css|docker|aws|portfolio|chrome extension|webdev|frontend|backend|full[- ]?stack|deploy|cdn|csp|drizzle|redis|queue)\b/i
 
 const BANNED =
-  /\b(side[- ]?hustle|make money|passive income|get rich|crypto pump|onlyfans|nsfw|porn|gambling|betting|giveaway|\$\d+\s*(a|per)\s*(day|week|month))\b/i
+  /\b(side[- ]?hustle|make money|passive income|get rich|extra income|earn \$?\d+|crypto pump|onlyfans|nsfw|porn|gambling|betting|giveaway|prompt marketplace|selling prompts|print[- ]?on[- ]?demand|\$\d+\s*(a|per)\s*(day|week|month))\b/i
 
 function scoreTitle(title: string, source: TrendTopic["source"], ups = 0): number {
   let score = source === "reddit" ? Math.min(40, Math.log10(ups + 10) * 12) : 20
