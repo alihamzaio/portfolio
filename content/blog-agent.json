@@ -20,6 +20,16 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvho1t4x_nl5132",
+      "at": "2026-10-21T05:23:02.680Z",
+      "status": "error",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 3,
+      "error": "Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01m0hc5g7be6jspsgy8xpp98f0` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Used 1000, Requested 273. Please try again in 16.38s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mvhnxytx_5at6mo",
       "at": "2026-10-21T05:20:03.432Z",
       "status": "error",
