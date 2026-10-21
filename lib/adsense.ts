@@ -2,6 +2,8 @@
 
 /** Public publisher ID (HTML client=ca-pub-… ; ads.txt uses pub-… without "ca-"). */
 const DEFAULT_ADSENSE_CLIENT = "ca-pub-6403279914866695"
+/** Display unit from AdSense → Ads → By ad unit (data-ad-slot). */
+const DEFAULT_ADSENSE_SLOT = "7008461083"
 
 export function getAdSenseClient(): string {
   const client = (process.env.NEXT_PUBLIC_ADSENSE_CLIENT || DEFAULT_ADSENSE_CLIENT).trim()
@@ -16,7 +18,7 @@ export function getAdSensePublisherId(): string {
 }
 
 export function getAdSenseSlot(): string {
-  return (process.env.NEXT_PUBLIC_ADSENSE_SLOT || "").trim()
+  return (process.env.NEXT_PUBLIC_ADSENSE_SLOT || DEFAULT_ADSENSE_SLOT).trim()
 }
 
 export function isAdSenseConfigured(): boolean {
