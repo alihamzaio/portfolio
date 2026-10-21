@@ -12,7 +12,9 @@ function isSecureRequest(request: NextRequest) {
 function buildSecurityHeaders(csp: string) {
   return [
     { key: "Content-Security-Policy", value: csp },
-    { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+    // Allow AdSense / OAuth-style popups; strict same-origin COOP can break ad frames.
+    { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+    // Keep pages embeddable only by us; ad iframes load FROM Google (frame-src), not as our CORP.
     { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "X-Frame-Options", value: "DENY" },
@@ -58,7 +60,7 @@ export function proxy(request: NextRequest) {
     response.headers.set("Cross-Origin-Resource-Policy", "cross-origin")
   }
 
-  response.headers.set("X-Site-Build", "seo-v20")
+  response.headers.set("X-Site-Build", "seo-v21-adsense")
 
   if (
     path === "/index.html" ||
@@ -74,7 +76,7 @@ export function proxy(request: NextRequest) {
     for (const header of buildSecurityHeaders(csp)) {
       redirect.headers.set(header.key, header.value)
     }
-    redirect.headers.set("X-Site-Build", "seo-v20")
+    redirect.headers.set("X-Site-Build", "seo-v21-adsense")
     return redirect
   }
 

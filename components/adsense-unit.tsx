@@ -1,7 +1,11 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { getAdSenseClient, isAdSenseConfigured } from "@/lib/adsense"
+import {
+  getAdSenseClient,
+  getAdSenseSlot,
+  isAdSenseDisplayReady,
+} from "@/lib/adsense"
 import { cn } from "@/lib/utils"
 
 type Props = {
@@ -17,24 +21,46 @@ declare global {
 }
 
 /**
- * Blog-only ad unit. No-op until NEXT_PUBLIC_ADSENSE_CLIENT is set on Vercel.
+ * Blog display ad unit.
+ * Renders only when NEXT_PUBLIC_ADSENSE_SLOT is a real AdSense ad-unit id.
+ * Without a slot, Google shows "This content is blocked" — so we hide the shell.
+ * Page-level Auto ads still load from <AdSenseScript /> in the root layout.
  */
 export function AdSenseUnit({ slot, className, format = "auto" }: Props) {
   const pushed = useRef(false)
   const client = getAdSenseClient()
-  const unitSlot = (slot || process.env.NEXT_PUBLIC_ADSENSE_SLOT || "").trim()
+  const unitSlot = (slot || getAdSenseSlot()).trim()
+  const ready = Boolean(client) && /^\d{8,}$/.test(unitSlot)
 
   useEffect(() => {
-    if (!isAdSenseConfigured() || pushed.current) return
-    try {
-      ;(window.adsbygoogle = window.adsbygoogle || []).push({})
-      pushed.current = true
-    } catch {
-      // Ad blockers / script not ready
-    }
-  }, [])
+    if (!ready || pushed.current) return
 
-  if (!isAdSenseConfigured()) return null
+    const push = () => {
+      try {
+        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+        pushed.current = true
+      } catch {
+        // Ad blockers / script not ready
+      }
+    }
+
+    // Wait for the async AdSense script if it has not loaded yet.
+    const existing = document.querySelector(
+      'script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]'
+    ) as HTMLScriptElement | null
+    if (existing && !(window as unknown as { adsbygoogle?: unknown }).adsbygoogle) {
+      existing.addEventListener("load", push, { once: true })
+      const t = window.setTimeout(push, 2500)
+      return () => {
+        existing.removeEventListener("load", push)
+        window.clearTimeout(t)
+      }
+    }
+    push()
+  }, [ready])
+
+  if (!isAdSenseDisplayReady() && !ready) return null
+  if (!ready) return null
 
   return (
     <div
@@ -51,7 +77,7 @@ export function AdSenseUnit({ slot, className, format = "auto" }: Props) {
         className="adsbygoogle"
         style={{ display: "block", minHeight: format === "rectangle" ? 250 : 90 }}
         data-ad-client={client}
-        data-ad-slot={unitSlot || undefined}
+        data-ad-slot={unitSlot}
         data-ad-format={format === "auto" ? "auto" : "rectangle"}
         data-full-width-responsive="true"
       />

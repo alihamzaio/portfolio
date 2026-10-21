@@ -18,11 +18,16 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "https://va.vercel-scripts.com",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
-    // Google AdSense (ownership check + ad serving)
+    // Google AdSense + Privacy Sandbox / Funding Choices
     "https://pagead2.googlesyndication.com",
     "https://www.googleadservices.com",
     "https://www.googletagservices.com",
     "https://adservice.google.com",
+    "https://partner.googleadservices.com",
+    "https://tpc.googlesyndication.com",
+    "https://fundingchoicesmessages.google.com",
+    "https://ep1.adtrafficquality.google",
+    "https://ep2.adtrafficquality.google",
     // next dev react-refresh uses eval(); only on http://localhost, not production https.
     ...(!isSecure ? ["'unsafe-eval'"] : []),
   ]
@@ -38,6 +43,11 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "https://googleads.g.doubleclick.net",
     "https://tpc.googlesyndication.com",
     "https://adservice.google.com",
+    "https://partner.googleadservices.com",
+    "https://fundingchoicesmessages.google.com",
+    "https://ep1.adtrafficquality.google",
+    "https://ep2.adtrafficquality.google",
+    "https://csi.gstatic.com",
     ...(!isSecure ? ["ws://localhost:*", "wss://localhost:*"] : []),
   ]
 
@@ -47,17 +57,20 @@ export function buildContentSecurityPolicy({ nonce, isSecure }: CspOptions): str
     "https://tpc.googlesyndication.com",
     "https://www.google.com",
     "https://pagead2.googlesyndication.com",
+    "https://fundingchoicesmessages.google.com",
+    "https://www.googleadservices.com",
+    "https://ep1.adtrafficquality.google",
+    "https://ep2.adtrafficquality.google",
   ]
 
   return [
     "default-src 'self'",
     `script-src ${scriptSrc.join(" ")}`,
     "script-src-attr 'none'",
-    "style-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://tagmanager.google.com",
     // Allow any https image host so blog covers (Pexels, Unsplash, Cloudinary, etc.) work.
-    // Still no http: upgrade-insecure-requests covers mixed content on https pages.
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data:",
+    "font-src 'self' data: https://fonts.gstatic.com",
     `connect-src ${connectSrc.join(" ")}`,
     `frame-src ${frameSrc.join(" ")}`,
     "frame-ancestors 'none'",

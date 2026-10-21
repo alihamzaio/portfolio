@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server"
-import { getAdSenseClient } from "@/lib/adsense"
+import { getAdSensePublisherId } from "@/lib/adsense"
 
 /**
  * AdSense site verification / crawler file.
  * https://support.google.com/adsense/answer/12171612
- * Populates when NEXT_PUBLIC_ADSENSE_CLIENT is set.
+ *
+ * Format must be: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+ * (publisher id WITHOUT the "ca-" prefix used in pagead client=).
  */
 export function GET() {
-  const client = getAdSenseClient()
+  const pub = getAdSensePublisherId()
   const lines = [
     "# ads.txt for alihamza portfolio",
-    client ? `google.com, ${client}, DIRECT, f08c47fec0942fa0` : "# Set NEXT_PUBLIC_ADSENSE_CLIENT to enable Google AdSense entry",
+    pub
+      ? `google.com, ${pub}, DIRECT, f08c47fec0942fa0`
+      : "# Set NEXT_PUBLIC_ADSENSE_CLIENT (ca-pub-…) to enable Google AdSense entry",
     "",
   ]
   return new NextResponse(lines.join("\n"), {
