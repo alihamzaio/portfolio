@@ -342,14 +342,33 @@ Return ONLY JSON.`,
       .replace(/\u2011/g, "-")
       .replace(/\u00a0/g, " ")
 
-  const title = scrub(String(post.title || draft.title || "").trim())
-  const body = scrub(String(post.body || draft.body || "").trim())
+  let title = scrub(String(post.title || draft.title || "").trim())
+  let body = scrub(String(post.body || draft.body || "").trim())
   if (!title || !body) throw new Error("Generated post missing title/body")
 
   let category = scrub(String(post.category || draft.category || "Engineering").trim())
   if (/trend|money|hustle|income/i.test(category)) category = "Engineering"
 
-  assertQualityPost(title, body, category)
+  try {
+    assertQualityPost(title, body, category)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    if (!/H2 sections/i.test(msg)) throw err
+    // One repair pass: models sometimes return flat markdown without ## headings.
+    const repaired = extractJsonObject(
+      await groqJson(
+        `Return ONLY JSON with keys topic,title,excerpt,metaDescription,category,tags,keywords,body.
+Rewrite this portfolio blog post so the body uses multiple ## H2 sections (Context, What I do, Tradeoffs, FAQ, Bottom line). Keep first-person voice. No hustle spam.`,
+        JSON.stringify({ title, body, topic: post.topic || title, category })
+      )
+    )
+    title = scrub(String(repaired.title || title).trim())
+    body = scrub(String(repaired.body || body).trim())
+    category = scrub(String(repaired.category || category).trim())
+    if (/trend|money|hustle|income/i.test(category)) category = "Engineering"
+    post = { ...post, ...repaired, title, body, category }
+    assertQualityPost(title, body, category)
+  }
 
   const excerpt = scrub(
     String(post.excerpt || body.replace(/\s+/g, " ").slice(0, 180)).trim()
