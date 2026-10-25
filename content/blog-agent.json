@@ -20,6 +20,16 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvnx0w1w_7chvyy",
+      "at": "2026-10-25T14:20:53.382Z",
+      "status": "error",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 0,
+      "error": "Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mvmgt7eq_bkb56l",
       "at": "2026-10-24T13:59:14.827Z",
       "status": "ok",
