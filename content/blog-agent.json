@@ -20,6 +20,21 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvts9b1f_bqlqv7",
+      "at": "2026-10-29T16:54:05.056Z",
+      "status": "ok",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 4,
+      "topic": "Practical SEO and content quality for developer sites",
+      "title": "How I Optimized SEO for a Next.js Portfolio Site Without Breaking Build Performance",
+      "topicSource": "retry",
+      "slug": "how-i-optimized-seo-for-a-next-js-portfolio-site-without-breaking-build-performa",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/3d584512fc68bf032c71e1771576fb585f7ffe56",
+      "postUrl": "/blog/how-i-optimized-seo-for-a-next-js-portfolio-site-without-breaking-build-performa",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mvsc636h_9h7tdr",
       "at": "2026-10-28T16:35:54.871Z",
       "status": "error",
@@ -147,7 +162,7 @@
       "retryOf": "run_mvhnglh0_srcynl",
       "weekdayUtc": 3,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mvmgt7eq_bkb56l"
+      "reason": "Superseded by retry run_mvts9b1f_bqlqv7"
     },
     {
       "id": "run_mvhnglh0_srcynl",
