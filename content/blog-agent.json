@@ -20,6 +20,21 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mvwkme3q_ceblsl",
+      "at": "2026-10-31T15:43:37.163Z",
+      "status": "ok",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 6,
+      "topic": "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
+      "title": "How I Stop Scope Creep Before the First Commit",
+      "topicSource": "retry",
+      "slug": "how-i-stop-scope-creep-before-the-first-commit",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/ab648a278cf68a9dc18dd3cb5ba266b828efd92d",
+      "postUrl": "/blog/how-i-stop-scope-creep-before-the-first-commit",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mvv789yh_li2ksz",
       "at": "2026-10-30T16:40:57.398Z",
       "status": "error",
@@ -172,7 +187,7 @@
       "retryOf": "run_mvhnglh0_srcynl",
       "weekdayUtc": 3,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mvts9b1f_bqlqv7"
+      "reason": "Superseded by retry run_mvwkme3q_ceblsl"
     },
     {
       "id": "run_mvhnglh0_srcynl",
