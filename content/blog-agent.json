@@ -20,6 +20,16 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mw0zdkv6_2qt99f",
+      "at": "2026-11-03T17:47:44.955Z",
+      "status": "error",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 2,
+      "error": "Rejected: body too thin (840 words; need 900+)",
+      "reason": "Retry failed"
+    },
+    {
       "id": "run_mvzpdhef_96d2as",
       "at": "2026-11-02T20:19:58.128Z",
       "status": "error",
