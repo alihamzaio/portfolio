@@ -20,6 +20,21 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mw823w42_24bwxh",
+      "at": "2026-11-08T16:38:35.043Z",
+      "status": "ok",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 0,
+      "topic": "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
+      "title": "Why your MVP estimate is wrong: how I scope freelance projects to avoid rework",
+      "topicSource": "retry",
+      "slug": "why-your-mvp-estimate-is-wrong-how-i-scope-freelance-projects-to-avoid-rework",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/99c980e5cb466ce773606873a25257d846c604f5",
+      "postUrl": "/blog/why-your-mvp-estimate-is-wrong-how-i-scope-freelance-projects-to-avoid-rework",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mw6m4v4x_a4w465",
       "at": "2026-11-07T16:23:40.397Z",
       "status": "error",
@@ -257,7 +272,7 @@
       "retryOf": "run_mvhnglh0_srcynl",
       "weekdayUtc": 3,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mvwkme3q_ceblsl"
+      "reason": "Superseded by retry run_mw823w42_24bwxh"
     },
     {
       "id": "run_mvhnglh0_srcynl",
