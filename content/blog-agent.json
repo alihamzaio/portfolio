@@ -20,6 +20,21 @@
   "useTrendTopics": true,
   "runs": [
     {
+      "id": "run_mw9q7ari_jmtnd1",
+      "at": "2026-11-09T20:40:50.961Z",
+      "status": "ok",
+      "attempts": 3,
+      "retryOf": "run_mvhnto1v_4ujgb9",
+      "weekdayUtc": 1,
+      "topic": "Freelance MVP scoping, estimates, and client kickoff habits that prevent rework",
+      "title": "How I Structure Kickoff Calls to Kill Scope Ambiguity Before Coding",
+      "topicSource": "retry",
+      "slug": "how-i-structure-kickoff-calls-to-kill-scope-ambiguity-before-coding",
+      "prUrl": "https://github.com/alihamzaio/portfolio/commit/afe6fac4d721c239ff36b4a1a46f134dae145718",
+      "postUrl": "/blog/how-i-structure-kickoff-calls-to-kill-scope-ambiguity-before-coding",
+      "reason": "Retry succeeded"
+    },
+    {
       "id": "run_mw823w42_24bwxh",
       "at": "2026-11-08T16:38:35.043Z",
       "status": "ok",
@@ -272,7 +287,7 @@
       "retryOf": "run_mvhnglh0_srcynl",
       "weekdayUtc": 3,
       "error": "Model did not return JSON",
-      "reason": "Superseded by retry run_mw823w42_24bwxh"
+      "reason": "Superseded by retry run_mw9q7ari_jmtnd1"
     },
     {
       "id": "run_mvhnglh0_srcynl",
